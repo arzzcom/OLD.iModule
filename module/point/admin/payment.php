@@ -98,10 +98,10 @@ var ContentArea = function(viewport) {
 		margin:"0 5 0 0",
 		tbar:[
 			new Ext.Button({
-				text:"게시판추가",
+				text:"결제방식추가",
 				icon:"<?php echo $_ENV['dir']; ?>/module/board/images/admin/icon_table_add.png",
 				handler:function() {
-					BoardFormFunction();
+					
 				}
 			}),
 			'-',
