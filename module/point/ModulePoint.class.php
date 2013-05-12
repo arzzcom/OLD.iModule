@@ -3,7 +3,8 @@ class ModulePoint extends Module {
 	public $table;
 	
 	function __construct() {
-		$this->table['item'] = $_ENV['code'].'_point_item_table';
+		$this->table['payment'] = $_ENV['code'].'_point_payment_table';
+		$this->table['buy'] = $_ENV['code'].'_point_buy_table';
 
 		parent::__construct('point');
 	}
