@@ -1,0 +1,135 @@
+@import url('./NanumGothicWeb.css');
+
+* {margin:0px; padding:0px; line-height:100%;}
+BODY {overflow:auto;}
+INPUT {outline:none;}
+
+/* Default */
+FORM {margin:0px;}
+IMG {border:0px;}
+
+/* align */
+.left {text-align:left;}
+.center {text-align:center;}
+.justify {text-align:justify;}
+.right {text-align:right;}
+.vTop {vertical-align:top;}
+.vMiddle {vertical-align:middle;}
+.vBottom {vertical-align:bottom;}
+
+/* font */
+.bold {font-weight:bold;}
+.normal {font-weight:normal;}
+.underline {text-decoration:underline;}
+.f10 {font-size:10px;}
+.f11 {font-size:11px;}
+.f12 {font-size:12px;}
+.f14 {font-size:14px;}
+.dotum {font-family:dotum;}
+.tahoma {font-family:tahoma;}
+.verdana {font-family:verdana;}
+.white {color:#FFFFFF !important;}
+.gray {color:#666666 !important;}
+.red {color:#FF0000 !important;}
+.smallEng {font-family:tahoma; font-size:10px;}
+
+/* cursor */
+.pointer {cursor:pointer;}
+
+/* heights & paddings */
+.innerimg {font:0/0 arial;}
+.height1 {width:1px; height:1px; overflow:hidden;}
+.height5 {width:1px; height:5px; overflow:hidden;}
+.height10 {width:1px; height:10px; overflow:hidden;}
+.height15 {height:15px; overflow:hidden;}
+.height20 {height:20px; overflow:hidden;}
+.height25 {height:25px; overflow:hidden;}
+.height30 {height:30px; overflow:hidden;}
+.height50 {height:50px; overflow:hidden;}
+.height100 {height:100px; overflow:hidden;}
+.height100p {height:100%;}
+.padding5 {padding:5px;}
+
+/* Table & Layout */
+.layoutfixed {width:100%; table-layout:fixed;}
+.wrapimage {font:0/0 arial;}
+
+/* LiveSearch */
+.liveSearchMatch {color:#EF5600;}
+
+/* SmartEditor */
+.smartOutput {padding:0px !important; font-size:12px; line-height:1.6; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; -ms-word-break:break-all; word-wrap:break-word;}
+.smartOutput p {line-height:1.6;}
+.smartOutput p SPAN {line-height:1.6;}
+.smartOutput p DIV {line-height:1.6;}
+.smartOutput blockquote.q1,
+.smartOutput blockquote.q2,
+.smartOutput blockquote.q3,
+.smartOutput blockquote.q4,
+.smartOutput blockquote.q5,
+.smartOutput blockquote.q6,
+.smartOutput blockquote.q7{ padding:10px; margin-left:15px; margin-right:15px;}
+.smartOutput blockquote.q1{ padding:0 10px; border-left:2px solid #ccc;}
+.smartOutput blockquote.q2{ padding:0 10px; background:url(../module/wysiwyg/images/bg_qmark.gif) no-repeat;}
+.smartOutput blockquote.q3{ border:1px solid #d9d9d9;}
+.smartOutput blockquote.q4{ border:1px solid #d9d9d9; background:#fbfbfb;}
+.smartOutput blockquote.q5{ border:2px solid #707070;}
+.smartOutput blockquote.q6{ border:1px dashed #707070;}
+.smartOutput blockquote.q7{ border:1px dashed #707070; background:#fbfbfb;}
+.smartOutput sup{ font:10px Tahoma;}
+.smartOutput sub{ font:10px Tahoma;}
+.smartOutput table td{ padding:4px;}
+.smartOutput .movie {border:1px dashed #CCCCCC; background:url(../images/common/wysiwyg_movie.png) no-repeat 50% 50%;}
+
+.smartOutputMobile {font-size:16px; line-height:1.6;}
+.smartOutputMobile p {line-height:1.6;}
+.smartOutputMobile p SPAN {line-height:1.6;}
+.smartOutputMobile p DIV {line-height:1.6;}
+.smartOutputMobile blockquote.q1,
+.smartOutputMobile blockquote.q2,
+.smartOutputMobile blockquote.q3,
+.smartOutputMobile blockquote.q4,
+.smartOutputMobile blockquote.q5,
+.smartOutputMobile blockquote.q6,
+.smartOutputMobile blockquote.q7{ padding:10px; margin-left:15px; margin-right:15px;}
+.smartOutputMobile blockquote.q1{ padding:0 10px; border-left:2px solid #ccc;}
+.smartOutputMobile blockquote.q2{ padding:0 10px; background:url(../module/wysiwyg/images/bg_qmark.gif) no-repeat;}
+.smartOutputMobile blockquote.q3{ border:1px solid #d9d9d9;}
+.smartOutputMobile blockquote.q4{ border:1px solid #d9d9d9; background:#fbfbfb;}
+.smartOutputMobile blockquote.q5{ border:2px solid #707070;}
+.smartOutputMobile blockquote.q6{ border:1px dashed #707070;}
+.smartOutputMobile blockquote.q7{ border:1px dashed #707070; background:#fbfbfb;}
+.smartOutputMobile sup{ font:10px Tahoma;}
+.smartOutputMobile sub{ font:10px Tahoma;}
+.smartOutputMobile table td{ padding:4px;}
+.smartOutputMobile .movie {border:1px dashed #CCCCCC; background:url(../images/common/wysiwyg_movie.png) no-repeat 50% 50%;}
+
+/* Selectbox */
+.selectbox {position:relative; background:#FFFFFF url(../images/common/selectbox_arrow.gif) no-repeat 100% 0;}
+.selectbox DIV {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; border:1px solid #C8C8C8; border-right:0px; height:18px; color:#2F2F2F; line-height:18px; padding-left:3px; cursor:pointer;}
+.selectbox UL {list-style-type:none; position:absolute; z-index:1; top:19px; left:0px; background:#FFFFFF; display:block; border:1px solid #C8C8C8; width:90px;}
+.selectbox UL LI {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; cursor:pointer; width:auto; padding:3px; margin:2px;}
+.selectbox UL LI:HOVER {background:#EEEEEE;}
+
+/* Layers */
+#WindowDisabledLayer {position:absolute; z-index:1000; background:#000000; top:0px; left:0px; filter:alpha(opacity=20); -moz-opacity:0.2; opacity:0.2;}
+#TipLayer {position:absolute; z-index:1001; background:#FFFFFF; border:2px solid #CCCCCC; padding:5px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; color:#666666;}
+#ShowImageLayer {position:absolute; z-index:1002;}
+#ShowImageLayer .LayerTopLeft {height:51px; background:url(../images/common/showimagelayer_topleft.gif);}
+#ShowImageLayer .LayerTopBg {height:51px; background:url(../images/common/showimagelayer_topbg.gif); vertical-align:top;}
+#ShowImageLayer .LayerTopBg .ButtonFullSize {float:right; margin-top:1px; width:34px; height:20px; background:url(../images/common/showimagelayer_button.gif) no-repeat 0px 0px; cursor:pointer;}
+#ShowImageLayer .LayerTopBg .ButtonFullSizeOver {float:right; margin-top:1px; width:34px; height:20px; background:url(../images/common/showimagelayer_button.gif) no-repeat 0px -20px; cursor:pointer;}
+#ShowImageLayer .LayerTopBg .ButtonClose {float:right; margin-top:1px; width:40px; height:20px; background:url(../images/common/showimagelayer_button.gif) no-repeat -34px 0px; cursor:pointer;}
+#ShowImageLayer .LayerTopBg .ButtonCloseOver {float:right; margin-top:1px; width:40px; height:20px; background:url(../images/common/showimagelayer_button.gif) no-repeat -34px -20px; cursor:pointer;}
+#ShowImageLayer .LayerTopRight {height:51px; background:url(../images/common/showimagelayer_topright.gif);}
+#ShowImageLayer .LayerBodyLeft {height:51px; background:url(../images/common/showimagelayer_bodyleft.gif);}
+#ShowImageLayer .LayerBodyRight {background:url(../images/common/showimagelayer_bodyright.gif);}
+#ShowImageLayer .LayerBodyRight {background:url(../images/common/showimagelayer_bodyright.gif);}
+#ShowImageLayer .LayerBottomLeft {height:8px; background:url(../images/common/showimagelayer_bottomleft.gif);}
+#ShowImageLayer .LayerBottomBg {height:8px; background:url(../images/common/showimagelayer_bottombg.gif);}
+#ShowImageLayer .LayerBottomRight {height:8px; background:url(../images/common/showimagelayer_bottomright.gif);}
+#ShowImageLayerLoading {background:#000000; color:#4F4F4F; font-family:dotum; font-size:11px; text-align:center;}
+#ShowImageLayerLoading DIV {padding:50px 0px 50px 0px;}
+
+.layerLeft {float:left;}
+.layerClear {clear:both;}

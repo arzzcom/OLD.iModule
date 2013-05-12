@@ -1,0 +1,21 @@
+.ux-start-button .x-btn-arrow {background-image:none;}
+.ux-start-button .x-btn-arrow-right {padding-left:10px;}
+.ux-taskbar {padding-left:4px !important;}
+.ux-start-menu-toolbar .x-btn-inner {text-align:left;}
+.ux-start-menu-toolbar {padding:4px !important;}
+.ux-taskbar .x-toolbar {background:transparent none; border-color:transparent;}
+.x-ie6 .ux-taskbar .x-toolbar {border-color:#d3e1f1;}
+.ux-desktop-windowbar .x-btn-inner,.x-nbr .ux-desktop-windowbar .x-btn-icon-text-left button {text-align:left !important;}
+.ux-taskbar .x-toolbar {height:28px;}
+.ux-taskbar {height:28px; padding:0;}
+.x-toolbar .x-toolbar {padding:0;}
+.ux-desktop-trayclock {text-align:center; vertical-align:middle; padding-top:0; padding-bottom:0;}
+.ux-wallpaper {background-color:#3d71b8;}
+.ux-wallpaper-tiled {background-repeat:repeat;}
+.ux-desktop-shortcut {cursor:pointer; text-align:center; word-spacing:75px; white-space:keep-all; padding:8px; margin:8px; width:75px; height:97px;}
+.ux-desktop-shortcut-icon {width:48px; height:48px; background-color:transparent; background-repeat:no-repeat;	margin:0 auto;	margin-bottom:5px;}
+.ux-desktop-shortcut-text {font:11px NanumGothicWeb; text-decoration:none; color:white; text-shadow:1px 1px 0px #000000;}
+.x-view-over .ux-desktop-shortcut-text {text-decoration:underline;}
+
+.admin {background-image:url(../images/common/icon_key.png);}
+.logout {background-image:url(../images/common/icon_key_go.png);}
