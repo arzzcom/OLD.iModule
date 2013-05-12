@@ -1,0 +1,18 @@
+.ItemListMainBuyList .titleBar {height:30px; overflow:hidden; background:url(./images/title_bg.gif);}
+
+.ItemListMainBuyList .imageView {width:150px; height:112px; margin:5px; border:2px solid #CCCCCC; background:url(./images/noimage.gif) no-repeat 50% 50%;}
+.ItemListMainBuyList .titleView {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; width:160px; margin:5px; height:15px; overflow:hidden; font-weight:bold; line-height:15px; color:#2F2F2F;}
+
+.ItemListMainBuyList .titleView A:link {text-decoration:none; color:#2F2F2F;}
+.ItemListMainBuyList .titleView A:visited {color:#2F2F2F; text-decoration:none;}
+.ItemListMainBuyList .titleView A:active {color:#2F2F2F; text-decoration:none;}
+.ItemListMainBuyList .titleView A:hover {text-decoration:underline; color:#000000;}
+
+.ItemListMainBuyList .infoView {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; width:160px; margin:5px; height:15px; overflow:hidden; color:#666666;}
+.ItemListMainBuyList .infoView DIV {float:left; height:15px; margin-right:5px;}
+
+.ItemListMainBuyList .category {color:#D97B43; font-weight:bold;}
+
+.ItemListMainBuyList .priceRentAll {height:15px; background:url(./images/icon_rent_all.gif) no-repeat; padding-left:18px; font-weight:bold; color:#253DA6; line-height:15px; letter-spacing:-1px;}
+.ItemListMainBuyList .priceRentMonth {height:15px; background:url(./images/icon_rent_month.gif) no-repeat; padding-left:18px; font-weight:bold; color:#253DA6; line-height:15px; letter-spacing:-1px;}
+.ItemListMainBuyList .priceBuy {height:15px; background:url(./images/icon_buy.gif) no-repeat; padding-left:18px; font-weight:bold; color:#253DA6; line-height:15px; letter-spacing:-1px;}

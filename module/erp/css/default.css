@@ -1,0 +1,33 @@
+.darkgray {background:#2F2F2F;}
+.skyblue {background:#DFE8F6;}
+.loginTitle {height:80px; background:#000000;}
+.loginTitle DIV {width:440px; height:80px; margin:0 auto; background:url(../images/workspace/login_title.gif);}
+.loginBox {width:420px; padding:10px; margin:10px auto; border:5px solid #4F4F4F; background:#000000;}
+.loginBox .inputbox {border:2px solid #4F4F4F; background:#2F2F2F; color:#EEEEEE; font-family:verdana; font-size:16px; padding:3px; width:290px; height:18px;}
+.loginBox .checkbox {width:13px; height:13px;}
+.loginBox LABEL {cursor:pointer;}
+.loginButton {margin:10px 5px 0px 5px; border-top:1px dashed #4F4F4F; text-align:right; font:0/0 arial; padding-top:10px;}
+
+.errorTitle {height:80px; background:#000000;}
+.errorTitle DIV {width:440px; height:80px; margin:0 auto; background:url(../images/common/error_title.gif);}
+.errorBox {width:420px; padding:10px; margin:10px auto; border:5px solid #4F4F4F; background:#000000; color:#CCCCCC; font-size:14px; font-weight:bold; font-family:돋움; line-height:160%;}
+
+#WorkReportAlert {margin:5px; background:#C10000; color:#FFFF80; font-family:돋움; font-size:11px; line-height:1.6; padding:5px; cursor:pointer;}
+
+#WorkspaceDefault .title {background:url(../images/workspace/workspace_titlebg.gif) repeat-x top; height:50px; border:1px solid #99BBE8; margin:5px;}
+#WorkspaceDefault .content {margin:0px 5px 5px 5px;}
+#WorkspaceDefault .innerBorder {border:1px solid #99BBE8; background:#FFFFFF; padding:8px;}
+#WorkspaceDefault .rightTitle {font:0/0 arail;}
+#WorkspaceDefault .rightText {padding-left:8px; font-family:돋움; font-size:12px; color:#6D6D6D; line-height:150%;}
+#WorkspaceDefault .footer {background:#4572A8; margin:0px 5px 5px 5px; padding:5px;}
+#WorkspaceDefault .goWorkspace {width:150px; font-family:돋움; font-size:11px;}
+#WorkspaceDefault .goMonth {width:90px; font-family:돋움; font-size:11px;}
+#WorkspaceDefault .imagesListon {width:100px; height:75px; border:3px solid #EF5600; cursor:pointer;}
+#WorkspaceDefault .imagesListoff {width:100px; height:75px; border:3px solid #000000; cursor:pointer; filter:alpha(opacity=50); -moz-opacity:0.5; opacity:0.5;}
+#WorkspaceDefault .imagesListover {width:100px; height:75px; border:3px solid #FFFFFF; cursor:pointer;}
+#WorkspaceDefault .ImagesListDate {color:#CCCCCC; font-family:verdana; font-size:11px; text-align:center; margin-top:5px; display:block; width:106px;}
+#WorkspaceDefault .copyment {font-family:돋움; font-size:11px; color:#FFFFFF;}
+
+#TodayWorkspace .title {cursor:pointer; font-weight:bold; font-size:12px; font-family:돋움; color:#15428B; padding:5px 0px 5px 22px; height:14px; background-repeat:no-repeat; background-position:5px center;}
+#TodayWorkspace .content-off {border:1px solid #E5E5E5; background:#F4F4F4; font-family:돋움; font-size:11px; line-height:150%; padding:5px; margin:0px 3px 0px 5px;}
+#TodayWorkspace .content-on {border:1px solid #99BBE8; background:#DFE8F6; font-family:돋움; font-size:11px; line-height:150%; padding:5px; margin:0px 3px 0px 5px;}

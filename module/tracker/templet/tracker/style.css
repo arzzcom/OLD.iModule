@@ -1,0 +1,256 @@
+/* 박스 스타일 */
+* {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum;;}
+.boxDefault {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum;; font-size:12px; border:1px solid #E1D0BB; background:#FFFFEA; padding:8px; line-height:1.6;}
+.boxDefault SPAN {line-height:1.6;}
+.boxSubText {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum;; font-size:11px; color:#666666; text-align:right; margin:5px 0px 5px 0px;}
+.boxAlert {padding:8px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum;; font-size:11px; line-height:1.4; background:#C10000; color:#FFFF80;}
+.boxInner {padding:2px 0px 2px 10px; margin:5px 0px 5px 10px; border-left:1px solid #CCCCCC; line-height:1.6;}
+.boxGray {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum;; font-size:12px; border:1px solid #E5E5E5; background:#F4F4F4; padding:8px; margin:5px 0px 5px 0px; line-height:1.6;}
+.boxBlue {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum;; font-size:12px; border:1px solid #98C1E5; background:#E4F5FD; color:#4680AE; padding:8px; line-height:1.6;}
+.pointText {color:#FF5600;}
+
+#TrackerGroupSearchCancel {width:20px; height:20px; cursor:pointer; position:absolute; right:0px; top:2px; background:url(./images/icon_delete.png) no-repeat 50% 50%;}
+#TrackerGroupSearchList {border:1px solid #CCCCCC; position:absolute; top:23px; left:0px; z-index:10000; height:238px; overflow-y:scroll; background:#FFFFFF;}
+#TrackerGroupSearchList UL {list-style-type:none;}
+#TrackerGroupSearchList LI {position:relative; margin:1px; padding:2px; border:1px solid transparent; height:72px; overflow:hidden; cursor:pointer;}
+#TrackerGroupSearchList LI.select {background:#F4F4F4; border:1px solid #E5E5E5;}
+#TrackerGroupSearchList DIV.registed {background:url(./images/ribbon_registed.png); width:59px; height:59px; position:absolute; z-index:1; top:0px; left:0px;}
+#TrackerGroupSearchList .title {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum;; padding-top:3px; font-size:14px; font-weight:bold;}
+#TrackerGroupSearchList .title .eng {font-weight:normal; color:#666666; font-family:tahoma; font-size:11px;}
+#TrackerGroupSearchList .info {padding-top:5px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum;; font-size:12px; color:#666666; font-weight:bold; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;}
+#TrackerGroupSearchList .info .value {color:#222222; font-weight:normal;}
+#TrackerGroupSearchList .thumbnail {width:50px; height:70px; border:1px solid #CCCCCC;}
+
+#TrackerArtistSearchInputList .item {display:inline-block; height:24px; line-height:26px; padding-right:20px; margin-right:5px; background:url(./images/icon_delete.png) no-repeat right center; cursor:pointer; vertical-align:middle;}
+#TrackerArtistSearchInputArea {display:inline-block; vertical-align:middle; position:relative;}
+#TrackerArtistSearchList {border:1px solid #CCCCCC; position:absolute; top:23px; left:0px; z-index:10000; height:238px; overflow-y:scroll; background:#FFFFFF;}
+#TrackerArtistSearchList UL {list-style-type:none;}
+#TrackerArtistSearchList LI {margin:1px; padding:2px; border:1px solid transparent; height:20px; overflow:hidden; cursor:pointer; line-height:20px;}
+#TrackerArtistSearchList LI.select {background:#F4F4F4; border:1px solid #E5E5E5;}
+
+#TrackerSubArtistSearchInputList .item {display:inline-block; height:24px; line-height:26px; padding-right:20px; margin-right:5px; background:url(./images/icon_delete.png) no-repeat right center; cursor:pointer; vertical-align:middle;}
+#TrackerSubArtistSearchInputArea {display:inline-block; vertical-align:middle; position:relative;}
+#TrackerSubArtistSearchList {border:1px solid #CCCCCC; position:absolute; top:23px; left:0px; z-index:10000; height:238px; overflow-y:scroll; background:#FFFFFF;}
+#TrackerSubArtistSearchList UL {list-style-type:none;}
+#TrackerSubArtistSearchList LI {margin:1px; padding:2px; border:1px solid transparent; height:20px; overflow:hidden; cursor:pointer; line-height:20px;}
+#TrackerSubArtistSearchList LI.select {background:#F4F4F4; border:1px solid #E5E5E5;}
+
+#TrackerNationInputList .item {display:inline-block; height:24px; line-height:26px; padding-right:20px; margin-right:5px; background:url(./images/icon_delete.png) no-repeat right center; cursor:pointer; vertical-align:middle;}
+#TrackerNationInputArea {display:inline-block; vertical-align:middle; position:relative;}
+
+.trackerFormTable {background:#CCCCCC; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum;; font-size:12px; width:100%; table-layout:fixed;}
+.trackerFormTable TD.header {background:#F4F4F4; padding:8px 0px 8px 8px; font-weight:bold; line-height:1.6;}
+.trackerFormTable TD.content {background:#FFFFFF; padding:8px;}
+
+.trackerFormTable .inputbox {height:16px; padding:3px; border:1px; line-height:16px; border:1px solid #CCCCCC; background-color:#F4F4F4; background-image:url(./images/input_bg.gif); background-repeat:no-repeat; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum;; font-size:12px;}
+.trackerFormTable .inputbox:focus {border:1px solid #99BBE8; background-color:#F0F5FA;}
+.trackerFormTable .textbox {resize:none; outline:none; width:592px; height:300px; padding:3px; border:1px; line-height:1.6; border:1px solid #CCCCCC; background-color:#F4F4F4; background-image:url(./images/input_bg.gif); background-repeat:no-repeat; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum;; font-size:12px;}
+.trackerFormTable .textbox:focus {border:1px solid #99BBE8; background-color:#F0F5FA;}
+.trackerFormTable .filebox {width:600px; height:22px; padding:3px 0px 1px 0px; border:1px solid #CCCCCC; background-color:#F4F4F4; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum;; font-size:12px;}
+
+.trackerFormTable .formInfo {margin-top:8px; line-height:1.5; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum;; font-size:12px; color:#666666;}
+.trackerFormTable .formInfo .point {color:#EF5600;}
+
+.icon_freeleech {float:left; width:22px; height:25px; background:url(./images/icon_freeleech.gif) no-repeat 0 50%; margin-left:2px;}
+.icon_halfleech {float:left; width:23px; height:25px; background:url(./images/icon_halfleech.gif) no-repeat 0 50%; margin-left:2px;}
+.icon_doubleupload {float:left; width:14px; height:25px; background:url(./images/icon_doubleupload.gif) no-repeat 0 50%; margin-left:2px;}
+.icon_exclusive {float:left; width:45px; height:25px; background:url(./images/icon_exclusive.gif) no-repeat 0 50%; margin-left:2px;}
+.torrentText {float:left; height:25px; line-height:25px; margin-right:5px;}
+.torrentText A {line-height:25px;}
+
+/* List */
+.trackerList .searchArea {font-size:12px; border:1px solid #98C1E5; background:#E4F5FD; color:#4680AE; padding:8px; line-height:1.6;}
+.trackerList .searchArea .header {font-weight:bold; padding-right:5px; text-align:right; vertical-align:top; padding-top:6px;}
+
+.trackerList .searchArea .inputbox {height:16px; padding:3px; border:1px; line-height:16px; border:1px solid #CCCCCC; background-color:#F4F4F4; background-image:url(./images/input_bg.gif); background-repeat:no-repeat; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum;; font-size:12px;}
+.trackerList .searchArea .inputbox:focus {border:1px solid #99BBE8; background-color:#F0F5FA;}
+
+.trackerList .groupHeader {height:70px; background:url(./images/bg_group.gif) repeat-x 0;}
+.trackerList .groupHeader DIV.split {height:70px; background:url(./images/bg_group_left.gif) no-repeat 0 0;}
+.trackerList .groupInfo {height:33px; overflow:hidden;}
+.trackerList .groupSplit {height:36px; line-height:36px; border-top:1px solid #DCDCDC; border-left:1px solid #DCDCDC; font-family:tahoma; font-size:11px; letter-spacing:-1px; text-align:center;}
+.trackerList .categorybox {margin:10px 5px 0px 5px; padding:0px 4px 0px 3px; font-size:11px; line-height:14px; height:14px; float:left; -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; color:#FFFFFF;}
+.trackerList .categorybox A {color:#FFFFFF; text-decoration:none;}
+
+.trackerList .category1 {border:1px solid #218907; background:#218907;}
+.trackerList .category2 {border:1px solid #1049b4; background:#1049b4;}
+.trackerList .category6 {border:1px solid #b300b1; background:#b300b1;}
+
+.trackerList .title {height:16px; line-height:15px; margin-top:10px; font-size:12px; font-weight:bold; float:left; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;}
+.trackerList .title A:link {text-decoration:none; color:#2F2F2F; line-height:15px;}
+.trackerList .title A:hover {text-decoration:underline; color:#000000;}
+.trackerList .title A:visited {text-decoration:none; color:#2F2F2F;}
+.trackerList .subtitle {padding-left:10px; color:#666666; font-size:11px; line-height:2.4; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;}
+.trackerList .subtitle A:link {text-decoration:none; color:#666666; line-height:2.4;}
+.trackerList .subtitle A:hover {text-decoration:underline; color:#000000;}
+.trackerList .subtitle A:visited {text-decoration:none; color:#666666;}
+.trackerList .hSplit {height:33px; line-height:33px; font-family:tahoma; text-align:center; font-size:11px; letter-spacing:-1px; border-bottom:1px solid #DCDCDC;}
+.trackerList .hSplitContent {height:36px; line-height:36px; text-align:right; font-family:tahoma; font-weight:bold; color:#666666; font-size:10px; padding-right:5px;}
+.trackerList .torrentInfo {background-image:url(./images/icon_feed.png); background-repeat:no-repeat; background-position:0 50%; height:28px; line-height:28px; border-left:1px solid #DCDCDC; padding-left:15px; font-size:11px;}
+.trackerList .torrentInfo A:link {text-decoration:none; color:#666666; line-height:28px;}
+.trackerList .torrentInfo A:hover {text-decoration:underline; color:#000000;}
+.trackerList .torrentInfo A:visited {text-decoration:none; color:#666666;}
+.trackerList .torrentInfo .reg_date {font-family:tahoma; letter-spacing:0px;}
+.trackerList .torrentSplit {height:28px; line-height:28px; text-align:right; border-left:1px solid #DCDCDC; font-family:tahoma; font-weight:bold; color:#666666; font-size:10px; padding-right:5px;}
+
+.trackerList .pageinfo {text-align:center; font-family:verdana; color:#2F2F2F; font-size:10px;}
+.trackerList .pagenav {width:100%; height:26px; text-align:center;}
+.trackerList .pagenav STRONG {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#FA6F46; border:1px solid #E9E9E9;}
+.trackerList .pagenav A:link {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.trackerList .pagenav A:hover {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; background:#F4F4F4; text-decoration:none;}
+.trackerList .pagenav A:visited {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.trackerList .pagenav A:active {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.trackerList .pagenav SPAN {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#DDDDDD; border:1px solid #E9E9E9; text-decoration:none;}
+
+/* Artist */
+.trackerArtist .areaTitle {height:29px; border:1px solid #B5B7BC; margin-bottom:5px; background:url(./images/bg_areatitle.gif);}
+.trackerArtist .areaTitle DIV.inner {height:27px; border:1px solid #FFFFFF;}
+.trackerArtist .areaTitle DIV.inner .text {padding-left:10px; float:left; font-size:12px; font-weight:bold; line-height:26px; height:27px;}
+.trackerArtist .areaTitle DIV.inner .toggle {float:right; margin:4px 5px 0px 0px; width:19px; height:19px; background-image:url(./images/btn_toggle.gif); background-repeat:no-repeat;cursor:pointer;}
+.trackerArtist .areaTitle DIV.inner .on {background-position:0px 0px;}
+.trackerArtist .areaTitle DIV.inner .off {background-position:0px -19px;}
+.trackerArtist .areaTitle DIV.inner A.edit {display:block; float:right; margin:4px 2px 0px 0px; width:78px; height:19px; background:url(./images/btn_edit.gif);}
+.trackerArtist .areaTitle DIV.inner A.addepisode {display:block; float:right; margin:4px 2px 0px 0px; width:120px; height:19px; background:url(./images/btn_add_episode.gif);}
+.trackerArtist .areaTitle DIV.inner A.addtorrent {display:block; float:right; margin:4px 2px 0px 0px; width:120px; height:19px; background:url(./images/btn_add_torrent.gif);}
+
+.trackerArtist .areaButton {font:0/0 arial; text-align:right;}
+
+.trackerArtist .viewTitle {padding-left:40px; color:#2F2F2F;}
+.trackerArtist .viewTitle .title {font-weight:bold; font-size:16px; height:18px; line-height:18px; margin-top:5px;}
+.trackerArtist .viewTitle .subinfo {font-weight:normal; font-size:12px; height:14px; line-height:14px; color:#666666;}
+.trackerArtist .viewTitle A:link {text-decoration:none; color:#2F2F2F;}
+.trackerArtist .viewTitle A:hover {text-decoration:underline; color:#000000;}
+.trackerArtist .viewTitle A:visited {text-decoration:none; color:#2F2F2F;}
+.trackerArtist .directorIcon {background:url(./images/icon_director.png) no-repeat 0 50%;}
+
+.trackerArtist .noimage {font-size:12px; line-height:1.8; padding:90px 0px 90px 0px; color:#666666; text-align:center;}
+
+.trackerArtist .infoTable {width:100%; background:#E5E5E5; table-layout:fixed;}
+.trackerArtist .infoTable .header {background:#F4F4F4; text-align:right; padding:8px 8px 8px 0px; font-size:12px; font-weight:bold;}
+.trackerArtist .infoTable .content {background:#FFFFFF; font-size:12px; line-height:1.6; padding:8px;}
+
+.trackerArtist .viewContent {width:535px; border:1px solid #DCDCDC; float:left; padding:4px;}
+.trackerArtist .viewSidebar {width:180px; border:1px solid #DCDCDC; float:right; background:#F4F4F4;}
+.trackerArtist .viewSidebar .thumbnail {border:1px solid #666666; margin:4px;}
+.trackerArtist .viewSidebar .thumbnail IMG {width:170px;}
+
+.trackerArtist .torrentList .groupHeader {height:70px; background:url(./images/bg_group.gif) repeat-x 0;}
+.trackerArtist .torrentList .groupHeader DIV.split {height:70px; background:url(./images/bg_group_left.gif) no-repeat 0 0;}
+.trackerArtist .torrentList .groupInfo {height:33px; overflow:hidden;}
+.trackerArtist .torrentList .groupSplit {height:36px; line-height:36px; border-top:1px solid #DCDCDC; border-left:1px solid #DCDCDC; font-family:tahoma; font-size:11px; letter-spacing:-1px; text-align:center;}
+.trackerArtist .torrentList .categorybox {margin:10px 5px 0px 5px; padding:0px 4px 0px 3px; font-size:11px; line-height:14px; height:14px; float:left; -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; color:#FFFFFF;}
+.trackerArtist .torrentList .categorybox A {color:#FFFFFF; text-decoration:none;}
+
+.trackerArtist .torrentList .category1 {border:1px solid #218907; background:#218907;}
+.trackerArtist .torrentList .category2 {border:1px solid #1049b4; background:#1049b4;}
+.trackerArtist .torrentList .title {height:16px; line-height:15px; margin-top:10px; font-size:12px; font-weight:bold; float:left; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;}
+.trackerArtist .torrentList .title A:link {text-decoration:none; color:#2F2F2F; line-height:15px;}
+.trackerArtist .torrentList .title A:hover {text-decoration:underline; color:#000000;}
+.trackerArtist .torrentList .title A:visited {text-decoration:none; color:#2F2F2F;}
+.trackerArtist .torrentList .subtitle {padding-left:10px; color:#666666; font-size:11px; line-height:2.4; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;}
+.trackerArtist .torrentList .subtitle A:link {text-decoration:none; color:#666666; line-height:2.4;}
+.trackerArtist .torrentList .subtitle A:hover {text-decoration:underline; color:#000000;}
+.trackerArtist .torrentList .subtitle A:visited {text-decoration:none; color:#666666;}
+.trackerArtist .torrentList .hSplit {height:33px; line-height:33px; font-family:tahoma; text-align:center; font-size:11px; letter-spacing:-1px; border-bottom:1px solid #DCDCDC;}
+.trackerArtist .torrentList .hSplitContent {height:36px; line-height:36px; text-align:right; font-family:tahoma; font-weight:bold; color:#666666; font-size:10px; padding-right:5px;}
+.trackerArtist .torrentList .torrentInfo {background-image:url(./images/icon_feed.png); background-repeat:no-repeat; background-position:0 50%; height:28px; line-height:28px; border-left:1px solid #DCDCDC; padding-left:15px; font-size:11px;}
+.trackerArtist .torrentList .torrentInfo A:link {text-decoration:none; color:#666666; line-height:28px;}
+.trackerArtist .torrentList .torrentInfo A:hover {text-decoration:underline; color:#000000;}
+.trackerArtist .torrentList .torrentInfo A:visited {text-decoration:none; color:#666666;}
+.trackerArtist .torrentList .torrentInfo .reg_date {font-family:tahoma; letter-spacing:0px;}
+.trackerArtist .torrentList .torrentSplit {height:28px; line-height:28px; text-align:right; border-left:1px solid #DCDCDC; font-family:tahoma; font-weight:bold; color:#666666; font-size:10px; padding-right:5px;}
+
+.trackerArtist .inputbox {height:16px; padding:3px; border:1px; line-height:16px; border:1px solid #CCCCCC; background-color:#F4F4F4; background-image:url(./images/input_bg.gif); background-repeat:no-repeat; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum;; font-size:12px;}
+.trackerArtist .inputbox:focus {border:1px solid #99BBE8; background-color:#F0F5FA;}
+.trackerArtist .textbox {resize:none; outline:none; width:592px; height:300px; padding:3px; border:1px; line-height:1.6; border:1px solid #CCCCCC; background-color:#F4F4F4; background-image:url(./images/input_bg.gif); background-repeat:no-repeat; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum;; font-size:12px;}
+.trackerArtist .textbox:focus {border:1px solid #99BBE8; background-color:#F0F5FA;}
+.trackerArtist .filebox {width:600px; height:22px; padding:3px 0px 1px 0px; border:1px solid #CCCCCC; background-color:#F4F4F4; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum;; font-size:12px;}
+
+
+/* View */
+.trackerView .areaTitle {height:29px; border:1px solid #B5B7BC; margin-bottom:5px; background:url(./images/bg_areatitle.gif);}
+.trackerView .areaTitle DIV.inner {height:27px; border:1px solid #FFFFFF;}
+.trackerView .areaTitle DIV.inner .text {padding-left:10px; float:left; font-size:12px; font-weight:bold; line-height:26px; height:27px;}
+.trackerView .areaTitle DIV.inner .toggle {float:right; margin:4px 5px 0px 0px; width:19px; height:19px; background-image:url(./images/btn_toggle.gif); background-repeat:no-repeat;cursor:pointer;}
+.trackerView .areaTitle DIV.inner .on {background-position:0px 0px;}
+.trackerView .areaTitle DIV.inner .off {background-position:0px -19px;}
+.trackerView .areaTitle DIV.inner A.edit {display:block; float:right; margin:4px 2px 0px 0px; width:78px; height:19px; background:url(./images/btn_edit.gif);}
+.trackerView .areaTitle DIV.inner A.addepisode {display:block; float:right; margin:4px 2px 0px 0px; width:120px; height:19px; background:url(./images/btn_add_episode.gif);}
+.trackerView .areaTitle DIV.inner A.addtorrent {display:block; float:right; margin:4px 2px 0px 0px; width:120px; height:19px; background:url(./images/btn_add_torrent.gif);}
+
+.trackerView .areaButton {font:0/0 arial; text-align:right;}
+
+.trackerView .viewTitle {padding-left:40px; color:#2F2F2F;}
+.trackerView .viewTitle .title {font-weight:bold; font-size:16px; height:18px; line-height:18px; margin-top:5px;}
+.trackerView .viewTitle .subinfo {font-weight:normal; font-size:12px; height:14px; line-height:14px; color:#666666;}
+.trackerView .viewTitle A:link {text-decoration:none; color:#2F2F2F;}
+.trackerView .viewTitle A:hover {text-decoration:underline; color:#000000;}
+.trackerView .viewTitle A:visited {text-decoration:none; color:#2F2F2F;}
+.trackerView .torrentIcon {background:url(./images/icon_list.png) no-repeat 0 50%;}
+.trackerView .episodeIcon {background:url(./images/icon_list.png) no-repeat 0 50%;}
+.trackerView .groupIcon {background:url(./images/icon_group.png) no-repeat 0 50%;}
+
+
+.trackerView .noimage {font-size:12px; line-height:1.8; padding:90px 0px 90px 0px; color:#666666; text-align:center;}
+
+.trackerView .infoTable {width:100%; background:#E5E5E5; table-layout:fixed;}
+.trackerView .infoTable .header {background:#F4F4F4; text-align:right; padding:8px 8px 8px 0px; font-size:12px; font-weight:bold;}
+.trackerView .infoTable .content {background:#FFFFFF; font-size:12px; line-height:1.6; padding:8px;}
+
+.trackerView .viewContent {width:535px; border:1px solid #DCDCDC; float:left; padding:4px;}
+.trackerView .viewSidebar {width:180px; border:1px solid #DCDCDC; float:right; background:#F4F4F4;}
+.trackerView .viewSidebar .thumbnail {border:1px solid #666666; margin:4px;}
+.trackerView .viewSidebar .thumbnail IMG {width:170px;}
+
+.trackerView .viewSidebar .viewPoint .star {width:75px; height:15px; background:url(./images/star_mid_bg.png); float:left; margin:5px 0px 5px 5px;}
+.trackerView .viewSidebar .viewPoint .star .on {height:15px; background:url(./images/star_mid_on.png);}
+.trackerView .viewSidebar .viewPoint .point {float:right; height:15px; line-height:15px; color:#F65D70; font-family:tahoma; font-size:12px; font-weight:bold; margin:5px 5px 5px 0px;}
+
+.trackerView .torrentList {width:100%; table-layout:fixed; background:#DCDCDC;}
+.trackerView .torrentList .tHead DIV {height:28px; font-family:tahoma; font-size:11px; border:0px; border-top:1px solid #FFFFFF; border-left:1px solid #FFFFFF; text-align:center; background:#F4F4F4; line-height:28px;}
+.trackerView .torrentList .tBody {background-color:#FFFFFF; font-size:12px; height:25px;}
+.trackerView .torrentList .tBody TD.episodeTitle {background:#F8F8F8 url(./images/icon_folder.png) no-repeat 0 50%; padding-left:20px; color:#2F2F2F; font-weight:bold; height:30px;}
+
+.trackerView .torrentList .count {text-align:right; padding-right:5px; font-family:tahoma; font-size:11px;}
+.trackerView .torrentTitle {background-image:url(./images/icon_feed.png); background-repeat:no-repeat; background-position:0 50%; padding-left:15px; color:#666666;}
+.trackerView .torrentTitle A:link {text-decoration:none; color:#666666;}
+.trackerView .torrentTitle A:hover {text-decoration:underline; color:#2F2F2F;}
+.trackerView .torrentTitle A:visited {text-decoration:underline; color:#666666;}
+
+.trackerView .torrentContent {padding:10px; line-height:2.0; background:#FFFFFF;}
+
+.trackerView .loadingbox {border:1px solid #E5E5E5; background:url(./images/icon_loader.gif) no-repeat 50% 50px; padding:80px 0px 40px 0px; font-size:12px; text-align:center; line-height:2.0;}
+
+/* Ment */
+.trackerMent .selectVote {cursor:pointer; border:1px solid #BFBFBF; height:58px; background:#FAFAFA url(./images/arrow_vote.gif) no-repeat 95px 50%; line-height:58px; font-size:12px; padding-left:10px;}
+.trackerMent .selectVote .star {width:55px; height:10px; margin-top:24px; background:url(./images/star_small_bg.png); float:left;}
+.trackerMent .selectVote .star .on {height:10px; background:url(./images/star_small_on.png);}
+.trackerMent .selectVote .point {float:right; margin:24px 28px 0px 0px; height:10px; color:#F65D70; font-family:tahoma; font-size:10px; font-weight:bold;}
+
+.trackerMent .inputarea {border:1px solid #BFBFBF; border-left:0px; border-right:0px; height:58px; padding-left:5px;}
+.trackerMent .inputarea .textbox {border:0px; width:100%; resize:none; outline:none; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; height:48px; font-size:12px; padding:5px 0px 5px 0px; line-height:1.6;}
+.trackerMent .selectVoteList {border:1px solid #BFBFBF; border-top:0px; background:#FAFAFA; padding:2px; position:absolute; z-index:1; width:114px; top:42px; left:0px;}
+.trackerMent .selectVoteList UL {list-style-type:none;}
+.trackerMent .selectVoteList LI {height:15px; padding:2px 4px 2px 4px; cursor:pointer; font-size:12px; color:#666666;}
+.trackerMent .selectVoteList LI.select {background:#E5E5E5;}
+.trackerMent .selectVoteList .star {width:75px; height:15px; background:url(./images/star_mid_bg.png); float:left;}
+.trackerMent .selectVoteList .star .on {height:15px; background:url(./images/star_mid_on.png);}
+.trackerMent .selectVoteList .point {float:right; height:15px; line-height:14px; color:#F65D70; font-family:tahoma; font-size:11px; font-weight:bold;}
+
+.trackerMent .listName {margin-right:10px; border-right:1px solid #CCCCCC; height:12px; line-height:12px; font-family:tahoma; font-size:11px; font-weight:bold; color:#4F4F4F;}
+.trackerMent .listVote .star {width:55px; height:10px; margin-top:1px; background:url(./images/star_small_bg.png); float:left;}
+.trackerMent .listVote .star .on {height:10px; background:url(./images/star_small_on.png);}
+.trackerMent .listVote .point {float:right; margin:1px 0px 0px 0px; height:10px; color:#F65D70; font-family:tahoma; font-size:10px; font-weight:bold;}
+.trackerMent .listTorrent {margin-left:10px; border-left:1px solid #CCCCCC; padding-left:5px; height:12px; line-height:12px; font-family:tahoma, NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; color:#666666;}
+.trackerMent .listDate {font-family:tahoma; font-size:11px; text-align:right; color:#666666;}
+.trackerMent .listContent {font-size:12px; line-height:1.6; color:#666666; margin:10px 0px 5px 0px;}
+
+.trackerMent .pageinfo {text-align:center; font-family:verdana; color:#2F2F2F; font-size:10px;}
+.trackerMent .pageinfo SPAN {font-family:verdana;}
+.trackerMent .pagenav {width:100%; height:26px; text-align:center;}
+.trackerMent .pagenav STRONG {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#FA6F46; border:1px solid #E9E9E9;}
+.trackerMent .pagenav A:link {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.trackerMent .pagenav A:hover {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; background:#F4F4F4; text-decoration:none;}
+.trackerMent .pagenav A:visited {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.trackerMent .pagenav A:active {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.trackerMent .pagenav SPAN {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#DDDDDD; border:1px solid #E9E9E9; text-decoration:none;}

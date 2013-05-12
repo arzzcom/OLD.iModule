@@ -1,0 +1,134 @@
+#AutoSaverAlertBox {position:absolute; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; float:left; padding:8px; background:#C10000; color:#FFFF80; z-index:1000;}
+
+.ModuleBoard .keyword {background:#FFFFEA; color:#C60000;}
+
+/* List */
+.ModuleBoard .listbar {height:32px; background:url(./images/listbar_bg.gif);}
+.ModuleBoard .listbar .left {background:url(./images/listbar_left.gif);}
+.ModuleBoard .listbar .right {background:url(./images/listbar_right.gif);}
+.ModuleBoard .listbar .text {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; font-weight:bold; color:#666666; text-align:center;}
+.ModuleBoard .listrow {height:28px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px;}
+.ModuleBoard .listrow .number {font-family:tahoma; font-size:11px;}
+.ModuleBoard .listrow A:link {color:#2F2F2F; text-decoration:none;}
+.ModuleBoard .listrow A:hover {color:#82C118; text-decoration:underline;}
+.ModuleBoard .listrow A:visited {color:#2F2F2F; text-decoration:none;}
+.ModuleBoard .listrow A:active {color:#2F2F2F; text-decoration:none;}
+.ModuleBoard .listrow .title {height:12px; overflow:hidden; margin:5px 0px 5px 0px;}
+.ModuleBoard .listrow .info {font-family:tahoma; font-size:11px; text-align:right; line-height:1.5;}
+.ModuleBoard .listrow .ment {color:#FA6F46; font-weight:bold;}
+.ModuleBoard .listrowbar {height:1px; overflow:hidden; background:#E5E5E5;}
+.ModuleBoard .noticerow {background:#F4F4F4 !important;}
+.ModuleBoard .pageinfo {text-align:center; font-family:verdana; color:#2F2F2F; font-size:10px;}
+.ModuleBoard .category {color:#666666;}
+.ModuleBoard .select {color:#78BD37;}
+.ModuleBoard .thumbneil {width:176px; height:110px; border:2px solid #E5E5E5; background-repeat:no-repeat; background-position:50% 50%; cursor:pointer; margin:5px 0px 5px 0px;}
+
+.ModuleBoard .pagenav {width:100%; height:26px; text-align:center;}
+.ModuleBoard .pagenav STRONG {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#FA6F46; border:1px solid #E9E9E9;}
+.ModuleBoard .pagenav A:link {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.ModuleBoard .pagenav A:hover {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; background:#F4F4F4; text-decoration:none;}
+.ModuleBoard .pagenav A:visited {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.ModuleBoard .pagenav A:active {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.ModuleBoard .pagenav SPAN {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#DDDDDD; border:1px solid #E9E9E9; text-decoration:none;}
+
+.ModuleBoard .searchbox {width:401px; padding:10px; margin:0 auto; border:1px dotted #CCCCCC;}
+.ModuleBoard .searchbox .checkboxon {font:0/0 arial; display:inline-block; width:15px; height:15px; background:url(./images/btn_checkbox.gif) no-repeat 0 -15px; cursor:pointer; overflow:hidden; margin-right:5px;}
+.ModuleBoard .searchbox .checkboxoff {font:0/0 arial; display:inline-block; width:15px; height:15px; background:url(./images/btn_checkbox.gif) no-repeat 0 0; cursor:pointer; overflow:hidden; margin-right:5px;}
+.ModuleBoard .searchbox .text {display:inline-block; height:15px; line-height:15px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; overflow:hidden; color:#4F4F4F; margin-right:10px;}
+.ModuleBoard .searchbox .searchinput {width:200px; height:22px; border:2px solid #51AF10; font:0/0 arial; position:relative; margin:0 auto;}
+.ModuleBoard .searchbox .searchinput .inputbox {width:170px; height:14px; border:1px solid #51AF10; padding:3px 0px 3px 3px; margin:0px;font-size:12px; font-weight:bold; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; float:left;}
+.ModuleBoard .searchbox .buttonbox {width:25px; height:22px; background-image:url(./images/btn_search.gif); background-repeat:repeat; float:right; border:0px; cursor:pointer; background-position:0px 0px;}
+.ModuleBoard .searchbox .buttonbox:hover {background-position:0px 22px;}
+.ModuleBoard .searchbox .livelist {position:absolute; width:172px; top:22px; left:1px; z-index:100; border:1px solid #C8C8C8; border-top:0px; background:#FFFFFF; font-size:12px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#888888;}
+.ModuleBoard .searchbox .livelist DIV {padding:5px 3px 5px 3px; margin:2px; cursor:pointer;}
+.ModuleBoard .searchbox .livelist DIV:hover {padding:5px 3px 5px 3px; margin:2px; background:#E5E5E5; cursor:pointer;}
+
+
+/* View */
+.ModuleBoard .viewbar {height:32px; background:url(./images/listbar_bg.gif); overflow:hidden;}
+.ModuleBoard .viewbar .left {background:url(./images/listbar_left.gif); overflow:hidden;}
+.ModuleBoard .viewbar .right {background:url(./images/listbar_right.gif); overflow:hidden;}
+.ModuleBoard .viewbar .title {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; color:#2F2F2F; font-weight:bold; height:32px; overflow:hidden;}
+
+.ModuleBoard .postinfor {margin-top:10px; padding:10px; border:1px dotted #CCCCCC;}
+.ModuleBoard .postinfor .photo {width:60px; height:60px; border:2px solid #CCCCCC;}
+.ModuleBoard .postinfor .detail {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; color:#2F2F2F;}
+.ModuleBoard .postinfor .detail DIV {margin:5px 0px 5px 0px;}
+.ModuleBoard .postinfor .detail .dotted {height:2px; margin-top:5px; border-top:1px dashed #CCCCCC; overflow:hidden;}
+.ModuleBoard .postinfor .detail .disable {color:#CCCCCC;}
+
+.ModuleBoard UL.filelist {list-style-type:none; background:#F4F4F4; border:1px solid #E5E5E5; color:#4F4F4F;}
+.ModuleBoard UL.filelist LI {margin:5px; font-family:verdana, NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; background:url(./images/icon_file.gif) no-repeat 0 50%; padding-left:15px;}
+.ModuleBoard .filelist A:link {text-decoration:none; color:#4F4F4F;}
+.ModuleBoard .filelist A:hover {text-decoration:underline; color:#2F2F2F;}
+.ModuleBoard .filelist A:visited {text-decoration:none; color:#4F4F4F;}
+.ModuleBoard .filelist A:active {text-decoration:none; color:#4F4F4F;}
+
+.ModuleBoard .mentbar {height:38px; background:url(./images/mentbar_bg.gif);}
+.ModuleBoard .mentbar .reply {background:#FFFFFF url(./images/icon_ment_reply.gif) no-repeat 0px 5px;}
+.ModuleBoard .mentbar .left {background:url(./images/mentbar_left.gif) no-repeat;}
+.ModuleBoard .mentbar .photo IMG {width:30px; height:30px; border:1px solid #CCCCCC;}
+.ModuleBoard .mentbar .right {background:url(./images/mentbar_right.gif);}
+.ModuleBoard .mentbar .name {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; color:#2F2F2F;}
+.ModuleBoard .mentbar .subname {padding-left:15px; background:url(./images/icon_ment_subname.gif) no-repeat 3px 2px; margin-top:2px; font-family:verdana; font-size:10px; color:#797979;}
+.ModuleBoard .mentbar .subname A {font-family:verdana; font-size:10px; text-decoration:none; color:#4280C3;}
+.ModuleBoard .mentbar .subname A:HOVER {text-decoration:underline;}
+.ModuleBoard .mentbar .disable {color:#CCCCCC; font-family:verdana; font-size:10px;}
+.ModuleBoard .mentbar .infor {font-family:verdana; font-size:10px; color:#797979; text-align:right;}
+.ModuleBoard .mentbar .infor .date {margin-bottom:3px; font-family:verdana; font-size:10px;}
+.ModuleBoard .mentbar .bar {color:#D9C6CF;}
+.ModuleBoard .mentbar .button {font-weight:bold; cursor:pointer; font-family:verdana; font-size:10px;}
+.ModuleBoard .mentbar .button A {color:#797979; text-decoration:none; font-weight:bold; cursor:pointer; font-family:verdana; font-size:10px;}
+.ModuleBoard .mentthin {height:5px; overflow:hidden; background:url(./images/mentthin_bg.gif);}
+.ModuleBoard .mentthin .left {background:url(./images/mentthin_left.gif);}
+.ModuleBoard .mentthin .right {background:url(./images/mentthin_right.gif);}
+.ModuleBoard .mentbody {margin:5px 0px 10px 0px;}
+.ModuleBoard .mentdelete {border:1px solid #F4EE8A; background:#FDFBD0; color:#FB5312; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; padding:5px; text-align:center; line-height:1.6;}
+
+.ModuleBoard .selectbar {height:38px; overflow:hidden; background:url(./images/selectbar_bg.gif);}
+.ModuleBoard .selectbar .reply {background:#FFFFFF url(./images/icon_ment_reply.gif) no-repeat 0px 5px;}
+.ModuleBoard .selectbar .left {background:url(./images/selectbar_left.gif) no-repeat;}
+.ModuleBoard .selectbar .photo IMG {width:30px; height:30px; border:1px solid #CCCCCC;}
+.ModuleBoard .selectbar .right {background:url(./images/selectbar_right.gif);}
+.ModuleBoard .selectbar .name {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; color:#2F2F2F;}
+.ModuleBoard .selectbar .subname {padding-left:15px; background:url(./images/icon_ment_subname.gif) no-repeat 3px 2px; margin-top:2px; font-family:verdana; font-size:10px; color:#797979;}
+.ModuleBoard .selectbar .subname A {font-family:verdana; font-size:10px; text-decoration:none; color:#4280C3;}
+.ModuleBoard .selectbar .subname A:HOVER {text-decoration:underline;}
+.ModuleBoard .selectbar .disable {color:#CCCCCC; font-family:verdana; font-size:10px;}
+.ModuleBoard .selectbar .infor {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; color:#269134; text-align:right;}
+.ModuleBoard .selectbar .infor .date {margin-bottom:3px; font-family:verdana; font-size:10px; color:#797979;}
+.ModuleBoard .selectbar .bar {color:#D9C6CF;}
+.ModuleBoard .selectbar .button {font-weight:bold; cursor:pointer; font-family:verdana; font-size:10px;}
+.ModuleBoard .selectbar .button A {color:#797979; text-decoration:none; font-weight:bold; cursor:pointer; font-family:verdana; font-size:10px;}
+.ModuleBoard .selectthin {height:5px; overflow:hidden; background:url(./images/mentthin_bg.gif);}
+.ModuleBoard .selectbody {padding:5px 5px 10px 5px; background:#FFFFEC; border:1px solid #CCCCCC; border-top:0px;}
+
+.ModuleBoard .mentthin {height:5px; overflow:hidden; background:url(./images/mentthin_bg.gif);}
+.ModuleBoard .mentthin .left {background:url(./images/mentthin_left.gif);}
+.ModuleBoard .mentthin .right {background:url(./images/mentthin_right.gif);}
+.ModuleBoard .infor {color:#82C118; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px;}
+.ModuleBoard .pointText {color:#82C118; font-weight:bold;}
+.ModuleBoard .inputbox {border:1px solid #D6D6D6; height:14px; padding:3px; background:url(./images/inputbox_bg.gif) repeat-x top; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; color:#4F4F4F; margin:5px 0px 5px 10px;}
+.ModuleBoard .inputbox-on {border:1px solid #A2BAEA;height:14px; padding:3px;  background:url(./images/inputbox_bg_on.gif) repeat-x top; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; color:#4F4F4F; margin:5px 0px 5px 10px;}
+.ModuleBoard .optionarea {border:1px dotted #CCCCCC; background:#F4F4F4; padding:3px; margin:5px 0px 5px 0px;}
+.ModuleBoard .checkbox {clear:both; height:14px; padding:3px; margin:5px 0px 5px 0px;}
+.ModuleBoard .checkbox INPUT {width:13px; height:13px; margin:0px 8px 0px 0px; float:left;}
+.ModuleBoard .checkbox LABEL {float:left; height:13px; cursor:pointer; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; display:block; padding:0px;}
+.ModuleBoard .selecttext {float:right; background:#FFFFEC url(./images/icon_tick.png) no-repeat 5px 2px; border:1px solid #CCCCCC; padding:5px 5px 5px 25px; cursor:pointer; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px;}
+
+
+.ModuleBoard .lastModify {margin:5px 0px 5px 0px; font-family:verdana; font-size:10px; text-align:right;}
+.ModuleBoard .dashed {height:1px; overflow:hidden; background:url(./images/dashed.gif);}
+
+/* UserMenu */
+.ModuleBoard .UserMenu {background:#F0F0F0; border:1px solid #718BB7; width:120px; display:inline; margin:0px !important; padding:0px !important;}
+.ModuleBoard .UserMenuItem {background-position:2px 2px; background-repeat:no-repeat; padding:0px 0px 0px 24px !important; height:24px; text-align:left; margin:1px !important; border:1px solid transparent; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; line-height:24px; font-weight:normal;}
+.ModuleBoard .UserMenuItem:HOVER {border:1px solid #A3BAE9; background-color:#DFE8F6; color:#3A428B;}
+
+.ModuleBoard .PointGift {background-image:url(./images/icon_gift.png);}
+.ModuleBoard .SendMessage {background-image:url(./images/icon_note_edit.png);}
+.ModuleBoard .SendEmail {background-image:url(./images/icon_email_open.png);}
+.ModuleBoard .GoHomepage {background-image:url(./images/icon_homepage.png);}
+
+.ModuleBoard .antispam {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; line-height:1.6;}
+.ModuleBoard .antispam INPUT {border:1px solid #D6D6D6; height:14px; padding:3px; background:url(./images/inputbox_bg.gif) repeat-x top; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; color:#4F4F4F;}

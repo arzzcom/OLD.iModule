@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<title>메일발송</title>
+	<version>1.0.0</version>
+	<path>/module/mail</path>
+	<setup>TRUE</setup>
+	<manager>TRUE</manager>
+	<config>
+		<set title="SMTP서버 설정">
+			<smtp_server>
+				<name>SMTP서버</name>
+				<type>input</type>
+				<allowblank>true</allowblank>
+				<default></default>
+				<msg>다른 SMTP서버를 사용할 경우 SMTP도메인를 입력합니다.</msg>
+			</smtp_server>
+			<smtp_port>
+				<name>SMTP포트</name>
+				<type>number</type>
+				<allowblank>true</allowblank>
+				<default></default>
+				<msg></msg>
+			</smtp_port>
+			<smtp_secure>
+				<name>SMTP종류</name>
+				<type>select</type>
+				<allowblank>true</allowblank>
+				<default>tls</default>
+				<option>["TLS","tls"],["SSL","ssl"]</option>
+				<msg></msg>
+			</smtp_secure>
+			<smtp_user>
+				<name>SMTP아이디</name>
+				<type>input</type>
+				<allowblank>true</allowblank>
+				<default></default>
+				<msg>다른 SMTP서버를 사용할 경우 SMTP 인증아이디를 입력합니다.</msg>
+			</smtp_user>
+			<smtp_password>
+				<name>SMTP암호</name>
+				<type>password</type>
+				<allowblank>true</allowblank>
+				<default></default>
+				<msg>다른 SMTP서버를 사용할 경우 SMTP 인증암호를 입력합니다.</msg>
+			</smtp_password>
+		</set>
+		<set title="기본값설정">
+			<email>
+				<name>회신메일주소</name>
+				<type>input</type>
+				<allowblank>false</allowblank>
+				<msg></msg>
+			</email>
+			<name>
+				<name>보내는사람</name>
+				<type>input</type>
+				<allowblank>false</allowblank>
+				<default></default>
+				<msg></msg>
+			</name>
+		</set>
+	</config>
+</module>

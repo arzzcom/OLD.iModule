@@ -1,0 +1,134 @@
+#AutoSaverAlertBox {position:absolute; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; float:left; padding:8px; background:#C10000; color:#FFFF80; z-index:1000;}
+
+.ModuleKin .tabBarArea {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; height:37px; background:url(./images/bg_tab.gif); border-left:1px solid #BCBCBC; border-right:1px solid #BCBCBC;}
+.ModuleKin .tabBarArea DIV {height:36px; float:left; border-top:1px solid #BCBCBC; border-right:1px solid #BCBCBC; cursor:pointer; font-weight:bold; padding:0px 15px 0px 15px;}
+.ModuleKin .tabBarArea .on {background:#FFFFFF; line-height:40px; color:#2F2F2F;}
+.ModuleKin .tabBarArea .off {line-height:36px; color:#666666;}
+
+.ModuleKin .listArea {border:1px solid #BCBCBC; border-top:0px;}
+
+.ModuleKin .listHeader {font-size:11px; font-weight:bold; height:30px; color:#666666;}
+.ModuleKin .listHeaderBar {height:1px; background:#E0E0E0; overflow:hidden;}
+.ModuleKin .listBar {height:1px; background:#F4F4F4; overflow:hidden;}
+.ModuleKin .listBody {height:28px; font-size:12px;}
+.ModuleKin .listName {color:#986C49; font-size:11px;}
+.ModuleKin .listAnswer {color:#2D760B; font-family:tahoma; font-size:10px; font-weight:bold;}
+.ModuleKin .newAnswer {padding-left:10px; background:url(./images/icon_new.gif) no-repeat 0 50%;}
+.ModuleKin .listDate {font-size:10px; font-family:tahoma; color:#666666;}
+.ModuleKin .selectAnswer {font-size:11px; color:#FFFFFF; background:#2D760B; padding:2px; height:12px; line-height:12px; width:45px; text-align:center;}
+.ModuleKin .listBody A:link {color:#2F2F2F; text-decoration:none;}
+.ModuleKin .listBody A:hover {color:#82C118; text-decoration:underline;}
+.ModuleKin .listBody A:visited {color:#2F2F2F; text-decoration:none;}
+.ModuleKin .listBody A:active {color:#2F2F2F; text-decoration:none;}
+.ModuleKin .isRewrite {color:#2D760B;}
+
+.ModuleKin .pagenav {width:100%; height:26px; text-align:center;}
+.ModuleKin .pagenav STRONG {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#FA6F46; border:1px solid #E9E9E9;}
+.ModuleKin .pagenav A:link {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.ModuleKin .pagenav A:hover {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; background:#F4F4F4; text-decoration:none;}
+.ModuleKin .pagenav A:visited {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.ModuleKin .pagenav A:active {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.ModuleKin .pagenav SPAN {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#DDDDDD; border:1px solid #E9E9E9; text-decoration:none;}
+.ModuleKin .pageinfo {text-align:center; font-family:verdana; color:#2F2F2F; font-size:10px;}
+
+.ModuleKin .questionbox {border:1px solid #C9C9C9; background:url(./images/bg_question.gif) repeat-x top;}
+.ModuleKin .questionbox .boxIcon {margin:33px 0px 0px 20px;}
+.ModuleKin .questionbox .viewTitle {color:#2F2F2F; font-weight:bold; font-size:14px; height:16px; margin:38px 0px 3px 0px;}
+.ModuleKin .selectedbox {border:1px solid #C9C9C9; border-top:0px; background:url(./images/bg_answer.gif) repeat-x top;}
+.ModuleKin .selectedbox .boxIcon {margin:0px 0px 0px 10px;}
+.ModuleKin .selectedbox .viewTitle {color:#2F2F2F; font-weight:bold; font-size:14px; height:16px; margin:30px 0px 3px 0px;}
+.ModuleKin .answerbox {border:1px solid #C9C9C9; border-top:0px; background:url(./images/bg_answer.gif) repeat-x top;}
+.ModuleKin .answerbox .boxIcon {margin:33px 0px 0px 20px;}
+.ModuleKin .answerbox .viewTitle {color:#2F2F2F; font-weight:bold; font-size:14px; height:16px; margin:38px 0px 3px 0px;}
+
+.ModuleKin .completebox {border:1px solid #C9C9C9; border-top:0px; padding:20px 8px 20px 8px;}
+.ModuleKin .completebox .text {background:url(./images/icon_exclamation.gif) no-repeat 5px 2px; padding-left:25px; font-size:12px; line-height:1.6;}
+.ModuleKin .completebox .text .pointText {color:#268F24; font-weight:bold; letter-spacing:0px;}
+
+.ModuleKin .viewPhotoIcon {width:18px; height:18px; border:1px solid #CCCCCC;}
+.ModuleKin .viewInfoUser {font-size:11px;}
+.ModuleKin .viewInfoUser DIV.innerLayer {float:left; margin-right:5px;}
+.ModuleKin .viewInfoText {color:#666666; font-size:11px; text-align:right; padding-right:8px;}
+.ModuleKin .viewInfoText .button {padding-top:30px;}
+.ModuleKin .viewInfoText .button .btnVote {text-align:center; width:127px; height:37px; cursor:pointer; background:url(./images/btn_vote.gif) no-repeat 0px 0px;}
+.ModuleKin .viewInfoText .button .btnVote DIV {background:url(./images/icon_vote.gif) no-repeat 0px 50%; height:37px; padding-left:18px; line-height:36px; font-family:tahoma; font-size:16px; font-weight:bold; color:#DF3F0D; display:inline-block;}
+.ModuleKin .viewInfoText .button .over {background-position:0px -37px;}
+.ModuleKin .viewInfoText .button .over DIV {display:none;}
+
+.ModuleKin .pointText {color:#2C5FA1; font-weight:bold; letter-spacing:-1px;}
+.ModuleKin .viewContent {margin-top:20px; padding:10px 15px 10px 15px;}
+.ModuleKin .viewContent .thanksMessage {border:1px solid #E5E5E5; background:#F4F4F4; font-size:12px; line-height:1.6; padding:12px; margin-bottom:10px;}
+.ModuleKin .viewContent .thanksMessage SPAN {font-weight:bold; color:#268F24; line-height:1.6;}
+
+.ModuleKin UL.filelist {list-style-type:none; background:#F4F4F4; border:1px solid #E5E5E5; color:#4F4F4F;}
+.ModuleKin UL.filelist LI {margin:5px; font-family:verdana, NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; background:url(./images/icon_file.gif) no-repeat 0 50%; padding-left:15px;}
+.ModuleKin .filelist A:link {text-decoration:none; color:#4F4F4F;}
+.ModuleKin .filelist A:hover {text-decoration:underline; color:#2F2F2F;}
+.ModuleKin .filelist A:visited {text-decoration:none; color:#4F4F4F;}
+.ModuleKin .filelist A:active {text-decoration:none; color:#4F4F4F;}
+.ModuleKin .writeAnswerbox {border-top:1px solid #E5E5E5; margin-top:10px; padding:20px 8px 0px 8px;}
+.ModuleKin .writeAnswerbox .text {background:url(./images/icon_exclamation.gif) no-repeat 5px 2px; padding-left:25px; font-size:12px; line-height:1.6;}
+.ModuleKin .writeAnswerbox .text .pointText {color:#268F24; font-weight:bold; letter-spacing:0px;}
+
+.ModuleKin .mentAreaBox {padding:20px 15px 0px 15px;}
+.ModuleKin .mentbox {margin:0px;}
+.ModuleKin .mentUserbox {width:95%; padding:4px; border:1px transparent; margin:0 auto; position:relative; height:20px;}
+.ModuleKin .mentUserbox DIV {position:absolute; top:0px; left:0px;}
+.ModuleKin .mentUserbox .text {font-size:11px; color:#666666;}
+.ModuleKin .mentwritebox {border:1px solid #E3E3E3; background:#FAFAFA; padding:10px;}
+.ModuleKin .mentPhoto {width:40px; height:40px; border:1px solid #CCCCCC;}
+.ModuleKin .mentInputbox {border-top:1px solid #D1D1D1; border-left:1px solid #D1D1D1; border-right:1px solid #E9E9E9; border-bottom:1px solid #E9E9E9; padding:3px; font-size:12px; width:100px; height:14px; line-height:14px;}
+.ModuleKin .mentTextbox {border-top:1px solid #D1D1D1; border-left:1px solid #D1D1D1; border-right:1px solid #E9E9E9; border-bottom:1px solid #E9E9E9; padding:4px; font-size:12px; width:95%; height:63px;}
+.ModuleKin .mentPhoto {width:40px; height:40px; border:1px solid #CCCCCC;}
+.ModuleKin .mentName {font-weight:bold; font-size:12px; height:25px;}
+.ModuleKin .mentName DIV.innerLayer {float:left; margin-right:5px;}
+.ModuleKin .mentName .mentInfo {font-size:11px; color:#666666; font-weight:normal;}
+.ModuleKin .mentInfo {color:#666666; text-align:right; font-size:11px;}
+.ModuleKin .mentContent {color:#2F2F2F; font-size:12px; line-height:1.6;}
+
+.ModuleKin .subButton {height:25px; font-size:12px; color:#CCCCCC;}
+.ModuleKin .subButton DIV {text-decoration:underline; color:#2F2F2F; font-weight:bold;}
+.ModuleKin .subButton SPAN.pointText {text-decoration:underline; color:#268F24 !important;}
+.ModuleKin .subButton A:link {text-decoration:none; color:#2F2F2F;}
+.ModuleKin .subButton A:hover {text-decoration:underline; color:#2F2F2F;}
+.ModuleKin .subButton A:visited {text-decoration:none; color:#4F4F4F;}
+.ModuleKin .subButton A:active {text-decoration:none; color:#4F4F4F;}
+
+.ModuleKin .writeBoxTitle {border:1px solid #B7B7B7; background:#F4F4F4; border-bottom:0px;}
+.ModuleKin .writeBoxTitle .inputTitle {border:1px solid #CCCCCC; width:95%; height:20px; font-size:14px; font-weight:bold; color:#2F2F2F; padding:3px; margin:10px 10px 10px 0px;}
+.ModuleKin .writeBox {border:1px solid #B7B7B7; border-top:0px;}
+.ModuleKin .writeBox .boxTitle {border-top:1px solid #FFFFFF; border-left:1px solid #FFFFFF; border-bottom:1px solid #E5E5E5; background:#F9F9F9; padding:12px; font-size:14px; font-weight:bold;}
+.ModuleKin .writeBox .boxContent {padding:10px;}
+.ModuleKin .writeBox .boxContent .categoryBox {border:1px solid #E5E5E5; border-top:1px solid #CCCCCC; border-left:1px solid #CCCCCC; padding:0px; overflow-y:scroll; height:150px;}
+.ModuleKin .writeBox .boxContent .categoryBox LI {margin:3px; padding:5px; font-size:12px; color:#666666; border:1px solid #FFFFFF; cursor:pointer;}
+.ModuleKin .writeBox .boxContent .categoryBox LI.over {background:#F4F4F4; color:#2F2F2F;}
+.ModuleKin .writeBox .boxContent .categoryBox LI.select {background:#F4F4F4; color:#2F2F2F; border:1px solid #CCCCCC; font-weight:bold;}
+.ModuleKin .writeBox .formHeader {height:32px; padding-left:15px; font-weight:bold; background:#F4F4F4; border-top:1px solid #FFFFFF; border-left:1px solid #FFFFFF; border-right:1px solid #E5E5E5; margin-right:15px; font-size:12px; line-height:32px;}
+.ModuleKin .writeBox .writeLine {height:1px; overflow:hidden; background:#E5E5E5;}
+.ModuleKin .writeBox .inputShort {border:1px solid #CCCCCC; height:14px; padding:3px; width:100px; font-size:12px; line-height:12px;}
+.ModuleKin .writeBox .inputLong {border:1px solid #CCCCCC; height:14px; padding:3px; width:400px; font-size:12px; line-height:12px;}
+
+.ModuleKin .searchbox {width:401px; padding:10px; margin:0 auto; border:1px dotted #CCCCCC;}
+.ModuleKin .searchbox .checkboxon {font:0/0 arial; display:inline-block; width:15px; height:15px; background:url(./images/btn_checkbox.gif) no-repeat 0 -15px; cursor:pointer; overflow:hidden; margin-right:5px; vertical-align:middle;}
+.ModuleKin .searchbox .checkboxoff {font:0/0 arial; display:inline-block; width:15px; height:15px; background:url(./images/btn_checkbox.gif) no-repeat 0 0; cursor:pointer; overflow:hidden; margin-right:5px; vertical-align:middle;}
+.ModuleKin .searchbox .text {display:inline-block; height:15px; line-height:15px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; overflow:hidden; color:#4F4F4F; margin-right:10px;}
+.ModuleKin .searchbox .searchinput {width:200px; height:22px; border:2px solid #51AF10; font:0/0 arial; position:relative; margin:0 auto;}
+.ModuleKin .searchbox .searchinput .inputbox {width:170px; height:14px; border:1px solid #51AF10; padding:3px 0px 3px 3px; margin:0px;font-size:12px; font-weight:bold; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; float:left;}
+.ModuleKin .searchbox .buttonbox {width:25px; height:22px; background-image:url(./images/btn_search.gif); background-repeat:repeat; float:right; border:0px; cursor:pointer; background-position:0px 0px;}
+.ModuleKin .searchbox .buttonbox:hover {background-position:0px 22px;}
+.ModuleKin .searchbox .livelist {position:absolute; width:172px; top:22px; left:1px; z-index:100; border:1px solid #C8C8C8; border-top:0px; background:#FFFFFF; font-size:12px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#888888;}
+.ModuleKin .searchbox .livelist DIV {padding:5px 3px 5px 3px; margin:2px; cursor:pointer;}
+.ModuleKin .searchbox .livelist DIV:hover {padding:5px 3px 5px 3px; margin:2px; background:#E5E5E5; cursor:pointer;}
+
+/* UserMenu */
+.ModuleKin .UserMenu {color:#2F2F2F; background:#F0F0F0; border:1px solid #718BB7; width:120px; display:inline; margin:0px !important; padding:0px !important;}
+.ModuleKin .UserMenuItem {background-position:2px 2px; background-repeat:no-repeat; padding:0px 0px 0px 24px !important; height:24px; text-align:left; margin:1px !important; border:1px solid transparent; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; line-height:24px; font-weight:normal;}
+.ModuleKin .UserMenuItem:HOVER {border:1px solid #A3BAE9; background-color:#DFE8F6; color:#3A428B;}
+
+.ModuleKin .PointGift {background-image:url(./images/icon_gift.png);}
+.ModuleKin .SendMessage {background-image:url(./images/icon_note_edit.png);}
+.ModuleKin .SendEmail {background-image:url(./images/icon_email_open.png);}
+.ModuleKin .GoHomepage {background-image:url(./images/icon_homepage.png);}
+
+.ModuleKin .antispam {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; line-height:1.6;}
+.ModuleKin .antispam INPUT {border:1px solid #D6D6D6; height:14px; padding:3px; background:url(./images/inputbox_bg.gif) repeat-x top; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; color:#4F4F4F;}

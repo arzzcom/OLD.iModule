@@ -1,0 +1,13 @@
+BODY {background:#2F2F2F;}
+.loginTitle {height:80px; background:#000000;}
+.loginTitle DIV {width:440px; height:80px; margin:0 auto; background:url(./images/title.gif);}
+.loginBox {width:420px; padding:10px; margin:10px auto; border:5px solid #4F4F4F; background:#000000;}
+.loginBox .inputbox {border:2px solid #4F4F4F; background:#2F2F2F; color:#EEEEEE; font-family:verdana; font-size:16px; padding:3px; width:290px; height:18px;}
+.loginBox .checkbox {width:13px; height:13px;}
+.loginBox LABEL {cursor:pointer;}
+.loginButton {margin:10px 5px 0px 5px; border-top:1px dashed #4F4F4F; text-align:right; font:0/0 arial; padding-top:10px;}
+
+.errorTitle {height:80px; background:#000000;}
+.errorTitle DIV {width:440px; height:80px; margin:0 auto; background:url(./images/error_title.gif);}
+.errorBox {width:420px; padding:10px; margin:10px auto; border:5px solid #4F4F4F; background:#000000; color:#CCCCCC; font-size:14px; font-weight:bold; font-family:돋움; line-height:160%;}
+.errorButton {width:430px; padding:10px; margin:10px auto; font:0/0 arial; text-align:center;}

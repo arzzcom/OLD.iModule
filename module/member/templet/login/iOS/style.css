@@ -1,0 +1,32 @@
+BODY {margin:0; font-family:Helvetica; background:#FFFFFF; color:#000000; -webkit-user-select:none; -webkit-text-size-adjust:none; overflow-x:hidden;}
+FORM {margin:0px; padding:0px;}
+
+/* ToolBar */
+.ModuleMember #toolbar {top:0px; left:0px; width:100%; box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box; border-bottom:1px solid #2d3642; padding:10px; height:45px; background:url(./images/toolbar.png) #6d84a2 repeat-x;}
+.ModuleMember #toolbar H1 {position:absolute; overflow:hidden; left:50%; margin:1px 0 0 -75px; height:45px; font-size:20px; width:150px; font-weight:bold; text-shadow:rgba(0, 0, 0, 0.4) 0px -1px 0; text-align:center; text-overflow:ellipsis; white-space:nowrap; color:#FFFFFF;}
+
+/* ToolButtons */
+.ModuleMember #backButton {left:6px; right:auto; padding:0; max-width:55px; border-width:0 8px 0 14px; -webkit-border-image:url(./images/backButton.png) 0 8 0 14;}
+.ModuleMember .button {position:absolute; overflow:hidden; top:8px; right:6px; margin:0; border-width:0 5px; padding:0 3px; width:auto; height:30px; line-height:30px; font-family:inherit; font-size:12px; font-weight:bold; color:#FFFFFF; text-shadow:rgba(0, 0, 0, 0.6) 0px -1px 0; text-overflow:ellipsis; text-decoration:none; white-space:nowrap; background:none; -webkit-border-image:url(./images/toolButton.png) 0 5 0 5;}
+.ModuleMember .grayButton {-webkit-border-image:url(./images/grayButton.png) 0 12 0 12; color:#FFFFFF;}
+
+/* Content */
+.ModuleMember #content {width:100%; padding:0px; margin:0px; background:url(./images/backLine.png);}
+
+/* Form */
+.ModuleMember .titlebox {color:#4C566C; text-shadow:rgba(255, 255, 255, 0.4) 1px 1px 0; font-size:18px; padding:5px 0px 0px 10px;}
+.ModuleMember .errorbox {border:1px solid #560000; background:#FFB8B8; border-radius:8px; padding:8px 0px 8px 0px; text-shadow:rgba(255, 255, 255, 0.4) 1px 1px 0; margin:8px; padding:10px;}
+.ModuleMember .inputbox {border:1px solid #AFAFAF; border-radius:8px; padding:8px 0px 8px 0px; background:#FFFFFF; margin:8px;}
+.ModuleMember .inputbox .center {height:40px;}
+.ModuleMember .inputbox .header {height:29px; line-height:29px; font-size:16px; color:#666666; padding-left:8px;}
+.ModuleMember .inputbox .input {height:29px; padding-right:8px;}
+.ModuleMember .inputbox .input INPUT {border:0px; height:29px; line-height:29px; font-size:16px; width:100%; -webkit-appearance:none;-webkit-border-radius:0;}
+.ModuleMember .inputbox .input SELECT {width:100%; height:29px; line-height:29px; border:0px; font-size:16px; -webkit-appearance:none;-webkit-border-radius:0;}
+.ModuleMember .inputbox .check {padding-left:8px;}
+.ModuleMember .inputbox .check INPUT {width:16px; height:16px;}
+.ModuleMember .inputbox .textarea {padding:0px 8px 0px 8px;}
+.ModuleMember .inputbox .textarea TEXTAREA {border:1px; width:100%; height:150px; font-size:16px; line-height:1.6; -webkit-appearance:none;-webkit-border-radius:0;}
+.ModuleMember .inputbox .line {background:#FFFFFF; height:17px; overflow:hidden;}
+.ModuleMember .inputbox .line DIV {height:1px; overflow:hidden; background:#AFAFAF;margin:8px 0px 8px 0px;}
+.ModuleMember .submitbox {padding:3px 8px 10px 8px;}
+.ModuleMember .submitbox INPUT[type="submit"] {display:block; width:100%; height:29px; line-height:29px; font-size:16px;}

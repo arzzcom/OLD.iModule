@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<title>SMS발송</title>
+	<path>/module/sms</path>
+	<setup>TRUE</setup>
+	<manager>TRUE</manager>
+	<version>1.0.0</version>
+	<config>
+		<set title="너나우리 연결설정">
+			<user_id>
+				<name>아이디</name>
+				<type>input</type>
+				<allowblank>false</allowblank>
+				<msg></msg>
+			</user_id>
+			<password>
+				<name>패스워드</name>
+				<type>password</type>
+				<allowblank>false</allowblank>
+				<msg></msg>
+			</password>
+		</set>
+		<set title="기본설정">
+			<defaultnumber>
+				<name>기본번호</name>
+				<type>input</type>
+				<allowblank>false</allowblank>
+				<msg>발신자번호없이 전송할때의 기본 전송번호를 입력하여 주십시오.</msg>
+			</defaultnumber>
+			<headmsg>
+				<name>말머리</name>
+				<type>input</type>
+				<allowblank>true</allowblank>
+				<msg>문자메세지 앞에 항상 표시될 문구가 있다면 입력하세요.</msg>
+			</headmsg>
+		</set>
+		<set title="옵션">
+			<longmsg>
+				<name></name>
+				<type>checkbox</type>
+				<allowblank>false</allowblank>
+				<msg>80자가 넘는 메세지에 대해 나누어 전송하는 것을 허용합니다.</msg>
+			</longmsg>
+		</set>
+	</config>
+</module>

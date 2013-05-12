@@ -1,0 +1,16 @@
+.SearchFormDetail .tabArea {border-left:1px solid #CCCCCC; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; height:28px; background:url(./images/bg_tabarea.gif); overflow:hidden;}
+.SearchFormDetail .tabOn {float:left; cursor:pointer; padding:8px 8px 2px 10px; height:16px; border:1px solid #CCCCCC; border-bottom:1px solid #FFFFFF; font-weight:bold; color:#2F2F2F; border-left:0px;}
+.SearchFormDetail .tabOff {float:left; cursor:pointer; padding:8px 8px 2px 10px; height:16px; border:1px solid #CCCCCC; color:#666666; border-left:0px; background:#F4F4F4;}
+
+.SearchFormDetail .tabContent {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; border:1px solid #CCCCCC; border-top:0px; background:#FFFFFF; padding:8px;}
+
+.SearchFormDetail .checkboxList {float:left; width:140px; height:15px; margin-top:5px;}
+
+.SearchFormDetail .alertBox {border:1px solid #E5E5E5; background:#F4F4F4; font-weight:bold; text-align:center; padding:8px;}
+
+.SearchFormDetail .searchForm {border-top:1px dotted #CCCCCC; margin-top:8px; padding-top:8px;}
+.SearchFormDetail .searchForm .panel {background:#F4F4F4; padding:8px;}
+.SearchFormDetail .searchForm .formHeader {padding:3px 0px 3px 0px; font-weight:bold; text-align:right; color:#2F2F2F;}
+.SearchFormDetail .searchForm .formContent {padding:3px 0px 3px 10px; color:#2F2F2F;}
+
+.SearchFormDetail .searchForm .formContent INPUT {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; border:1px solid #CCCCCC; background:#FFFFFF; height:18px; line-height:10px; padding:0px 4px 0px 4px;}

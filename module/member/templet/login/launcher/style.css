@@ -1,0 +1,44 @@
+.MemberLoginPortal {border:1px solid #C0C2C5; height:98px; background:#F3F4F3; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; font-size:11px; color:#2F2F2F;}
+.MemberLoginPortal .innerLayer {border:1px transparent; border-top:1px solid #FFFFFF; border-left:1px solid #FFFFFF; padding:8px; height:70px;}
+.MemberLoginPortal .inputbox {border:1px solid #BEBEBE; padding:3px; width:96px; height:14px; line-height:14px; font-family:tahoma; font-size:11px; font-weight:bold; outline:none;}
+.MemberLoginPortal .user_idarea {height:24px; vertical-align:top;}
+.MemberLoginPortal .user_idarea INPUT {background-image:url(./images/text_id.gif); background-repeat:no-repeat; background-position:5px 4px;}
+.MemberLoginPortal .passwordarea {height:23px; vertical-align:bottom;}
+.MemberLoginPortal .passwordarea INPUT {background-image:url(./images/text_password.gif); background-repeat:no-repeat; background-position:5px 4px;}
+
+.MemberLoginPortal A:link {color:#666666; text-decoration:none;}
+.MemberLoginPortal A:hover {color:#82C118; text-decoration:underline;}
+.MemberLoginPortal A:visited {color:#666666; text-decoration:none;}
+.MemberLoginPortal A:active {color:#666666; text-decoration:none;}
+
+.MemberLoginPortal .welcome {height:16px;}
+
+.MemberLoginPortal .photo {width:60px; height:60px; border:1px solid #CCCCCC;}
+.MemberLoginPortal .point {font-family:tahoma; font-size:10px; margin:3px 0px 3px 0px; color:#2F2F2F;}
+.MemberLoginPortal .point SPAN {font-family:tahoma; font-size:10px;}
+
+.MemberLoginPortal .nickname {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; padding:4px 0px 4px 0px; border-bottom:1px dashed #CCCCCC; margin-bottom:2px; color:#2F2F2F;}
+.MemberLoginPortal .nickname SPAN {font-famliy:tahoma; font-size:10px; color:#666666;}
+
+.MemberLoginPortal .expbar {height:13px; overflow:hidden;}
+.MemberLoginPortal .expbar TR {height:13px; overflow:hidden;}
+.MemberLoginPortal .expbar .text {font-family:tahoma; font-size:10px; font-weight:bold; line-height:15px; color:#2F2F2F;}
+.MemberLoginPortal .expbar .level {color:#EF5600; font-family:tahoma; font-size:10px;}
+.MemberLoginPortal .expbar .start {background:url(./images/expbar_start.gif) repeat-x 50%;}
+.MemberLoginPortal .expbar .on {background:url(./images/expbar_exp.gif) repeat-x 50%;}
+.MemberLoginPortal .expbar .off {background:url(./images/expbar_remain.gif) repeat-x 50%;}
+.MemberLoginPortal .expbar .end {background:url(./images/expbar_end.gif) repeat-x 50%;}
+
+.MemberLoginPortal .message {font-family:tahoma; font-size:10px; margin:3px 0px 3px 0px; cursor:pointer; color:#2F2F2F;}
+.MemberLoginPortal .message SPAN {font-family:tahoma; font-size:10px;}
+.MemberLoginPortal .message SPAN.new {color:#EF5600;}
+.MemberLoginPortal .message IMG {vertical-align:middle;}
+
+.MemberLoginPortal .securityButton {width:60px; height:16px; background-image:url(./images/btn_security.gif); background-repeat:no-repeat; margin:0 auto; cursor:pointer; overflow:hidden; background-position:0px 0px;}
+.MemberLoginPortal .securityButton DIV {float:left; height:16px; width:20px;}
+.MemberLoginPortal .step1 {background-position:0px -32px;}
+.MemberLoginPortal .step2 {background-position:0px -16px;}
+.MemberLoginPortal .step3 {background-position:0px 0px;}
+
+.ipon {color:purple; font-weight:bold; cursor:pointer; text-decoration:underline;}
+.ipoff {color:#CCCCCC; font-weight:bold; cursor:pointer; text-decoration:underline;}

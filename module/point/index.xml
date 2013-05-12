@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<title>포인트</title>
+	<version>1.0.0</version>
+	<path>/module/point</path>
+	<setup>TRUE</setup>
+	<manager>TRUE</manager>
+	<config>
+		<set title="포인트 부가서비스 설정">
+			<use_gift>
+				<name>포인트선물</name>
+				<type>checkbox</type>
+				<allowblank>true</allowblank>
+				<default>on</default>
+				<msg>포인트 선물하기 기능을 사용합니다.</msg>
+			</use_gift>
+			<use_buy>
+				<name>포인트구매</name>
+				<type>checkbox</type>
+				<allowblank>true</allowblank>
+				<default>off</default>
+				<msg>포인트 구매하기 기능을 사용합니다.</msg>
+			</use_buy>
+			<use_return>
+				<name>포인트환불</name>
+				<type>checkbox</type>
+				<allowblank>true</allowblank>
+				<default>off</default>
+				<msg>포인트 환불하기 기능을 사용합니다.</msg>
+			</use_return>
+		</set>
+		<set title="현금 1원당 포인트">
+			<ratio>
+				<name>포인트</name>
+				<type>number</type>
+				<allowblank>false</allowblank>
+				<default>1</default>
+				<fixmsg>포인트 (1은 포인트와 현금가치비율이 동일, 1보다 크면 현금가치가 더 높음)</fixmsg>
+			</ratio>
+		</set>
+	</config>
+</module>

@@ -1,0 +1,6 @@
+.RecentlyCalendarList {}
+.RecentlyCalendarList .dayIcon {width:70px; height:65px; background:url(./images/calendar.png); text-align:center;}
+.RecentlyCalendarList .dayIcon .month {height:25px; color:#FFFFFF; font-family:tahoma; font-weight:bold; font-size:12px; text-shadow:1px 1px 2px black; text-transform:uppercase; letter-spacing:1px; line-height:23px;}
+.RecentlyCalendarList .dayIcon .day {height:40px; font-family:tahoma; font-weight:bold; font-size:28px; text-shadow:2px 2px 3px gray; letter-spacing:1px; line-height:32px;}
+.RecentlyCalendarList .title {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:16px; font-weight:bold; text-shadow: 1px 1px 4px silver}
+.RecentlyCalendarList .subinfo {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; margin-top:5px; color:#666666; line-height:1.4;}

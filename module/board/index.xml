@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<title>게시판</title>
+	<version>2.0.0</version>
+	<path>/module/board</path>
+	<setup>TRUE</setup>
+	<manager>TRUE</manager>
+	<folder root="board">
+		<path>attach</path>
+		<path>thumbnail</path>
+		<path>skin</path>
+	</folder>
+	<database>
+		<table name="{code}_board_autosave_table">
+			<field name="tid" type="char" length="32">고유값</field>
+			<field name="bid" type="varchar" length="20">게시판아이디</field>
+			<field name="repto" type="int" length="11">게시물고유번호</field>
+			<field name="ip" type="varchar" length="15">아이피</field>
+			<field name="data" type="longtext">자동저장컨텐츠</field>
+			<field name="reg_date" type="int" length="11">자동저장시각</field>
+			<index name="tid" type="primary" />
+			<index name="bid" type="index" />
+			<index name="repto" type="index" />
+			<index name="ip" type="index" />
+		</table>
+		
+		<table name="{code}_board_category_table">
+			<field name="idx" type="int" length="11">고유값</field>
+			<field name="bid" type="varchar" length="20">게시판아이디</field>
+			<field name="category" type="varchar" length="100">카테고리명</field>
+			<field name="permission" type="varchar" length="255">글작성권한</field>
+			<field name="sort" type="int" length="11">정렬순서</field>
+			<index name="idx" type="auto_increment" />
+			<index name="bid" type="index" />
+			<index name="sort" type="index" />
+		</table>
+		
+		<table name="{code}_board_file_table">
+			<field name="idx" type="int" length="11">고유값</field>
+			<field name="type" type="enum" length="POST,MENT" default="POST">첨부종류</field>
+			<field name="repto" type="int" length="11">첨부된게시물고유번호</field>
+			<field name="filename" type="varchar" length="255">파일명</field>
+			<field name="filepath" type="varchar" length="255">파일경로</field>
+			<field name="filesize" type="int" length="11">파일용량</field>
+			<field name="filetype" type="char" length="3">파일종류</field>
+			<field name="wysiwyg" type="varchar" length="20">파일이삽입된에디터</field>
+			<field name="reg_date" type="int" length="11">첨부시각</field>
+			<field name="hit" type="int" length="11">다운로드수</field>
+			<index name="idx" type="auto_increment" />
+			<index name="type" type="index" />
+			<index name="repto" type="index" />
+		</table>
+		
+		<table name="{code}_board_log_table">
+			<field name="idx" type="int" length="11">고유값</field>
+			<field name="bid" type="varchar" length="20">게시판아이디</field>
+			<field name="repto" type="int" length="11">게시물고유번호</field>
+			<field name="type" type="enum" length="HIT,VOTE" default="HIT">로그종류</field>
+			<field name="mno" type="int" length="11">회원번호</field>
+			<field name="ip" type="varchar" length="15">아이피</field>
+			<field name="vote" type="int" length="2">추천점수</field>
+			<field name="reg_date" type="int" length="11">로그기록시각</field>
+			<index name="idx" type="auto_increment" />
+			<index name="repto" type="index" />
+			<index name="type" type="index" />
+			<index name="mno" type="index" />
+			<index name="ip" type="index" />
+		</table>
+		
+		<table name="{code}_board_ment_table">
+			<field name="idx" type="int" length="11">고유값</field>
+			<field name="bid" type="varchar" length="20">게시판아이디</field>
+			<field name="repto" type="int" length="11">게시물번호</field>
+			<field name="parent" type="int" length="11">부모댓글번호</field>
+			<field name="mno" type="int" length="11">회원번호</field>
+			<field name="postmno" type="int" length="11">원게시물작성회원번호</field>
+			<field name="name" type="varchar" length="20">이름</field>
+			<field name="email" type="varchar" length="200">이메일</field>
+			<field name="homepage" type="varchar" length="200">홈페이지</field>
+			<field name="password" type="char" length="32">패스워드</field>
+			<field name="content" type="longtext">내용(HTML)</field>
+			<field name="extra_content" type="longtext">추가내용</field>
+			<field name="search" type="text">검색내용</field>
+			<field name="reg_date" type="int" length="11">작성시각</field>
+			<field name="ip" type="varchar" length="15">아이피</field>
+			<field name="is_select" type="enum" length="TRUE,FALSE" default="FALSE">답변채택여부</field>
+			<field name="is_secret" type="enum" length="TRUE,FALSE" default="FALSE">비밀글여부</field>
+			<field name="is_msg" type="enum" length="TRUE,FALSE" default="FALSE">답변쪽지알림여부</field>
+			<field name="is_email" type="enum" length="TRUE,FALSE" default="FALSE">답변이메일알림여부</field>
+			<field name="is_hidename" type="enum" length="TRUE,FALSE" default="FALSE">익명여부</field>
+			<field name="is_delete" type="enum" length="TRUE,FALSE" default="FALSE">삭제여부</field>
+			<field name="is_mobile" type="enum" length="TRUE,FALSE" default="FALSE">모바일작성여부</field>
+			<field name="last_modify_mno" type="int" length="11">최종수정한회원번호</field>
+			<field name="last_modify_date" type="int" length="11">최종수정시각</field>
+			<field name="last_modify_hit" type="int" length="11">수정횟수</field>
+			<index name="idx" type="auto_increment" />
+			<index name="bid" type="index" />
+			<index name="repto" type="index" />
+			<index name="mno" type="index" />
+			<index name="search" type="fulltext" />
+		</table>
+		
+		<table name="{code}_board_post_table">
+			<field name="idx" type="int" length="11">고유값</field>
+			<field name="loop" type="int" length="11">역순정렬값</field>
+			<field name="bid" type="varchar" length="20">게시판아이디</field>
+			<field name="is_delete" type="enum" length="TRUE,FALSE" default="FALSE">삭제여부</field>
+			<field name="category" type="int" length="11">카테고리번호</field>
+			<field name="mno" type="int" length="11">회원번호</field>
+			<field name="name" type="varchar" length="20">이름</field>
+			<field name="email" type="varchar" length="200">이메일</field>
+			<field name="homepage" type="varchar" length="200">홈페이지</field>
+			<field name="password" type="char" length="32">패스워드</field>
+			<field name="title" type="varchar" length="255">게시물번호</field>
+			<field name="content" type="longtext">내용(HTML)</field>
+			<field name="extra_content" type="longtext">추가내용</field>
+			<field name="search" type="text">검색내용</field>
+			<field name="field1" type="varchar" length="255">추가내용1</field>
+			<field name="field2" type="varchar" length="255">추가내용2</field>
+			<field name="field3" type="varchar" length="255">추가내용3</field>
+			<field name="image" type="int" length="11">대표이미지번호</field>
+			<field name="reg_date" type="int" length="11">작성시각</field>
+			<field name="ip" type="varchar" length="15">아이피</field>
+			<field name="hit" type="int" length="11">조회수</field>
+			<field name="ment" type="int" length="11">댓글수</field>
+			<field name="trackback" type="int" length="11">트랙백수</field>
+			<field name="vote" type="int" length="11">추천점수</field>
+			<field name="voter" type="int" length="11">추천인원수</field>
+			<field name="last_ment" type="int" length="11">마지막댓글시각</field>
+			<field name="is_select" type="enum" length="TRUE,FALSE" default="FALSE">답변채택여부</field>
+			<field name="is_notice" type="enum" length="TRUE,FALSE" default="FALSE">공지사항여부</field>
+			<field name="is_html_title" type="enum" length="TRUE,FALSE" default="FALSE">제목HTML사용여부</field>
+			<field name="is_secret" type="enum" length="TRUE,FALSE" default="FALSE">비밀글여부</field>
+			<field name="is_ment" type="enum" length="TRUE,FALSE" default="FALSE">댓글작성허용여부</field>
+			<field name="is_trackback" type="enum" length="TRUE,FALSE" default="FALSE">트랙백허용여부</field>
+			<field name="is_msg" type="enum" length="TRUE,FALSE" default="FALSE">답변쪽지알림여부</field>
+			<field name="is_email" type="enum" length="TRUE,FALSE" default="FALSE">답변이메일알림여부</field>
+			<field name="is_hidename" type="enum" length="TRUE,FALSE" default="FALSE">익명여부</field>
+			<field name="is_mobile" type="enum" length="TRUE,FALSE" default="FALSE">모바일작성여부</field>
+			<field name="last_modify_mno" type="int" length="11">최종수정한회원번호</field>
+			<field name="last_modify_date" type="int" length="11">최종수정시각</field>
+			<field name="last_modify_hit" type="int" length="11">수정횟수</field>
+			<index name="idx" type="auto_increment" />
+			<index name="loop" type="index" />
+			<index name="bid" type="index" />
+			<index name="category" type="index" />
+			<index name="mno" type="index" />
+			<index name="is_delete" type="index" />
+			<index name="title,search" type="fulltext" />
+			<index name="name" type="fulltext" />
+		</table>
+		
+		<table name="{code}_board_table">
+			<field name="bid" type="varchar" length="20">게시판아이디</field>
+			<field name="apikey" type="char" length="32">API키</field>
+			<field name="title" type="varchar" length="255">게시판명</field>
+			<field name="skin" type="varchar" length="30">스킨명</field>
+			<field name="width" type="varchar" length="10">게시판넓이</field>
+			<field name="use_category" type="enum" length="TRUE,FALSE,OPTION" default="FALSE">카테고리사용여부</field>
+			<field name="use_uploader" type="enum" length="TRUE,FALSE" default="TRUE">멀티업로더사용여부</field>
+			<field name="use_ment" type="enum" length="TRUE,FALSE" default="TRUE">댓글사용여부</field>
+			<field name="use_trackback" type="enum" length="TRUE,FALSE" default="FALSE">트랙백사용여부</field>
+			<field name="use_charge" type="enum" length="TRUE,FALSE" default="FALSE">포인트결제사용여부</field>
+			<field name="use_select" type="enum" length="TRUE,FALSE" default="FALSE">댓글채택사용여부</field>
+			<field name="use_rss" type="enum" length="TRUE,FALSE" default="FALSE">RSS사용여부</field>
+			<field name="rss_config" type="text">RSS설정</field>
+			<field name="listnum" type="int" length="2">페이지당게시물수</field>
+			<field name="pagenum" type="int" length="2">페이지링크범위</field>
+			<field name="view_alllist" type="enum" length="TRUE,FALSE" default="TRUE">뷰페이지전체목록사용여부</field>
+			<field name="view_prevnext" type="enum" length="TRUE,FALSE" default="FALSE">뷰페이지이전글다음글사용여부</field>
+			<field name="view_list" type="varchar" length="100" default="loopnum,title,name,reg_date,hit">목록컬럼설정</field>
+			<field name="view_notice_page" type="enum" length="ALL,FIRST" default="ALL">공지사항노출페이지</field>
+			<field name="view_notice_count" type="enum" length="INCLUDE,EXCLUDE" default="INCLUDE">공지사항페이지당게시물수포함여부</field>
+			<field name="view_notice_list" type="enum" length="TRUE,FALSE" default="TRUE">목록공지사항글포함여부</field>
+			<field name="post_point" type="int" length="11">글작성시포인트</field>
+			<field name="ment_point" type="int" length="11">댓글작성포인트</field>
+			<field name="select_point" type="int" length="11">댓글채택시포인트</field>
+			<field name="permission" type="text">권한설정</field>
+			<index name="bid" type="primary" />
+		</table>
+		
+		<table name="{code}_board_status_table">
+			<field name="date" type="date">일시</field>
+			<field name="post" type="int" length="11">게시물등록수</field>
+			<field name="ment" type="int" length="11">댓글등록수</field>
+			<field name="hit" type="int" length="11">조회수</field>
+			<index name="date" type="primary" />
+		</table>
+	</database>
+</module>

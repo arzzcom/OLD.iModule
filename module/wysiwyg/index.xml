@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<title>위지윅</title>
+	<path>/module/wysiwyg</path>
+	<setup>FALSE</setup>
+	<manager>FALSE</manager>
+	<version>1.0.0</version>
+</module>

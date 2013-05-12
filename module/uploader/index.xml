@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<title>멀티업로더</title>
+	<path>/module/uploader</path>
+	<setup>TRUE</setup>
+	<manager>TRUE</manager>
+	<version>1.0.0</version>
+</module>

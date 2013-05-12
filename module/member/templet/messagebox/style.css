@@ -1,0 +1,73 @@
+.ModuleMember .outer {border:1px solid #CCCCCC;}
+.ModuleMember .header {background:url(./images/table_bg.gif); height:28px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; color:#666666; text-align:center; font-weight:bold;}
+.ModuleMember .spliter {background:#CCCCCC;}
+
+.ModuleMember .searchbox {height:25px; padding:4px 5px 5px 5px; overflow:hidden; border-top:1px solid #CCCCCC;}
+.ModuleMember .searchbox .searchinput {width:180px; height:22px; border:2px solid #51AF10; font:0/0 arial; position:relative; margin:0 auto;}
+.ModuleMember .searchbox .searchinput .inputbox {width:150px; height:14px; border:1px solid #51AF10; padding:3px 0px 3px 3px; margin:0px;font-size:12px; font-weight:bold; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; float:left;}
+.ModuleMember .searchbox .buttonbox {width:25px; height:22px; background-image:url(./images/btn_search.gif); background-repeat:repeat; float:right; border:0px; cursor:pointer; background-position:0px 0px;}
+.ModuleMember .searchbox .buttonbox:hover {background-position:0px 22px;}
+
+.ModuleMember .methods {height:625px; overflow-y:scroll;}
+.ModuleMember .open {background:url(./images/open.gif) no-repeat 5px 50%; height:25px; padding-left:18px; cursor:pointer;}
+.ModuleMember .close {background:url(./images/close.gif) no-repeat 5px 50%; height:25px; padding-left:18px; cursor:pointer;}
+.ModuleMember .namecard {background:url(./images/namecard.gif) no-repeat 1px 3px; padding-left:22px; height:25px; line-height:25px; overflow:hidden; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; font-weight:bold;}
+.ModuleMember .methodDate {list-style-type:none; margin:0px 5px 0px 20px;}
+.ModuleMember .methodDate LI {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; height:22px; line-height:20px; background:url(./images/date.gif) no-repeat 5px 50%; padding-left:25px; overflow:hidden;}
+.ModuleMember .methodDate LI.select {background-color:#F9EF9D;}
+.ModuleMember .methodDate A {display:block; height:22px; line-height:22px; text-decoration:none; color:#000000;}
+.ModuleMember .methodID {list-style-type:none; margin:0px 5px 0px 20px;}
+.ModuleMember .methodID LI {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; height:22px; line-height:20px; background:url(./images/name.gif) no-repeat 5px 50%; padding-left:25px; overflow:hidden;}
+.ModuleMember .methodID LI.select {background-color:#F9EF9D;}
+.ModuleMember .methodID A {display:block; height:22px; line-height:22px; text-decoration:none; color:#000000;}
+.ModuleMember .count {font-family:tahoma; font-size:10px; color:#3E438B;}
+.ModuleMember .methods IMG {vertical-align:middle; .vertical-align:absmiddle;}
+
+.ModuleMember .toolbar {background:url(./images/toolbar.gif); color:#CCCCCC; height:25px; color:#CCCCCC; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; text-align:right; padding-right:5px; line-height:25px;}
+.ModuleMember .toolbar .delete {color:#F9EF9D; cursor:pointer; font-weight:bold;}
+
+.ModuleMember .SystemID {color:#FF5600; font-family:verdana; font-size:11px; font-weight:bold;}
+.ModuleMember .messageArea {height:600px; overflow-y:scroll; background:#F4F4F4;}
+.ModuleMember .item {margin:5px; background:#FFFFFF; padding:8px; border:1px solid #E5E5E5;}
+.ModuleMember .user {height:22px;}
+.ModuleMember .nickname {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; font-weight:bold;}
+.ModuleMember .date {color:#666666; font-family:tahoma; font-size:11px; text-align:right;}
+.ModuleMember .url {color:#305CB4; font-family:tahoma; font-size:10px; text-align:right; margin-top:5px; cursor:pointer;}
+.ModuleMember .msgbody {padding:5px 0px 0px 0px; -ms-word-break:break-all; word-wrap:break-word;}
+.ModuleMember .nomessage {height:100px; text-align:center; line-height:100px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px;}
+.ModuleMember .systemType {color:#666666; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; margin-bottom:5px;}
+.ModuleMember .systemParent {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; border:1px solid #E5E5E5; background:#F4F4F4; line-height:1.6; padding:5px; margin-bottom:10px;}
+
+.ModuleMember .navigator {height:34px; border-top:1px solid #CCCCCC; background:#FFFFFF;}
+.ModuleMember .button {padding:0px 5px 0px 5px; font:0/0 arial; margin:0px; height:34px;}
+
+.ModuleMember .pagenav {width:100%; height:18px; text-align:center;}
+.ModuleMember .pagenav STRONG {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#FA6F46; border:1px solid #E9E9E9;}
+.ModuleMember .pagenav A:link {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.ModuleMember .pagenav A:hover {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; background:#F4F4F4; text-decoration:none;}
+.ModuleMember .pagenav A:visited {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.ModuleMember .pagenav A:active {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.ModuleMember .pagenav SPAN {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#DDDDDD; border:1px solid #E9E9E9; text-decoration:none;}
+
+
+.ModuleMember .viewer {background:#DFDDD9; padding:5px; width:490px; height:590px;}
+.ModuleMember .viewerInner {border:1px solid #C2C2C2; background:#FFFFFF;}
+.ModuleMember .viewerTitle {height:20px; line-height:20px; font-family:verdana; font-size:10px; padding-left:5px; font-weight:bold; background:url(./images/viewer_title.gif); color:#7D8093;}
+.ModuleMember .viewerContent {height:442px; overflow-y:scroll; border-bottom:1px solid #C2C2C2;}
+.ModuleMember .viewerButton {background:url(./images/bg_tool.gif) repeat-x; vertical-align:top;}
+.ModuleMember .viewerButton INPUT {margin-top:38px; cursor:pointer;}
+
+.ModuleMember .more {background:url(./images/more_bg.gif); height:30px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; color:#666666; text-align:center; font-weight:bold; border:1px solid #CCCCCC; border-bottom:1px solid #999999; border-right:1px solid #999999; cursor:pointer; margin:5px; line-height:30px; overflow:hidden;}
+.ModuleMember .viewerMessgeArea {margin:5px 10px 10px 10px;}
+.ModuleMember .viewerMessge {vertical-align:bottom;}
+.ModuleMember .viewerMessgereceive .talkTop {background:url(./images/yourtalk_top.gif); width:400px; height:10px; overflow:hidden;}
+.ModuleMember .viewerMessgereceive .talkContent {background:url(./images/yourtalk_bg.gif); width:370px; padding:0px 15px 0px 15px;}
+.ModuleMember .viewerMessgereceive .talkBottom {background:url(./images/yourtalk_bottom.gif); width:400px; height:10px; overflow:hidden;}
+.ModuleMember .viewerMessgesend .talkTop {background:url(./images/mytalk_top.gif); width:400px; height:10px; overflow:hidden;}
+.ModuleMember .viewerMessgesend .talkContent {background:url(./images/mytalk_bg.gif); width:370px; padding:0px 15px 0px 15px;}
+.ModuleMember .viewerMessgesend .talkBottom {background:url(./images/mytalk_bottom.gif); width:400px; height:10px; overflow:hidden;}
+
+
+.ModuleMember .talkPhoto {vertical-align:bottom;}
+.ModuleMember .talkPhoto IMG {width:45px; height:45px; border:2px solid #CCCCCC;}
+

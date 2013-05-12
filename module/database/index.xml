@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<title>데이터베이스관리</title>
+	<path>/module/database</path>
+	<setup>TRUE</setup>
+	<manager>TRUE</manager>
+	<version>1.0.0</version>
+</module>

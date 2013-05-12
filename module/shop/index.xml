@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<title>쇼핑몰</title>
+	<path>/module/shop</path>
+	<setup>TRUE</setup>
+	<manager>TRUE</manager>
+	<version>1.0.0</version>
+	<config>
+		<set title="디자인설정">
+			<skin>
+				<name>스킨설정</name>
+				<type>directory</type>
+				<allowblank>FALSE</allowblank>
+				<value>templet</value>
+				<msg>스킨을 선택하세요.</msg>
+			</skin>
+		</set>
+
+		<set title="카테고리보기설정">
+			<listnum>
+				<name>페이지당 수</name>
+				<type>number</type>
+				<allowblank>FALSE</allowblank>
+				<default>20</default>
+				<msg>페이지당 보일 상품수를 입력하세요.</msg>
+			</listnum>
+			<rownum>
+				<name>한줄당 수</name>
+				<type>number</type>
+				<allowblank>FALSE</allowblank>
+				<default>4</default>
+				<msg>한줄당 보일 상품수를 입력하세요.</msg>
+			</rownum>
+			<pagenum>
+				<name>페이지 수</name>
+				<type>number</type>
+				<allowblank>FALSE</allowblank>
+				<default>10</default>
+				<msg>페이지목록을 몇페이지까지 보일지 입력하세요.</msg>
+			</pagenum>
+		</set>
+	</config>
+</module>

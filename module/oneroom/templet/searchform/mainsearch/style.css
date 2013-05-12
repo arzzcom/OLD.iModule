@@ -1,0 +1,12 @@
+.SearchFormMainSearch .tabContent {border:2px solid #262E53; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; background:#5d6a8b; padding:8px;}
+
+.SearchFormMainSearch .checkboxList {float:left; width:140px; height:15px; margin-top:5px;}
+
+.SearchFormMainSearch .alertBox {border:1px solid #E5E5E5; background:#F4F4F4; font-weight:bold; text-align:center; padding:8px;}
+
+.SearchFormMainSearch .searchForm {border-top:1px dotted #CCCCCC; margin-top:8px; padding-top:8px;}
+.SearchFormMainSearch .searchForm .panel {background:#838fae; padding:8px;}
+.SearchFormMainSearch .searchForm .formHeader {padding:3px 0px 3px 0px; font-weight:bold; text-align:right; color:#2F2F2F;}
+.SearchFormMainSearch .searchForm .formContent {padding:3px 0px 3px 10px; color:#2F2F2F;}
+
+.SearchFormMainSearch .searchForm .formContent INPUT {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; border:1px solid #CCCCCC; background:#FFFFFF; height:18px; line-height:10px; padding:0px 4px 0px 4px;}

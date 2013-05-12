@@ -1,0 +1,8 @@
+#sForm .stepbar {height:60px; padding:20px; margin:3px 0px 10px 0px; background:url(./images/stepbar.gif);}
+#sForm .steptitlebar {height:28px; font:0/0 arial; background:url(./images/steptitlebar.gif);}
+#sForm .box {padding:15px; height:250px; border:2px solid #E5E5E5;}
+#sForm .inputbox {border:1px solid #CCCCCC; font-family:AppleGothic, "malgun gothic", dotum; font-weight:normal; font-size:12px; height:14px; padding:4px;}
+#sForm .inputboxon {border:2px solid #2F2F2F; font-family:AppleGothic, "malgun gothic", dotum; font-weight:normal; font-size:12px; height:14px; padding:3px;}
+#sForm .disable {background:#F4F4F4;}
+#sForm .infobox {font-family:AppleGothic, "malgun gothic", dotum; font-size:12px; border:1px solid #E1D0BB; background:#FFFFEA; padding:8px; line-height:1.6;}
+#sForm .questionbox  {font-family:AppleGothic, "malgun gothic", dotum; font-size:12px; border:1px solid #E5E5E5; background:#F4F4F4; padding:8px; line-height:1.6;}

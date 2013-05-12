@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<title>네이버맵 API</title>
+	<version>1.0.0</version>
+	<path>/module/map</path>
+	<setup>TRUE</setup>
+	<manager>TRUE</manager>
+	<config>
+		<set title="네이버맵 API설정">
+			<apikey>
+				<name>API키</name>
+				<type>input</type>
+				<allowblank>true</allowblank>
+				<default></default>
+				<msg>네이버에서 발급받은 API키를 입력하세요.</msg>
+			</apikey>
+		</set>
+	</config>
+</module>

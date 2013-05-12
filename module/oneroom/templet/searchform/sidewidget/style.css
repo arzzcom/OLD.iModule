@@ -1,0 +1,8 @@
+.sideWidget .tableView {table-layout:fixed; width:100%; background:#99BBE8;}
+.sideWidget .titleRow {background:url(./images/title_bg.gif); height:24px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; font-weight:bold; padding-left:8px; color:#17438B;}
+.sideWidget .contentRow {background:#FFFFFF; padding:8px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px;}
+
+.sideWidget .contentRow UL.theme {list-style-type:none;}
+.sideWidget .contentRow UL.theme LI {background-repeat:no-repeat; background-position:left center; height:16px; line-height:16px; margin:0px 0px 5px 0px; padding:2px 0px 2px 20px;}
+.sideWidget .contentRow UL.theme LI A {text-decoration:none; color:#2F2F2F;}
+.sideWidget .contentRow .bar {margin-top:5px; border-top:1px dotted #CCCCCC; height:5px; overflow:hidden;}

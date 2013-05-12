@@ -1,0 +1,9 @@
+.rPostTitle {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; height:25px; color:#083772;}
+.rPostContent {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; line-height:1.6; height:80px; vertical-align:top; -ms-word-break:break-all; word-wrap:break-word;}
+.rPostTitle A {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; height:25px; color:#083772; text-decoration:none;}
+.rPostTitle A:HOVER {text-decoration:underline;}
+.rPostDate {font-family:tahoma; font-size:10px; padding-right:5px;}
+.rPostImageArea {position:relative;}
+.rPostIcon {position:absolute; top:-3px; left:-5px; z-index:1;}
+.rPostImage {width:80px; height:60px; border:1px solid #CCCCCC; margin-top:3px; overflow:hidden;}
+.rComment {font-family:tahoma; color:#EF0000; font-size:10px;}

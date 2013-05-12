@@ -1,0 +1,14 @@
+.LoginBox {width:200px; height:120px; background:url(./images/loginbg.gif);}
+.LoginForm {width:117px; height:18px; border:1px solid #E4CAAE; background-repeat:no-repeat; background-position:5px 3px; background-color:#FFFFFF; font-family:verdana; font-weight:bold; color:#4F4F4F; font-size:11px;}
+.LoginFormArea {width:119px; height:44px; float:left; display:inline; margin:11px 0px 0px 12px; font:0/0 arial;}
+.LoginButton {float:right; width:49px; height:44px; margin:11px 12px 0px 0px;}
+.LoginBar {height:1px; background:#E4CAAE; overflow:hidden; margin:9px 12px 3px 12px; display:block;}
+.LoginAuto {width:13px; height:13px; margin:5px 5px 0px 12px; float:left;}
+.LoginAutoText {float:left; margin:5px 0px 0px 0px;}
+.LoginBottom {background:#EEE0CF; padding-top:3px; margin:5px 12px 0px 12px; height:15px; color:#E4CAAE; font-family:돋움; font-size:11px; text-align:center;}
+.LoginInfo {font-family:dotum; font-size:11px; padding:5px 10px 0px 10px; line-height:140%; height:45px;}
+.LoginUser {font-family:dotum; font-size:12px; padding:10px 10px 0px 10px;}
+.LoginBox A:link {text-decoration:none;}
+.LoginBox A:visited {text-decoration:none;}
+.LoginBox A:active {text-decoration:none;}
+.LoginBox A:hover {text-decoration:none;}

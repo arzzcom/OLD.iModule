@@ -1,0 +1,51 @@
+#SigninNdoor .box {padding:15px; height:250px; border:2px solid #E5E5E5; overflow-y:scroll;}
+#SigninNdoor .checkbox {padding:15px; border:2px solid #E5E5E5; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:14px; line-height:160%;}
+#SigninNdoor .realnamebox {padding:15px; border:2px solid #E5E5E5;}
+#SigninNdoor .realnameinfo {border-top:1px solid #E5E5E5; margin-top:15px; padding:20px; line-height:160%; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px;}
+#SigninNdoor .pointText {color:#FF6C00; font-size:14px;}
+
+#SigninNdoor .inputbox {border:2px solid #CCCCCC; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:14px; font-weight:bold; height:16px; padding:3px;}
+#SigninNdoor .inputboxon {border:2px solid #2F2F2F; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:14px; font-weight:bold; height:16px; padding:3px;}
+
+#SigninNdoor LABEL {cursor:pointer; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px;}
+
+#SigninNdoor .realnamebox {padding:15px; border:2px solid #E5E5E5;}
+#SigninNdoor .realnameinfo {border-top:1px solid #E5E5E5; margin-top:15px; padding:20px; line-height:160%; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px;}
+#SigninNdoor .pointText {color:#FF6C00; font-size:14px;}
+
+#SigninNdoor .checkbox {padding:15px; border:2px solid #E5E5E5; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:14px; line-height:160%;}
+
+#SigninNdoor .inputbox {border:2px solid #CCCCCC; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:14px; font-weight:bold; height:16px; padding:3px;}
+#SigninNdoor .inputboxon {border:2px solid #2F2F2F; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:14px; font-weight:bold; height:16px; padding:3px;}
+
+#SigninNdoor .boldline {height:2px; background:#E5E5E5; overflow:hidden;}
+#SigninNdoor .inputicon {background:#F9F9F9; text-align:center; font:0/0 arial;}
+#SigninNdoor .inputtext {background:#F9F9F9; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; font-weight:bold;}
+#SigninNdoor .inputline {background:#EDEDED;}
+#SigninNdoor .inputform {padding:5px 0px 5px 8px;}
+#SigninNdoor .inputform .inputbox {border:1px solid #CCCCCC; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-weight:normal; font-size:12px; height:14px; padding:4px;}
+#SigninNdoor .inputform .inputboxon {border:2px solid #2F2F2F; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-weight:normal; font-size:12px; height:14px; padding:3px;}
+#SigninNdoor .disable {background:#F4F4F4;}
+
+#SigninNdoor .inputform .inputboxnum {border:1px solid #CCCCCC; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-weight:normal; font-size:12px; height:14px; padding:2px;}
+#SigninNdoor .inputform .inputboxnumon {border:1px solid #2F2F2F; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-weight:normal; font-size:12px; height:14px; padding:2px;}
+
+#SigninNdoor .inputrow {height:1px; background:#E5E5E5; overflow:hidden;}
+#SigninNdoor .inputform .msg {margin-top:5px; font-family:dotum; font-size:11px;}
+#SigninNdoor .inputform .msgerror {color:#FF8080; margin-top:5px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px;}
+#SigninNdoor .inputform .msgtrue {color:#84C1FF; margin-top:5px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px;}
+
+#SigninNdoor .innerbox {margin:5px 5px 5px 0px; padding:10px; width:400px; background:#F4F4F4; border:1px solid #E5E5E5;}
+#SigninNdoor .innerbox .text {font-family:verdana; font-size:10px; color:#666666; font-weight:bold;}
+#SigninNdoor .innerbox .title {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px;}
+
+#SigninNdoor .selectbox {}
+#SigninNdoor .selectbox .text {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; border:1px solid #C8C8C8; border-right:0px; height:16px; color:#2F2F2F; background:#FFFFFF; padding:2px 0px 0px 2px; float:left; cursor:pointer;}
+#SigninNdoor .selectbox .button {background:url(./images/selectbox_arrow.gif); width:19px; height:20px; float:left; cursor:pointer;}
+#SigninNdoor .selectbox .listbox {position:relative; clear:both;}
+#SigninNdoor .selectbox .list {position:absolute; z-index:100; top:-1px; left:0px; border:1px solid #C8C8C8; background:#FFFFFF;}
+#SigninNdoor .selectbox .list .item {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; padding:3px; margin:2px; cursor:pointer;}
+#SigninNdoor .selectbox .list .item:hover {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; padding:3px; margin:2px; background:#E5E5E5; cursor:pointer;}
+
+#SigninNdoor .textbox {border:2px solid #CCCCCC; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:14px; font-weight:bold; width:80%; height:200px; padding:3px;}
+#SigninNdoor .textboxon {border:2px solid #2F2F2F; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:14px; font-weight:bold; width:80%; height:200px; padding:3px;}

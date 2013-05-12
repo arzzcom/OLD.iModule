@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<title>쿠폰몰</title>
+	<version>1.0.0</version>
+	<path>/module/coupon</path>
+	<setup>TRUE</setup>
+	<manager>TRUE</manager>
+</module>

@@ -1,0 +1,61 @@
+.CategoryArea {width:180px; height:310px; background:url(./images/category_bg.gif);}
+.CategoryArea .top {height:35px;}
+.CategoryArea .depth1 {height:20px; padding-left:15px;}
+.CategoryArea .depth2 {height:20px; padding-left:30px;}
+.CategoryArea .depth3 {height:20px; padding-left:45px;}
+
+#ShopList .pagenav {width:100%; height:26px; text-align:center;}
+#ShopList .pagenav STRONG {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:돋움; color:#FA6F46; border:1px solid #E9E9E9;}
+#ShopList .pagenav A:link {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:돋움; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+#ShopList .pagenav A:hover {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:돋움; color:#6D6D6D; border:1px solid #E9E9E9; background:#F4F4F4; text-decoration:none;}
+#ShopList .pagenav A:visited {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:돋움; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+#ShopList .pagenav A:active {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:돋움; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+#ShopList .pagenav SPAN {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:돋움; color:#DDDDDD; border:1px solid #E9E9E9; text-decoration:none;}
+
+#ShopList .listimg {font:0/0 arial; border:2px solid #CCCCCC; width:150px; height:150px; margin:0 auto;}
+#ShopList .listimg IMG {width:150px; height:150px;}
+#ShopList .title {line-height:160%; margin:5px; font-family:돋움; font-size:12px; font-weight:bold; text-align:center;}
+#ShopList .title A {text-decoration:none; color:#000000;}
+#ShopList .title .icon {font:0/0 arial;}
+#ShopList .title .icon IMG {vertical-align:top; margin:1.5px 0px 2px 1px;}
+#ShopList .price {font-family:돋움; font-size:12px; font-weight:bold; text-align:center; color:#EF5600;}
+#ShopList .point {font-family:돋움; font-size:11px; text-align:center; color:#666666; margin-top:3px;}
+
+#ShopList .navbar {height:32px; background:url(./images/navbar_bg.gif); overflow:hidden;}
+#ShopList .navbar .left {background:url(./images/navbar_left.gif); overflow:hidden;}
+#ShopList .navbar .right {background:url(./images/navbar_right.gif); overflow:hidden;}
+#ShopList .navbar .navtitle {background:url(./images/icon_nav.gif) no-repeat 5px 50%; text-align:left; padding-left:30px; padding-top:1px; font-family:돋움; font-size:11px; color:#2F2F2F; height:32px; overflow:hidden;}
+#ShopList .navbar .navtitle A {color:#666666; text-decoration:none;}
+
+#ShopView .navbar {height:32px; background:url(./images/navbar_bg.gif); overflow:hidden;}
+#ShopView .navbar .left {background:url(./images/navbar_left.gif); overflow:hidden;}
+#ShopView .navbar .right {background:url(./images/navbar_right.gif); overflow:hidden;}
+#ShopView .navbar .navtitle {background:url(./images/icon_nav.gif) no-repeat 5px 50%; text-align:left; padding-left:30px; padding-top:1px; font-family:돋움; font-size:12px; font-weight:bold; color:#2F2F2F; height:32px; overflow:hidden;}
+#ShopView .navbar .navtitle .icon {font:0/0 arial; display:inline-block; vertical-align:middle; margin-bottom:1px;}
+#ShopView .navbar .navtitle .icon IMG {margin:0px 0px 0px 1px;}
+
+#ShopView .categoryview {padding:5px; background:#2F2F2F; color:#E5E5E5; font-family:돋움; font-size:11px; width:294px;}
+#ShopView .categoryview A {color:#E5E5E5; text-decoration:none;}
+#ShopView .viewimg {font:0/0 arial;}
+#ShopView .viewimg IMG {border:2px solid #E5E5E5;}
+#ShopView .viewinfo {vertical-align:top;}
+#ShopView .viewinfo TD {height:26px;}
+#ShopView .viewinfo .price {color:#F92300; font-weight:bold; font-size:14px; font-family:돋움;}
+#ShopView .viewinfo .saleprice {color:#333333; text-decoration:line-through; font-weight:bold;}
+#ShopView .viewinfo .code {color:#333333; font-size:12px; font-family:verdana;}
+#ShopView .viewinfo .text {color:#333333; font-size:12px; font-family:돋움;}
+#ShopView .viewinfo .text IMG {display:inline-block; vertical-align:middle; margin-bottom:1px;}
+#ShopView .viewinfo .pointtext {color:#F92300; font-size:12px; font-family:돋움;}
+#ShopView .viewinfo .line {height:1px; overflow:hidden; background:#CCCCCC;}
+#ShopView .viewinfo .option {font-family:돋움; font-size:11px; background:#F4F4F4; padding:8px; margin-bottom:5px;}
+#ShopView .viewinfo .option SELECT {font-family:돋움; font-size:11px; color:#666666; height:18px;}
+#ShopView .viewinfo .option INPUT {font-family:verdana; width:32px; height:14px; font-size:10px; text-align:right; padding:1px; border:1px solid #CCCCCC;}
+#ShopView .viewinfo .button {margin-top:10px; text-align:center; font:0/0 arial;}
+#ShopView .viewinfo .button IMG {margin:2px; cursor:pointer;}
+
+#ShopView .navbar .tabOn {float:left; cursor:pointer; margin:6px 2px 0px 0px; height:18px; border:1px solid #ACACAC; border-bottom:1px; background:#FFFFFF; padding:7px 8px 0px 8px; font-family:돋움; font-size:12px; font-weight:bold;}
+#ShopView .navbar .tabOff {float:left; cursor:pointer; margin:6px 2px 0px 0px; height:18px; padding:7px 9px 0px 9px; font-family:돋움; font-size:12px;}
+#ShopView .navbar .tabOver {float:left; cursor:pointer; margin:6px 2px 0px 0px; height:17px; border:1px solid #ACACAC; background:#E5E5E5; padding:7px 8px 0px 8px; font-family:돋움; font-size:12px;}
+#ShopView .navbar .pointtext {color:#F92300; font-weight:bold;}
+
+#ShopView .content {margin:10px 0px 0px 0px;}

@@ -1,0 +1,7 @@
+.SMSFormDefault {border:1px solid #E5E5E5; padding:8px 0px 8px 0px;}
+.SMSFormDefault .title {width:180px; margin:0 auto;}
+.SMSFormDefault .smsbody {width:180px; height:84px; margin:0 auto; background:url(./images/bg_smsbody.gif); text-align:center;}
+.SMSFormDefault .smsbody .textarea {width:160px; height:55px; margin-top:18px; line-height:1.6; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; border:0px; background:transparent; color:#FFFFFF; overflow:hidden;}
+.SMSFormDefault .sender {width:182px; margin:0 auto; padding:0px;}
+.SMSFormDefault .sender .inputarea {border-top:1px solid #7C7C7C; text-align:center;}
+.SMSFormDefault .sender .inputarea INPUT {border-top:1px solid #C3C3C3; border-right:1px solid #C3C3C3; border-left:1px solid #C3C3C3; border-bottom:1px solid #DDDDDD; height:19px; line-height:19px; padding:0px 4px 0px 4px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px;}

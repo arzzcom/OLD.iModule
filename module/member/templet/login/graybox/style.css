@@ -1,0 +1,50 @@
+.LoginBox {width:200px;}
+.LoginBox .LoginTitle {width:190px; height:28px; background:url(./images/login_title.gif);}
+.LoginBox .LoginTitleBg {width:180px; height:28px; background:url(./images/login_title_bg.gif); line-height:28px; padding-left:10px; color:#CCCCCC; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px;}
+.LoginBox .LoginTitleBg SPAN {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; color:#FFFFFF;}
+
+.LoginBox .top {height:5px; overflow:hidden; background:url(./images/loginbox_top.gif);}
+.LoginBox .bg {background:url(./images/loginbox_bg.gif); padding:0px 5px 0px 5px;}
+.LoginBox .bottom {height:5px; overflow:hidden; background:url(./images/loginbox_bottom.gif);}
+
+.LoginBox .LoginFormArea {width:122px; height:44px; float:left; display:inline; margin:5px 0px 0px 5px; font:0/0 arial;}
+.LoginBox .LoginForm {width:123px; height:18px; border:1px solid #CCCCCC; background-repeat:no-repeat; background-position:5px 3px; background-color:#FFFFFF; font-family:verdana; font-weight:bold; color:#4F4F4F; font-size:11px;}
+
+.LoginBox .LoginInfoArea {width:180px; height:65px; margin:5px 5px 0px 5px;}
+.LoginBox .LoginInfoArea TD {vertical-align:top;}
+.LoginBox .LoginInfoArea .photo {width:60px; height:60px; border:2px solid #CCCCCC;}
+.LoginBox .LoginInfoArea .point {font-family:tahoma; font-size:10px; margin:5px 0px 5px 0px;}
+.LoginBox .LoginInfoArea .point SPAN {font-family:tahoma; font-size:10px;}
+
+.LoginBox .LoginInfoArea .nickname {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; padding-bottom:4px; border-bottom:1px dashed #CCCCCC; margin-bottom:3px;}
+.LoginBox .LoginInfoArea .nickname SPAN {font-famliy:tahoma; font-size:10px; color:#666666;}
+
+.LoginBox .LoginInfoArea .message {font-family:tahoma; font-size:10px; margin:5px 0px 5px 0px; cursor:pointer;}
+.LoginBox .LoginInfoArea .message SPAN {font-family:tahoma; font-size:10px;}
+.LoginBox .LoginInfoArea .message SPAN.new {color:#EF5600;}
+.LoginBox .LoginInfoArea .message IMG {vertical-align:middle;}
+
+.LoginBox .LoginInfoArea .expbar {height:13px; overflow:hidden;}
+.LoginBox .LoginInfoArea .expbar TR {height:13px; overflow:hidden;}
+.LoginBox .LoginInfoArea .expbar .text {font-family:tahoma; font-size:10px; font-weight:bold; line-height:15px;}
+.LoginBox .LoginInfoArea .expbar .level {color:#EF5600; font-family:tahoma; font-size:10px;}
+.LoginBox .LoginInfoArea .expbar .start {background:url(./images/expbar_start.gif) repeat-x 50%;}
+.LoginBox .LoginInfoArea .expbar .on {background:url(./images/expbar_exp.gif) repeat-x 50%;}
+.LoginBox .LoginInfoArea .expbar .off {background:url(./images/expbar_remain.gif) repeat-x 50%;}
+.LoginBox .LoginInfoArea .expbar .end {background:url(./images/expbar_end.gif) repeat-x 50%;}
+
+.LoginBox .LoginButton {float:right; width:49px; height:44px; margin:5px 5px 0px 0px;}
+
+.LoginBox .LoginBar {height:1px; background:#CCCCCC; overflow:hidden; margin:9px 5px 3px 5px; display:block;}
+
+.LoginBox .LoginAutoLogin INPUT {width:13px; height:13px; margin:5px 5px 0px 5px; float:left;}
+.LoginBox .LoginAutoLogin LABEL {float:left; margin:7px 0px 0px 0px; cursor:pointer; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px;}
+.LoginBox .LoginAutoLogin LABEL SPAN {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; color:#E65101;}
+
+.LoginBox .LoginBottom {background:#CCCCCC; padding-top:3px; margin:8px 5px 0px 5px; height:15px; color:#2F2F2F; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; text-align:center;}
+.LoginBox .LoginBottom A {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px;}
+
+.LoginBox .LoginInfo {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; padding:5px 10px 0px 10px; line-height:140%; height:45px;}
+.LoginBox .LoginUser {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; padding:10px 10px 0px 10px;}
+
+.LoginBox A {text-decoration:none; color:#2F2F2F;}

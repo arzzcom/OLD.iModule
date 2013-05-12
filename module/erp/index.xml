@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<title>ERP</title>
+	<path>/module/erp</path>
+	<setup>TRUE</setup>
+	<manager>TRUE</manager>
+	<version>0.0.9</version>
+	<config>
+		<set title="API KEY 설정">
+			<mapapi>
+				<name>네이버맵 API</name>
+				<type>input</type>
+				<allowblank>false</allowblank>
+				<default></default>
+				<msg>발급받은 네이버맵 API KEY 를 입력하여 주십시오.</msg>
+			</mapapi>
+		</set>
+
+		<set title="SMS알림 설정">
+			<sms_order>
+				<name>하도급/자재발주</name>
+				<type>input</type>
+				<allowblank>true</allowblank>
+				<default></default>
+				<msg>SMS알림을 받을 핸드폰번호를 콤마(,)로 구분하여 입력하여 주십시오.</msg>
+			</sms_order>
+		</set>
+	</config>
+</module>

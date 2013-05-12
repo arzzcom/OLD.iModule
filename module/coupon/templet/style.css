@@ -1,0 +1,38 @@
+.ModuleCoupon .TotalItem {font-family:verdana; text-align:right; font-size:10px; padding-bottom:5px;}
+.ModuleCoupon .TotalItem SPAN {font-family:verdana; font-size:10px;}
+
+.ModuleCoupon .listbar {height:32px; background:url(./images/listbar_bg.gif);}
+.ModuleCoupon .listbar .left {background:url(./images/listbar_left.gif);}
+.ModuleCoupon .listbar .center {font-family:AppleGothic, "malgun gothic", dotum; font-size:11px; font-weight:bold; color:#666666; text-align:center;}
+.ModuleCoupon .listbar .right {background:url(./images/listbar_right.gif);}
+
+.ModuleCoupon .listrow .title {font-family:AppleGothic, "malgun gothic", dotum; font-size:12px; font-weight:bold;}
+.ModuleCoupon .listrow .title IMG {vertical-align:middle; margin-right:2px; margin-bottom:1px;}
+.ModuleCoupon .listrow .infor {font-family:AppleGothic, "malgun gothic", dotum; font-size:12px; color:#666666; margin-top:3px; margin-left:1px; line-height:1.2;}
+.ModuleCoupon .listrow .subinfor {font-family:AppleGothic, "malgun gothic", dotum; font-size:11px; color:#960000; margin-top:2px;}
+.ModuleCoupon .listrow .point {font-family:verdana; letter-spacing:-1px; font-size:11px; text-align:right;}
+.ModuleCoupon .listrow .point SPAN {font-family:verdana; letter-spacing:-1px; font-size:11px; font-weight:bold; color:#EF5600;}
+.ModuleCoupon .listrow .button {margin-top:5px; text-align:right;}
+.ModuleCoupon .listrow .button IMG {cursor:pointer;}
+
+.ModuleCoupon .listsplit {height:6px; overflow:hidden;}
+.ModuleCoupon .listsplit DIV {height:5px; border-bottom:1px solid #CCCCCC;}
+
+.ModuleCoupon .pagenav {width:100%; height:26px; text-align:center;}
+.ModuleCoupon .pagenav STRONG {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:AppleGothic, "malgun gothic", dotum; color:#FA6F46; border:1px solid #E9E9E9;}
+.ModuleCoupon .pagenav A:link {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.ModuleCoupon .pagenav A:hover {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; background:#F4F4F4; text-decoration:none;}
+.ModuleCoupon .pagenav A:visited {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.ModuleCoupon .pagenav A:active {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.ModuleCoupon .pagenav SPAN {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:AppleGothic, "malgun gothic", dotum; color:#DDDDDD; border:1px solid #E9E9E9; text-decoration:none;}
+
+.ModuleCoupon .searchbox {width:354px; margin:0 auto;}
+.ModuleCoupon .searchbox .searchinput {width:350px; height:22px; border:2px solid #51AF10; font:0/0 arial; position:relative; margin:0 auto;}
+.ModuleCoupon .searchbox .searchinput .inputbox {width:320px; height:14px; border:1px solid #51AF10; padding:3px 0px 3px 3px; margin:0px;font-size:12px; font-weight:bold; font-family:AppleGothic, "malgun gothic", dotum; float:left;}
+.ModuleCoupon .searchbox .buttonbox {width:25px; height:22px; background-image:url(./images/btn_search.gif); background-repeat:repeat; float:right; border:0px; cursor:pointer; background-position:0px 0px;}
+.ModuleCoupon .searchbox .buttonbox:hover {background-position:0px 22px;}
+.ModuleCoupon .searchbox .livelist {position:absolute; width:322px; top:22px; left:1px; z-index:100; border:1px solid #C8C8C8; border-top:0px; background:#FFFFFF; font-size:12px; font-family:AppleGothic, "malgun gothic", dotum; color:#888888;}
+.ModuleCoupon .searchbox .livelist DIV {padding:5px 3px 5px 3px; margin:2px; cursor:pointer;}
+.ModuleCoupon .searchbox .livelist DIV:hover {padding:5px 3px 5px 3px; margin:2px; background:#E5E5E5; cursor:pointer;}
+
+.ModuleCoupon .usedcoupon {filter:alpha(opacity=30); opacity:0.3; -moz-opacity:0.3;}

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<title>배너</title>
+	<version>2.0.0</version>
+	<path>/module/banner</path>
+	<setup>TRUE</setup>
+	<manager>TRUE</manager>
+	<folder root="banner">
+		<path>section</path>
+		<path>item</path>
+	</folder>
+	
+	<database>
+		<table name="{code}_banner_item_table">
+			<field name="idx" type="int" length="11">고유값</field>
+			<field name="code" type="varchar" length="20">영역코드</field>
+			<field name="mno" type="int" length="11">회원번호</field>
+			<field name="is_active" type="enum" length="TRUE,FALSE" default="FALSE">활성화여부</field>
+			<field name="type" type="enum" length="CPC,CPM" default="CPC">광고종류</field>
+			<field name="point" type="int" length="11">광고비</field>
+			<field name="paid_point" type="int" length="11">지불한광고비</field>
+			<field name="start_date" type="date" length="11">시작일</field>
+			<field name="end_date" type="date" length="11">종료일</field>
+			<field name="bannertype" type="enum" length="IMG,SWF,TEXT" default="IMG">배너파일유형</field>
+			<field name="bannerpath" type="varchar" length="255">파일경로/광고주소</field>
+			<field name="bannertext" type="text">광고설명</field>
+			<field name="url" type="varchar" length="255">광고주소</field>
+			<field name="view" type="int" length="11">누적노출수</field>
+			<field name="hit" type="int" length="11">누적클릭수</field>
+			<index name="idx" type="auto_increment" />
+			<index name="code" type="index" />
+			<index name="mno" type="index" />
+			<index name="is_active" type="index" />
+			<index name="start_date" type="index" />
+			<index name="end_date" type="index" />
+		</table>
+		
+		<table name="{code}_banner_log_count_table">
+			<field name="bno" type="int" length="11">광고번호</field>
+			<field name="date" type="date">통계날짜</field>
+			<field name="hour" type="int" length="2">시각</field>
+			<field name="view" type="int" length="11">노출수</field>
+			<field name="hit" type="int" length="11">클릭수</field>
+			<index name="bno,date,hour" type="primary" />
+			<index name="bno" type="index" />
+			<index name="date" type="index" />
+			<index name="hour" type="index" />
+		</table>
+
+		<table name="{code}_banner_log_click_table">
+			<field name="idx" type="int" length="11">고유값</field>
+			<field name="bno" type="int" length="11">광고번호</field>
+			<field name="ip" type="varchar" length="15">클릭IP</field>
+			<field name="referer" type="varchar" length="255">클릭주소</field>
+			<field name="reg_date" type="int" length="11">클릭시간</field>
+			<index name="idx" type="auto_increment" />
+			<index name="bno" type="index" />
+			<index name="ip" type="index" />
+			<index name="reg_date" type="index" />
+		</table>
+		
+		<table name="{code}_banner_section_table">
+			<field name="code" type="varchar" length="20">영역코드</field>
+			<field name="title" type="varchar" length="30">영역이름</field>
+			<field name="type" type="enum" length="CPC,CPM" default="CPC">광고종류</field>
+			<field name="point" type="int" length="11">광고비</field>
+			<field name="limit" type="int" length="11">최대활성배너수</field>
+			<field name="allow_user" type="enum" length="TRUE,FALSE" default="FALSE">회원등록가능여부</field>
+			<field name="auto_active" type="enum" length="TRUE,FALSE" default="FALSE">자동활성화</field>
+			<field name="filetype" type="varchar" length="15">배너파일유형</field>
+			<field name="width" type="int" length="11">가로크기</field>
+			<field name="height" type="int" length="11">세로크기</field>
+			<index name="code" type="primary" />
+		</table>
+		
+		<table name="{code}_banner_status_count_table">
+			<field name="date" type="date">통계날짜</field>
+			<field name="hour" type="int" length="2">시각</field>
+			<field name="view" type="int" length="11">노출수</field>
+			<field name="hit" type="int" length="11">클릭수</field>
+			<index name="date,hour" type="primary" />
+			<index name="date" type="index" />
+			<index name="hour" type="index" />
+		</table>
+	</database>
+</module>

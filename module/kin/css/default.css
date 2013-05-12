@@ -1,0 +1,39 @@
+/* Error */
+DIV.errorArea {background:#2F2F2F; width:500px; margin:100px auto;}
+TR.errorTitleArea {height:80px; background:#000000;}
+DIV.errorTitle {width:440px; height:80px; margin:0 auto; background:url(../images/common/error_title.gif);}
+DIV.passwordTitle {width:440px; height:80px; margin:0 auto; background:url(../images/common/password_title.gif);}
+DIV.confirmTitle {width:440px; height:80px; margin:0 auto; background:url(../images/common/confirm_title.gif);}
+.errorBox {color:#CCCCCC; font-weight:bold; font-size:14px; line-height:200%; font-family:돋움; width:420px; padding:10px; margin:15px auto; border:5px solid #4F4F4F; background:#000000;}
+.errorBox .inputbox {border:2px solid #4F4F4F; background:#2F2F2F; color:#EEEEEE; font-family:verdana; font-size:16px; padding:3px; width:290px; height:18px;}
+.errorBox LABEL {cursor:pointer;}
+.errorButton {margin:10px 5px 0px 5px; border-top:1px dashed #4F4F4F; text-align:center; font:0/0 arial; padding-top:10px;}
+.errorButton IMG {margin-left:5px;}
+
+
+/* Select */
+DIV.selectArea {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#2F2F2F;}
+DIV.selectTitle {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; background:#F4F4F4; padding:15px; height:16px; line-height:16px; font-weight:bold; border-bottom:1px solid #E5E5E5; font-size:14px;}
+DIV.selectForm {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; padding:15px; font-size:12px;}
+DIV.selectForm DIV {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; line-height:1.6;}
+DIV.selectForm .pointText {color:#289C01 !important; font-weight:bold; letter-spacing:0px;}
+DIV.selectForm .innerLayer {border:1px solid #E5E5E5; padding:15px; margin-top:10px; line-height:1.6; font-size:11px;}
+DIV.selectForm .inputbox {border:1px solid #CCCCCC; padding:5px; line-height:1.6; color:#666666; width:428px; height:100px; font-size:12px;}
+DIV.selectForm .passwordbox {border:1px solid #CCCCCC; padding:3px; line-height:14px; color:#666666; width:95px; height:14px; font-size:12px;}
+
+DIV.selectButton {text-align:left; font:0/0 arial; text-align:right;}
+DIV.selectButton IMG {cursor:pointer; margin-left:2px;}
+
+
+/* Complete */
+DIV.completeArea {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#2F2F2F;}
+DIV.completeTitle {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; background:#F4F4F4; padding:15px; height:16px; line-height:16px; font-weight:bold; border-bottom:1px solid #E5E5E5; font-size:14px;}
+DIV.completeForm {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; padding:15px; font-size:12px;}
+DIV.completeForm DIV {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; line-height:1.6;}
+DIV.completeForm .pointText {color:#289C01 !important; font-weight:bold; letter-spacing:0px;}
+DIV.completeForm .innerLayer {border:1px solid #E5E5E5; padding:15px; margin-top:10px; line-height:1.6; font-size:12px;}
+DIV.completeForm .inputbox {border:1px solid #CCCCCC; padding:5px; line-height:1.6; color:#666666; width:428px; height:100px; font-size:12px;}
+DIV.completeForm .passwordbox {border:1px solid #CCCCCC; padding:3px; line-height:14px; color:#666666; width:95px; height:14px; font-size:12px;}
+
+DIV.completeButton {text-align:left; font:0/0 arial; text-align:right;}
+DIV.completeButton IMG {cursor:pointer; margin-left:2px;}

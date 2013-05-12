@@ -1,0 +1,21 @@
+.ProDealerMainGreen .header {background:url(./images/bg_tl.gif) no-repeat 0 0; height:51px; padding-left:23px;}
+.ProDealerMainGreen .headerRight {height:51px; text-align:right; background:url(./images/bg_tr.gif) no-repeat 100% 0;}
+.ProDealerMainGreen .header .title {float:left; padding:16px 40px 0px 10px; height:35px; background:url(./images/bg_title.gif) no-repeat 100% 0;}
+.ProDealerMainGreen .header .info {float:right; padding:15px 20px 0px 0px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px;}
+.ProDealerMainGreen .bodyer {background:url(./images/bg_ml.gif) repeat-y 0; padding-left:20px;}
+.ProDealerMainGreen .bodyer .bodyerInner {background:url(./images/bg_mr.gif) repeat-y 100%; padding-right:20px;}
+
+.ProDealerMainGreen .footer {background:url(./images/bg_bl.gif) no-repeat 0 0; height:27px; padding-left:28px;}
+.ProDealerMainGreen .footerRight {height:27px; text-align:right; background:url(./images/bg_br.gif) no-repeat 100% 0;}
+
+.ProDealerMainGreen .imageView {width:120px; height:120px; margin:5px auto; border:2px solid #CCCCCC; background:url(./images/noimage.gif) no-repeat 50% 50%;}
+.ProDealerMainGreen .titleView {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; width:160px; margin:5px; height:15px; overflow:hidden; font-weight:bold; line-height:15px; color:#2F2F2F;}
+
+.ProDealerMainGreen .titleView A:link {text-decoration:none; color:#2F2F2F;}
+.ProDealerMainGreen .titleView A:visited {color:#2F2F2F; text-decoration:none;}
+.ProDealerMainGreen .titleView A:active {color:#2F2F2F; text-decoration:none;}
+.ProDealerMainGreen .titleView A:hover {text-decoration:underline; color:#000000;}
+
+.ProDealerMainGreen .nameView {height:15px; line-height:15px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; font-weight:bold; color:#2F2F2F; text-align:center;}
+.ProDealerMainGreen .phoneView {height:15px; line-height:15px; font-family:tahoma; font-size:12px; color:#0193D7; text-align:center;}
+.ProDealerMainGreen .regionView {height:15px; line-height:15px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; color:#253DA6; text-align:center;}

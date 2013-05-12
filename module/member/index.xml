@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<title>회원</title>
+	<version>2.0.0</version>
+	<path>/module/member</path>
+	<setup>TRUE</setup>
+	<manager>TRUE</manager>
+	<config>
+		<set title="회원가입설정">
+			<signin>
+				<name>회원가입경로</name>
+				<type>input</type>
+				<allowblank>false</allowblank>
+				<default></default>
+				<msg></msg>
+			</signin>
+			<signin_redirect>
+				<name>가입완료경로</name>
+				<type>input</type>
+				<allowblank>false</allowblank>
+				<default></default>
+				<msg></msg>
+			</signin_redirect>
+			<myinfo>
+				<name>정보수정경로</name>
+				<type>input</type>
+				<allowblank>false</allowblank>
+				<default></default>
+				<msg></msg>
+			</myinfo>
+			<msgbox>
+				<name>메세지함경로</name>
+				<type>input</type>
+				<allowblank>false</allowblank>
+				<default></default>
+				<msg></msg>
+			</msgbox>
+			<help>
+				<name>암호찾기경로</name>
+				<type>input</type>
+				<allowblank>false</allowblank>
+				<default></default>
+				<msg></msg>
+			</help>
+			<signin_alert>
+				<name>가입안내메세지</name>
+				<type>checkbox</type>
+				<allowblank>true</allowblank>
+				<default>on</default>
+				<msg>회원가입후 가입안내메세지를 출력합니다.</msg>
+			</signin_alert>
+			<signin_realname>
+				<name>실명인증</name>
+				<type>checkbox</type>
+				<allowblank>true</allowblank>
+				<default>off</default>
+				<msg>회원가입시 실명인증처리를 합니다. (실명인증 모듈 설치 및 설정이 되어 있어야 합니다.)</msg>
+			</signin_realname>
+			<signin_inactive>
+				<name>승인제</name>
+				<type>checkbox</type>
+				<allowblank>true</allowblank>
+				<default>off</default>
+				<msg>회원가입후 관리자 승인을 받아야 계정이 활성화 됩니다. (자동 계정 비활성화)</msg>
+			</signin_inactive>
+		</set>
+		<set title="기본값설정">
+			<default_point>
+				<name>기본포인트</name>
+				<type>number</type>
+				<allowblank>false</allowblank>
+				<default>2000</default>
+				<msg></msg>
+			</default_point>
+			<default_exp>
+				<name>기본경험치</name>
+				<type>number</type>
+				<allowblank>false</allowblank>
+				<default>0</default>
+				<msg></msg>
+			</default_exp>
+		</set>
+	</config>
+	<folder root="member">
+		<path>nickcon</path>
+		<path>photo</path>
+	</folder>
+	<database>
+		<table name="{code}_autologin_table">
+			<field name="uid" type="char" length="32">고유키</field>
+			<field name="mno" type="int" length="11">회원번호</field>
+			<field name="ip" type="varchar" length="15">로그인아이피</field>
+			<field name="last_login" type="int" length="11">최종로그인시간</field>
+			<index name="uid" type="primary" />
+			<index name="mno" type="index" />
+			<index name="ip" type="index" />
+		</table>
+		
+		<table name="{code}_member_exp_table">
+			<field name="idx" type="int" length="11">고유키</field>
+			<field name="mno" type="int" length="11">회원번호</field>
+			<field name="exp" type="int" length="11">획득경험치</field>
+			<field name="msg" type="varchar" length="255">획득사유</field>
+			<field name="reg_date" type="int" length="11">획득시간</field>
+			<index name="idx" type="auto_increment" />
+			<index name="mno" type="index" />
+		</table>
+		
+		<table name="{code}_member_group_table">
+			<field name="group" type="varchar" length="20">그룹아이디</field>
+			<field name="title" type="varchar" length="20">그룹명</field>
+			<field name="allow_signin" type="enum" length="TRUE,FALSE" default="TRUE">회원가입허용</field>
+			<field name="allow_active" type="enum" length="TRUE,FALSE" default="TRUE">자동활성화</field>
+			<field name="sort" type="int" length="11">순서</field>
+			<index name="group" type="primary" />
+		</table>
+		
+		<table name="{code}_member_leave_table">
+			<field name="idx" type="int" length="11">고유키</field>
+			<field name="mno" type="int" length="11">회원번호</field>
+			<field name="msg" type="text">탈퇴사유</field>
+			<index name="idx" type="auto_increment" />
+			<index name="mno" type="index" />
+		</table>
+		
+		<table name="{code}_member_message_table">
+			<field name="idx" type="int" length="11">고유키</field>
+			<field name="mno" type="int" length="11">메세지박스소유자회원번호</field>
+			<field name="frommno" type="int" length="11">보낸사람회원번호</field>
+			<field name="tomno" type="int" length="11">받는사람회원번호</field>
+			<field name="message" type="longtext">메세지내용</field>
+			<field name="url" type="varchar" length="255">메세지를 발송한 모듈의 주소</field>
+			<field name="reg_date" type="int" length="11">발송날짜</field>
+			<field name="is_read" type="enum" length="TRUE,FALSE" default="FALSE">읽은여부</field>
+			<field name="is_system" type="enum" length="TRUE,FALSE" default="FALSE">시스템발송여부</field>
+			<index name="idx" type="auto_increment" />
+			<index name="mno" type="index" />
+			<index name="frommno" type="index" />
+			<index name="tomno" type="index" />
+			<index name="reg_date" type="index" />
+			<index name="is_read" type="index" />
+		</table>
+		
+		<table name="{code}_member_password_table">
+			<field name="idx" type="int" length="11">고유키</field>
+			<field name="question" type="varchar" length="255">질문내용</field>
+			<index name="idx" type="auto_increment" />
+			<data idx="1" question="가장 기억에 남는 장소는?" />
+			<data idx="2" question="나의 좌우명은?" />
+			<data idx="3" question="나의 보물 제1호는?" />
+			<data idx="4" question="가장 기억에 남는 선생님의 성함은?" />
+			<data idx="5" question="다른 사람이 모르는 나만의 신체비밀은?" />
+			<data idx="6" question="오래도록 기억되고 싶은 날짜는?" />
+			<data idx="7" question="받았던 선물중 가장 독특했던 선물은?" />
+			<data idx="8" question="인상깊게 읽었던 책의 제목은?" />
+			<data idx="9" question="읽은 책중에서 좋아하는 구절은?" />
+			<data idx="10" question="우리집 애완동물의 이름은?" />
+			<data idx="11" question="나의 출신 초등학교는?" />
+			<data idx="12" question="내가 태어난 곳은?" />
+			<data idx="13" question="내가 존경하는 인물은?" />
+			<data idx="14" question="나의 어릴적 별명은?" />
+			<data idx="15" question="가장 친한 친구의 이름은?" />
+		</table>
+		
+		<table name="{code}_member_phone_table">
+			<field name="phone" type="varchar" length="15">폰번호</field>
+			<field name="pcode" type="int" length="5">인증번호</field>
+			<field name="reg_date" type="int" length="11">발송시간</field>
+			<index name="phone" type="primary" />
+			<index name="pcode" type="index" />
+		</table>
+		
+		<table name="{code}_member_point_table">
+			<field name="idx" type="int" length="11">고유값</field>
+			<field name="mno" type="int" length="11">회원번호</field>
+			<field name="point" type="int" length="11">획득포인트</field>
+			<field name="msg" type="varchar" length="255">획득사유</field>
+			<field name="module" type="varchar" length="20">획득모듈</field>
+			<field name="url" type="varchar" length="255">획득주소</field>
+			<field name="is_buy" type="enum" length="TRUE,FALSE" default="FALSE">구매여부</field>
+			<field name="reg_date" type="int" length="11">획득시간</field>
+			<index name="idx" type="auto_increment" />
+			<index name="mno" type="index" />
+			<index name="is_buy" type="index" />
+			<index name="reg_date" type="index" />
+		</table>
+		
+		<table name="{code}_member_signin_table">
+			<field name="idx" type="int" length="11">고유값</field>
+			<field name="group" type="varchar" length="20">그룹아이디</field>
+			<field name="name" type="varchar" length="30">필드명</field>
+			<field name="type" type="varchar" length="20">필드종류</field>
+			<field name="title" type="varchar" length="100">필드제목</field>
+			<field name="msg" type="varchar" length="255">필드설명</field>
+			<field name="value" type="longtext">필드설정값</field>
+			<field name="allowblank" type="enum" length="TRUE,FALSE" default="FALSE">필수입력유무</field>
+			<field name="sort" type="int" length="11">순서</field>
+			<index name="idx" type="auto_increment" />
+			<index name="group" type="index" />
+			<index name="sort" type="index" />
+			<data idx="1" group="default" name="agreement" type="agreement" title="회원약관" msg="위의 회원약관에 동의합니다." value="&lt;p&gt;회원약관을 입력해주세요.&lt;/p&gt;" allowblank="FALSE" sort="0" />
+			<data idx="2" group="default" name="user_id" type="user_id" title="회원아이디" msg="아이디는 영문, 숫자, _(언더바)조합만 가능합니다." allowblank="FALSE" sort="0" />
+			<data idx="3" group="default" name="password" type="password" title="패스워드" msg="영문, 숫자, 특수문자를 사용하여 패스워드를 입력하여 주십시오." allowblank="FALSE" sort="1" />
+			<data idx="4" group="default" name="name" type="name" title="이름" msg="실명을 입력하여 주십시오." allowblank="FALSE" sort="2" />
+			<data idx="5" group="default" name="nickname" type="nickname" title="닉네임" msg="사이트에서 자신을 알릴 닉네임을 20자이내로 입력하세요." allowblank="FALSE" sort="3" />
+			<data idx="6" group="default" name="email" type="email" title="이메일주소" msg="이메일주소를 정확하게 입력하여 주십시오." allowblank="FALSE" sort="4" />
+		</table>
+		
+		<table name="{code}_member_table">
+			<field name="idx" type="int" length="11">고유값</field>
+			<field name="type" type="enum" length="ADMINISTRATOR,MODERATOR,MEMBER" default="MEMBER">회원종류</field>
+			<field name="group" type="varchar" length="20" default="default">그룹아이디</field>
+			<field name="is_active" type="enum" length="TRUE,FALSE" default="TRUE">활성계정여부</field>
+			<field name="is_leave" type="enum" length="TRUE,FALSE" default="FALSE">탈퇴계정여부</field>
+			<field name="user_id" type="varchar" length="20">회원아이디</field>
+			<field name="password" type="char" length="32">패스워드</field>
+			<field name="password_question" type="int" length="11">패스워드질문번호</field>
+			<field name="password_answer" type="varchar" length="255">패스워드질문답</field>
+			<field name="name" type="varchar" length="20">실명</field>
+			<field name="nickname" type="varchar" length="20">닉네임</field>
+			<field name="jumin" type="char" length="14">주민등록번호</field>
+			<field name="companyno" type="char" length="12">사업자등록번호</field>
+			<field name="telephone" type="varchar" length="15">전화번호</field>
+			<field name="cellphone" type="varchar" length="20">휴대전화번호</field>
+			<field name="email" type="varchar" length="200">이메일</field>
+			<field name="homepage" type="varchar" length="255">홈페이지주소</field>
+			<field name="zipcode" type="char" length="7">우편번호</field>
+			<field name="address" type="varchar" length="255">주소</field>
+			<field name="birthday" type="date">생년월일</field>
+			<field name="gender" type="enum" length=",MALE,FEMALE"></field>
+			<field name="point" type="int" length="11">포인트</field>
+			<field name="exp" type="int" length="11">경험치</field>
+			<field name="reg_date" type="int" length="11">가입일시</field>
+			<field name="leave_date" type="int" length="11">탈퇴일시</field>
+			<field name="last_login" type="int" length="11">마지막로그인일시</field>
+			<field name="signature" type="text" length="11">서명</field>
+			<field name="voter" type="int" length="11">추천인회원번호</field>
+			<field name="extra_data" type="longtext">추가필드</field>
+			<index name="idx" type="auto_increment" />
+			<index name="group" type="index" />
+			<index name="is_active" type="index" />
+			<index name="is_leave" type="index" />
+			<index name="user_id" type="index" />
+			<index name="jumin" type="index" />
+			<index name="nickname" type="index" />
+			<index name="email" type="index" />
+			<index name="birthday" type="index" />
+		</table>
+		
+		<table name="{code}_member_voter_table">
+			<field name="idx" type="int" length="11">고유값</field>
+			<field name="tomno" type="int" length="11">추천받은회원번호</field>
+			<field name="frommno" type="int" length="11">추천한회원번호</field>
+			<field name="reg_date" type="int" length="11">추천일시</field>
+			<index name="idx" type="auto_increment" />
+			<index name="tomno" type="index" />
+			<index name="frommno" type="index" />
+		</table>
+	</database>
+</module>

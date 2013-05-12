@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<title>웹하드</title>
+	<path>/module/webhard</path>
+	<setup>TRUE</setup>
+	<manager>TRUE</manager>
+	<version>1.0.0</version>
+	<config>
+		<set title="기본설정">
+			<size>
+				<name>웹하드용량</name>
+				<type>input</type>
+				<allowblank>false</allowblank>
+				<msg>웹하드 제한용량을 GB단위로 입력하여 주십시오.</msg>
+			</size>
+		</set>
+	</config>
+</module>
