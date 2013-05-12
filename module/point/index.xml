@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
 	<title>포인트</title>
-	<version>1.0.0</version>
+	<version>2.0.0</version>
 	<path>/module/point</path>
 	<setup>TRUE</setup>
 	<manager>TRUE</manager>
@@ -39,4 +39,28 @@
 			</ratio>
 		</set>
 	</config>
+	<database>
+		<table name="{code}_point_buy_table">
+			<field name="idx" type="int" length="11">고유값</field>
+			<field name="mno" type="int" length="11">회원번호</field>
+			<field name="point" type="int" length="11">구매포인트</field>
+			<field name="payment" type="int" length="11">구매방법</field>
+			<field name="status" type="enum" length="NEW,PAID,COMPLETE" default="NEW">상태</field>
+			<field name="reg_date" type="int" length="11">구매일</field>
+			<index name="idx" type="auto_increment" />
+			<index name="mno" type="index" />
+			<index name="reg_date" type="index" />
+		</table>
+		
+		<table name="{code}_point_payment_table">
+			<field name="idx" type="int" length="11">고유값</field>
+			<field name="type" type="enum" length="ACCOUNT,CARD,CELLPHONE,BANKING" default="BANKING">결제방법</field>
+			<field name="value" type="varchar" length="100">결제정보</field>
+			<field name="min_point" type="int" length="11">최소결제포인트</field>
+			<field name="max_point" type="int" length="11">최대결제포인트</field>
+			<field name="is_use" type="enum" length="TRUE,FALSE" default="TRUE">사용여부</field>
+			<index name="idx" type="auto_increment" />
+			<index name="is_use" type="index" />
+		</table>
+	</database>
 </module>
