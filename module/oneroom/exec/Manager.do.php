@@ -833,76 +833,39 @@ if ($action == 'prodealer') {
 		exit(json_encode($return));
 	}
 }
-/*
-if ($action == 'premium_auction') {
-	header('Content-type: text/xml; charset="UTF-8"', true);
-	header("Cache-Control: no-cache, must-revalidate");
-	header("Pragma: no-cache");
 
-	if ($mMember->IsLogged() == false || $mOneroom->CheckDealer() == false) $Error['point'] = '권한이 없습니다.';
-	$point = Request('point');
-	if ($mOneroom->GetConfig('premium_point') > $point) $Error['point'] = '최소입찰가보다 입찰가가 낮습니다.';
-	if ($member['point'] < $point+$mOneroom->GetConfig('premium_auction_point')) $Error['point'] = '포인트가 부족합니다.';
-	if ($mOneroom->GetMyPremiumActionCount() >= $mOneroom->GetConfig('premium_auction_limit')) $Error['point'] = '참여횟수를 이미 다 사용하였습니다.';
-	
-	if (sizeof($Error) == 0) {
-		$mDB->DBinsert($mOneroom->table['premium_auction'],array('date'=>date('Y-m',mktime(0,0,0,date('m')+1,1,date('Y'))),'mno'=>$member['idx'],'point'=>$point,'reg_date'=>GetGMT()));
-		$mMember->SendPoint($member['idx'],-($mOneroom->GetConfig('premium_auction_point')+$point),'프리미엄공간 경매입찰','','oneroom');
-	}
-	
-	echo '<?xml version="1.0" encoding="UTF-8"?>';
-	echo '<message success="'.(sizeof($Error) == 0 ? 'true' : 'false').'">';
-
-	if (sizeof($Error) > 0) {
-		echo '<errors>';
-		foreach ($Error as $id=>$msg) {
-			echo '<field><id>'.$id.'</id><msg><![CDATA['.$msg.']]></msg></field>';
-		}
-		echo '</errors>';
-	} else {
-		echo '<errors>';
-		echo '<field><id>'.number_format($member['point']-($mOneroom->GetConfig('premium_auction_point')+$point)).'</id></field>';
-		echo '</errors>';
-	}
-
-	echo '</message>';
-}
-
-if ($action == 'default_prodealer') {
-	header('Content-type: text/xml; charset="UTF-8"', true);
-	header("Cache-Control: no-cache, must-revalidate");
-	header("Pragma: no-cache");
-	
-	if ($do == 'add') {
-		$Error = array();
-		$idx = explode(',',Request('idx'));
-		
-		for ($i=0, $loop=sizeof($idx);$i<$loop;$i++) {
-			$check = $mDB->DBfetch($mOneroom->table['prodealer'],array('idx'),"where `dealer`='{$idx[$i]}' and `start_date`='-1'");
-			if (isset($check['idx']) == true) {
-				$mDB->DBupdate($mOneroom->table['prodealer'],array('region1'=>Request('region1'),'region2'=>Request('region2'),'region3'=>Request('region3')),'',"where `idx`='{$check['idx']}'");
-			} else {
-				$dealer = $mDB->DBfetch($mOneroom->table['dealer'],array('agent'),"where `idx`='{$idx[$i]}'");
-				$mDB->DBinsert($mOneroom->table['prodealer'],array('agent'=>$dealer['agent'],'dealer'=>$idx[$i],'region1'=>Request('region1'),'region2'=>Request('region2'),'region3'=>Request('region3'),'start_date'=>'-1'));
+if ($action == 'point') {
+	if ($do == 'payment') {
+		$mModule = new Module('point');
+		if ($mModule->IsSetup() == true) {
+			$mPoint = new ModulePoint();
+			
+			$insert['mno'] = $member['idx'];
+			$insert['point'] = Request('point');
+			$insert['price'] = ceil($insert['point']/$mPoint->GetConfig('ratio')/100)*100;
+			$insert['payment'] = Request('payment');
+			
+			$payment = $mDB->DBfetch($mPoint->table['payment'],'*',"where `idx`='{$insert['payment']}'");
+			switch ($payment['type']) {
+				case 'BANKING' :
+					$insert['payinfo'] = Request('banking2').' (입금예정일 : '.Request('banking1').')';
+					$message = Request('banking1').'일까지 '.number_format($insert['price']).'원을 입금하여 주십시오.<br />입금계좌 : '.$payment['value'];
+					break;
+					
+				default :
+					$message = '';
 			}
-		}
-		echo '<?xml version="1.0" encoding="UTF-8"?>';
-		echo '<message success="'.(sizeof($Error) == 0 ? 'true' : 'false').'">';
-
-		if (sizeof($Error) > 0) {
-			echo '<errors>';
-			foreach ($Error as $id=>$msg) {
-				echo '<field><id>'.$id.'</id><msg><![CDATA['.$msg.']]></msg></field>';
-			}
-			echo '</errors>';
+			
+			$insert['reg_date'] = GetGMT();
+			$mDB->DBinsert($mPoint->table['buy'],$insert);
+			$return['success'] = true;
+			$return['type'] = $payment['type'];
+			$return['message'] = $message;
 		} else {
-			echo '<errors>';
-			echo '<field><id>'.$idx.'</id></field>';
-			echo '</errors>';
+			$return['success'] = false;
 		}
-
-		echo '</message>';
+		
+		exit(json_encode($return));
 	}
 }
-*/
 ?>

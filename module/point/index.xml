@@ -44,7 +44,9 @@
 			<field name="idx" type="int" length="11">고유값</field>
 			<field name="mno" type="int" length="11">회원번호</field>
 			<field name="point" type="int" length="11">구매포인트</field>
+			<field name="price" type="int" length="11">결제금액</field>
 			<field name="payment" type="int" length="11">구매방법</field>
+			<field name="payinfo" type="varchar" length="150">구매정보</field>
 			<field name="status" type="enum" length="NEW,PAID,COMPLETE" default="NEW">상태</field>
 			<field name="reg_date" type="int" length="11">구매일</field>
 			<index name="idx" type="auto_increment" />

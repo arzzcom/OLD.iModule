@@ -572,117 +572,59 @@ if ($action == 'point') {
 		}
 	}
 	
-	if ($get == 'item') {
-		$mPoint = new ModulePoint();
-		if ($mPoint->GetConfig('use_buy') == 'on') {
-			$lists = $mDB->DBfetchs($mPoint->table['item'],'*');
+	if ($get == 'paylist') {
+		$mModule = new Module('point');
+		if ($mModule->IsSetup() == true) {
+			$mPoint = new ModulePoint();
+			$find = "where `mno`='{$member['idx']}'";
+			$total = $mDB->DBcount($mPoint->table['buy'],$find);
+			$lists = $mDB->DBfetchs($mPoint->table['buy'],'*',$find,$orderer,$limiter);
+			
 			for ($i=0, $loop=sizeof($lists);$i<$loop;$i++) {
-				if (!$lists[$i]['info']) {
-					$pointValue = $mPoint->GetPointByMoney($lists[$i]['money']);
-					$lists[$i]['info'] = $pointValue < $lists[$i]['point'] ? '보너스 포인트 : '.number_format($lists[$i]['point'] - $pointValue).'포인트' : '';
+				$payment = $mDB->DBfetch($mPoint->table['payment'],'*',"where `idx`='{$lists[$i]['payment']}'");
+				if ($payment['type'] == 'BANKING') {
+					$lists[$i]['payment'] = '[무통장입금] '.$payment['value'];
+				}
+				$lists[$i]['reg_date'] = GetTime('Y-m-d H:i:s',$lists[$i]['reg_date']);
+			}
+		}
+	}
+	
+	if ($get == 'payment') {
+		$mModule = new Module('point');
+		if ($mModule->IsSetup() == true) {
+			$mPoint = new ModulePoint();
+			if ($mPoint->GetConfig('use_buy') == 'on') {
+				$type = array('BANKING'=>'무통장입금','ACCOUNT'=>'계좌이체','CARD'=>'신용카드','CELLPHONE'=>'휴대폰결제');
+				$lists = $mDB->DBfetchs($mPoint->table['payment'],'*',"where `is_use`='TRUE'");
+				for ($i=0, $loop=sizeof($lists);$i<$loop;$i++) {
+					$lists[$i]['display'] = $type[$lists[$i]['type']];
+					if ($lists[$i]['type'] == 'BANKING') {
+						$lists[$i]['display'] = '['.$lists[$i]['display'].'] '.$lists[$i]['value'];
+					}
 				}
 			}
 		}
 	}
-}
-/*
-if ($action == 'premium') {
-	if ($get == 'list') {
-		$find = "where `mno`='{$member['idx']}'";
-		
-		$category1 = $mOneroom->GetZeroValue('category1');
-		$category2 = $mOneroom->GetZeroValue('category2');
-		$category3 = $mOneroom->GetZeroValue('category3');
-		
-		$region1 = $mOneroom->GetZeroValue('region1');
-		$region2 = $mOneroom->GetZeroValue('region2');
-		$region3 = $mOneroom->GetZeroValue('region3');
-		
-		$type = Request('type');
-		
-		if ($category1 != null) $find.= " and `category1`='$category1'";
-		if ($category2 != null) $find.= " and `category1`='$category2'";
-		if ($category3 != null) $find.= " and `category1`='$category3'";
-		
-		if ($region1 != null) $find.= " and `region1`='$region1'";
-		if ($region2 != null) $find.= " and `region2`='$region2'";
-		if ($region3 != null) $find.= " and `region3`='$region3'";
-		
-		if ($keyword != null) $find.= " and `title` like '%$keyword%'";
-		
-		$lists = $mDB->DBfetchs($mOneroom->table['item'],array('idx','status','category1','category2','category3','region1','region2','region3','is_buy','is_rent_all','is_rent_month','is_rent_short','price_buy','price_rent_all','price_rent_deposit','price_rent_month','title','areasize','real_areasize','reg_date','hit'),$find,$orderer,$limiter);
-		$total = $mDB->DBcount($mOneroom->table['item'],$find);
 	
-		for ($i=0, $loop=sizeof($lists);$i<$loop;$i++) {
-			$lists[$i]['region'] = $mOneroom->GetRegion($lists[$i]['region1'],$lists[$i]['region2'],$lists[$i]['region3']);
-			$lists[$i]['category'] = $mOneroom->GetCategory($lists[$i]['category1'],$lists[$i]['category2'],$lists[$i]['category3']);
-			
-			$lists[$i]['price_type'] = $lists[$i]['is_buy'].','.$lists[$i]['is_rent_all'].','.$lists[$i]['is_rent_month'].','.$lists[$i]['is_rent_short'];
-			$lists[$i]['price'] = $lists[$i]['price_buy'].','.$lists[$i]['price_rent_all'].','.$lists[$i]['price_rent_deposit'].','.$lists[$i]['price_rent_month'];
-			$lists[$i]['reg_date'] = GetTime('Y-m-d H:i:s',$lists[$i]['reg_date']);
-		}
-	}
-	
-	if ($get == 'data') {
-		header('Content-type: text/xml; charset=UTF-8', true);
-		header("Cache-Control: no-cache, must-revalidate");
-		header("Pragma: no-cache");
-		
-		$idx = Request('idx');
-		$data = $mDB->DBfetch($mOneroom->table['item'],'*',"where `idx`='$idx'");
-		$data['is_buy'] = $data['is_buy'] == 'TRUE' ? 'on' : '';
-		$data['is_rent_all'] = $data['is_rent_all'] == 'TRUE' ? 'on' : '';
-		$data['is_rent_month'] = $data['is_rent_month'] == 'TRUE' ? 'on' : '';
-		$data['is_rent_short'] = $data['is_rent_short'] == 'TRUE' ? 'on' : '';
-		$data['floor1'] = array_shift(explode('-',$data['floor']));
-		$data['floor2'] = array_pop(explode('-',$data['floor']));
-		$data['floor1'] = $data['floor1'] ? $data['floor1'] : '0';
-		$data['floor2'] = $data['floor2'] ? $data['floor2'] : '0';
-		$data['is_double'] = $data['is_double'] == 'TRUE' ? 'on' : '';
-		$data['is_under'] = $data['is_under'] == 'TRUE' ? 'on' : '';
-		$data['movein_date_now'] = $data['movein_date'] == '0000-00-00' ? 'on' : '';
-		
-		if ($data['subway'] != '0') {
-			$subway = $mDB->DBfetch($mOneroom->table['subway'],array('parent'),"where `idx`='{$data['subway']}'");
-			$data['subway1'] = $subway['parent'];
-			$data['subway2'] = $data['subway'];
+	if ($get == 'buyinfo') {
+		$mModule = new Module('point');
+		if ($mModule->IsSetup() == true) {
+			$mPoint = new ModulePoint();
+			if ($mPoint->GetConfig('use_buy') == 'on') {
+				$return['success'] = true;
+				$return['ratio'] = $mPoint->GetConfig('ratio');
+			} else {
+				$return['success'] = false;
+			}
+		} else {
+			$return['success'] = false;
 		}
 		
-		if ($data['university'] != '0') {
-			$university = $mDB->DBfetch($mOneroom->table['university'],array('parent'),"where `idx`='{$data['university']}'");
-			$data['university1'] = $university['parent'];
-			$data['university2'] = $data['university'];
-		}
-		
-		$options = explode(',',$data['options']);
-		for ($i=0, $loop=sizeof($options);$i<$loop;$i++) $data['options_'.$options[$i]] = 'on';
-		
-		$data['default_image'] = $data['image'];
-		$data['detail'] = str_replace('{$moduleDir}',$mOneroom->moduleDir,$data['detail']);
-		echo GetArrayToExtXML($data);
-		exit;
-	}
-	
-	
-	if ($get == 'slot') {
-		$lists = $mDB->DBfetchs($mOneroom->table['slot'],'*');
-		$return['point'] = $member['point'];
+		exit(json_encode($return));
 	}
 }
 
-if ($action == 'premium_auction') {
-	if ($get == 'list') {
-		$date = date('Y-m',mktime(0,0,0,date('m')+1,1,date('Y')));
-		$data = $mDB->DBfetchs($mOneroom->table['premium_auction'],array('mno','MAX(point)','MAX(reg_date)'),"where `date`='$date' group by `mno`");
-		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
-			$memberInfo = $mMember->GetMemberInfo($data[$i]['mno']);
-			$user = substr($memberInfo['user_id'],0,3);
-			for ($j=3;$j<strlen($memberInfo['user_id']);$j++) $user.= '*';
-			$lists[] = '{"user":"'.$user.'","point":"'.$data[$i][1].'","reg_date":"'.GetTime('Y.m.d H:i:s',$data[$i][2]).'"}';
-		}
-	}
-}
-*/
 $return['totalCount'] = isset($total) == true ? $total : sizeof($lists);
 $return['lists'] = $lists;
 

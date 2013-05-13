@@ -27,6 +27,20 @@ Ext.define('MyDesktop.<?php echo $id; ?>',{
 			fields:["idx","reg_date","msg",{name:"point",type:"int"}]
 		});
 		
+		var store2 = new Ext.data.JsonStore({
+			proxy:{
+				type:"ajax",
+				simpleSortMode:true,
+				url:"<?php echo $_ENV['dir']; ?>/module/oneroom/exec/Manager.get.php",
+				reader:{type:"json",root:"lists",totalProperty:"totalCount"},
+				extraParams:{action:"point",get:"paylist"}
+			},
+			remoteSort:true,
+			sorters:[{property:"reg_date",direction:"DESC"}],
+			pageSize:50,
+			fields:["idx","reg_date","payment","point","price","status"]
+		});
+		
 		var desktop = this.app.getDesktop();
 		var win = desktop.getWindow("<?php echo $id; ?>");
 		if (!win) {
@@ -51,109 +65,150 @@ Ext.define('MyDesktop.<?php echo $id; ?>',{
 								id:"<?php echo $id; ?>BuyWindow",
 								title:"포인트구매",
 								width:500,
-								height:300,
 								layout:"fit",
+								resizable:false,
 								items:[
-									new Ext.grid.GridPanel({
-										id:"<?php echo $id; ?>ItemList",
+									new Ext.form.FormPanel({
 										border:false,
-										columns:[
-											{
-												header:"포인트",
-												dataIndex:"point",
-												width:110,
-												renderer:function(value) {
-													return '<div style="text-align:right;">'+GetNumberFormat(value)+'포인트</div>';
-												}
-											},{
-												header:"구매가격",
-												dataIndex:"money",
-												width:100,
-												renderer:function(value) {
-													return '<div style="text-align:right;">'+GetNumberFormat(value)+'원</div>';
-												}
-											},{
-												header:"상품정보",
-												dataIndex:"info",
-												minWidth:120,
-												flex:1
-											}
-										],
-										store:new Ext.data.JsonStore({
-											proxy:{
-												type:"ajax",
-												simpleSortMode:false,
-												url:"<?php echo $_ENV['dir']; ?>/module/oneroom/exec/Manager.get.php",
-												reader:{type:"json",root:"lists",totalProperty:"totalCount",point:"point"},
-												extraParams:{action:"point",get:"item"}
-											},
-											remoteSort:false,
-											sorters:[{property:"point",direction:"ASC"}],
-											autoLoad:true,
-											pageSize:50,
-											fields:["idx",{name:"point",type:"int"},{name:"money",type:"int"},"info"]
-										}),
-										columnLines:true,
-										selModel:new Ext.selection.CheckboxModel({mode:"SINGLE"}),
-										bbar:[
-											new Ext.form.ComboBox({
-												flex:1,
-												typeAhead:true,
-												triggerAction:"all",
-												lazyRender:true,
-												store:new Ext.data.JsonStore({
-													proxy:{
-														type:"ajax",
-														simpleSortMode:true,
-														url:"<?php echo $_ENV['dir']; ?>/module/oneroom/exec/Manager.get.php",
-														reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-														extraParams:{"action":"region"}
-													},
-													sorters:[{property:"sort",direction:"ASC"}],
-													autoLoad:true,
-													fields:["idx","title","sort"]
-												}),
-												width:100,
-												editable:false,
-												mode:"local",
-												displayField:"title",
-												valueField:"idx",
-												emptyText:"결제방식을 선택하여 주십시오."
+										id:"<?php echo $id; ?>BuyForm",
+										fieldDefaults:{labelWidth:85,labelAlign:"right",anchor:"100%",allowBlank:false},
+										bodyPadding:"5 5 0 5",
+										items:[
+											new Ext.form.FieldSet({
+												title:"결제방식 선택",
+												items:[
+													new Ext.form.ComboBox({
+														fieldLabel:"결제방식",
+														name:"payment",
+														typeAhead:true,
+														lazyRender:false,
+														store:new Ext.data.JsonStore({
+															proxy:{
+																type:"ajax",
+																simpleSortMode:true,
+																url:"<?php echo $_ENV['dir']; ?>/module/oneroom/exec/Manager.get.php",
+																reader:{type:"json",root:"lists",totalProperty:"totalCount"},
+																extraParams:{action:"point",get:"payment"}
+															},
+															remoteSort:false,
+															sorters:[{property:"sort",direction:"ASC"}],
+															autoLoad:true,
+															pageSize:50,
+															fields:["idx","display","type","min_point","max_point"]
+														}),
+														editable:false,
+														mode:"local",
+														displayField:"display",
+														valueField:"idx",
+														triggerAction:"all",
+														emptyText:"결제방식을 선택하세요.",
+														listeners:{select:{fn:function(form,select) {
+															var selected = select.shift().data;
+															if (selected.type == "BANKING") {
+																Ext.getCmp("<?php echo $id; ?>BuyFormBANKING").show();
+																Ext.getCmp("<?php echo $id; ?>BuyFormBANKING").enable();
+															}
+															
+															Ext.getCmp("<?php echo $id; ?>BuyForm").getForm().findField("point").setMinValue(selected.min_point);
+															Ext.getCmp("<?php echo $id; ?>BuyForm").getForm().findField("point").setMaxValue(selected.max_point == "0" ? "" : selected.max_point);
+															var minPoint = selected.min_point == "0" ? "제한없음" : GetNumberFormat(selected.min_point)+"포인트";
+															var maxPoint = selected.max_point == "0" ? "제한없음" : GetNumberFormat(selected.max_point)+"포인트";
+															Ext.getCmp("<?php echo $id; ?>BuyFormLimit").setValue("최소구매포인트 : "+minPoint+" / 최대구매포인트 : "+maxPoint);
+														}}}
+													})
+												]
+											}),
+											new Ext.form.FieldSet({
+												title:"포인트 구매",
+												items:[
+													new Ext.form.FieldContainer({
+														fieldLabel:"구매포인트",
+														layout:"hbox",
+														items:[
+															new Ext.form.NumberField({
+																name:"point",
+																width:100,
+																value:1000,
+																step:1000,
+																listeners:{
+																	blur:{fn:function(form) {
+																		form.setValue(Math.floor(form.getValue()/1000)*1000);
+																	}},
+																	change:{fn:function(form) {
+																		Ext.getCmp("<?php echo $id; ?>BuyFormPrice").setValue(GetNumberFormat(Math.ceil(Ext.getCmp("<?php echo $id; ?>BuyForm").getForm().findField("point").getValue()/Ext.getCmp("<?php echo $id; ?>BuyFormPrice").ratio/100)*100)+" 원");
+																	}}
+																}
+															}),
+															new Ext.form.DisplayField({
+																value:"&nbsp;포인트 (1000포인트 단위)"
+															})
+														]
+													}),
+													new Ext.form.DisplayField({
+														id:"<?php echo $id; ?>BuyFormLimit",
+														fieldLabel:"구매제한안내",
+														value:"최소구매포인트 : 제한없음 / 최대구매포인트 : 제한없음"
+													}),
+													new Ext.form.DisplayField({
+														id:"<?php echo $id; ?>BuyFormPrice",
+														fieldLabel:"결제금액",
+														ratio:1,
+														value:"0 원"
+													})
+												]
+											}),
+											new Ext.form.FieldSet({
+												id:"<?php echo $id; ?>BuyFormBANKING",
+												title:"입금자정보 (선택하신 입금계좌로 결제금액을 입금하여 주십시오.)",
+												hidden:true,
+												disabled:true,
+												items:[
+													new Ext.form.FieldContainer({
+														fieldLabel:"입금예정일",
+														layout:"hbox",
+														items:[
+															new Ext.form.DateField({
+																name:"banking1",
+																format:"Y-m-d",
+																value:Ext.Date.format(new Date(),"Y-m-d"),
+																width:100
+															}),
+															new Ext.form.DisplayField({
+																value:"&nbsp;(입금예정일로부터 7일이상 미입금시 자동취소)"
+															})
+														],
+													}),
+													new Ext.form.TextField({
+														fieldLabel:"입금자명",
+														name:"banking2"
+													})
+												]
 											})
 										]
 									})
 								],
 								buttons:[
 									new Ext.Button({
-										text:"선택상품구매",
+										text:"포인트구매",
 										handler:function() {
-											var checked = Ext.getCmp("<?php echo $id; ?>SlotList").getSelectionModel().getSelection();
-											if (checked.length == 0) {
-												Ext.Msg.show({title:"에러",msg:"구매할 상품을 선택하여 주십시오.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
-											} else {
-												Ext.Msg.show({title:"확인",msg:checked[0].get("point")+"포인트를 "+GetNumberFormat(checked[0].get("money"))+"원에 구매하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
-													if (button == "yes") {
-														Ext.Msg.wait("포인트 구매중입니다.","잠시만 기다려주십시오.");
-														Ext.Ajax.request({
-															url:"<?php echo $_ENV['dir']; ?>/module/oneroom/exec/Manager.do.php",
-															success:function(response) {
-																var data = Ext.JSON.decode(response.responseText);
-																if (data.success == true) {
-																	Ext.Msg.show({title:"안내",msg:"성공적으로 구매하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
-																		Ext.getCmp("<?php echo $id; ?>BuyWindow").close();
-																	}});
-																} else {
-																	Ext.Msg.show({title:"안내",msg:data.message,buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
-																}
-															},
-															failure:function() {
-																Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
-															},
-															params:{"action":"slot","do":"buy","idx":checked[0].get("idx")}
-														});
+											Ext.getCmp("<?php echo $id; ?>BuyForm").getForm().submit({
+												url:"<?php echo $_ENV['dir']; ?>/module/oneroom/exec/Manager.do.php?action=point&do=payment",
+												submitEmptyText:false,
+												waitTitle:"잠시만 기다려주십시오.",
+												waitMsg:"포인트구매신청중입니다.",
+												success:function(form,action) {
+													if (action.result.type == "BANKING") {
+														Ext.Msg.show({title:"안내",msg:"성공적으로 처리되었습니다.<br />"+action.result.message,buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function(button) {
+															Ext.getCmp("<?php echo $id; ?>BuyWindow").close();
+															Ext.getCmp("<?php echo $id; ?>ListTab").setActiveTab(1);
+															Ext.getCmp("<?php echo $id; ?>ListPanel2").getStore().loadPage(1);
+														}});
 													}
-												}});
-											}
+												},
+												failure:function(form,action) {
+													Ext.Msg.show({title:"에러",msg:"입력내용에 오류가 있습니다.<br />입력내용을 다시 한번 확인하여 주십시오.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
+												}
+											});
 										}
 									}),
 									new Ext.Button({
@@ -162,15 +217,47 @@ Ext.define('MyDesktop.<?php echo $id; ?>',{
 											Ext.getCmp("<?php echo $id; ?>BuyWindow").close();
 										}
 									})
-								]
+								],
+								listeners:{
+									show:{fn:function() {
+										Ext.Ajax.request({
+											url:"<?php echo $_ENV['dir']; ?>/module/oneroom/exec/Manager.get.php",
+											success:function(response) {
+												var data = Ext.JSON.decode(response.responseText);
+												if (data.success == true) {
+													Ext.getCmp("<?php echo $id; ?>BuyFormPrice").ratio = parseInt(data.ratio);
+													Ext.getCmp("<?php echo $id; ?>BuyForm").getForm().findField("point").fireEvent("change",Ext.getCmp("<?php echo $id; ?>BuyForm").getForm().findField("point"));
+												} else {
+													Ext.Msg.show({title:"안내",msg:"지금은 포인트를 구매할 수 없습니다.<br />관리자에게 문의하여 주시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function(button) {
+														Ext.getCmp("<?php echo $id; ?>BuyWindow").close();
+													}});
+												}
+											},
+											failure:function() {
+											},
+											headers:{},
+											params:{"action":"point","get":"buyinfo"}
+										});
+									}}
+								}
 							}).show();
 						}
 					}),
 					'-',
 					new Ext.toolbar.TextItem({
-						text:"나의 현재 포인트 : 계산중...",
-						listeners:{render:{fn:function() {
-							
+						text:"나의 포인트 : 계산중...",
+						listeners:{render:{fn:function(button) {
+							Ext.Ajax.request({
+								url:"<?php echo $_ENV['dir']; ?>/module/oneroom/exec/Manager.get.php",
+								success:function(response) {
+									var data = Ext.JSON.decode(response.responseText);
+									button.setText("나의 포인트 : "+GetNumberFormat(data.point)+"포인트");
+								},
+								failure:function() {
+								},
+								headers:{},
+								params:{"action":"mypoint"}
+							});
 						}}}
 					})
 				],
@@ -181,7 +268,7 @@ Ext.define('MyDesktop.<?php echo $id; ?>',{
 						tabPosition:"bottom",
 						items:[
 							new Ext.grid.GridPanel({
-								id:"ListPanel1",
+								id:"<?php echo $id; ?>ListPanel1",
 								title:"포인트적립/사용내역",
 								layout:"fit",
 								border:false,
@@ -222,13 +309,64 @@ Ext.define('MyDesktop.<?php echo $id; ?>',{
 									store:store1,
 									displayInfo:true
 								})
+							}),
+							new Ext.grid.GridPanel({
+								id:"<?php echo $id; ?>ListPanel2",
+								title:"포인트구매내역",
+								layout:"fit",
+								border:false,
+								autoScroll:true,
+								columns:[
+									new Ext.grid.RowNumberer(),
+									{
+										header:"구매일시",
+										dataIndex:"reg_date",
+										width:120,
+										renderer:function(value) {
+											return '<div style="font-family:tahoma;">'+value+'</div>'
+										}
+									},{
+										header:"구매방법",
+										dataIndex:"payment",
+										minWidth:150,
+										flex:1
+									},{
+										header:"구매포인트",
+										dataIndex:"point",
+										width:110,
+										renderer:function(value) {
+											return '<div style="text-align:right; color:blue;">'+GetNumberFormat(value)+' 포인트</div>';
+										}
+									},{
+										header:"결제금액",
+										dataIndex:"price",
+										width:110,
+										renderer:function(value) {
+											return '<div style="text-align:right; color:red;">'+GetNumberFormat(value)+' 원</div>';
+										}
+									},{
+										header:"상태",
+										dataIndex:"status",
+										width:80,
+										renderer:function(value) {
+											var status = {NEW:"<span style='color:red;'>결제확인중</span>",COMPLETE:"<span style='color:blue;'>충전완료</span>"};
+											return status[value];
+										}
+									}
+								],
+								columnLines:true,
+								store:store2,
+								bbar:new Ext.PagingToolbar({
+									store:store2,
+									displayInfo:true
+								})
 							})
 						]
 					})
 				],
 				listeners:{show:{fn:function() {
 					store1.load();
-					//store2.load();
+					store2.load();
 				}}}
 			}).show();
 		}
