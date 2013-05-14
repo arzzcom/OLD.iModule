@@ -92,7 +92,10 @@ class Member {
 	function GetMemberInfo($mno='') {
 		$mno = $mno == '' ? (isset($_SESSION['logged']) == true ? $_SESSION['logged'] : 0) : $mno;
 
-		$data = $this->mDB->DBfetch($_ENV['table']['member'],'*',"where `idx`=$mno");
+		if ($this->mDB->DBfind($_ENV['table']['member']) == true) {
+			$data = $this->mDB->DBfetch($_ENV['table']['member'],'*',"where `idx`='$mno'");
+		}
+		
 		if (isset($data['idx']) == true) {
 			$data['level'] = $this->GetLevel($data['exp']);
 
@@ -121,7 +124,11 @@ class Member {
 			$data['extra'] = unserialize($data['extra_data']);
 			unset($data['extra_data']);
 		} else {
-			$level = $this->mDB->DBfetch($_ENV['table']['level'],array('lv','exp','next'),"where `lv`=0");
+			if ($this->mDB->DBfind($_ENV['table']['level']) == true) {
+				$level = $this->mDB->DBfetch($_ENV['table']['level'],array('lv','exp','next'),"where `lv`=0");
+			} else {
+				$level = array('lv'=>'0','exp'=>0,'next'=>100);
+			}
 
 			$data['idx'] = 0;
 			$data['user_id'] = '';

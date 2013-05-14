@@ -15,6 +15,7 @@ class Module {
 	function __construct($module) {
 		$this->moduleName = $module;
 		$this->mDB = &DB::instance();
+		
 		$this->mMember = &Member::instance();
 		$this->member = $this->mMember->GetMemberInfo();
 		$this->mIPBan = &IPBan::instance();
@@ -47,7 +48,7 @@ class Module {
 		}
 	}
 	
-	function Install($config='') {
+	function Install($config='',$isTop=false) {
 		if ($this->GetModuleXML('is_setup') == 'TRUE' && $this->IsSetup() == false) {
 			$database = $this->GetModuleXML('database');
 		
@@ -93,8 +94,26 @@ class Module {
 				}
 			}
 			
-			$sort = $this->mDB->DBcount($_ENV['table']['module']);
-			$this->mDB->DBinsert($_ENV['table']['module'],array('module'=>$this->moduleName,'name'=>$this->GetModuleXML('title'),'version'=>$this->GetModuleXML('version'),'config'=>$config,'is_admin'=>$this->GetModuleXMl('is_manager'),'is_admin_top'=>'FALSE','sort'=>$sort));
+			if ($isTop == true) {
+				$sort = $this->mDB->DBcount($_ENV['table']['module'],"where `is_admin_top`='TRUE'");
+			} else {
+				$sort = 0;
+			}
+			
+			if ($config == '' && $this->GetModuleXML('is_config') == 'TRUE') {
+				$configs = $this->GetModuleXML()->config->set;
+				
+				$default_config = array();
+				for ($i=0, $loop=sizeof($configs);$i<$loop;$i++) {
+					foreach ($configs[$i] as $name=>$conf) {
+						$default_config[$name] = (string)$conf->default;
+					}
+				}
+				
+				$config = serialize($default_config);
+			}
+			
+			$this->mDB->DBinsert($_ENV['table']['module'],array('module'=>$this->moduleName,'name'=>$this->GetModuleXML('title'),'version'=>$this->GetModuleXML('version'),'config'=>$config,'is_admin'=>$this->GetModuleXMl('is_manager'),'is_admin_top'=>($isTop == true ? 'TRUE' : 'FALSE'),'sort'=>$sort));
 		}
 	}
 

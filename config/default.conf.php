@@ -9,6 +9,7 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'].'/iModule.conf.php') == true) {
 	REQUIRE_ONCE $_SERVER['DOCUMENT_ROOT'].'/iModule.conf.php';
 }
 
+$_ENV['code'] = isset($_ENV['code']) == true && strlen($_ENV['code']) > 0 ? $_ENV['code'] : 'imodule';
 $_ENV['isIncluded'] = array();
 $_ENV['isHeaderIncluded'] = false;
 $_ENV['isFooterIncluded'] = false;

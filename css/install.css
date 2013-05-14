@@ -2,15 +2,22 @@ BODY {background:#2F2F2F;}
 
 .version {position:absolute; top:25px; right:10px; font-family:tahoma; font-size:14px; letter-spacing:-1px; color:#EEEEEE;}
 
+.installTitle {height:80px; background:#000000;}
+.installTitle DIV {width:600px; height:80px; margin:0 auto; background:url(../images/install/install.gif) no-repeat; position:relative;}
+
 .updateTitle {height:80px; background:#000000;}
 .updateTitle DIV {width:600px; height:80px; margin:0 auto; background:url(../images/install/update.gif) no-repeat; position:relative;}
 
 .installBox {width:570px; padding:10px; margin:10px auto; border:5px solid #4F4F4F; background:#000000; color:#CCCCCC; font-size:14px; font-weight:bold; font-family:NanumGothicWeb; line-height:160%;}
 
+.checkpoint {font-family:NanumGothicWeb; color:#FFFFFF; font-weight:normal; font-size:12px; background:url(../images/install/bullet_go.png) no-repeat 0px 50%; padding-left:16px;}
+.checkicon {height:20px; font:0/0 arial; text-align:right;}
+.checkerror {font-family:NanumGothicWeb; background:url(../images/install/bullet_error.png) no-repeat 0px 0px; line-height:16px; font-size:11px; color:#666666; font-weight:normal; padding-left:20px;}
+
 #installButton {width:430px; padding:10px; margin:10px auto; text-align:center; font-size:12px; color:#E00000; font-family:NanumGothicWeb; font-weight:bold;}
 
-.loginBox {width:420px; padding:10px; margin:10px auto; border:5px solid #4F4F4F; background:#000000;}
-.loginBox .inputbox {border:2px solid #4F4F4F; background:#2F2F2F; color:#EEEEEE; font-family:verdana; font-size:16px; padding:3px; width:290px; height:18px;}
+.inputbox {border:2px solid #4F4F4F; background:#2F2F2F; color:#EEEEEE; font-family:verdana; font-size:16px; padding:3px; width:400px; height:18px;}
+.info {padding-left:20px; background:url(../images/install/bullet_go.png) no-repeat 0px 0px; line-height:16px; font-size:11px; color:#FFFFFF; font-family:NanumGothicWeb; font-weight:normal;}
 .loginBox .checkbox {width:13px; height:13px;}
 .loginBox LABEL {cursor:pointer;}
 .loginButton {margin:10px 5px 0px 5px; border-top:1px dashed #4F4F4F; text-align:right; font:0/0 arial; padding-top:10px;}

@@ -42,7 +42,7 @@ function ArzzEncoder($text,$key='') {
 		$readFile = @file($_ENV['path'].'/config/key.conf.php') or die('Not Found key.conf.php File!!<br>Please Install Solution Again!!');
 		$_ENV['key'] = trim($readFile[1]);
 	}
-	return base64_encode(rtrim(mcrypt_encrypt(MCRYPT_RIJNDAEL_128,$key ? $key : $_ENV['key'],$text,MCRYPT_MODE_ECB,'')));
+	return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128,$key ? $key : $_ENV['key'],$text,MCRYPT_MODE_ECB,''));
 }
 
 function ArzzDecoder($text,$key='') {
@@ -51,7 +51,7 @@ function ArzzDecoder($text,$key='') {
 		$_ENV['key'] = trim($readFile[1]);
 	}
 
-	return rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_128,$key ? $key : $_ENV['key'],base64_decode($text),MCRYPT_MODE_ECB,''));
+	return mcrypt_decrypt(MCRYPT_RIJNDAEL_128,$key ? $key : $_ENV['key'],base64_decode($text),MCRYPT_MODE_ECB,'');
 }
 
 function Alertbox($msg,$code=0,$redirect=null,$target=null) {
@@ -960,11 +960,11 @@ function CheckPhoneNumber($phone) {
 }
 
 function CheckEmail($email) {
-	return preg_match('/^[[:alnum:]]+([_.-][[:alnum:]]+)*[_.-]*@([[:alnum:]]+([.-][[:alnum:]]+)*)+.[[:alpha:]]{2,4}$/',$email);
+	return preg_match('/^[[:alnum:]]+([_.-\]\+[[:alnum:]]+)*[_.-]*@([[:alnum:]]+([.-][[:alnum:]]+)*)+.[[:alpha:]]{2,4}$/',$email);
 }
 
 function CheckUserID($user_id) {
-	return preg_match('/^[a-zA-z]{1}[[:alnum:]]{5,19}$/',$user_id);
+	return preg_match('/^[a-zA-z]{1}[[:alnum:]]{4,20}$/',$user_id);
 }
 
 function CheckNickname($nickname) {

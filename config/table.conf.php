@@ -1,5 +1,4 @@
 <?php
-$_ENV['code'] = 'iboard';
 $_ENV['table']['db'] = $_ENV['code'].'_db_table';
 $_ENV['table']['autologin'] = $_ENV['code'].'_autologin_table';
 $_ENV['table']['adminlog'] = $_ENV['code'].'_admin_log_table';

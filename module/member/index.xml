@@ -113,6 +113,7 @@
 			<field name="allow_active" type="enum" length="TRUE,FALSE" default="TRUE">자동활성화</field>
 			<field name="sort" type="int" length="11">순서</field>
 			<index name="group" type="primary" />
+			<data group="default" title="기본그룹" allow_signin="TRUE" allow_active="TRUE" sort="0" />
 		</table>
 		
 		<table name="{code}_member_leave_table">
@@ -121,6 +122,27 @@
 			<field name="msg" type="text">탈퇴사유</field>
 			<index name="idx" type="auto_increment" />
 			<index name="mno" type="index" />
+		</table>
+		
+		<table name="{code}_member_level_table">
+			<field name="lv" type="int" length="11">레벨</field>
+			<field name="exp" type="int" length="11">최소경험치</field>
+			<field name="next" type="int" length="11">최대경험치</field>
+			<field name="limit_exp" type="int" length="11">하루획득가능경험치</field>
+			<field name="limit_point" type="int" length="11">하루획득가능포인트</field>
+			<index name="lv" type="primary" />
+			<index name="exp" type="index" />
+			<data lv="0" exp="0" next="100" limit_exp="0" limit_point="0" />
+			<data lv="1" exp="100" next="300" limit_exp="0" limit_point="0" />
+			<data lv="2" exp="300" next="600" limit_exp="0" limit_point="0" />
+			<data lv="3" exp="600" next="1000" limit_exp="0" limit_point="0" />
+			<data lv="4" exp="1000" next="1500" limit_exp="0" limit_point="0" />
+			<data lv="5" exp="1500" next="2100" limit_exp="0" limit_point="0" />
+			<data lv="6" exp="2100" next="2800" limit_exp="0" limit_point="0" />
+			<data lv="7" exp="2800" next="3600" limit_exp="0" limit_point="0" />
+			<data lv="8" exp="3600" next="4500" limit_exp="0" limit_point="0" />
+			<data lv="9" exp="4500" next="5500" limit_exp="0" limit_point="0" />
+			<data lv="10" exp="5500" next="0" limit_exp="0" limit_point="0" />
 		</table>
 		
 		<table name="{code}_member_message_table">
