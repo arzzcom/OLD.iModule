@@ -94,7 +94,7 @@ if ($step == 4) {
 			
 			
 			<tr>
-				<td colspan="2" class="checkpoint">글로벌 설정파일 존재여부를 확인입니다.</td>
+				<td colspan="2" class="checkpoint">글로벌 설정파일 존재여부를 확인합니다.</td>
 				<td class="checkicon">
 					<?php echo $checking_global == true ? '<img src="./images/install/tick.png" />' : '<img src="./images/install/error.png" />'; ?>
 				</td>
