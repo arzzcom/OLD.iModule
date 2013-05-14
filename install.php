@@ -8,12 +8,17 @@ GetDefaultHeader('아이모듈 설치','',array(
 $checking_installed = file_exists('./config/db.conf.php') == false && file_exists('./config/key.conf.php') == false;
 $checking_global = file_exists($_SERVER['DOCUMENT_ROOT'].'/iModule.conf.php') == false;
 $checking_php = preg_match('/5\.(0|1|2|3)\.[0-9]+/',@phpversion()) == true;
+$checking_mcrypt = function_exists('mcrypt_encrypt');
+$checking_mb_string = function_exists('mb_strlen');
+$checking_xml = class_exists('SimpleXMLElement');
+$checking_json = function_exists('json_encode');
+$checking_curl = function_exists('curl_init');
 $checking_mysql = preg_match('/5\.[0-9]+\.[0-9]+/',@mysql_get_client_info()) == true;
 $checking_config = is_dir('./config') == true && (substr(sprintf('%o',fileperms('./config')),2,3) == 707 || substr(sprintf('%o',fileperms('./config')),2,3) == 777);
 $checking_userfile = is_dir($_ENV['userfilePath']) == true && (substr(sprintf('%o',fileperms($_ENV['userfilePath'])),2,3) == 707 || substr(sprintf('%o',fileperms($_ENV['userfilePath'])),2,3) == 777);
 
-$checking = $checking_installed == true && $checking_config == true && $checking_userfile == true;
-$is_notice = $checking_global == false || $checking_php == false || $checking_mysql == false;
+$checking = $checking_installed == true && $checking_config == true && $checking_userfile == true && $checking_mcrypt == true && $checking_mb_string == true && $checking_json == true && $checking_xml == true;
+$is_notice = $checking_global == false || $checking_php == false || $checking_mysql == false || $checking_curl == false;
 
 $step = Request('step') ? intval(Request('step')) : 1;
 $step = $step > 1 && $step < 6 && $checking == false ? 2 : $step;
@@ -103,7 +108,7 @@ if ($step == 4) {
 			<tr>
 				<td></td>
 				<td colspan="2" class="checkerror">
-					글로벌 설정파일(<?php echo $_SERVER['DOCUMENT_ROOT'].'/iModule.conf.php'; ?>)존재합니다.<br />글로벌 설정파일에 DB정보나, KEY정보가 정의되어 있다면, 해당 설정을 최우선적으로 적용합니다.
+					글로벌 설정파일(<?php echo $_SERVER['DOCUMENT_ROOT'].'/iModule.conf.php'; ?>)이 존재합니다.<br />글로벌 설정파일에 DB정보나, KEY정보가 정의되어 있다면, 해당 설정을 최우선적으로 적용합니다.
 				</td>
 			</tr>
 			<?php } ?>
@@ -120,6 +125,86 @@ if ($step == 4) {
 				<td></td>
 				<td colspan="2" class="checkerror">
 					아이모듈은 PHP 5.0.x ~ PHP 5.3.x 버전에서 동작을 보증합니다. 서버의 PHP버전을 변경하여 주십시오.
+				</td>
+			</tr>
+			<?php } ?>
+			
+			
+			<tr>
+				<td colspan="2" class="checkpoint">PHP mcrypt 모듈을 확인합니다.</td>
+				<td class="checkicon">
+					<?php echo $checking_mcrypt == true ? '<img src="./images/install/tick.png" />' : '<img src="./images/install/cross.png" />'; ?>
+				</td>
+			</tr>
+			<?php if ($checking_mcrypt == false) { ?>
+			<tr>
+				<td></td>
+				<td colspan="2" class="checkerror">
+					PHP 컴파일을 통해 mcrypt 모듈을 설치하여 주시기 바랍니다.
+				</td>
+			</tr>
+			<?php } ?>
+			
+			
+			<tr>
+				<td colspan="2" class="checkpoint">PHP mb_string 모듈을 확인합니다.</td>
+				<td class="checkicon">
+					<?php echo $checking_mb_string == true ? '<img src="./images/install/tick.png" />' : '<img src="./images/install/cross.png" />'; ?>
+				</td>
+			</tr>
+			<?php if ($checking_mb_string == false) { ?>
+			<tr>
+				<td></td>
+				<td colspan="2" class="checkerror">
+					PHP 컴파일을 통해 mb_string 모듈을 설치하여 주시기 바랍니다.
+				</td>
+			</tr>
+			<?php } ?>
+			
+			
+			<tr>
+				<td colspan="2" class="checkpoint">PHP json 모듈을 확인합니다.</td>
+				<td class="checkicon">
+					<?php echo $checking_json == true ? '<img src="./images/install/tick.png" />' : '<img src="./images/install/cross.png" />'; ?>
+				</td>
+			</tr>
+			<?php if ($checking_json == false) { ?>
+			<tr>
+				<td></td>
+				<td colspan="2" class="checkerror">
+					PHP 컴파일을 통해 json 모듈을 설치하여 주시기 바랍니다.
+				</td>
+			</tr>
+			<?php } ?>
+			
+			
+			<tr>
+				<td colspan="2" class="checkpoint">PHP XML 모듈을 확인합니다.</td>
+				<td class="checkicon">
+					<?php echo $checking_xml == true ? '<img src="./images/install/tick.png" />' : '<img src="./images/install/cross.png" />'; ?>
+				</td>
+			</tr>
+			<?php if ($checking_xml == false) { ?>
+			<tr>
+				<td></td>
+				<td colspan="2" class="checkerror">
+					PHP 컴파일을 통해 XML 모듈을 설치하여 주시기 바랍니다.
+				</td>
+			</tr>
+			<?php } ?>
+			
+			
+			<tr>
+				<td colspan="2" class="checkpoint">PHP CURL 모듈을 확인합니다.</td>
+				<td class="checkicon">
+					<?php echo $checking_curl == true ? '<img src="./images/install/tick.png" />' : '<img src="./images/install/error.png" />'; ?>
+				</td>
+			</tr>
+			<?php if ($checking_curl == false) { ?>
+			<tr>
+				<td></td>
+				<td colspan="2" class="checkerror">
+					PHP 컴파일을 통해 CURL 모듈을 설치하여 주시기 바랍니다.
 				</td>
 			</tr>
 			<?php } ?>
