@@ -365,8 +365,12 @@ ContentArea = function(viewport) {
 					fields:["module","title","version","db","folder","dbsize","filesize","is_setup","is_config","is_manager","is_direct","path"]
 				}),
 				listeners:{
-					itemdblclick:{fn:function() {
-						Ext.Msg.show({title:"안내",msg:"현재 설정화면은 더블클릭으로 실행되는 동작이 없습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO});
+					itemdblclick:{fn:function(grid,record) {
+						if (record.data.is_manager == "TRUE") {
+							location.href = "./?page=module&subpage="+record.data.module;
+						} else {
+							Ext.Msg.show({title:"안내",msg:"해당 모듈은 관리자모드가 존재하지 않습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO});
+						}
 					}},
 					itemcontextmenu:ItemContextMenu
 				}
