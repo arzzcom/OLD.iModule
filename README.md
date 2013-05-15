@@ -1,6 +1,6 @@
 기술지원 : http://www.imodule.kr
 
-아이모듈을 활용한 예제소스 : https://github.com/arzzcom/iModule
+아이모듈을 활용한 예제소스 : https://github.com/arzzcom/iModule.Example
 
 아이모듈은 소스가 비공개된 상태로 개선/업데이트되어오면서 미처 발견하지 못한 보안이슈가 많을 수 있습니다.
 
