@@ -1039,6 +1039,11 @@ var ItemForm = function(idx,grid) {
 					}
 					oEditors.getById["ItemFormWysiwyg-inputEl"].exec("UPDATE_IR_FIELD",[]);
 					
+					if (Ext.getCmp("ItemFormPanel").getForm().findField("detail").getValue() == "<br>" || Ext.getCmp("ItemFormPanel").getForm().findField("detail").getValue() == "") {
+						Ext.Msg.show({title:"에러",msg:"상세설명을 입력하여 주십시오.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
+						return;
+					}
+					
 					Ext.getCmp("ItemFormPanel").getForm().submit({
 						url:"<?php echo $_ENV['dir']; ?>/module/oneroom/exec/Manager.do.php?action=item&do="+(idx ? "modify&idx="+idx : "add"),
 						submitEmptyText:false,
