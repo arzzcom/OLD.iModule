@@ -11,6 +11,9 @@ class ModuleMember extends member {
 		$this->mDB = &DB::instance();
 		$mModule = new Module('member');
 		$this->module = $mModule->GetConfig();
+		$this->module['signin_alert'] = isset($this->module['signin_alert']) == false ? 'off' : $this->module['signin_alert'];
+		$this->module['signin_realname'] = isset($this->module['signin_realname']) == false ? 'off' : $this->module['signin_realname'];
+		$this->module['signin_inactive'] = isset($this->module['signin_inactive']) == false ? 'off' : $this->module['signin_inactive'];
 		$this->moduleDir = $mModule->GetModuleDir();
 		$this->modulePath = $mModule->GetModulePath();
 		$this->baseURL = array_shift(explode('?',$_SERVER['REQUEST_URI']));
@@ -318,9 +321,11 @@ class ModuleMember extends member {
 					REQUIRE_ONCE $actionFile;
 				}
 				
+				$groupInfo = $this->mDB->DBfetch($_ENV['table']['group'],array('allow_active'),"where `group`='$group'");
+				
 				$mTemplet->assign('name',$data['name']);
 				$mTemplet->assign('user_id',$data['user_id']);
-				$mTemplet->assign('inactive',$this->module['signin_inactive'] == 'on');
+				$mTemplet->assign('inactive',$groupInfo == 'FALSE' || $this->module['signin_inactive'] == 'on');
 				$mTemplet->assign('link',array('confirm'=>$this->module['signin_redirect']));
 			}
 
