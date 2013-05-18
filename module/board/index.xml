@@ -10,6 +10,10 @@
 		<path>thumbnail</path>
 		<path>skin</path>
 	</folder>
+	<dependency>
+		<module>wyiswyg</module>
+		<module>uploader</module>
+	</dependency>
 	<database>
 		<table name="{code}_board_autosave_table">
 			<field name="tid" type="char" length="32">고유값</field>

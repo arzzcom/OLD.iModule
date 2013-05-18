@@ -85,7 +85,7 @@ if ($action == 'module') {
 		$config = serialize($config);
 		
 		$mModule = new Module($module);
-		$mModule->Install($config);
+		$mModule->Install($config,true);
 		
 		$return['success'] = true;
 		exit(json_encode($return));

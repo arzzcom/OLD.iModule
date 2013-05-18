@@ -26,6 +26,24 @@ if ($mMember->IsAdmin() == false) {
 	exit(json_encode($return));
 }
 
+if ($action == 'buy') {
+	$find = "where 1";
+	
+	$total = $mDB->DBcount($mPoint->table['buy'],$find);
+	$lists = $mDB->DBfetchs($mPoint->table['buy'],'*',$find,$orderer,$limiter);
+	for ($i=0, $loop=sizeof($lists);$i<$loop;$i++) {
+		$buyer = $mMember->GetMemberInfo($lists[$i]['mno']);
+		$payment = $mDB->DBfetch($mPoint->table['payment'],'*',"where `idx`='{$lists[$i]['payment']}'");
+		switch ($payment['type']) {
+			case 'BANKING' :
+				$lists[$i]['payment_info'] = '[무통장입금] '.$payment['value'];
+				break;
+		}
+		$lists[$i]['buyer'] = $buyer['name'].'('.$buyer['user_id'].')';
+		$lists[$i]['reg_date'] = GetTime('Y.m.d H:i:s',$lists[$i]['reg_date']);
+	}
+}
+
 if ($action == 'payment') {
 	if ($get == 'list') {
 		$find = '';

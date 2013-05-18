@@ -194,8 +194,7 @@ ContentArea = function(viewport) {
 											waitMsg:"모듈을 설치하고 있습니다.",
 											success:function(form,action) {
 												Ext.Msg.show({title:"안내",msg:"성공적으로 설치하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function(button) {
-													Ext.getCmp("InstallWindow").close();
-													Ext.getCmp("ListPanel").getStore().reload();
+													location.href = location.href;
 												}});
 											},
 											failure:function(form,action) {

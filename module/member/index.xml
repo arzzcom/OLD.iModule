@@ -5,6 +5,7 @@
 	<path>/module/member</path>
 	<setup>TRUE</setup>
 	<manager>TRUE</manager>
+	<dependency></dependency>
 	<config>
 		<set title="회원가입설정">
 			<signin>
