@@ -34,6 +34,16 @@ if ($action == 'install') {
 	@fclose($dbFile);
 	@chmod('../config/db.conf.php',0707);
 	
+	if (is_dir($_ENV['userfilePath'].'/temp') == false) {
+		@mkdir($_ENV['userfilePath'].'/temp') or InstallError('TEMP폴더를 생성할 수 없습니다.');
+		@chmod($_ENV['userfilePath'].'/temp',0707);
+	}
+	
+	if (is_dir($_ENV['userfilePath'].'/log') == false) {
+		@mkdir($_ENV['userfilePath'].'/log') or InstallError('LOG폴더를 생성할 수 없습니다.');
+		@chmod($_ENV['userfilePath'].'/log',0707);
+	}
+	
 	$mDB = &DB::instance();
 	
 	$XMLData = file_get_contents($_ENV['path'].'/index.xml');
