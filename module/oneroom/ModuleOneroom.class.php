@@ -47,7 +47,7 @@ class ModuleOneroom extends Module  {
 		}
 		if (sizeof($closing) > 0) {
 			$closing = implode(',',$closing);
-			$this->mDB->DBupdate($this->table['item'],array('is_open'=>'FALSE','is_premium'=>'FALSE','is_regionitem'=>'FALSE','is_default_premium'=>'FALSE','is_default_region'=>'FALSE'),'',"where `idx` IN ($closing)");
+			$this->mDB->DBupdate($this->table['item'],array('is_open'=>'FALSE','is_premium'=>'FALSE','is_regionitem'=>'FALSE','is_default_premium'=>'FALSE','is_default_regionitem'=>'FALSE'),'',"where `idx` IN ($closing)");
 			$this->mDB->DBdelete($this->table['premium_item'],"where `ino` IN ($closing) and `type` IN ('SLOT','POINT')");
 			$this->mDB->DBupdate($this->table['user_slot'],array('ino'=>'0'),'',"where `ino` IN ($closing)");
 			$this->mDB->DBupdate($this->table['premium_item'],array('ino'=>'0'),'',"where `ino` IN ($closing)");
