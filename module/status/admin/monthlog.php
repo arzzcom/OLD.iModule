@@ -128,7 +128,7 @@ var ContentArea = function(viewport) {
 						}
 					}),
 					'->',
-					{xtype:"tbtext",text:"막대그래프 : 페이지뷰 / 선그래프 : 방문수"}
+					{xtype:"tbtext",text:"막대그래프 : 방문수 / 선그래프 : 페이지뷰"}
 				],
 				items:[
 					new Ext.chart.Chart({
@@ -138,11 +138,11 @@ var ContentArea = function(viewport) {
 						axes:[{
 							type:"Numeric",
 							position:"right",
-							title:"Visits"
+							title:"PageViews"
 						},{
 							type:"Numeric",
 							position:"left",
-							title:"PageViews",
+							title:"Visits",
 							grid:true
 						},{
 							type:"Category",
@@ -153,9 +153,9 @@ var ContentArea = function(viewport) {
 						}],
 						series:[{
 							type:"column",
-							axis:"right",
+							axis:"left",
 							xField:"day",
-							yField:"pageview",
+							yField:"visit",
 							renderer:function(a,b,c,d) {
 								c.fill = "#8F0E1B";
 								c.opacity = 0.2;
@@ -165,7 +165,7 @@ var ContentArea = function(viewport) {
 								trackMouse:true,
 								autoWidth:true,
 								renderer:function(store,item) {
-									this.update("<b>"+store.get("hour")+"시</b><br />방문수 : "+GetNumberFormat(store.get("visit"))+"명<br />페이지뷰 : "+GetNumberFormat(store.get("pageview"))+"회");
+									this.update("<b>"+store.get("day")+"일</b><br />방문수 : "+GetNumberFormat(store.get("visit"))+"명<br />페이지뷰 : "+GetNumberFormat(store.get("pageview"))+"회");
 								}
 							},
 							label:{
@@ -173,10 +173,10 @@ var ContentArea = function(viewport) {
 							}
 						},{
 							type:"line",
-							axis:"left",
+							axis:"right",
 							gutter:20,
 							xField:"day",
-							yField:"visit",
+							yField:"pageview",
 							fill:true,
 							style:{
 								stroke:"#0E5391",
@@ -185,7 +185,7 @@ var ContentArea = function(viewport) {
 							tips:{
 								trackMouse:true,
 								renderer:function(store,item) {
-									this.update("<b>"+store.get("hour")+"시</b><br />방문수 : "+GetNumberFormat(store.get("visit"))+"명<br />페이지뷰 : "+GetNumberFormat(store.get("pageview"))+"회");
+									this.update("<b>"+store.get("day")+"일</b><br />방문수 : "+GetNumberFormat(store.get("visit"))+"명<br />페이지뷰 : "+GetNumberFormat(store.get("pageview"))+"회");
 								}
 							}
 						}]
