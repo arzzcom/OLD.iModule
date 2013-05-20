@@ -88,7 +88,7 @@ if ($action == 'group') {
 	$find = '';
 	$keyword = Request('keyword');
 	$find = "where `group`='$keyword' or `title` like '%$keyword%'";
-	$lists = array_merge($lists,$mDB->DBfetchs($_ENV['table']['group'],'*',$find));
+	$lists = array_merge($lists,$mDB->DBfetchs($_ENV['table']['group'],'*',$find,'sort,asc'));
 	
 	if ($is_member == 'true') {
 		for ($i=0, $loop=sizeof($lists);$i<$loop;$i++) {
