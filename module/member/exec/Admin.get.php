@@ -17,6 +17,11 @@ $orderer = $sort != null && $dir != null ? $sort.','.$dir : '';
 $lists = array();
 $return = array();
 
+if ($mMember->IsAdmin() == false) {
+	$return['success'] = false;
+	exit(json_encode($return));
+}
+
 if ($action == 'member') {
 	if ($get == 'list') {
 		$grouplist = $mDB->DBfetchs($_ENV['table']['group'],'*');

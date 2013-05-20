@@ -5,6 +5,7 @@ class Module {
 	protected $member;
 	protected $module;
 	protected $moduleXML;
+	protected $moduleInfo;
 	protected $adminTop;
 	public $moduleName;
 	public $mIPBan;
@@ -24,10 +25,10 @@ class Module {
 		$this->moduleDir = $_ENV['dir'].'/module/'.$module;
 		$this->baseURL = array_shift(explode('?',$_SERVER['REQUEST_URI']));
 
-		$check = $this->mDB->DBfetch($_ENV['table']['module'],array('config','is_admin_top'),"where `module`='$module'");
-		$this->module = isset($check['config']) == true ? ($check['config'] ? unserialize($check['config']) : array()) : false;
+		$this->moduleInfo = $this->mDB->DBfetch($_ENV['table']['module'],array('version','dbsize','filesize','config','is_admin_top'),"where `module`='$module'");
+		$this->module = isset($this->moduleInfo['config']) == true ? ($this->moduleInfo['config'] ? unserialize($this->moduleInfo['config']) : array()) : false;
 		$this->moduleXML = null;
-		$this->adminTop = $check['is_admin_top'];
+		$this->adminTop = $this->moduleInfo['is_admin_top'];
 	}
 
 	function IsSetup() {
@@ -114,6 +115,9 @@ class Module {
 			}
 			
 			$this->mDB->DBinsert($_ENV['table']['module'],array('module'=>$this->moduleName,'name'=>$this->GetModuleXML('title'),'version'=>$this->GetModuleXML('version'),'config'=>$config,'is_admin'=>$this->GetModuleXMl('is_manager'),'is_admin_top'=>($isTop == true ? 'TRUE' : 'FALSE'),'sort'=>$sort));
+			
+			$this->GetFileSize(true);
+			$this->GetDatabaseSize(true);
 		}
 	}
 
@@ -130,8 +134,23 @@ class Module {
 	}
 
 	function GetConfig($config='') {
-		if ($config) return $this->module[$config];
-		else return $this->module;
+		if ($config) {
+			return isset($this->module[$config]) == true ? $this->module[$config] : '';
+		} else {
+			if ($this->IsSetup() == false) {
+				$configs = $this->GetModuleXML()->config->set;
+				
+				$default_config = array();
+				for ($i=0, $loop=sizeof($configs);$i<$loop;$i++) {
+					foreach ($configs[$i] as $name=>$conf) {
+						$default_config[$name] = (string)$conf->default;
+					}
+				}
+				return $default_config;
+			} else {
+				return $this->module;
+			}
+		}
 	}
 
 	function GetAdminTop() {
@@ -226,8 +245,9 @@ class Module {
 		return true;
 	}
 	
-	function GetFolderSize() {
+	function GetFileSize($is_calc=false) {
 		if ($this->IsSetup() == false) return 0;
+		if ($is_calc == false) return $this->moduleInfo['filesize'];
 		
 		$folder = $this->GetModuleXML('folder');
 		$totalsize = 0;
@@ -239,10 +259,14 @@ class Module {
 			}
 		}
 		
+		$this->mDB->DBupdate($_ENV['table']['module'],array('filesize'=>$totalsize),'',"where `module`='{$this->moduleName}'");
+		
 		return $totalsize;
 	}
 	
-	function GetDatabaseSize() {
+	function GetDatabaseSize($is_calc=false) {
+		if ($this->IsSetup() == false) return 0;
+		if ($is_calc == false) return $this->moduleInfo['dbsize'];
 		$totalsize = 0;
 		
 		$database = $this->GetModuleXML('database');
@@ -255,12 +279,13 @@ class Module {
 			}
 		}
 		
+		$this->mDB->DBupdate($_ENV['table']['module'],array('dbsize'=>$totalsize),'',"where `module`='{$this->moduleName}'");
+		
 		return $totalsize;
 	}
 	
 	function GetDBVersion() {
-		$version = $this->mDB->DBfetch($_ENV['table']['module'],array('version'),"where `module`='{$this->moduleName}'");
-		return isset($version['version']) == true ? $version['version'] : '';
+		return $this->IsSetup() == true ? $this->moduleInfo['version'] : '';
 	}
 	
 	function GetVersionToNumber($ver='') {
@@ -387,62 +412,6 @@ class Module {
 					}
 				}
 			}
-			/*
-			$table = $database->table;
-			
-			for ($i=0, $loop=sizeof($table);$i<$loop;$i++) {
-				$tablename = str_replace('{code}',$_ENV['code'],(string)($table[$i]->attributes()->name));
-				echo $tablename.'<br />';
-				$field = $table[$i]->field;
-				$fields = array();
-				for ($j=0, $loopj=sizeof($field);$j<$loopj;$j++) {
-					$fields[$j] = array('name'=>(string)($field[$j]->attributes()->name),'type'=>(string)($field[$j]->attributes()->type),'length'=>(string)($field[$j]->attributes()->length),'default'=>(string)($field[$j]->attributes()->default),'comment'=>(string)($field[$j]));
-				}
-				
-				$index = $table[$i]->index;
-				$indexes = array();
-				for ($j=0, $loopj=sizeof($index);$j<$loopj;$j++) {
-					$indexes[$j] = array('name'=>(string)($index[$j]->attributes()->name),'type'=>(string)($index[$j]->attributes()->type),'comment'=>(string)($index[$j]));
-				}
-				
-				if ($this->mDB->DBFind($tablename) == true) {
-					if ($this->mDB->DBcompare($tablename,$fields,$indexes) == false) {
-						if ($this->mDB->DBFind('new_'.$tablename) == true) {
-							$this->mDB->DBdrop('new_'.$tablename);
-						}
-						
-						if ($this->mDB->DBcreate('new_'.$tablename,$fields,$indexes) == true) {
-							$limiter = 0;
-							while (true) {
-								$data = $this->mDB->DBfetchs($tablename,'*','',$fields[0]['name'].',asc',$limiter.',100');
-								if (sizeof($data) == 0) break;
-								for ($j=0, $loopj=sizeof($data);$j<$loopj;$j++) {
-									$insert = array();
-									for ($k=0, $loopk=sizeof($fields);$k<$loopk;$k++) {
-										if (isset($data[$j][$fields[$k]['name']]) == true) $insert[$fields[$k]['name']] = $data[$j][$fields[$k]['name']];
-									}
-									
-									$this->mDB->DBinsert('new_'.$tablename,$insert);
-								}
-								$limiter = $limiter + 100;
-							}
-							$this->mDB->DBname($tablename,'_backup_'.$tablename.'('.date('YmdHis').')');
-							$this->mDB->DBname('new_'.$tablename,$tablename);
-						}
-					}
-				} else {
-					if ($this->mDB->DBcreate($tablename,$fields,$indexes) == true) {
-						$data = isset($table[$i]->data) == true ? $table[$i]->data : array();
-						
-						for ($j=0, $loopj=sizeof($data);$j<$loopj;$j++) {
-							$insert = array_pop(array_values((array)($data[$j]->attributes())));
-							$this->mDB->DBinsert($tablename,$insert);
-						}
-					}
-				}
-				flush();
-			}
-			*/
 		}
 	}
 	

@@ -11,6 +11,11 @@ $do = Request('do');
 $return = array();
 $errors = array();
 
+if ($mMember->IsAdmin() == false) {
+	$return['success'] = false;
+	exit(json_encode($return));
+}
+
 if ($action == 'module') {
 	$module = Request('module');
 	if ($mMember->IsAdmin() == false) {
@@ -90,21 +95,5 @@ if ($action == 'module') {
 		$return['success'] = true;
 		exit(json_encode($return));
 	}
-}
-
-if ($action == 'status') {
-	header('Content-type: text/xml; charset="UTF-8"', true);
-	header("Cache-Control: no-cache, must-revalidate");
-	header("Pragma: no-cache");
-
-	$mStatus = new Status();
-
-	if ($do == 'log_visit_delete') {
-		$mDB->DBtruncate($mStatus->table['log_visit']);
-	}
-
-	echo '<?xml version="1.0" encoding="UTF-8"?>';
-	echo '<message success="true">';
-	echo '</message>';
 }
 ?>

@@ -255,6 +255,22 @@ ContentArea = function(viewport) {
 			new Ext.grid.GridPanel({
 				id:"ListPanel",
 				border:false,
+				tbar:[
+					new Ext.Button({
+						text:"디비/파일용량 재계산",
+						icon:"<?php echo $_ENV['dir']; ?>/images/admin/icon_arrow_refresh.png",
+						handler:function() {
+							Ext.Msg.show({title:"확인",msg:"디비/파일용량 계산은 서버에 부담을 주어 시간이 오래걸릴 수 있습니다.<br />디비 및 파일용량을 재계산하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
+								if (button == "yes") {
+									Ext.getCmp("ListPanel").getStore().getProxy().setExtraParam("calcSize","true");
+									Ext.getCmp("ListPanel").getStore().reload();
+								}
+							}});
+						}
+					}),
+					'->',
+					{xtype:"tbtext",text:"마우스 우클릭 : 상세메뉴 / 더블클릭 : 모듈관리"}
+				],
 				columns:[
 					new Ext.grid.RowNumberer(),
 					{
@@ -361,7 +377,7 @@ ContentArea = function(viewport) {
 					pageSize:50,
 					groupField:"is_setup",
 					groupDir:"DESC",
-					fields:["module","title","version","db","folder","dbsize","filesize","is_setup","is_config","is_manager","is_direct","path"]
+					fields:["module","title","version","db","folder",{name:"dbsize",type:"int"},{name:"filesize",type:"int"},"is_setup","is_config","is_manager","is_direct","path"]
 				}),
 				listeners:{
 					itemdblclick:{fn:function(grid,record) {

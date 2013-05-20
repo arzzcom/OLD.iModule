@@ -53,6 +53,8 @@
 			<field name="name" type="varchar" length="20">모듈명</field>
 			<field name="version" type="varchar" length="10">설치버전</field>
 			<field name="config" type="longtext">모듈설정</field>
+			<field name="dbsize" type="bigint" length="20">디비용량</field>
+			<field name="filesize" type="bigint" length="20">파일용량</field>
 			<field name="is_admin" type="enum" length="TRUE,FALSE" default="FALSE">관리자여부</field>
 			<field name="is_admin_top" type="enum" length="TRUE,FALSE" default="FALSE">관리자바로가기여부</field>
 			<field name="sort" type="int" length="11">정렬</field>

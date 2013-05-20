@@ -74,11 +74,9 @@ if ($page == 'module') {
 		<tr>
 			<td rowspan="2" class="innerimg vTop"><a href="<?php echo $_ENV['dir']; ?>/admin/"><img src="<?php echo $_ENV['dir']; ?>/images/admin/logo.gif" /></a></td>
 			<td rowspan="2" class="innerimg vTop">
-				<!--<a href="<?php echo $_ENV['dir']; ?>/admin/?page=widget"><img src="<?php echo $_ENV['dir']; ?>/images/admin/menu_widget_<?php echo $page == 'widget' ? 'on' : 'off'; ?>.gif" alt="위젯관리" /></a>-->
 				<a href="<?php echo $_ENV['dir']; ?>/admin/?page=module"><img src="<?php echo $_ENV['dir']; ?>/images/admin/menu_module_<?php echo $page == 'module' && $subpage == null ? 'on' : 'off'; ?>.gif" alt="모듈관리" /></a>
 				<a href="<?php echo $_ENV['dir']; ?>/admin/?page=addon"><img src="<?php echo $_ENV['dir']; ?>/images/admin/menu_addon_<?php echo $page == 'addon' && $subpage == null ? 'on' : 'off'; ?>.gif" alt="애드온관리" /></a>
-				<a href="<?php echo $_ENV['dir']; ?>/admin/?page=widget"><img src="<?php echo $_ENV['dir']; ?>/images/admin/menu_widget_<?php echo $page == 'widget' && $subpage == null ? 'on' : 'off'; ?>.gif" alt="통계관리" /></a>
-				<a href="<?php echo $_ENV['dir']; ?>/admin/?page=status"><img src="<?php echo $_ENV['dir']; ?>/images/admin/menu_status_<?php echo $page == 'status' ? 'on' : 'off'; ?>.gif" alt="통계" /></a>
+				<a href="<?php echo $_ENV['dir']; ?>/admin/?page=widget"><img src="<?php echo $_ENV['dir']; ?>/images/admin/menu_widget_<?php echo $page == 'widget' && $subpage == null ? 'on' : 'off'; ?>.gif" alt="위젯관리" /></a>
 				<?php for ($i=0, $loop=sizeof($modules);$i<$loop;$i++) { if ($modules[$i]['is_admin'] == 'TRUE' && $modules[$i]['is_admin_top'] == 'TRUE') { ?>
 				<?php if (isset($isModuleBar) == false) { $isModuleBar = true; echo '<img src="'.$_ENV['dir'].'/images/admin/menu_bar.gif" />'; } ?>
 				<a href="<?php echo $_ENV['dir']; ?>/admin/?page=module&amp;subpage=<?php echo $modules[$i]['module']; ?>"><img src="<?php echo $_ENV['dir']; ?>/module/<?php echo $modules[$i]['module']; ?>/images/admin/menu_<?php echo $page == 'module' && $subpage == $modules[$i]['module'] ? 'on' : 'off'; ?>.gif" alt="<?php echo $modules[$i]['name']; ?>관리" /></a>
@@ -96,7 +94,7 @@ if ($page == 'module') {
 	</div>
 	
 	<div id="FooterLayer">
-	copyrights © iModule (www.imodule.kr) All Rights Reserved.
+	iModule (www.imodule.kr) GPLV2.
 	</div>
 	
 	<div id="CategoryLayer">
@@ -155,6 +153,39 @@ Ext.onReady(function () {
 				split:true,
 				layout:"fit",
 				margins:"0 0 0 5",
+				<?php if ($page == 'module') { ?>
+				tbar:[
+					new Ext.form.ComboBox({
+						flex:1,
+						typeAhead:true,
+						lazyRender:false,
+						store:new Ext.data.JsonStore({
+							proxy:{
+								type:"ajax",
+								simpleSortMode:true,
+								url:"<?php echo $_ENV['dir']; ?>/exec/Admin.get.php",
+								reader:{type:"json",root:"lists",totalProperty:"totalCount"},
+								extraParams:{action:"module",get:"managerlist"}
+							},
+							remoteSort:false,
+							sorters:[{property:"name",direction:"ASC"}],
+							autoLoad:true,
+							pageSize:50,
+							fields:["module","name"]
+						}),
+						editable:false,
+						mode:"local",
+						displayField:"name",
+						valueField:"module",
+						triggerAction:"all",
+						emptyText:"전체모듈관리",
+						style:{margin:"1px 3px 1px 1px"},
+						listeners:{select:{fn:function(form,selected) {
+							location.href = "./?page=module&subpage="+selected.shift().data.module;
+						}}}
+					})
+				],
+				<?php } ?>
 				contentEl:"CategoryLayer"
 			}),
 			new ContentArea(this)

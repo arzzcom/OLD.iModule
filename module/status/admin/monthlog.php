@@ -16,15 +16,15 @@ var ContentArea = function(viewport) {
 		proxy:{
 			type:"ajax",
 			simpleSortMode:true,
-			url:"<?php echo $_ENV['dir']; ?>/module/banner/exec/Admin.get.php",
+			url:"<?php echo $_ENV['dir']; ?>/module/status/exec/Admin.get.php",
 			reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-			extraParams:{action:"status",get:"month",date:"<?php echo date('Y-m'); ?>"}
+			extraParams:{action:"monthlog",date:"<?php echo date('Y-m'); ?>"}
 		},
 		remoteSort:true,
 		sorters:[{property:"day",direction:"ASC"}],
 		autoLoad:true,
 		pageSize:50,
-		fields:["day",{name:"view",type:"int"},{name:"hit",type:"int"}],
+		fields:["day",{name:"visit",type:"int"},{name:"pageview",type:"int"}],
 		listeners:{
 			beforeload:{fn:function() {
 				Ext.Msg.wait("데이터를 로딩중입니다.","잠시만 기다려주십시오.");
@@ -38,7 +38,7 @@ var ContentArea = function(viewport) {
 	ContentArea.superclass.constructor.call(this,{
 		id:"content",
 		region:"center",
-		title:"월별통계보기",
+		title:"월별방문통계",
 		layout:"fit",
 		items:[
 			new Ext.Panel({
@@ -116,39 +116,6 @@ var ContentArea = function(viewport) {
 						}
 					}),
 					'-',
-					new Ext.form.ComboBox({
-						name:"type",
-						store:new Ext.data.JsonStore({
-							proxy:{
-								type:"ajax",
-								simpleSortMode:true,
-								url:"<?php echo $_ENV['dir']; ?>/module/banner/exec/Admin.get.php",
-								reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-								extraParams:{action:"item",get:"list",is_active:"TRUE"}
-							},
-							remoteSort:true,
-							sorters:[{property:"idx",direction:"DESC"}],
-							autoLoad:true,
-							pageSize:50,
-							fields:["idx","code","mno","master","is_active","type","point","paid_point","start_date","end_date","bannerpath","bannertext","url",{name:"percent",type:"float"}]
-						}),
-						editable:false,
-						mode:"local",
-						displayField:"display",
-						valueField:"value",
-						triggerAction:"all",
-						emptyText:"광고별 보기",
-						tpl:'<tpl for="."><div class="x-boundlist-item"><div style="color:blue;">[영역:{code}]</div><div><span style="color:#EF5600;">[#{idx}]</span> {url}</div></div></tpl>',
-						displayTpl:'<tpl for=".">[#{idx}] {url}</tpl>',
-						width:200,
-						maxWidth:500,
-						minWindth:400,
-						listeners:{select:{fn:function(form,selected) {
-							store.getProxy().setExtraParam("bno",selected.shift().data.idx);
-							store.loadPage(1);
-						}}}
-					}),
-					'-',
 					new Ext.Button({
 						text:"그래프저장",
 						icon:"<?php echo $_ENV['dir']; ?>/module/banner/images/admin/icon_disk.png",
@@ -161,7 +128,7 @@ var ContentArea = function(viewport) {
 						}
 					}),
 					'->',
-					{xtype:"tbtext",text:"막대그래프 : 클릭수 / 선그래프 : 노출수"}
+					{xtype:"tbtext",text:"막대그래프 : 페이지뷰 / 선그래프 : 방문수"}
 				],
 				items:[
 					new Ext.chart.Chart({
@@ -171,11 +138,11 @@ var ContentArea = function(viewport) {
 						axes:[{
 							type:"Numeric",
 							position:"right",
-							title:"Hits"
+							title:"Visits"
 						},{
 							type:"Numeric",
 							position:"left",
-							title:"Views",
+							title:"PageViews",
 							grid:true
 						},{
 							type:"Category",
@@ -188,7 +155,7 @@ var ContentArea = function(viewport) {
 							type:"column",
 							axis:"right",
 							xField:"day",
-							yField:"hit",
+							yField:"pageview",
 							renderer:function(a,b,c,d) {
 								c.fill = "#8F0E1B";
 								c.opacity = 0.2;
@@ -198,7 +165,7 @@ var ContentArea = function(viewport) {
 								trackMouse:true,
 								autoWidth:true,
 								renderer:function(store,item) {
-									this.update("<b>"+store.get("day")+"일</b><br />"+GetNumberFormat(store.get("view"))+"회 노출<br />"+GetNumberFormat(store.get("hit"))+"회 클릭");
+									this.update("<b>"+store.get("hour")+"시</b><br />방문수 : "+GetNumberFormat(store.get("visit"))+"명<br />페이지뷰 : "+GetNumberFormat(store.get("pageview"))+"회");
 								}
 							},
 							label:{
@@ -209,7 +176,7 @@ var ContentArea = function(viewport) {
 							axis:"left",
 							gutter:20,
 							xField:"day",
-							yField:"view",
+							yField:"visit",
 							fill:true,
 							style:{
 								stroke:"#0E5391",
@@ -218,7 +185,7 @@ var ContentArea = function(viewport) {
 							tips:{
 								trackMouse:true,
 								renderer:function(store,item) {
-									this.update("<b>"+store.get("day")+"일</b><br />"+GetNumberFormat(store.get("view"))+"회 노출<br />"+GetNumberFormat(store.get("hit"))+"회 클릭");
+									this.update("<b>"+store.get("hour")+"시</b><br />방문수 : "+GetNumberFormat(store.get("visit"))+"명<br />페이지뷰 : "+GetNumberFormat(store.get("pageview"))+"회");
 								}
 							}
 						}]

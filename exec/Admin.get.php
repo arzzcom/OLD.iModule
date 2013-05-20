@@ -16,8 +16,14 @@ $orderer = $sort != null && $dir != null ? $sort.','.$dir : '';
 
 $lists = array();
 
+if ($mMember->IsAdmin() == false) {
+	$return['success'] = false;
+	exit(json_encode($return));
+}
+
 if ($action == 'module') {
 	if ($get == 'list') {
+		$calcSize = Request('calcSize') == 'true';
 		$modulePath = @opendir($_ENV['path'].'/module');
 		$i = 0;
 	
@@ -37,8 +43,8 @@ if ($action == 'module') {
 				$lists[$i]['version'] = $mModule->GetModuleXML('version');
 				$lists[$i]['db'] = $db['version'];
 				$lists[$i]['folder'] = $mModule->CheckFolder() == true ? 'TRUE' : 'FALSE';
-				$lists[$i]['dbsize'] = $mModule->GetDatabaseSize();
-				$lists[$i]['filesize'] = $mModule->GetFolderSize();
+				$lists[$i]['dbsize'] = $mModule->GetDatabaseSize($calcSize);
+				$lists[$i]['filesize'] = $mModule->GetFileSize($calcSize);
 				$lists[$i]['is_setup'] = $mModule->GetModuleXML('is_setup') == 'TRUE' ? ($mModule->IsSetup() == true ? 'TRUE' : 'FALSE') : 'DISABLE';
 				$lists[$i]['is_config'] = $mModule->IsConfig() == true ? 'TRUE' : 'FALSE';
 				$lists[$i]['is_manager'] = $mModule->GetModuleXML('is_manager') == 'TRUE' ? 'TRUE' : 'FALSE';
@@ -65,78 +71,16 @@ if ($action == 'module') {
 		}
 	}
 	
+	if ($get == 'managerlist') {
+		$lists = $mDB->DBfetchs($_ENV['table']['module'],array('module','name'),"where `is_admin`='TRUE'");
+	}
+	
 	if ($get == 'config') {
 		$module = Request('module');
 		$mModule = new Module($module);
 		$return['success'] = true;
-		$return['data'] = $mModule->GetConfig();
+		$return['data'] = $mModule->GetConfig() == false ? array() : $mModule->GetConfig();
 		exit(json_encode($return));
-	}
-}
-
-if ($action == 'status') {
-	$mStatus = new Status();
-	$get = Request('get');
-
-	if ($get == 'log_visit') {
-		$date = Request('date');
-		$find = "where `date`='$date'";
-		$type = Request('type');
-		if ($type == 'MEMBER') $find.= " and `mno`!=0";
-
-		$data = $mDB->DBfetchs($mStatus->table['log_visit'],'*',$find,$orderer,$limiter);
-		$total = $mDB->DBcount($mStatus->table['log_visit'],$find);
-
-		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
-			if ($data[$i]['mno'] != 0) {
-				$nickname = $mMember->GetMemberName($data[$i]['mno'],'nickname',false);
-			} else {
-				$nickname = '';
-			}
-			$list[$i] = '{';
-			$list[$i].= '"visit_time":"'.GetTime('Y.m.d H:i:s',$data[$i]['visit_time']).'",';
-			$list[$i].= '"pageurl":"'.GetString($data[$i]['pageurl'],'ext').'",';
-			$list[$i].= '"refererurl":"'.GetString($data[$i]['refererurl'],'ext').'",';
-			$list[$i].= '"ip":"'.$data[$i]['ip'].'",';
-			$list[$i].= '"nickname":"'.GetString($nickname,'ext').'",';
-			$list[$i].= '"user_agent":"'.GetString($data[$i]['user_agent'],'ext').'"';
-			$list[$i].= '}';
-		}
-	}
-
-	if ($get == 'log_bot') {
-		$date = Request('date');
-		$find = "where `date`='$date'";
-
-		$data = $mDB->DBfetchs($mStatus->table['log_bot'],'*',$find,'visit,desc');
-		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
-			$list[$i] = '{';
-			$list[$i].= '"botname":"'.$mStatus->GetBotName($data[$i]['botname']).'",';
-			$list[$i].= '"avgrevisit":"'.sprintf('%0.2f',($data[$i]['last_time']-$data[$i]['first_time'])/$data[$i]['visit']).'",';
-			$list[$i].= '"visit":"'.$data[$i]['visit'].'",';
-			$list[$i].= '"last_time":"'.GetTime('Y.m.d H:i:s',$data[$i]['last_time']).'",';
-			$list[$i].= '"last_url":"'.GetString($data[$i]['last_url'],'ext').'"';
-			$list[$i].= '}';
-		}
-	}
-	
-	if ($get == 'referer') {
-		$date = Request('date');
-		$find = "where `date`='$date'";
-		$keyword = Request('keyword');
-		if ($keyword != null) $find.= " and `referer` like '%$keyword%'";
-
-		$data = $mDB->DBfetchs($mStatus->table['referer'],'*',$find,$orderer,$limiter);
-		$total = $mDB->DBcount($mStatus->table['referer'],$find);
-
-		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
-			$list[$i] = '{';
-			$list[$i].= '"visit_time":"'.GetTime('Y.m.d H:i:s',$data[$i]['visit_time']).'",';
-			$list[$i].= '"keyword":"'.GetString($data[$i]['keyword'],'ext').'",';
-			$list[$i].= '"refererurl":"'.GetString($data[$i]['refererurl'],'ext').'",';
-			$list[$i].= '"ip":"'.GetString($data[$i]['ip'],'ext').'"';
-			$list[$i].= '}';
-		}
 	}
 }
 

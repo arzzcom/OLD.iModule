@@ -16,15 +16,15 @@ var ContentArea = function(viewport) {
 		proxy:{
 			type:"ajax",
 			simpleSortMode:true,
-			url:"<?php echo $_ENV['dir']; ?>/module/banner/exec/Admin.get.php",
+			url:"<?php echo $_ENV['dir']; ?>/module/status/exec/Admin.get.php",
 			reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-			extraParams:{action:"status",get:"day",date:"<?php echo date('Y-m-d'); ?>"}
+			extraParams:{action:"daylog",date:"<?php echo date('Y-m-d'); ?>"}
 		},
 		remoteSort:true,
 		sorters:[{property:"hour",direction:"ASC"}],
 		autoLoad:true,
 		pageSize:50,
-		fields:["hour",{name:"view",type:"int"},{name:"hit",type:"int"},{name:"cview",type:"int"},{name:"chit",type:"int"}],
+		fields:["hour",{name:"visit",type:"int"},{name:"pageview",type:"int"}],
 		listeners:{
 			beforeload:{fn:function() {
 				Ext.Msg.wait("데이터를 로딩중입니다.","잠시만 기다려주십시오.");
@@ -47,7 +47,7 @@ var ContentArea = function(viewport) {
 				tbar:[
 					new Ext.Button({
 						text:"이전일",
-						icon:"<?php echo $_ENV['dir']; ?>/module/banner/images/admin/icon_arrow_left.png",
+						icon:"<?php echo $_ENV['dir']; ?>/module/status/images/admin/icon_arrow_left.png",
 						handler:function() {
 							var day = new Date(Ext.getCmp("Date").getValue());
 							var move = Ext.Date.add(day,Ext.Date.DAY,-1);
@@ -66,45 +66,12 @@ var ContentArea = function(viewport) {
 					}),
 					new Ext.Button({
 						text:"다음일",
-						icon:"<?php echo $_ENV['dir']; ?>/module/banner/images/admin/icon_arrow_right.png",
+						icon:"<?php echo $_ENV['dir']; ?>/module/status/images/admin/icon_arrow_right.png",
 						handler:function() {
 							var day = new Date(Ext.getCmp("Date").getValue());
 							var move = Ext.Date.add(day,Ext.Date.DAY,1);
 							Ext.getCmp("Date").setValue(Ext.Date.format(move,"Y-m-d"));
 						}
-					}),
-					'-',
-					new Ext.form.ComboBox({
-						name:"type",
-						store:new Ext.data.JsonStore({
-							proxy:{
-								type:"ajax",
-								simpleSortMode:true,
-								url:"<?php echo $_ENV['dir']; ?>/module/banner/exec/Admin.get.php",
-								reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-								extraParams:{action:"item",get:"list",is_active:"TRUE"}
-							},
-							remoteSort:true,
-							sorters:[{property:"idx",direction:"DESC"}],
-							autoLoad:true,
-							pageSize:50,
-							fields:["idx","code","mno","master","is_active","type","point","paid_point","start_date","end_date","bannerpath","bannertext","url",{name:"percent",type:"float"}]
-						}),
-						editable:false,
-						mode:"local",
-						displayField:"display",
-						valueField:"value",
-						triggerAction:"all",
-						emptyText:"광고별 보기",
-						tpl:'<tpl for="."><div class="x-boundlist-item"><div style="color:blue;">[영역:{code}]</div><div><span style="color:#EF5600;">[#{idx}]</span> {url}</div></div></tpl>',
-						displayTpl:'<tpl for=".">[#{idx}] {url}</tpl>',
-						width:200,
-						maxWidth:500,
-						minWindth:400,
-						listeners:{select:{fn:function(form,selected) {
-							store.getProxy().setExtraParam("bno",selected.shift().data.idx);
-							store.loadPage(1);
-						}}}
 					}),
 					'-',
 					new Ext.Button({
@@ -119,7 +86,7 @@ var ContentArea = function(viewport) {
 						}
 					}),
 					'->',
-					{xtype:"tbtext",text:"막대그래프 : 클릭수 / 선그래프 : 노출수"}
+					{xtype:"tbtext",text:"막대그래프 : 페이지뷰 / 선그래프 : 방문수"}
 				],
 				items:[
 					new Ext.chart.Chart({
@@ -129,11 +96,11 @@ var ContentArea = function(viewport) {
 						axes:[{
 							type:"Numeric",
 							position:"right",
-							title:"Hits"
+							title:"Visits"
 						},{
 							type:"Numeric",
 							position:"left",
-							title:"Views",
+							title:"PageViews",
 							grid:true
 						},{
 							type:"Category",
@@ -146,7 +113,7 @@ var ContentArea = function(viewport) {
 							type:"column",
 							axis:"right",
 							xField:"hour",
-							yField:"hit",
+							yField:"pageview",
 							renderer:function(a,b,c,d) {
 								c.fill = "#8F0E1B";
 								c.opacity = 0.2;
@@ -156,7 +123,7 @@ var ContentArea = function(viewport) {
 								trackMouse:true,
 								autoWidth:true,
 								renderer:function(store,item) {
-									this.update("<b>"+store.get("hour")+"시</b><br />"+GetNumberFormat(store.get("view"))+"회 노출<br />"+GetNumberFormat(store.get("hit"))+"회 클릭");
+									this.update("<b>"+store.get("hour")+"시</b><br />방문수 : "+GetNumberFormat(store.get("visit"))+"명<br />페이지뷰 : "+GetNumberFormat(store.get("pageview"))+"회");
 								}
 							},
 							label:{
@@ -167,7 +134,7 @@ var ContentArea = function(viewport) {
 							axis:"left",
 							gutter:20,
 							xField:"hour",
-							yField:"view",
+							yField:"visit",
 							fill:true,
 							style:{
 								stroke:"#0E5391",
@@ -176,7 +143,7 @@ var ContentArea = function(viewport) {
 							tips:{
 								trackMouse:true,
 								renderer:function(store,item) {
-									this.update("<b>"+store.get("hour")+"시</b><br />"+GetNumberFormat(store.get("view"))+"회 노출<br />"+GetNumberFormat(store.get("hit"))+"회 클릭");
+									this.update("<b>"+store.get("hour")+"시</b><br />방문수 : "+GetNumberFormat(store.get("visit"))+"명<br />페이지뷰 : "+GetNumberFormat(store.get("pageview"))+"회");
 								}
 							}
 						}]

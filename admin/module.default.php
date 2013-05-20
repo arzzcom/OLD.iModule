@@ -69,7 +69,6 @@ var ContentArea = function(viewport) {
 												width:200,
 												allowBlank:<?php echo isset($conf->allowblank) == true && $conf->allowblank == 'true' ? 'true' : 'false'; ?>,
 												emptyText:"<?php echo $conf->msg; ?>"
-												<?php if (isset($config[$name]) == true || $conf->default) { ?>,value:"<?php echo isset($config[$name]) == true ? $config[$name] : $conf->default; ?>"<?php } ?>
 											}),
 											new Ext.form.DisplayField({
 												value:"&nbsp;<?php echo $conf->fixmsg; ?>"
@@ -82,7 +81,6 @@ var ContentArea = function(viewport) {
 										name:"<?php echo $name; ?>",
 										allowBlank:<?php echo isset($conf->allowblank) == true && $conf->allowblank == 'true' ? 'true' : 'false'; ?>,
 										emptyText:"<?php echo $conf->msg; ?>"
-										<?php if (isset($config[$name]) == true || $conf->default) { ?>,value:"<?php echo isset($config[$name]) == true ? $config[$name] : $conf->default; ?>"<?php } ?>
 									})
 									<?php } } elseif ($conf->type == 'password') { ?>
 									new Ext.form.TextField({
@@ -90,14 +88,12 @@ var ContentArea = function(viewport) {
 										name:"<?php echo $name; ?>",
 										inputType:"password",
 										allowBlank:<?php echo isset($conf->allowblank) == true && $conf->allowblank == 'true' ? 'true' : 'false'; ?>
-										<?php if (isset($config[$name]) == true || $conf->default) { ?>,value:"<?php echo isset($config[$name]) == true ? $config[$name] : $conf->default; ?>"<?php } ?>
 									})
 									<?php } elseif ($conf->type == 'checkbox') { ?>
 									new Ext.form.Checkbox({
 										fieldLabel:"<?php echo $conf->name; ?>",
 										name:"<?php echo $name; ?>",
-										boxLabel:"<?php echo $conf->msg; ?>",
-										checked:<?php echo (isset($config[$name]) == true && $config[$name] == 'on') || $conf->default == 'on' ? 'true' : 'false'; ?>
+										boxLabel:"<?php echo $conf->msg; ?>"
 									})
 									<?php } elseif ($conf->type == 'select') { ?>
 									new Ext.form.ComboBox({
@@ -115,7 +111,6 @@ var ContentArea = function(viewport) {
 										width:200,
 										editable:false,
 										emptyText:"<?php echo $conf->msg; ?>"
-										<?php if (isset($config[$name]) == true || $conf->default) { ?>,value:"<?php echo isset($config[$name]) == true ? $config[$name] : $conf->default; ?>"<?php } ?>
 									})
 									<?php } elseif ($conf->type == 'directory') { ?>
 									new Ext.form.ComboBox({
@@ -132,7 +127,6 @@ var ContentArea = function(viewport) {
 										triggerAction:"all",
 										editable:false,
 										emptyText:"<?php echo $conf->msg; ?>"
-										<?php if (isset($config[$name]) == true || $conf->default) { ?>,value:"<?php echo isset($config[$name]) == true ? $config[$name] : $conf->default; ?>"<?php } ?>
 									})
 									<?php } elseif ($conf->type == 'permission') { ?>
 									new Ext.form.FieldContainer({
@@ -154,7 +148,6 @@ var ContentArea = function(viewport) {
 												mode:"local",
 												displayField:"display",
 												valueField:"value",
-												value:"",
 												style:{marginRight:"5px"},
 												listeners:{select:{fn:function(form) {
 													Ext.getCmp("ConfigForm").getForm().findField(form.getName().replace("_select","")).setValue(form.getValue());
@@ -165,7 +158,6 @@ var ContentArea = function(viewport) {
 												flex:1,
 												allowBlank:true,
 												style:{marginRight:"5px"},
-												value:"<?php echo isset($config[$name]) == true ? $config[$name] : $conf->default; ?>",
 												listeners:{
 													afterrender:{fn:function(form){
 														if (Ext.getCmp("ID_"+form.getName()+"_select").getStore().find("value","<?php echo isset($config[$name]) == true ? $config[$name] : $conf->default; ?>",false,false) == -1) {
@@ -201,7 +193,6 @@ var ContentArea = function(viewport) {
 												width:100,
 												allowBlank:<?php echo isset($conf->allowblank) == true && $conf->allowblank == 'true' ? 'true' : 'false'; ?>,
 												emptyText:"<?php echo $conf->msg; ?>"
-												<?php if (isset($config[$name]) == true || $conf->default) { ?>,value:"<?php echo isset($config[$name]) == true ? $config[$name] : $conf->default; ?>"<?php } ?>
 											}),
 											new Ext.form.DisplayField({
 												flex:1,
@@ -215,7 +206,6 @@ var ContentArea = function(viewport) {
 										name:"<?php echo $name; ?>",
 										allowBlank:<?php echo isset($conf->allowblank) == true && $conf->allowblank == 'true' ? 'true' : 'false'; ?>,
 										emptyText:"<?php echo $conf->msg; ?>"
-										<?php if (isset($config[$name]) == true || $conf->default) { ?>,value:"<?php echo isset($config[$name]) == true ? $config[$name] : $conf->default; ?>"<?php } ?>
 									})
 									<?php } } } ?>
 								]
