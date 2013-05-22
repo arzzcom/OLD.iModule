@@ -103,12 +103,16 @@ if ($action == 'log_bot') {
 		$find = "where `date`>='$start_date' and `date`<='$end_date'";
 		$data = $mDB->DBfetchs($mStatus->table['log_bot'],'*',$find,$orderer);
 		$visit = array();
+		$totalVisit = 0;
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			$visit[$data[$i]['botname']] = isset($visit[$data[$i]['botname']]) == false ? 0 : $visit[$data[$i]['botname']];
 			$visit[$data[$i]['botname']]+= $data[$i]['visit'];
+			$totalVisit+= $data[$i]['visit'];
 		}
 		foreach ($visit as $key=>$value) {
-			$lists[] = array('botname'=>$mStatus->GetBotName($key),'visit'=>$value);
+			if (ceil($value/$totalVisit*100) < 5) $display = '';
+			else $display = $mStatus->GetBotName($key);
+			$lists[] = array('botname'=>$mStatus->GetBotName($key),'display'=>$display,'visit'=>$value);
 		}
 	}
 	
@@ -135,13 +139,16 @@ if ($action == 'log_bot') {
 			}
 		}
 		
+		$thisMonth = 0;
 		$loop = 0;
 		for ($i=strtotime($start_date);$i<=strtotime($end_date);$i=$i+60*60*24) {
 			$list = isset($visit[date('Y-m-d',$i)]) == true ? $visit[date('Y-m-d',$i)] : $botList;
 			$list['date'] = date('m-d',$i);
+			$list['display'] = $thisMonth != date('m',$i) ? date('m-d',$i) : date('d',$i);
 			$lists[] = $list;
 			$loop++;
 			if ($loop > 30) break;
+			$thisMonth = date('m',$i);
 		}
 	}
 }

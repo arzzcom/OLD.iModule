@@ -40,17 +40,26 @@ class ModuleStatus extends Module {
 		$count = $this->mDB->DBfetch($this->table['day'],array($mode),"where `date`='$date'");
 		return isset($count[$mode]) == true ? $count[$mode] : 0;
 	}
+	
+	function IsBot() {
+		if (preg_match('/(TurnitinBot|checkprivacy|NaverBot|Daumoa|Googlebot|msnbot|WebAuto|Yeti|bingbot|Mediapartners-Google|nagios-plugins|Ezooms|MJ12bot|WBSearchBot|Wizdata_Crawler|facebook|first)/',$_SERVER['HTTP_USER_AGENT'],$match) == true) {
+			return $match[1];
+		} else {
+			return false;
+		}
+	}
 
 	function SaveStatus() {
 		$date = date('Y-m-d');
 		$hour = date('G');
-		if (preg_match('/(TurnitinBot|checkprivacy|NaverBot|Daumoa|Googlebot|msnbot|WebAuto|Yeti|bingbot|Mediapartners-Google|nagios-plugins|Ezooms|MJ12bot|WBSearchBot|Wizdata_Crawler|facebook|first)/',$_SERVER['HTTP_USER_AGENT'],$match) == true) {
+		if ($this->IsBot() !== false) {
+			$botcode = $this->IsBot();
 			$isBot = true;
 			if ($this->GetConfig('bot') == 'on') {
-				if ($this->mDB->DBcount($this->table['log_bot'],"where `date`='$date' and `botname`='{$match[1]}'") == 0) {
-					$this->mDB->DBinsert($this->table['log_bot'],array('date'=>$date,'botname'=>$match[1],'visit'=>1,'first_time'=>GetGMT(),'last_time'=>GetGMT(),'last_url'=>'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
+				if ($this->mDB->DBcount($this->table['log_bot'],"where `date`='$date' and `botname`='{$botcode}'") == 0) {
+					$this->mDB->DBinsert($this->table['log_bot'],array('date'=>$date,'botname'=>$botcode,'visit'=>1,'first_time'=>GetGMT(),'last_time'=>GetGMT(),'last_url'=>'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
 				} else {
-					$this->mDB->DBupdate($this->table['log_bot'],array('last_time'=>GetGMT(),'last_url'=>'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']),array('visit'=>'`visit`+1'),"where `date`='$date' and `botname`='{$match[1]}'");
+					$this->mDB->DBupdate($this->table['log_bot'],array('last_time'=>GetGMT(),'last_url'=>'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']),array('visit'=>'`visit`+1'),"where `date`='$date' and `botname`='$botcode'");
 				}
 			}
 		} else {

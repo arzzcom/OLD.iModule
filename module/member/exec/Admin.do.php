@@ -11,6 +11,11 @@ $do = Request('do');
 $return = array();
 $errors = array();
 
+if ($mMember->IsAdmin() == false) {
+	$return['success'] = false;
+	exit(json_encode($return));
+}
+
 if ($action == 'member') {
 	if ($do == 'add') {
 		$group = Request('group');

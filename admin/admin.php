@@ -75,8 +75,8 @@ if ($page == 'module') {
 			<td rowspan="2" class="innerimg vTop"><a href="<?php echo $_ENV['dir']; ?>/admin/"><img src="<?php echo $_ENV['dir']; ?>/images/admin/logo.gif" /></a></td>
 			<td rowspan="2" class="innerimg vTop">
 				<a href="<?php echo $_ENV['dir']; ?>/admin/?page=module"><img src="<?php echo $_ENV['dir']; ?>/images/admin/menu_module_<?php echo $page == 'module' && $subpage == null ? 'on' : 'off'; ?>.gif" alt="모듈관리" /></a>
-				<a href="<?php echo $_ENV['dir']; ?>/admin/?page=addon"><img src="<?php echo $_ENV['dir']; ?>/images/admin/menu_addon_<?php echo $page == 'addon' && $subpage == null ? 'on' : 'off'; ?>.gif" alt="애드온관리" /></a>
-				<a href="<?php echo $_ENV['dir']; ?>/admin/?page=widget"><img src="<?php echo $_ENV['dir']; ?>/images/admin/menu_widget_<?php echo $page == 'widget' && $subpage == null ? 'on' : 'off'; ?>.gif" alt="위젯관리" /></a>
+				<a href="<?php echo $_ENV['dir']; ?>/admin/?page=addon"><img src="<?php echo $_ENV['dir']; ?>/images/admin/menu_addon_<?php echo $page == 'addon' && $subpage == null ? 'on' : 'off'; ?>.gif" alt="애드온관리" onclick="alert('코어 2.x 버전에서는 아직 사용하실 수 없습니다.'); return false;" /></a>
+				<a href="<?php echo $_ENV['dir']; ?>/admin/?page=widget"><img src="<?php echo $_ENV['dir']; ?>/images/admin/menu_widget_<?php echo $page == 'widget' && $subpage == null ? 'on' : 'off'; ?>.gif" alt="위젯관리" onclick="alert('코어 2.x 버전에서는 아직 사용하실 수 없습니다.'); return false;" /></a>
 				<?php for ($i=0, $loop=sizeof($modules);$i<$loop;$i++) { if ($modules[$i]['is_admin'] == 'TRUE' && $modules[$i]['is_admin_top'] == 'TRUE') { ?>
 				<?php if (isset($isModuleBar) == false) { $isModuleBar = true; echo '<img src="'.$_ENV['dir'].'/images/admin/menu_bar.gif" />'; } ?>
 				<a href="<?php echo $_ENV['dir']; ?>/admin/?page=module&amp;subpage=<?php echo $modules[$i]['module']; ?>"><img src="<?php echo $_ENV['dir']; ?>/module/<?php echo $modules[$i]['module']; ?>/images/admin/menu_<?php echo $page == 'module' && $subpage == $modules[$i]['module'] ? 'on' : 'off'; ?>.gif" alt="<?php echo $modules[$i]['name']; ?>관리" /></a>

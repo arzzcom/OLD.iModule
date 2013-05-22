@@ -158,16 +158,6 @@ class Module {
 	}
 
 	function SetConfig($config) {
-		/*
-		$a = array();
-		$a['signin'] = '/index.php?page=main&menu=signin';
-		$a['signin_redirect'] = '/index.php';
-		$a['signin_alert'] = 'TRUE';
-		$a['default_point'] = '2000';
-		$a['default_exp'] = '0';
-
-		echo base64_encode(serialize($a));
-		*/
 		$config = serialize($config);
 		$this->mDB->DBupdate($_ENV['table']['module'],array('config'=>$config),"where `module`='{$this->module}'");
 	}

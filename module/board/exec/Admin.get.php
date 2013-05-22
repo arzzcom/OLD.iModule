@@ -522,9 +522,9 @@ if ($action == 'file') {
 	
 	if ($get == 'totalsize') {
 		$data = $mDB->DBfetch($mBoard->table['file'],array('SUM(filesize)'));
-		$data['success'] = true;
-		$data['totalsize'] = $data[0];
-		exit(json_encode($data));
+		$return['success'] = true;
+		$return['totalsize'] = isset($data[0]) == true ? $data[0] : 0;
+		exit(json_encode($return));
 	} else {
 		$keyword = Request('keyword');
 		if ($get == 'register') $find = "where `repto`!=0";

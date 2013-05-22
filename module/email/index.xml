@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
 	<title>메일발송</title>
-	<version>1.0.0</version>
-	<path>/module/mail</path>
+	<version>2.0.0</version>
+	<path>/module/email</path>
 	<setup>TRUE</setup>
 	<manager>TRUE</manager>
+	<folder root="email">
+		<path>attach</path>
+		<path>thumbnail</path>
+	</folder>
+	<dependency>
+		<module>member</module>
+		<module>wyiswyg</module>
+		<module>uploader</module>
+	</dependency>
 	<config>
 		<set title="SMTP서버 설정">
 			<smtp_server>
@@ -60,4 +69,47 @@
 			</name>
 		</set>
 	</config>
+	<database>
+		<table name="{code}_email_file_table">
+			<field name="idx" type="int" length="11">고유값</field>
+			<field name="type" type="enum" length="HTML,FILE" default="HTML">첨부종류</field>
+			<field name="repto" type="int" length="11">첨부된메일고유번호</field>
+			<field name="filename" type="varchar" length="255">파일명</field>
+			<field name="filepath" type="varchar" length="255">파일경로</field>
+			<field name="filesize" type="int" length="11">파일용량</field>
+			<field name="filetype" type="char" length="3">파일종류</field>
+			<field name="hit" type="int" length="11">조회수</field>
+			<index name="idx" type="auto_increment" />
+			<index name="type" type="index" />
+			<index name="repto" type="index" />
+		</table>
+		
+		<table name="{code}_email_table">
+			<field name="idx" type="int" length="11">고유값</field>
+			<field name="subject" type="varchar" length="255">제목</field>
+			<field name="body" type="longtext">내용</field>
+			<index name="idx" type="auto_increment" />
+		</table>
+		
+		<table name="{code}_email_send_table">
+			<field name="idx" type="int" length="11">고유값</field>
+			<field name="repto" type="int" length="11">메일본문고유번호</field>
+			<field name="from" type="varchar" length="255">보낸사람</field>
+			<field name="to" type="varchar" length="255">받는사람</field>
+			<field name="result" type="enum" length="WAIT,TRUE,FALSE" default="WAIT">결과</field>
+			<field name="send_date" type="int" length="11">보낸시각</field>
+			<field name="read_date" type="int" length="11">읽은시각</field>
+			<index name="idx" type="auto_increment" />
+			<index name="repto" type="index" />
+			<index name="result" type="index" />
+		</table>
+		
+		<table name="{code}_email_temp_table">
+			<field name="key" type="char" length="32">발송키</field>
+			<field name="email" type="varchar" length="255">이메일주소</field>
+			<field name="name" type="varchar" length="20">받는사람</field>
+			<index name="key,email" type="primary" />
+			<index name="key" type="index" />
+		</table>
+	</database>
 </module>

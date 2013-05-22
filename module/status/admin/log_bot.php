@@ -209,7 +209,7 @@ ContentArea = function(viewport) {
 						region:"south",
 						title:"기간별로그",
 						split:true,
-						collapsible:true,
+						collapsible:false,
 						minHeight:250,
 						height:350,
 						margin:"0 5 5 5",
@@ -314,14 +314,14 @@ ContentArea = function(viewport) {
 											sorters:[{property:"visit",direction:"DESC"}],
 											autoLoad:true,
 											pageSize:50,
-											fields:["botname",{name:"visit",type:"int"}]
+											fields:["botname","display",{name:"visit",type:"int"}]
 										}),
 										series:[{
 											type:"pie",
 											field:"visit",
 											donut:false,
 											label:{
-												field:"botname",
+												field:"display",
 												display:"rotate",
 												contrast:true,
 												font:"12px NanumGothicWeb"
@@ -357,7 +357,7 @@ ContentArea = function(viewport) {
 											sorters:[{property:"date",direction:"ASC"}],
 											autoLoad:true,
 											pageSize:50,
-											fields:["date"<?php for ($i=0, $loop=sizeof($bot);$i<$loop;$i++) { ?>,{name:"<?php echo $bot[$i]; ?>",type:"int"}<?php } ?>,{name:"others",type:"int"}]
+											fields:["date","display"<?php for ($i=0, $loop=sizeof($bot);$i<$loop;$i++) { ?>,{name:"<?php echo $bot[$i]; ?>",type:"int"}<?php } ?>,{name:"others",type:"int"}]
 										}),
 										legend:{
 											position:"bottom"
@@ -369,7 +369,7 @@ ContentArea = function(viewport) {
 										},{
 											type:"Category",
 											position:"bottom",
-											fields:"date",
+											fields:"display",
 											grid:true
 										}],
 										series:[{

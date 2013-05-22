@@ -11,6 +11,7 @@
 		<path>skin</path>
 	</folder>
 	<dependency>
+		<module>member</module>
 		<module>wyiswyg</module>
 		<module>uploader</module>
 	</dependency>

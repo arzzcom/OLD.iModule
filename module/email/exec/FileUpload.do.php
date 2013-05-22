@@ -6,23 +6,24 @@ $mEmail = new ModuleEmail();
 
 $file = $_FILES['Filedata'];
 $check = @getimagesize($file['tmp_name']);
+
+$repto = Request('repto') ? Request('repto') : '0';
 $type = Request('type');
-$wysiwyg = Request('wysiwyg');
 $filename = $file['name'];
 $temppath = $file['tmp_name'];
 $filesize = filesize($temppath);
 $filetype = GetFileType($filename,$temppath);
-$filepath = '/userfile/email/'.md5_file($temppath).'.'.time().'.'.rand(100000,999999);
+$filepath = '/attach/'.md5_file($temppath).'.'.time().'.'.rand(100000,999999);
 
-if ($filetype == 'IMG' && CreateDirectory($_ENV['path'].'/userfile/email') == true) {
-	@move_uploaded_file($temppath,$_ENV['path'].$filepath);
-	$idx = $mDB->DBinsert($mEmail->table['file'],array('type'=>$type,'filename'=>$filename,'filepath'=>$filepath,'filesize'=>$filesize,'filetype'=>$filetype,'wysiwyg'=>$wysiwyg));
+if (CreateDirectory($_ENV['userfilePath'].$mEmail->userfile.'/attach') == true) {
+	@move_uploaded_file($temppath,$_ENV['userfilePath'].$mEmail->userfile.$filepath);
+	$idx = $mDB->DBinsert($mEmail->table['file'],array('type'=>$type,'filename'=>$filename,'filepath'=>$filepath,'filesize'=>$filesize,'filetype'=>$filetype,'repto'=>$repto));
 
 	echo $idx.'|'.$filetype.'|'.$filename.'|'.$filesize;
-
-	if ($filetype == 'IMG' && CreateDirectory($_ENV['path'].'/userfile/email/thumbneil') == true) {
-		GetThumbneil($_ENV['path'].$filepath,$_ENV['path'].'/userfile/email/thumbneil/'.$idx.'.thm',100,75,false);
-		echo '|'.$_ENV['dir'].'/userfile/email/thumbneil/'.$idx.'.thm';
+	
+	if (CreateDirectory($_ENV['userfilePath'].$mEmail->thumbnail) == true) {
+		GetThumbnail($_ENV['userfilePath'].$mEmail->userfile.$filepath,$_ENV['userfilePath'].$mEmail->thumbnail.'/'.$idx.'.thm',100,75,false);
+		echo '|'.$_ENV['userfileDir'].$mEmail->thumbnail.'/'.$idx.'.thm';
 	}
 } else {
 	echo 'FALSE';

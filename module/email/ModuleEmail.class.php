@@ -7,13 +7,19 @@ class ModuleEmail extends Module {
 	protected $PHPMailer;
 	protected $templet;
 	protected $from;
+	protected $to;
 	protected $toList = array();
 	protected $subject;
 	protected $body;
 
+	public $userfile;
+	public $thumbnail;
+	
 	public function __construct($isSMTP=true) {
-		$this->table['send'] = $_ENV['code'].'_email_table';
+		$this->table['email'] = $_ENV['code'].'_email_table';
 		$this->table['file'] = $_ENV['code'].'_email_file_table';
+		$this->table['send'] = $_ENV['code'].'_email_send_table';
+		$this->table['temp'] = $_ENV['code'].'_email_temp_table';
 		$this->templet = '';
 
 		parent::__construct('email');
@@ -39,7 +45,10 @@ class ModuleEmail extends Module {
 		$this->PHPMailer->CharSet = 'UTF-8';
 
 		$this->PHPMailer->SetFrom($this->module['email'], '=?UTF-8?b?'.base64_encode($this->module['name']).'?=');
-		$this->from = $this->module['name'].'<'.$this->module['email'].'>';
+		$this->from = array($this->module['name'],$this->module['email']);
+		
+		$this->userfile = '/email';
+		$this->thumbnail = '/email/thumbnail';
 	}
 
 	public function SetTemplet($templet) {
@@ -59,15 +68,15 @@ class ModuleEmail extends Module {
 	public function SetFrom($email=null,$name=null) {
 		if ($email != null && $name != null && $email) {
 			$this->PHPMailer->SetFrom($email, '=?UTF-8?b?'.base64_encode($name).'?=');
-			if ($name) $this->from = $name.'<'.$email.'>';
-			else $this->from = $email;
+			if ($name) $this->from = array($name,$email);
+			else $this->from = array('',$email);
 		} elseif ($email != null && $email) {
 			$this->PHPMailer->SetFrom($email, '=?UTF-8?b?'.base64_encode($this->module['name']).'?=');
-			$this->from = $this->module['name'].'<'.$email.'>';
+			$this->from = array($this->module['name'],$email);
 		} elseif ($name != null) {
 			$this->PHPMailer->SetFrom($this->module['email'], '=?UTF-8?b?'.base64_encode($name).'?=');
-			if ($name) $this->from = $name.'<'.$this->module['email'].'>';
-			else $this->from = $this->module['email'];
+			if ($name) $this->from = array($name,$this->module['email']);
+			else $this->from = array('',$this->module['email']);
 		}
 	}
 
@@ -83,20 +92,10 @@ class ModuleEmail extends Module {
 	public function AddTo($email,$name='') {
 		if ($name) {
 			$this->PHPMailer->AddAddress($email, '=?UTF-8?b?'.base64_encode($name).'?=');
-			$this->toList[] = $name.'<'.$email.'>';
+			$this->to = array($name,$email);
 		} else {
 			$this->PHPMailer->AddAddress($email, '=?UTF-8?b?'.base64_encode($name).'?=');
-			$this->toList[] = $email;
-		}
-	}
-
-	public function AddBCC($email,$name='') {
-		if ($name) {
-			$this->PHPMailer->AddBCC($email, '=?UTF-8?b?'.base64_encode($name).'?=');
-			$this->toList[] = $name.'<'.$email.'>';
-		} else {
-			$this->PHPMailer->AddBCC($email, '=?UTF-8?b?'.base64_encode($name).'?=');
-			$this->toList[] = $email;
+			$this->to = array('',$email);
 		}
 	}
 
@@ -108,19 +107,20 @@ class ModuleEmail extends Module {
 		}
 	}
 
-	public function SendEmail() {
+	public function SendEmail($idx=null) {
 		$templet = $this->GetTemplet();
 
-		$idx = $this->mDB->DBinsert($this->table['send'],array('from'=>$this->from,'to'=>implode("\n",$this->toList),'subject'=>$this->subject,'body'=>$this->body,'send_date'=>GetGMT(),'result'=>'TRUE'));
+		if ($idx == null) {
+			$repto = $this->mDB->DBinsert($this->table['email'],array('subject'=>$this->subject,'body'=>$this->body));
+			$idx = $this->mDB->DBinsert($this->table['send'],array('repto'=>$repto,'from'=>serialize($this->from),'to'=>serialize($this->to),'result'=>'WAIT'));
+		}
 
 		$this->PHPMailer->Subject = '=?UTF-8?b?'.base64_encode($this->subject).'?=';
 		$this->PHPMailer->Body = str_replace('{$content}',$this->body.'<img src="http://'.$_SERVER['HTTP_HOST'].$this->moduleDir.'/exec/CheckEmail.do.php?idx='.$idx.'" style="width:1px; height:1px;" />',$templet);
 
 		$result = $this->PHPMailer->Send();
 
-		if ($result == false) {
-			$this->mDB->DBupdate($this->table['send'],array('result'=>'FALSE'),'',"where `idx`=$idx");
-		}
+		$this->mDB->DBupdate($this->table['send'],array('result'=>($result == true ? 'TRUE' : 'FALSE'),'send_date'=>GetGMT()),'',"where `idx`='$idx'");
 
 		return $result;
 	}
