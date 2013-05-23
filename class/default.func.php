@@ -51,7 +51,7 @@ function ArzzDecoder($text,$key='') {
 		$_ENV['key'] = trim($readFile[1]);
 	}
 
-	return mcrypt_decrypt(MCRYPT_RIJNDAEL_128,$key ? $key : $_ENV['key'],base64_decode($text),MCRYPT_MODE_ECB,'');
+	return trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_128,$key ? $key : $_ENV['key'],base64_decode($text),MCRYPT_MODE_ECB,''));
 }
 
 function Alertbox($msg,$code=0,$redirect=null,$target=null) {
