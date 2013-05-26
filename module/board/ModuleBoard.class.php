@@ -86,8 +86,8 @@ class ModuleBoard extends Module {
 		$this->recentlyDir = $this->moduleDir.'/templet/recently';
 
 		if ($this->setup['mobile'] == true) {
-			$this->setup['listnum'] = 10;
-			$this->setup['pagenum'] = 5;
+			$this->setup['listnum'] = 15;
+			$this->setup['pagenum'] = 3;
 		}
 
 		if (isset($setup['skin']) == true) {

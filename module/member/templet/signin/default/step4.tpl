@@ -488,7 +488,7 @@
 		<td class="inputtext">{$data.title}</td>
 		<td class="inputline"></td>
 		<td class="inputform">
-			<input type="file" name="{$data.type}" class="inputbox" onfocus="this.className='inputboxon';" onblur="this.className='inputbox';" style="width:400px;" />
+			<input type="file" name="{$data.type}" class="filebox" style="width:400px;" />
 			<div id="DuplicationCheck_email" class="msg">{$data.msg}</div>
 		</td>
 	</tr>
@@ -503,7 +503,7 @@
 		<td class="inputtext">{$data.title}</td>
 		<td class="inputline"></td>
 		<td class="inputform">
-			<input type="file" name="{$data.type}" class="inputbox" onfocus="this.className='inputboxon';" onblur="this.className='inputbox';" style="width:400px;" />
+			<input type="file" name="{$data.type}" class="filebox" style="width:400px;" />
 			<div id="DuplicationCheck_email" class="msg">{$data.msg}</div>
 		</td>
 	</tr>

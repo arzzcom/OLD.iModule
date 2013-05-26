@@ -12,7 +12,7 @@
 			<col width="20%" /><col width="20%" /><col width="20%" /><col width="20%" /><col width="20%" />
 			{foreach name=prodealer from=$data item=data}
 				{if $smarty.foreach.list.index % 5 == 0}<tr>{/if}
-				<td class="pointer" onclick="location.href='/prodealer/list.imo?mno={$data.mno}'">
+				<td class="pointer" onclick="location.href='{$data.dealerlink}'">
 					<div class="listBox" style="margin-right:1px;">
 						<div class="imageView">
 							<img src="{$data.dealer.photo}" style="width:100%;" />

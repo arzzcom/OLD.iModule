@@ -123,6 +123,10 @@ class ModuleMember extends member {
 	function PrintMyInfo($skin) {
 		echo '<!-- MyInfo Start -->'."\n";
 
+		if ($this->IsLogged() == false) {
+			$this->PrintError('먼저 로그인을 하여주시기 바랍니다.');
+		}
+
 		$member = $this->GetMemberInfo();
 		$group = $member['group'];
 		

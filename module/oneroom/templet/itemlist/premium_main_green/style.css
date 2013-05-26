@@ -16,7 +16,7 @@
 .ItemListPremiumMain .titleView A:active {color:#2F2F2F; text-decoration:none;}
 .ItemListPremiumMain .titleView A:hover {text-decoration:underline; color:#000000;}
 
-.ItemListPremiumMain .infoView {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; width:170px; margin:5px auto; height:15px; overflow:hidden; color:#666666;}
+.ItemListPremiumMain .infoView {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; width:170px; margin:5px auto; height:15px; overflow:hidden; color:#666666; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .ItemListPremiumMain .infoView DIV {float:left; height:15px; margin-right:5px;}
 
 .ItemListPremiumMain .category {color:#D97B43; font-weight:bold;}

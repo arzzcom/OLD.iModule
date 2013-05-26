@@ -44,7 +44,7 @@
 
 .ModuleOneroom .viewHeader {background:#F4F4F4; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#2F2F2F; font-weight:bold; padding:10px 5px 10px 0px; text-align:right;}
 .ModuleOneroom .viewBody {padding:10px 0px 10px 5px; background:#FFFFFF; color:#4F4F4F; line-height:1.6;}
-.ModuleOneroom .viewBody DIV {float:left; margin-right:10px;}
+.ModuleOneroom .viewBody DIV {float:left; margin:2px 10px 2px 0px;}
 
 .ModuleOneroom .viewOption {background:url(./images/icon_check_off.gif) no-repeat 0 50%; padding-left:15px; width:80px;}
 .ModuleOneroom .viewOptionChecked {background:url(./images/icon_check_on.gif) no-repeat 0 50%; padding-left:15px; width:80px;}

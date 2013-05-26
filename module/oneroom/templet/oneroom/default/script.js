@@ -1,6 +1,6 @@
 function ShowImageViewer(idx) {
 	var viewer = document.getElementById("ImageViewer");
-	var imageLayers = viewer.getElementsByClassName("originimglayer");
+	var imageLayers = GetElementsByClassName("originimglayer","div");
 	for (var i=0, loop=imageLayers.length;i<loop;i++) {
 		imageLayers[i].style.display = "none";
 	}

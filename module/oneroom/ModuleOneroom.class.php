@@ -368,7 +368,7 @@ class ModuleOneroom extends Module  {
 	function PrintView() {
 		$idx = Request('idx');
 		$data = $this->mDB->DBfetch($this->table['item'],'*',"where `idx`='$idx'");
-		
+		$default_image = $data['image'];
 		if ($this->mDB->DBcount($this->table['log'],"where `repto`='$idx' and (`mno`={$this->member['idx']} or `ip`='".$_SERVER['REMOTE_ADDR']."')") == 0) {
 			$this->mDB->DBupdate($this->table['item'],'',array('hit'=>'`hit`+1'),"where `idx`='$idx'");
 			$this->mDB->DBinsert($this->table['log'],array('repto'=>$idx,'mno'=>($this->mMember->IsLogged() == true ? $this->member['idx'] : -1),'ip'=>$_SERVER['REMOTE_ADDR'],'reg_date'=>GetGMT()));
@@ -378,10 +378,16 @@ class ModuleOneroom extends Module  {
 		
 		$data = $this->GetItemValue($data);
 		
-		$image = $this->mDB->DBfetchs($this->table['file'],array('idx'),"where `repto`='$idx'");
-		for ($i=0, $totalimage = sizeof($image);$i<$totalimage;$i++) {
-			$image[$i]['thumbnail'] = file_exists($_ENV['userfilePath'].$this->thumbnail.'/'.$image[$i]['idx'].'.thm') == true ? $_ENV['userfileDir'].$this->thumbnail.'/'.$image[$i]['idx'].'.thm' : '';
-			$image[$i]['image'] = $this->moduleDir.'/exec/ShowImage.do.php?idx='.$image[$i]['idx'];
+		$image = array();
+		$images = $this->mDB->DBfetchs($this->table['file'],array('idx'),"where `repto`='$idx'");
+		for ($i=0, $totalimage = sizeof($images);$i<$totalimage;$i++) {
+			$images[$i]['thumbnail'] = file_exists($_ENV['userfilePath'].$this->thumbnail.'/'.$images[$i]['idx'].'.thm') == true ? $_ENV['userfileDir'].$this->thumbnail.'/'.$images[$i]['idx'].'.thm' : '';
+			$images[$i]['image'] = $this->moduleDir.'/exec/ShowImage.do.php?idx='.$images[$i]['idx'];
+			if ($images[$i]['idx'] == $default_image) {
+				array_unshift($image,$images[$i]);
+			} else {
+				array_push($image,$images[$i]);
+			}
 		}
 		
 		$itemOption = explode(',',$data['options']);
@@ -414,47 +420,6 @@ class ModuleOneroom extends Module  {
 		$this->mTemplet->assign('map',$map);
 		$this->mTemplet->assign('dealer',$this->GetDealer($data['mno']));
 		//$this->mTemplet->register_object('mBoard',$this,array('GetSortLink','GetThumbnail'));
-		$this->PrintTemplet();
-	}
-	
-	function PrintRegister($skin) {
-		$type = Request('type') ? Request('type') : 'select';
-		
-		echo '<link rel="stylesheet" href="'.$this->moduleDir.'/templet/register/'.$skin.'/style.css" type="text/css" />'."\n";
-		
-		$this->mTemplet = new Templet($this->modulePath.'/templet/register/'.$skin.'/'.$type.'.tpl');
-		
-		$point = array('agent'=>$this->GetConfig('agent_point'),'dealer'=>$this->GetConfig('dealer_point'));
-		$is_auto = array('agent'=>$this->GetConfig('auto_confirm_agent') == 'on','dealer'=>$this->GetConfig('auto_confirm_dealer') == 'on');
-		$agreement = '<div class="smartOutput">'.$this->GetConfig('register_agreement').'</div>';
-		
-		if ($type == 'select') {
-			$register_info = '<div class="smartOutput">'.$this->GetConfig('register_info').'</div>';
-			$use_private = $this->GetConfig('use_private') == 'on';
-			
-			$link = array('agent'=>$this->baseURL.GetQueryString(array('type'=>'agent')),'dealer'=>$this->baseURL.GetQueryString(array('type'=>'dealer')),'private'=>$this->baseURL.GetQueryString(array('type'=>'private')));
-			$this->mTemplet->assign('link',$link);
-			$this->mTemplet->assign('register_info',$register_info);
-			$this->mTemplet->assign('use_private',$use_private);
-		} else {
-			$formStart = '<form name="RegisterForm" target="execFrame" method="post" action="'.$this->moduleDir.'/exec/Register.do.php">'."\n";
-			$formStart.= '<input type="hidden" name="action" value="register" />'."\n";
-			$formStart.= '<input type="hidden" name="type" value="'.$type.'" />'."\n";
-			$formEnd = '</form><iframe name="execFrame"></iframe>'."\n";
-			
-			
-			if ($type == 'agent') {
-				
-			}
-			
-			$this->mTemplet->assign('formStart',$formStart);
-			$this->mTemplet->assign('formEnd',$formEnd);
-		}
-		
-		$this->mTemplet->assign('point',$point);
-		$this->mTemplet->assign('is_auto',$is_auto);
-		$this->mTemplet->assign('agreement',$agreement);
-		$this->mTemplet->assign('skinDir',$this->moduleDir.'/templet/register/'.$skin);
 		$this->PrintTemplet();
 	}
 	
@@ -525,7 +490,7 @@ class ModuleOneroom extends Module  {
 		$this->PrintTemplet();
 	}
 	
-	function PrintProDealer($skin,$limit,$link) {
+	function PrintProDealer($skin,$page,$limit) {
 		echo '<link rel="stylesheet" href="'.$this->moduleDir.'/templet/prodealer/'.$skin.'/style.css" type="text/css" />'."\n";
 		
 		$find = '';
@@ -556,9 +521,11 @@ class ModuleOneroom extends Module  {
 			$data[$i]['item'] = $this->mDB->DBcount($this->table['item'],"where `mno`='{$data[$i]['mno']}'");
 			$data[$i]['dealer'] = $this->mMember->GetMemberInfo($data[$i]['mno']);
 			$data[$i]['region'] = $this->GetRegion($data[$i]['region1'],$data[$i]['region2'],$data[$i]['region3']);
+			$data[$i]['dealerlink'] = $page.(preg_match('/\?/',$page) == true ? '&amp;' : '?').'mno='.$data[$i]['mno'];
 		}
 		$this->mTemplet = new Templet($this->modulePath.'/templet/prodealer/'.$skin.'/list.tpl');
 		$this->mTemplet->assign('data',$data);
+		$this->mTemplet->assign('page',$page);
 		$this->mTemplet->assign('skinDir',$this->moduleDir.'/templet/prodealer/'.$skin);
 		$this->mTemplet->register_object('mOneroom',$this,array('GetRegionName','GetUniversityName','GetSubwayName'));
 		$this->PrintTemplet();
@@ -728,7 +695,7 @@ class ModuleOneroom extends Module  {
 		}
 	}
 
-	function PrintPremiumItem($skin,$limit) {
+	function PrintPremiumItem($skin,$page,$limit) {
 		$region1 = $this->GetZeroValue('region1');
 		$region2 = $this->GetZeroValue('region2');
 		$region3 = $this->GetZeroValue('region3');
@@ -750,7 +717,7 @@ class ModuleOneroom extends Module  {
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			$data[$i] = $this->mDB->DBfetch($this->table['item'],array('idx','region1','region2','region3','category1','category2','category3','title','is_buy','is_rent_all','is_rent_month','is_rent_short','price_buy','price_rent_all','price_rent_deposit','price_rent_month','price_maintenance','areasize','real_areasize','floor','is_under','is_double','subway','subway_distance','university','rooms','parkings','build_year','image'),"where `idx`='{$data[$i]}'");
 			$data[$i] = $this->GetItemValue($data[$i]);
-			$data[$i]['itemlink'] = $this->baseURL.$this->GetQueryString(array('mode'=>'view','idx'=>$data[$i]['idx']));
+			$data[$i]['itemlink'] = $page.(preg_match('/\?/',$page) == true ? '&amp;' : '?').'mode=view&amp;idx='.$data[$i]['idx'];
 		}
 		
 		echo '<link rel="stylesheet" href="'.$this->moduleDir.'/templet/itemlist/'.$skin.'/style.css" type="text/css" />'."\n";
@@ -758,11 +725,12 @@ class ModuleOneroom extends Module  {
 		$this->mTemplet = new Templet($this->modulePath.'/templet/itemlist/'.$skin.'/list.tpl');
 		$this->mTemplet->assign('skinDir',$this->moduleDir.'/templet/itemlist/'.$skin);
 		$this->mTemplet->assign('data',$data);
+		$this->mTemplet->assign('page',$page);
 		$this->mTemplet->register_object('mOneroom',$this,array('GetRegionName'));
 		$this->PrintTemplet();
 	}
 	
-	function PrintRegionItem($skin,$limit) {
+	function PrintRegionItem($skin,$page,$limit) {
 		$region1 = $this->GetZeroValue('region1');
 		$region2 = $this->GetZeroValue('region2');
 		$region3 = $this->GetZeroValue('region3');
@@ -792,6 +760,7 @@ class ModuleOneroom extends Module  {
 		$this->mTemplet = new Templet($this->modulePath.'/templet/itemlist/'.$skin.'/list.tpl');
 		$this->mTemplet->assign('skinDir',$this->moduleDir.'/templet/itemlist/'.$skin);
 		$this->mTemplet->assign('data',$data);
+		$this->mTemplet->assign('page',$page);
 		$this->mTemplet->register_object('mOneroom',$this,array('GetRegionName'));
 		$this->PrintTemplet();
 	}

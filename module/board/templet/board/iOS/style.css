@@ -10,7 +10,6 @@ FORM {margin:0px; padding:0px;}
 .ModuleBoard .button {position:absolute; overflow:hidden; top:8px; right:6px; margin:0; border-width:0 5px; padding:0 3px; width:auto; height:30px; line-height:30px; font-size:12px; font-weight:bold; color:#FFFFFF; text-shadow:rgba(0, 0, 0, 0.6) 0px -1px 0; text-overflow:ellipsis; text-decoration:none; white-space:nowrap; background:none; -webkit-border-image:url(./images/toolButton.png) 0 5 0 5;}
 .ModuleBoard .grayButton {-webkit-border-image:url(./images/grayButton.png) 0 12 0 12; color:#FFFFFF;}
 
-
 /* Content */
 .ModuleBoard #content {width:100%; padding:0px; margin:0px;}
 .ModuleBoard #content.whiteBg {background:#FFFFFF !important;}
@@ -37,19 +36,18 @@ FORM {margin:0px; padding:0px;}
 .ModuleBoard UL LI.group {position:relative; top:-1px; margin-bottom:-2px; border-top:1px solid #7d7d7d; border-bottom:1px solid #999999; padding:1px 10px; background:url(./images/listGroup.png) repeat-x; font-size:17px; font-weight:bold; text-shadow:rgba(0, 0, 0, 0.4) 0 1px 0; color:#FFFFFF;}
 
 /* PageNav */
-.ModuleBoard .pagenav {width:100%; height:26px; text-align:center; margin-top:10px;}
-.ModuleBoard .pagenav STRONG {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; color:#FA6F46; border:1px solid #E9E9E9;}
-.ModuleBoard .pagenav A:link {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
-.ModuleBoard .pagenav A:hover {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; color:#6D6D6D; border:1px solid #E9E9E9; background:#F4F4F4; text-decoration:none;}
-.ModuleBoard .pagenav A:visited {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
-.ModuleBoard .pagenav A:active {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
-.ModuleBoard .pagenav SPAN {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; color:#DDDDDD; border:1px solid #E9E9E9; text-decoration:none;}
+.ModuleBoard .pagenav {width:100%; text-align:center; margin-top:10px;}
+.ModuleBoard .pagenav STRONG {display:inline-block; text-align:center; padding:5px 8px 5px 8px; margin:0px 0px 0px 3px; font-size:14px; color:#FA6F46; border:1px solid #E9E9E9;}
+.ModuleBoard .pagenav A:link {display:inline-block; text-align:center; padding:5px 8px 5px 8px; margin:0px 0px 0px 3px; font-size:14px; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.ModuleBoard .pagenav A:hover {display:inline-block; text-align:center; padding:5px 8px 5px 8px; margin:0px 0px 0px 3px; font-size:14px; color:#6D6D6D; border:1px solid #E9E9E9; background:#F4F4F4; text-decoration:none;}
+.ModuleBoard .pagenav A:visited {display:inline-block; text-align:center; padding:5px 8px 5px 8px; margin:0px 0px 0px 3px; font-size:14px; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.ModuleBoard .pagenav A:active {display:inline-block; text-align:center; padding:5px 8px 5px 8px; margin:0px 0px 0px 3px; font-size:14px; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
+.ModuleBoard .pagenav SPAN {display:inline-block; text-align:center; padding:5px 8px 5px 8px; margin:0px 0px 0px 3px; font-size:14px; color:#DDDDDD; border:1px solid #E9E9E9; text-decoration:none;}
 
 /* Searchbar */
-.ModuleBoard .searchbox {width:80%; margin:10px auto; border:1px solid #3B940B;}
-.ModuleBoard .searchbox INPUT {-webkit-appearance:none;-webkit-border-radius:0;}
-.ModuleBoard .searchbox INPUT[type="search"] {display:block; width:100%; height:22px; border:1px solid #3B940B; border-right:0px; padding:0px 5px 0px 5px; line-height:22px;}
-
+.ModuleBoard .searchbox {width:70%; margin:10px auto; border:2px solid #3B940B;}
+.ModuleBoard .searchbox INPUT {-webkit-appearance:none;-webkit-border-radius:0; width:34px; height:30px;}
+.ModuleBoard .searchbox INPUT[type="search"] {display:block; width:100%; height:30px; border:1px solid #3B940B; border-right:0px; padding:0px 5px 0px 5px; line-height:28px;}
 
 /* Menubar */
 .ModuleBoard #menubar {box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box; border-bottom:1px solid #2d3642; border-top:1px solid #6d84a2; padding:10px; height:48px; background:url(./images/menubar.png) #6d84a2 repeat-x;}

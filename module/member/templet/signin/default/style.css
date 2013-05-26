@@ -7,12 +7,13 @@
 
 #sForm .realnamebox {padding:15px; border:2px solid #E5E5E5;}
 #sForm .realnameinfo {border-top:1px solid #E5E5E5; margin-top:15px; padding:20px; line-height:160%; font-family:NanumGothicWeb; font-size:12px;}
-#sForm .pointText {color:#FF6C00; font-size:14px;}
+#sForm .pointText {color:#FF6C00; font-size:12px;}
 
-#sForm .checkbox {padding:15px; border:2px solid #E5E5E5; font-family:NanumGothicWeb; font-size:14px; line-height:160%;}
+#sForm .checkbox {padding:15px; border:2px solid #E5E5E5; font-family:NanumGothicWeb; font-size:12px; line-height:160%;}
 
-#sForm .inputbox {border:2px solid #CCCCCC; font-family:NanumGothicWeb; font-size:14px; font-weight:bold; height:16px; padding:3px;}
-#sForm .inputboxon {border:2px solid #2F2F2F; font-family:NanumGothicWeb; font-size:14px; font-weight:bold; height:16px; padding:3px;}
+#sForm .inputbox {border:2px solid #CCCCCC; font-family:NanumGothicWeb; font-size:12px; font-weight:bold; height:16px; padding:3px;}
+#sForm .inputboxon {border:2px solid #2F2F2F; font-family:NanumGothicWeb; font-size:12px; font-weight:bold; height:16px; padding:3px;}
+#sForm .filebox {border:1px solid #CCCCCC; font-family:NanumGothicWeb; font-size:12px; height:22px; padding:0px; background:#FFFFFF;}
 
 #sForm .boldline {height:2px; background:#E5E5E5; overflow:hidden;}
 #sForm .inputicon {background:#F9F9F9; text-align:center; font:0/0 arial;}
@@ -43,7 +44,7 @@
 #sForm .selectbox .list .item {font-family:NanumGothicWeb; font-size:12px; padding:3px; margin:2px; cursor:pointer;}
 #sForm .selectbox .list .item:hover {font-family:NanumGothicWeb; font-size:12px; padding:3px; margin:2px; background:#E5E5E5; cursor:pointer;}
 
-#sForm .textbox {border:2px solid #CCCCCC; font-family:NanumGothicWeb; font-size:14px; font-weight:bold; width:80%; height:200px; padding:3px;}
-#sForm .textboxon {border:2px solid #2F2F2F; font-family:NanumGothicWeb; font-size:14px; font-weight:bold; width:80%; height:200px; padding:3px;}
+#sForm .textbox {border:2px solid #CCCCCC; font-family:NanumGothicWeb; font-size:12px; font-weight:bold; width:80%; height:200px; padding:3px;}
+#sForm .textboxon {border:2px solid #2F2F2F; font-family:NanumGothicWeb; font-size:12px; font-weight:bold; width:80%; height:200px; padding:3px;}
 
 #sForm .list {font-family:NanumGothicWeb; font-size:12px;}

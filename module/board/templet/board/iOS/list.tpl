@@ -5,18 +5,14 @@
 </div>
 
 {literal}
-<div style="background:#FFFFFF;">
-<script type="text/javascript"><!--
-google_ad_client = "ca-pub-3210736654114323";
-/* 모바일배너 */
-google_ad_slot = "4241182321";
-google_ad_width = 320;
-google_ad_height = 50;
-//-->
-</script>
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
+<div style="background:#F4F4F4; border-bottom:1px solid #CCCCCC; text-align:center;">
+	<script type="text/javascript">
+	google_ad_client = "ca-pub-3210736654114323";
+	google_ad_slot = "4241182321";
+	google_ad_width = 320;
+	google_ad_height = 50;
+	</script>
+	<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
 </div>
 {/literal}
 <div id="content" class="whiteBg">
@@ -50,7 +46,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 	<input type="hidden" name="key" value="tc" />
 	<div class="searchbox">
 		<table cellpadding="0" cellspacing="0" class="layoutfixed">
-		<col width="100%" /><col width="25" />
+		<col width="100%" /><col width="34" />
 		<tr>
 			<td>
 				<input type="search" name="keyword" value="{$keyword}" />

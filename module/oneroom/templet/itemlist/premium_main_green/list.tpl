@@ -13,9 +13,9 @@
 			{foreach name=list from=$data item=data}
 				{if $smarty.foreach.list.index % 4 == 0}<tr>{/if}
 				<td>
-					<div class="imageView pointer" onclick="location.href='/{if $data.category1 == '1'}oneroom{elseif $data.category1 == '2'}multiroom{elseif $data.category1 == '3'}officetel{elseif $data.category1 == '4'}limit{elseif $data.category1 == '5'}full{elseif $data.category1 == '6'}apt{else}shop{/if}?mode=view&idx={$data.idx}';">{if $data.image}<img src="{$data.image}" style="width:100%;" />{/if}</div>
+					<div class="imageView pointer" onclick="location.href='{$data.itemlink}';">{if $data.image}<img src="{$data.image}" style="width:100%;" />{/if}</div>
 					<div class="titleView">
-						<a href="/{if $data.category1 == '1'}oneroom{elseif $data.category1 == '2'}multiroom{elseif $data.category1 == '3'}officetel{elseif $data.category1 == '4'}limit{elseif $data.category1 == '5'}full{elseif $data.category1 == '6'}apt{else}shop{/if}?mode=view&idx={$data.idx}">{$data.title|cutstring:14:false}</a>
+						<a href="{$data.itemlink}">{$data.title|cutstring:14:false}</a>
 					</div>
 					<div class="infoView"><span class="category">{$data.category}</span> {if $data.region2 != '0'}{mOneroom->GetRegionName region=$data.region2}{else}{mOneroom->GetRegionName region=$data.region1},{/if} {$data.areasize}</div>
 					<div class="infoView">

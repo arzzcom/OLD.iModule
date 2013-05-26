@@ -445,7 +445,7 @@
 		<td class="inputtext">{$data.title}</td>
 		<td class="inputline"></td>
 		<td class="inputform">
-			<input type="file" name="{$data.type}" class="inputbox" onfocus="this.className='inputboxon';" onblur="this.className='inputbox';" style="width:400px;" />
+			<input type="file" name="{$data.type}" class="filebox" style="width:400px;" />
 			<div class="height5"></div>
 			<table cellpadding="0" cellspacing="0" class="layoutfixed">
 			<col width="20" /><col width="100%" />
@@ -468,7 +468,7 @@
 		<td class="inputtext">{$data.title}</td>
 		<td class="inputline"></td>
 		<td class="inputform">
-			<input type="file" name="{$data.type}" class="inputbox" onfocus="this.className='inputboxon';" onblur="this.className='inputbox';" style="width:400px;" />
+			<input type="file" name="{$data.type}" class="filebox" style="width:400px;" />
 			<div class="height5"></div>
 			<table cellpadding="0" cellspacing="0" class="layoutfixed">
 			<col width="20" /><col width="100%" />

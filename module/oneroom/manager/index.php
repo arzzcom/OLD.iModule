@@ -1156,6 +1156,12 @@ var ItemForm = function(idx,grid) {
 						
 						if (action.result.data.subway1) form.findField("subway1").fireEvent("select",form.findField("subway1"));
 						if (action.result.data.subway2) form.findField("subway2").fireEvent("select",form.findField("subway2"));
+						
+						try {
+							oEditors.getById["ItemFormWysiwyg-inputEl"].exec("PASTE_HTML",[form.findField("detail").getValue()]);
+						} catch (e) {
+							
+						}
 					},
 					failure:function(form,action) {
 						Ext.Msg.show({title:"에러",msg:"서버에 이상이 있어 데이터를 불러오지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
