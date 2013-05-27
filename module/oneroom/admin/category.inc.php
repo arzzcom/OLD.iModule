@@ -7,8 +7,8 @@ $categorys = array(
 	array('category'=>'item','name'=>'매물관리','icon'=>$_ENV['dir'].'/module/oneroom/images/admin/icon_building.png'),
 	array('category'=>'default_premium','name'=>'기본프리미엄매물관리','icon'=>$_ENV['dir'].'/module/oneroom/images/admin/icon_premium.png'),
 	array('category'=>'default_regionitem','name'=>'기본지역추천매물관리','icon'=>$_ENV['dir'].'/module/oneroom/images/admin/icon_regionvote.png'),
-	array('category'=>'default_prodealer','name'=>'기본지역전문가관리','icon'=>$_ENV['dir'].'/module/oneroom/images/admin/icon_prodealer.png')/*,
-	array('category'=>'file','name'=>'첨부파일관리','icon'=>$_ENV['dir'].'/module/board/images/admin/icon_disk_multiple.png'),
-	array('category'=>'trash','name'=>'휴지통관리','icon'=>$_ENV['dir'].'/module/board/images/admin/icon_trash.png')*/
+	array('category'=>'default_prodealer','name'=>'기본지역전문가관리','icon'=>$_ENV['dir'].'/module/oneroom/images/admin/icon_prodealer.png'),
+	array('category'=>'slot','name'=>'슬롯아이템관리','icon'=>$_ENV['dir'].'/module/oneroom/images/admin/icon_tag_blue.png'),
+	array('category'=>'file','name'=>'첨부파일관리','icon'=>$_ENV['dir'].'/module/board/images/admin/icon_disk.png')
 );
 ?>

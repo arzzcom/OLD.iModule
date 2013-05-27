@@ -17,6 +17,11 @@ $orderer = $sort != null && $dir != null ? $sort.','.$dir : '';
 
 $lists = array();
 
+if ($mMember->IsAdmin() == false) {
+	$return['success'] = false;
+	exit(json_encode($return));
+}
+
 if ($action == 'region') {
 	$is_all = Request('is_all');
 	$is_none = Request('is_none');
@@ -305,32 +310,60 @@ if ($action == 'prodealer') {
 		$lists[$i]['region3_title'] = $lists[$i]['region3'] != '0' ? $mOneroom->GetRegionName($lists[$i]['region3']) : '';
 		$lists[$i]['region3_count'] = isset($region3[0]) == true ? $region3[0] : '0';
 	}
-/*
-	$status = Request('status');
-	if ($status == 'default') $find = "where `start_date`='-1'";
+}
+
+if ($action == 'slot') {
+	$get = Request('get');
 	
-	$lists = $mDB->DBfetchs($mOneroom->table['prodealer'],array('idx','agent','dealer','region1','region2','region3','start_date','end_date'),$find,$orderer,$limiter);
-	$total = $mDB->DBcount($mOneroom->table['prodealer'],$find);
-	for ($i=0, $loop=sizeof($lists);$i<$loop;$i++) {
-		$agent = $mOneroom->GetAgentName($lists[$i]['agent']);
-		$dealer = $mOneroom->GetDealer($lists[$i]['dealer']);
-		$region = $mOneroom->GetRegion($lists[$i]['region1'],$lists[$i]['region2'],$lists[$i]['region3']);
-		
-		$itemtotal = $mDB->DBcount($mOneroom->table['item'],"where `dealer`={$lists[$i]['idx']}");
-		$itemcomplete = $mDB->DBcount($mOneroom->table['item'],"where `dealer`={$lists[$i]['idx']} and `status`='COMPLETE'");
-		
-		$lists[$i] = '{';
-		$lists[$i].= '"idx":"'.$lists[$i]['idx'].'",';
-		$lists[$i].= '"agent":"'.GetString($agent,'ext').'",';
-		$lists[$i].= '"region":"'.GetString($region,'ext').'",';
-		$lists[$i].= '"agent":"'.GetString($agent,'ext').'",';
-		$lists[$i].= '"name":"'.GetString($dealer['name'],'ext').'",';
-		$lists[$i].= '"item":"'.$itemcomplete.','.$itemtotal.'",';
-		$lists[$i].= '"email":"'.GetString($dealer['email'],'ext').'",';
-		$lists[$i].= '"cellphone":"'.GetString($dealer['cellphone']['cellphone'],'ext').'"';
-		$lists[$i].= '}';
+	$lists = $mDB->DBfetchs($mOneroom->table['slot'],'*',"where `type`='$get'");
+}
+
+if ($action == 'file') {
+	$get = Request('get');
+	
+	if ($get == 'totalsize') {
+		$data = $mDB->DBfetch($mOneroom->table['file'],array('SUM(filesize)'));
+		$return['success'] = true;
+		$return['totalsize'] = isset($data[0]) == true ? $data[0] : 0;
+		exit(json_encode($return));
+	} else {
+		$keyword = Request('keyword');
+		if ($get == 'register') $find = "where `repto`!=0";
+		elseif ($get == 'temp') $find = "where `repto`=0";
+		elseif ($get == 'image') $find = "where `filetype`='IMG'";
+	
+		if ($keyword) $find.= " and `filename` like '%$keyword%'";
+		$boardInfo = array();
+		$total = $mDB->DBcount($mOneroom->table['file'],$find);
+		$lists = $mDB->DBfetchs($mOneroom->table['file'],'*',$find,$orderer,$limiter);
+	
+		for ($i=0, $loop=sizeof($lists);$i<$loop;$i++) {
+			$post = $ment = array();
+			if ($lists[$i]['repto'] != 0) {
+				$item = $mDB->DBfetch($mOneroom->table['item'],array('title'),"where `idx`='{$lists[$i]['repto']}'");
+			}
+				
+			if (isset($item['title']) == true) $lists[$i]['title'] = $item['title'];
+			else $lists[$i]['title'] = '';
+			
+			if ($lists[$i]['filetype'] == 'IMG' && $get == 'image') {
+				if (file_exists($_ENV['userfilePath'].$mOneroom->thumbnail.'/'.$lists[$i]['idx'].'.thm') == true) {
+					$lists[$i]['image'] = $_ENV['userfileDir'].$mOneroom->thumbnail.'/'.$lists[$i]['idx'].'.thm';
+				} else {
+					if (GetThumbnail($_ENV['userfilePath'].$mOneroom->userfile.$lists[$i]['filepath'],$_ENV['userfilePath'].$mOneroom->thumbnail.'/'.$lists[$i]['idx'].'.thm',100,75,false) == true) {
+						$lists[$i]['image'] = $_ENV['userfileDir'].$mOneroom->thumbnail.'/'.$lists[$i]['idx'].'.thm';
+					} else {
+						$lists[$i]['image'] = $_ENV['dir'].'/module/board/images/admin/noimage.gif';
+					}
+				}
+				
+			} else {
+				$lists[$i]['image'] = '';
+			}
+			
+			$lists[$i]['filepath'] = $_ENV['userfilePath'].$mOneroom->userfile.$lists[$i]['filepath'];
+		}
 	}
-*/
 }
 
 $return = array();

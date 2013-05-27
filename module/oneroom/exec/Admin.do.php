@@ -12,6 +12,11 @@ $do = Request('do');
 $return = array();
 $errors = array();
 
+if ($mMember->IsAdmin() == false) {
+	$return['success'] = false;
+	exit(json_encode($return));
+}
+
 if ($action == 'region') {
 	if ($do == 'add') {
 		$insert['title'] = Request('title');
@@ -548,40 +553,113 @@ if ($action == 'item') {
 	}
 }
 
-if ($action == 'default_prodealer') {
-	header('Content-type: text/xml; charset="UTF-8"', true);
-	header("Cache-Control: no-cache, must-revalidate");
-	header("Pragma: no-cache");
-	
+if ($action == 'slot') {
 	if ($do == 'add') {
-		$errors = array();
-		$idx = explode(',',Request('idx'));
+		$insert = array();
+		$insert['type'] = Request('type');
+		$insert['term'] = Request('term');
+		$insert['price'] = Request('price');
 		
-		for ($i=0, $loop=sizeof($idx);$i<$loop;$i++) {
-			$check = $mDB->DBfetch($mOneroom->table['prodealer'],array('idx'),"where `dealer`='{$idx[$i]}' and `start_date`='-1'");
-			if (isset($check['idx']) == true) {
-				$mDB->DBupdate($mOneroom->table['prodealer'],array('region1'=>Request('region1'),'region2'=>Request('region2'),'region3'=>Request('region3')),'',"where `idx`='{$check['idx']}'");
-			} else {
-				$dealer = $mDB->DBfetch($mOneroom->table['dealer'],array('agent'),"where `idx`='{$idx[$i]}'");
-				$mDB->DBinsert($mOneroom->table['prodealer'],array('agent'=>$dealer['agent'],'dealer'=>$idx[$i],'region1'=>Request('region1'),'region2'=>Request('region2'),'region3'=>Request('region3'),'start_date'=>'-1'));
-			}
+		if ($mDB->DBcount($mOneroom->table['slot'],"where `type`='{$insert['type']}' and `term`='{$insert['term']}'") > 0) {
+			$errors['term'] = '기간이 중복됩니다.';
 		}
-		echo '<?xml version="1.0" encoding="UTF-8"?>';
-		echo '<message success="'.(sizeof($errors) == 0 ? 'true' : 'false').'">';
-
-		if (sizeof($errors) > 0) {
-			echo '<errors>';
-			foreach ($errors as $id=>$msg) {
-				echo '<field><id>'.$id.'</id><msg><![CDATA['.$msg.']]></msg></field>';
-			}
-			echo '</errors>';
+		
+		if (sizeof($errors) == 0) {
+			$idx = 10;//$mDB->DBinsert($mDB->table['slot'],$insert);
+			
+			$return['success'] = true;
+			$return['idx'] = $idx;
+			$return['term'] = $insert['term'];
+			$return['price'] = $insert['price'];
 		} else {
-			echo '<errors>';
-			echo '<field><id>'.$idx.'</id></field>';
-			echo '</errors>';
+			$return['success'] = false;
+			$return['errors'] = $errors;
+		}
+		exit(json_encode($return));
+	}
+	
+	if ($do == 'modify') {
+		$data = json_decode(Request('data'),true);
+		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
+			$mDB->DBupdate($mOneroom->table['slot'],$data[$i],'',"where `idx`='{$data[$i]['idx']}'");
+		}
+		
+		$return['success'] = true;
+		exit(json_encode($return));
+	}
+	
+	if ($do == 'delete') {
+		$idx = Request('idx');
+		$mDB->DBdelete($mOneroom->table['slot'],"where `idx` IN ($idx)");
+		$return['success'] = true;
+		exit(json_encode($return));
+	}
+}
+
+if ($action == 'file') {
+	if ($do == 'retrench') {
+		GetDefaultHeader('첨부파일 정리중');
+
+		$fileLimit = Request('fileLimit') ? Request('fileLimit') : 0;
+
+		$files = scandir($_ENV['userfilePath'].$mOneroom->userfile.'/attach',0);
+
+		if ($fileLimit == 0) {
+			$totalFile = sizeof($files);
+			$deleteFile = 0;
+		} else {
+			$totalFile = Request('totalFile');
+			$deleteFile = Request('deleteFile');
+		}
+		
+		for ($i=$fileLimit-$deleteFile;$i<$fileLimit+100;$i++) {
+			if (isset($files[$i]) == false) {
+				break;
+			} elseif (is_dir($_ENV['userfilePath'].$mOneroom->userfile.'/attach/'.$files[$i]) == false) {
+				if ($mDB->DBcount($mOneroom->table['file'],"where `filepath`='/attach/{$files[$i]}'") == 0) {
+					$deleteFile++;
+					@unlink($_ENV['userfilePath'].$mOneroom->userfile.'/attach/'.$files[$i]) or $deleteFile--;
+				}
+			}
 		}
 
-		echo '</message>';
+		if ($totalFile > $fileLimit+100) {
+			echo '<script type="text/javascript">top.RetrenchProgressControl('.($fileLimit+100).','.$totalFile.','.$deleteFile.');</script>';
+			Redirect($_SERVER['PHP_SELF'].GetQueryString(array('fileLimit'=>$fileLimit+100,'totalFile'=>$totalFile,'deleteFile'=>$deleteFile),'',false));
+		} else {
+			echo '<script type="text/javascript">top.RetrenchProgressControl('.$totalFile.','.$totalFile.','.$deleteFile.');</script>';
+		}
+
+		GetDefaultFooter();
+	}
+
+	if ($do == 'removetemp') {
+		GetDefaultHeader('첨부파일 정리중');
+		
+		$fileLimit = Request('fileLimit') ? Request('fileLimit') : 0;
+		$deleteFile = Request('deleteFile') ? Request('deleteFile') : 0;
+		if ($fileLimit == 0) {
+			$totalFile = $mDB->DBcount($mOneroom->table['file'],"where `repto`=0");
+		} else {
+			$totalFile = Request('totalFile');
+		}
+		
+		$data = $mDB->DBfetchs($mOneroom->table['file'],array('idx','filepath'),"where `repto`=0",'idx,asc',($fileLimit-$deleteFile).',1000');
+		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
+			$deleteFile++;
+			@unlink($_ENV['userfilePath'].$mOneroom->userfile.$data[$i]['filepath']);
+			@unlink($_ENV['userfilePath'].$mOneroom->thumbnail.'/'.$data[$i]['idx'].'.thm');
+			$mDB->DBdelete($mOneroom->table['file'],"where `idx`='{$data[$i]['idx']}'");
+		}
+		
+		if ($totalFile > $fileLimit + 1000) {
+			echo '<script type="text/javascript">top.TempProgressControl('.($fileLimit+1000).','.$totalFile.','.$deleteFile.');</script>';
+			Redirect($_SERVER['PHP_SELF'].GetQueryString(array('fileLimit'=>$fileLimit+1000,'deleteFile'=>$deleteFile,'totalFile'=>$totalFile),'',false));
+		} else {
+			echo '<script type="text/javascript">top.TempProgressControl('.$totalFile.','.$totalFile.','.$deleteFile.');</script>';
+		}
+		
+		GetDefaultFooter();
 	}
 }
 ?>

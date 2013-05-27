@@ -1158,7 +1158,7 @@ var ItemForm = function(idx,grid) {
 						if (action.result.data.subway2) form.findField("subway2").fireEvent("select",form.findField("subway2"));
 						
 						try {
-							oEditors.getById["ItemFormWysiwyg-inputEl"].exec("PASTE_HTML",[form.findField("detail").getValue()]);
+							oEditors.getById["ItemFormWysiwyg-inputEl"].exec("SET_IR",[form.findField("detail").getValue()]);
 						} catch (e) {
 							
 						}

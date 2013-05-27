@@ -60,7 +60,7 @@ var ContentArea = function(viewport) {
 		proxy:{
 			type:"ajax",
 			simpleSortMode:true,
-			url:"<?php echo $_ENV['dir']; ?>/module/email/exec/Admin.get.php",
+			url:"<?php echo $_ENV['dir']; ?>/module/oneroom/exec/Admin.get.php",
 			reader:{type:"json",root:"lists",totalProperty:"totalCount"},
 			extraParams:{action:"file",get:"register",keyword:""}
 		},
@@ -68,14 +68,14 @@ var ContentArea = function(viewport) {
 		sorters:[{property:"idx",direction:"DESC"}],
 		autoLoad:true,
 		pageSize:50,
-		fields:["idx","repto","subject","filename","filetype","filesize","filepath","hit"]
+		fields:["idx","repto","title","filename","filetype","filesize","filepath","hit"]
 	});
 	
 	var store2 = new Ext.data.JsonStore({
 		proxy:{
 			type:"ajax",
 			simpleSortMode:true,
-			url:"<?php echo $_ENV['dir']; ?>/module/email/exec/Admin.get.php",
+			url:"<?php echo $_ENV['dir']; ?>/module/oneroom/exec/Admin.get.php",
 			reader:{type:"json",root:"lists",totalProperty:"totalCount"},
 			extraParams:{action:"file",get:"temp",keyword:""}
 		},
@@ -83,14 +83,14 @@ var ContentArea = function(viewport) {
 		sorters:[{property:"idx",direction:"DESC"}],
 		autoLoad:true,
 		pageSize:50,
-		fields:["idx","repto","subject","filename","filetype","filesize","filepath","hit"]
+		fields:["idx","repto","title","filename","filetype","filesize","filepath","hit"]
 	});
 
 	var store3 = new Ext.data.JsonStore({
 		proxy:{
 			type:"ajax",
 			simpleSortMode:true,
-			url:"<?php echo $_ENV['dir']; ?>/module/email/exec/Admin.get.php",
+			url:"<?php echo $_ENV['dir']; ?>/module/oneroom/exec/Admin.get.php",
 			reader:{type:"json",root:"lists",totalProperty:"totalCount"},
 			extraParams:{action:"file",get:"image",keyword:""}
 		},
@@ -98,38 +98,20 @@ var ContentArea = function(viewport) {
 		sorters:[{property:"idx",direction:"DESC"}],
 		autoLoad:true,
 		pageSize:50,
-		fields:["idx","image","repto","subject","filename","filetype","filesize","filepath","hit"]
+		fields:["idx","image","repto","title","filename","filetype","filesize","filepath","hit"]
 	});
 	
 	function ItemDblClick(grid,record,row,index,e) {
-		if (record.data.repto && record.data.subject) {
+		if (record.data.repto && record.data.title) {
 			new Ext.Window({
-				title:record.data.subject,
-				width:600,
+				title:record.data.title,
+				width:800,
+				height:500,
 				modal:true,
-				html:'<div id="ShowPreview" style="background:#FFFFFF; overflow-y:scroll; height:400px; padding:10px;"></div>',
-				listeners:{show:{fn:function() {
-					Ext.Msg.wait("메일 본문을 불러오고 있습니다.","잠시만 기다려주십시오.");
-					Ext.Ajax.request({
-						url:"<?php echo $_ENV['dir']; ?>/module/email/exec/Admin.get.php",
-						success:function(response) {
-							var data = Ext.JSON.decode(response.responseText);
-							if (data.success == true) {
-								document.getElementById("ShowPreview").innerHTML = data.body;
-								Ext.Msg.hide();
-							} else {
-								Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
-							}
-						},
-						failure:function() {
-							Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
-						},
-						params:{action:"email",idx:record.data.repto,mode:"group"}
-					});
-				}}}
+				html:'<iframe name="preview" src="<?php echo $_ENV['dir']; ?>/module/oneroom/manager/preview.php?idx='+record.data.repto+'" style="width:100%; height:100%;" frameborder="0" scrolling="auto"></iframe>'
 			}).show();
 		} else {
-			Ext.Msg.show({title:"에러",msg:"이 파일은 메일이 발송되지 않았거나, 첨부된 메일내역이 삭제되었습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
+			Ext.Msg.show({title:"에러",msg:"이 파일은 매물정보에 포함되지 않았거나, 첨부된 매물내역이 삭제되었습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
 		}
 	}
 	
@@ -142,7 +124,7 @@ var ContentArea = function(viewport) {
 		menu.add({
 			text:"파일다운로드",
 			handler:function() {
-				execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/email/exec/FileDownload.do.php?idx="+record.data.idx;
+				execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/oneroom/exec/FileDownload.do.php?idx="+record.data.idx;
 			}
 		});
 		
@@ -157,32 +139,14 @@ var ContentArea = function(viewport) {
 			menu.add('-');
 			
 			menu.add({
-				text:"파일이 첨부된 메일보기",
+				text:"파일이 첨부된 매물보기",
 				handler:function(item) {
 					new Ext.Window({
-						title:record.data.subject,
-						width:600,
+						title:record.data.title,
+						width:800,
+						height:500,
 						modal:true,
-						html:'<div id="ShowPreview" style="background:#FFFFFF; overflow-y:scroll; height:400px; padding:10px;"></div>',
-						listeners:{show:{fn:function() {
-							Ext.Msg.wait("메일 본문을 불러오고 있습니다.","잠시만 기다려주십시오.");
-							Ext.Ajax.request({
-								url:"<?php echo $_ENV['dir']; ?>/module/email/exec/Admin.get.php",
-								success:function(response) {
-									var data = Ext.JSON.decode(response.responseText);
-									if (data.success == true) {
-										document.getElementById("ShowPreview").innerHTML = data.body;
-										Ext.Msg.hide();
-									} else {
-										Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
-									}
-								},
-								failure:function() {
-									Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
-								},
-								params:{action:"email",idx:record.data.repto,mode:"group"}
-							});
-						}}}
+						html:'<iframe name="preview" src="<?php echo $_ENV['dir']; ?>/module/oneroom/manager/preview.php?idx='+record.data.repto+'" style="width:100%; height:100%;" frameborder="0" scrolling="auto"></iframe>'
 					}).show();
 				}
 			});
@@ -211,7 +175,7 @@ var ContentArea = function(viewport) {
 					}),
 					new Ext.Button({
 						text:"검색",
-						icon:"<?php echo $_ENV['dir']; ?>/module/email/images/admin/icon_magnifier.png",
+						icon:"<?php echo $_ENV['dir']; ?>/module/oneroom/images/admin/icon_magnifier.png",
 						handler:function() {
 							if (Ext.getCmp("ListTab").getActiveTab().getId() == "ListPanel3") {
 								store3.getProxy().setExtraParam("keyword",Ext.getCmp("Keyword").getValue());
@@ -226,7 +190,7 @@ var ContentArea = function(viewport) {
 					new Ext.Button({
 						id:"BtnRetrench",
 						text:"미기록파일정리",
-						icon:"<?php echo $_ENV['dir']; ?>/module/email/images/admin/icon_link_error.png",
+						icon:"<?php echo $_ENV['dir']; ?>/module/oneroom/images/admin/icon_link_error.png",
 						handler:function() {
 							Ext.Msg.show({title:"안내",msg:"DB에서 관리되고 있지 않은 첨부파일을 찾아 전부 삭제합니다.<br />이 작업은 첨부파일폴더전체를 검색하기때문에 시간이 많이 소요될 수 있습니다.<br />기록되지 않은 파일은 찾아 삭제하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
 								if (button == "yes") {
@@ -246,7 +210,7 @@ var ContentArea = function(viewport) {
 											})
 										],
 										listeners:{show:{fn:function() {
-											execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/email/exec/Admin.do.php?action=file&do=retrench";
+											execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/oneroom/exec/Admin.do.php?action=file&do=retrench";
 										}}}
 									}).show();
 								}
@@ -256,9 +220,9 @@ var ContentArea = function(viewport) {
 					new Ext.Button({
 						id:"BtnRemovetemp",
 						text:"임시파일정리",
-						icon:"<?php echo $_ENV['dir']; ?>/module/email/images/admin/icon_link_delete.png",
+						icon:"<?php echo $_ENV['dir']; ?>/module/oneroom/images/admin/icon_link_delete.png",
 						handler:function() {
-							Ext.Msg.show({title:"안내",msg:"메일에 첨부되지 않고 임시로 업로드된 파일을 정리합니다.<br />임시파일정리를 계속 하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
+							Ext.Msg.show({title:"안내",msg:"매물에 첨부되지 않고 임시로 업로드된 파일을 정리합니다.<br />임시파일정리를 계속 하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
 								if (button == "yes") {
 									new Ext.Window({
 										id:"ProgressWindow",
@@ -272,11 +236,11 @@ var ContentArea = function(viewport) {
 										items:[
 											new Ext.ProgressBar({
 												id:"ProgressFile",
-												text:"메일 첨부되지 않고 임시로 업로드된 파일을 검색중입니다."
+												text:"매물 첨부되지 않고 임시로 업로드된 파일을 검색중입니다."
 											})
 										],
 										listeners:{show:{fn:function() {
-											execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/email/exec/Admin.do.php?action=file&do=removetemp";
+											execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/oneroom/exec/Admin.do.php?action=file&do=removetemp";
 										}}}
 									}).show();
 								}
@@ -287,7 +251,7 @@ var ContentArea = function(viewport) {
 					new Ext.Toolbar.TextItem({
 						id:"TotalSize",
 						text:"총 첨부된 파일용량 : 계산중...",
-						listeners:{render:{fn:function(button) {
+						listeners:{render:{fn:function() {
 							GetTotalSize();
 						}}}
 					})
@@ -330,8 +294,8 @@ var ContentArea = function(viewport) {
 								width:40,
 								renderer:GridNumberFormat
 							},{
-								header:"파일이 첨부된 메일",
-								dataIndex:"subject",
+								header:"파일이 첨부된 매물",
+								dataIndex:"title",
 								sortable:true,
 								minWidth:200,
 								flex:1
@@ -385,8 +349,8 @@ var ContentArea = function(viewport) {
 								width:40,
 								renderer:GridNumberFormat
 							},{
-								header:"파일이 첨부된 메일",
-								dataIndex:"subject",
+								header:"파일이 첨부된 매물",
+								dataIndex:"title",
 								sortable:true,
 								minWidth:200,
 								flex:1,
@@ -424,7 +388,7 @@ var ContentArea = function(viewport) {
 									'<div class="item">',
 										'<div class="image"><img src="{image}" /></div>',
 										'<div class="filename">{filename}</div>',
-										'<div class="mailtitle"><tpl if="subject != \'\'">{subject}<tpl else>원본게시물없음</tpl></div>',
+										'<div class="mailtitle"><tpl if="title != \'\'">{title}<tpl else>원본게시물없음</tpl></div>',
 									'</div>',
 									'</tpl>',
 									'</div>'
@@ -447,7 +411,7 @@ var ContentArea = function(viewport) {
 											maxWidth:800,
 											maxHeight:500,
 											autoScroll:true,
-											html:'<img src="<?php echo $_ENV['dir']; ?>/module/email/exec/ShowImage.do.php?idx='+record.data.idx+'" onload="Ext.getCmp(\'PreviewWindow\').doLayout().center()" />'
+											html:'<img src="<?php echo $_ENV['dir']; ?>/module/oneroom/exec/ShowImage.do.php?idx='+record.data.idx+'" onload="Ext.getCmp(\'PreviewWindow\').doLayout().center()" />'
 										}).show();
 									}},
 									itemcontextmenu:ItemContextMenu
