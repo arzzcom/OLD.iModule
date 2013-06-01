@@ -66,35 +66,39 @@ class ModuleBoard extends Module {
 
 		if ($bid) {
 			if ($bid == '$mypost') {
-				$this->setup = array('skin'=>'default','width'=>'100%','listnum'=>20,'pagenum'=>10,'view_list'=>true,'use_category'=>'FALSE','use_select'=>'FALSE','view_list'=>'loopnum,reg_date,hit,vote','use_mode'=>'TRUE','permission'=>'');
+				$this->setup = array('skin'=>'default','width'=>'100%','listnum'=>20,'pagenum'=>10,'view_list'=>true,'use_category'=>'FALSE','use_select'=>'FALSE','view_list'=>'loopnum,reg_date,hit,vote','use_mode'=>'TRUE','permission'=>'','view_notice_page'=>'NONE');
 			} else {
 				$this->setup = $this->mDB->DBfetch($this->table['setup'],array('bid','skin','title','width','use_uploader','use_category','use_charge','use_select','use_rss','listnum','pagenum','view_alllist','view_list','view_notice_page','view_notice_count','view_notice_list','post_point','ment_point','permission'),"where `bid`='{$bid}'");
 				$this->setup['use_mode'] = 'FALSE';
 			}
-
-			$this->skinPath = $this->modulePath.'/templet/board/'.$this->setup['skin'];
-			$this->skinDir = $this->moduleDir.'/templet/board/'.$this->setup['skin'];
-			$this->setup['mobile'] = isset($this->setup['mobile']) == true ? $this->setup['mobile'] : false;
-			$this->setup['width'] = preg_match('/%/',$this->setup['width']) ? $this->setup['width'] : $this->setup['width'].'px';
-
-			if (is_array($setup) == true) {
-				foreach ($setup as $key=>$value) $this->setup[$key] = $value;
+			
+			if (isset($this->setup['skin']) == true) {
+				$this->skinPath = $this->modulePath.'/templet/board/'.$this->setup['skin'];
+				$this->skinDir = $this->moduleDir.'/templet/board/'.$this->setup['skin'];
+				$this->setup['mobile'] = isset($this->setup['mobile']) == true ? $this->setup['mobile'] : false;
+				$this->setup['width'] = preg_match('/%/',$this->setup['width']) ? $this->setup['width'] : $this->setup['width'].'px';
+			
+				if (is_array($setup) == true) {
+					foreach ($setup as $key=>$value) $this->setup[$key] = $value;
+				}
+			
+				if ($this->setup['mobile'] == true) {
+					$this->setup['listnum'] = 15;
+					$this->setup['pagenum'] = 3;
+				}
+		
+				if (isset($setup['skin']) == true) {
+					$this->setup['skin'] = $setup['skin'];
+					$this->skinPath = $this->modulePath.'/templet/board/'.$this->setup['skin'];
+					$this->skinDir = $this->moduleDir.'/templet/board/'.$this->setup['skin'];
+				}
+			} else {
+				$this->setup['width'] = '100%';
 			}
 		}
 
 		$this->recentlyPath = $this->modulePath.'/templet/recently';
 		$this->recentlyDir = $this->moduleDir.'/templet/recently';
-
-		if ($this->setup['mobile'] == true) {
-			$this->setup['listnum'] = 15;
-			$this->setup['pagenum'] = 3;
-		}
-
-		if (isset($setup['skin']) == true) {
-			$this->setup['skin'] = $setup['skin'];
-			$this->skinPath = $this->modulePath.'/templet/board/'.$this->setup['skin'];
-			$this->skinDir = $this->moduleDir.'/templet/board/'.$this->setup['skin'];
-		}
 
 		$this->mPlugin = new Plugin($this);
 	}
@@ -328,7 +332,7 @@ class ModuleBoard extends Module {
 	function PrintHeader() {
 		if ($this->isHeaderIncluded == true) return;
 
-		if ($this->setup['mobile'] == true) {
+		if (isset($this->setup['mobile']) == true && $this->setup['mobile'] == true) {
 			if ($_ENV['isHeaderIncluded'] == false) {
 				GetDefaultHeader($this->setup['title'],'',array(
 					array('type'=>'meta','content'=>array('name'=>'viewport','content'=>'initial-scale=1.0; maximum-scale=1.0; user-scalable=1;')),
@@ -713,7 +717,7 @@ class ModuleBoard extends Module {
 		$pagenum = $this->setup['pagenum'];
 		$p = is_numeric(Request('p')) == true && Request('p') > 0 ? Request('p') : 1;
 
-		if ($this->setup['view_notice_page'] == 'ALL' || $p == '1') {
+		if ($this->setup['view_notice_page'] != 'NONE' && ($this->setup['view_notice_page'] == 'ALL' || $p == '1')) {
 			$notice = $this->mDB->DBfetchs($this->table['post'],array('idx','bid','category','mno','name','email','homepage','title','image','reg_date','hit','ment','last_ment','trackback','vote','voter','is_notice','is_html_title','is_secret','is_mobile','field1','field2','field3'),$this->find." and `is_notice`='TRUE'",'idx,desc');
 			for ($i=0, $loop=sizeof($notice);$i<$loop;$i++) {
 				$notice[$i]['title'] = $notice[$i]['is_html_title'] == 'TRUE' ? $notice[$i]['title'] : GetString($notice[$i]['title'],'replace');
@@ -757,11 +761,11 @@ class ModuleBoard extends Module {
 			$notice = array();
 		}
 
-		if ($this->setup['view_notice_count'] == 'INCLUDE') {
+		if ($this->setup['view_notice_page'] != 'NONE' && $this->setup['view_notice_count'] == 'INCLUDE') {
 			$listnum = $listnum-sizeof($notice);
 		}
 
-		if ($this->setup['view_notice_list'] == 'FALSE') $find.= " and `is_notice`='FALSE'";
+		if ($this->setup['view_notice_page'] != 'NONE' && $this->setup['view_notice_list'] == 'FALSE') $find.= " and `is_notice`='FALSE'";
 
 		$totalpost = $this->mDB->DBcount($this->table['post'],$find);
 		$totalpage = ceil($totalpost/$listnum) == 0 ? 1 : ceil($totalpost/$listnum);
@@ -1346,6 +1350,10 @@ class ModuleBoard extends Module {
 	// 최근게시물 출력
 	function PrintRecently($skin,$page,$row,$limit='',$title='',$finder='') {
 		$this->PrintHeader();
+		
+		if (preg_match('/\$/',$this->bid) == false && isset($this->setup['bid']) == false) {
+			return $this->PrintError($this->bid.' 게시판을 찾을 수 없습니다.');
+		}
 
 		$title = $title ? $title : $this->setup['title'];
 		$find = $this->find;

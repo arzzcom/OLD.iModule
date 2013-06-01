@@ -97,7 +97,7 @@ if ($action == 'item') {
 				$errors['bannerfile'] = '선택한 배너영역에는 이미지파일(GIF,JPG,PNG)형식을 지원하지 않습니다.';
 			}
 			
-			if (in_array($filetype[2],array(1,2,3,4)) == false) {
+			if (in_array($filetype[2],array(1,2,3,4,13)) == false) {
 				$errors['bannerfile'] = '배너파일은 이미지파일(GIF,JPG,PNG)또는 플래시파일(SWF)파일만 허용됩니다.';
 			}
 			
@@ -186,6 +186,23 @@ if ($action == 'item') {
 			}
 		} else {
 			$mDB->DBupdate($mBanner->table['item'],array('is_active'=>'FALSE'),'',"where `idx` IN ($idx)");
+		}
+		
+		$return['success'] = true;
+		exit(json_encode($return));
+	}
+	
+	if ($do == 'delete') {
+		$idx = explode(',',Request('idx'));
+		for ($i=0, $loop=sizeof($idx);$i<$loop;$i++) {
+			$data = $mDB->DBfetch($mBanner->table['item'],'*',"where `idx`='{$idx[$i]}'");
+			$mDB->DBdelete($mBanner->table['item'],"where `idx`='{$idx[$i]}'");
+			$mDB->DBstatus($mBanner->table['log_count'],"where `bno`='{$idx[$i]}'");
+			$mDB->DBstatus($mBanner->table['log_click'],"where `bno`='{$idx[$i]}'");
+			
+			if ($item['bannerpath'] && file_exists($_ENV['userfilePath'].$mBanner->userfile.$item['bannerpath']) == true) {
+				unlink($_ENV['userfilePath'].$mBanner->userfile.$item['bannerpath']);
+			}
 		}
 		
 		$return['success'] = true;

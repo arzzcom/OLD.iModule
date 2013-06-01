@@ -33,11 +33,11 @@ var ContentArea = function(viewport) {
 		menu.add('-');
 		
 		menu.add({
-			text:"배너영역삭제",
+			text:"배너삭제",
 			handler:function () {
-				Ext.Msg.show({title:"확인",msg:"배너영역을 삭제하면 해당 배너영역의 모든 배너가 삭제됩니다.<br />배너영역을 삭제하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
+				Ext.Msg.show({title:"확인",msg:"배너를 삭제하면 모든 통계 및 배너이미지가 삭제됩니다.<br />배너를 삭제하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
 					if (button == "yes") {
-						Ext.Msg.wait("배너영역을 삭제하고 있습니다.","잠시만 기다려주십시오.");
+						Ext.Msg.wait("배너를 삭제하고 있습니다.","잠시만 기다려주십시오.");
 						Ext.Ajax.request({
 							url:"<?php echo $_ENV['dir']; ?>/module/banner/exec/Admin.do.php",
 							success:function(response) {
@@ -53,7 +53,7 @@ var ContentArea = function(viewport) {
 							failure:function() {
 								Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
 							},
-							params:{"action":"item","do":"delete","code":record.data.code}
+							params:{"action":"item","do":"delete","code":record.data.idx}
 						});
 					}
 				}});

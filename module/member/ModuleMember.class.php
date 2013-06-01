@@ -219,7 +219,7 @@ class ModuleMember extends member {
 	}
 
 	function PrintSignIn($skin,$group='default',$actionFile='') {
-		$step = Request('step') ? Request('step') : '1';
+		$step = Request('step') ? Request('step') : 1;
 
 		echo '<!-- Signin Start -->'."\n";
 
