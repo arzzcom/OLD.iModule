@@ -54,6 +54,13 @@ if ($action == 'member') {
 							$errors['jumin1'] = '주민등록번호가 중복됩니다.';
 						}
 					break;
+					
+					case 'companyno' :
+						$insert['companyno'] = CheckCompanyNo(Request('companyno1').'-'.Request('companyno2').'-'.Request('companyno3')) == true ? Request('companyno1').'-'.Request('companyno2').'-'.Request('companyno3') : $errors['companyno1'] = '사업자등록번호가 중복됩니다.';
+						if ($mDB->DBcount($_ENV['table']['member'],"where `companyno`='{$insert['companyno']}' and `is_leave`='FALSE'") > 0) {
+							$errors['companyno1'] = '사업자등록번호가 중복됩니다.';
+						}
+					break;
 
 					case 'email' :
 						$insert['email'] = CheckEmail(Request('email')) == true ? Request('email') : $errors['email'] = '이메일주소를 정확하게 입력하여 주십시오.';
@@ -173,6 +180,13 @@ if ($action == 'member') {
 							$insert['jumin'] = CheckJumin(Request('jumin1').'-'.Request('jumin2')) == true ? Request('jumin1').'-'.Request('jumin2') : $errors['jumin1'] = '주민등록번호를 정확하게 입력하여 주십시오.';
 							if ($mDB->DBcount($_ENV['table']['member'],"where `jumin`='{$insert['jumin']}' and `is_leave`='FALSE' and `idx`!=$idx") > 0) {
 								$errors['jumin1'] = '주민등록번호가 중복됩니다.';
+							}
+						break;
+						
+						case 'companyno' :
+							$insert['companyno'] = CheckCompanyNo(Request('companyno1').'-'.Request('companyno2').'-'.Request('companyno3')) == true ? Request('companyno1').'-'.Request('companyno2').'-'.Request('companyno3') : $errors['companyno1'] = '사업자등록번호가 중복됩니다.';
+							if ($mDB->DBcount($_ENV['table']['member'],"where `companyno`='{$insert['companyno']}' and `is_leave`='FALSE'") > 0) {
+								$errors['companyno1'] = '사업자등록번호가 중복됩니다.';
 							}
 						break;
 	

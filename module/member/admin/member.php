@@ -104,6 +104,92 @@ ContentArea = function(viewport) {
 					allowBlank:<?php echo $signin[$i]['allowblank'] == 'TRUE' ? 'true' : 'false'; ?>
 				})
 			);
+			<?php } elseif ($signin[$i]['type'] == 'jumin') { ?>
+			fields.push(
+				new Ext.form.FieldContainer({
+					fieldLabel:"<?php echo $signin[$i]['title']; ?>",
+					anchor:"100%",
+					layout:"hbox",
+					allowBlank:<?php echo $signin[$i]['allowblank'] == 'TRUE' ? 'true' : 'false'; ?>,
+					items:[
+						new Ext.form.TextField({
+							name:"jumin1",
+							width:60,
+							validator:function(value) {
+								if (value.search(/^[0-9]{6}$/) == -1) {
+									return "주민등록번호가 잘못입력되었습니다."
+								} else {
+									return true;
+								}
+							}
+						}),
+						new Ext.form.DisplayField({
+							value:"&nbsp;-&nbsp;"
+						}),
+						new Ext.form.TextField({
+							name:"jumin2",
+							width:70,
+							validator:function(value) {
+								if (value.search(/^[0-9]{7}$/) == -1) {
+									return "주민등록번호가 잘못입력되었습니다."
+								} else {
+									return true;
+								}
+							}
+						})
+					]
+				})
+			);
+			<?php } elseif ($signin[$i]['type'] == 'companyno') { ?>
+			fields.push(
+				new Ext.form.FieldContainer({
+					fieldLabel:"<?php echo $signin[$i]['title']; ?>",
+					anchor:"100%",
+					layout:"hbox",
+					allowBlank:<?php echo $signin[$i]['allowblank'] == 'TRUE' ? 'true' : 'false'; ?>,
+					items:[
+						new Ext.form.TextField({
+							name:"companyno1",
+							width:40,
+							validator:function(value) {
+								if (value.search(/^[0-9]{3}$/) == -1) {
+									return "사업자 등록번호가 잘못입력되었습니다."
+								} else {
+									return true;
+								}
+							}
+						}),
+						new Ext.form.DisplayField({
+							value:"&nbsp;-&nbsp;"
+						}),
+						new Ext.form.TextField({
+							name:"companyno2",
+							width:30,
+							validator:function(value) {
+								if (value.search(/^[0-9]{2}$/) == -1) {
+									return "사업자 등록번호가 잘못입력되었습니다."
+								} else {
+									return true;
+								}
+							}
+						}),
+						new Ext.form.DisplayField({
+							value:"&nbsp;-&nbsp;"
+						}),
+						new Ext.form.TextField({
+							name:"companyno3",
+							width:50,
+							validator:function(value) {
+								if (value.search(/^[0-9]{5}$/) == -1) {
+									return "사업자 등록번호가 잘못입력되었습니다."
+								} else {
+									return true;
+								}
+							}
+						})
+					]
+				})
+			);
 			<?php } elseif ($signin[$i]['type'] == 'birthday') { ?>
 			fields["<?php echo $signin[$i]['group']; ?>"].push(
 				new Ext.form.FieldContainer({
