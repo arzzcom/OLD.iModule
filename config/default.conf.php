@@ -52,7 +52,7 @@ if (isset($_SERVER['HTTP_HOST']) == true) {
 } else {
 	$_ENV['domain'] = '';
 }
-$_ENV['userfileDir'] = isset($_ENV['userfileDir']) == true ? $_ENV['userfileDir'] : '/userfile';
+$_ENV['userfileDir'] = isset($_ENV['userfileDir']) == true ? $_ENV['userfileDir'] : $_ENV['dir'].'/userfile';
 $_ENV['userfilePath'] = isset($_ENV['userfilePath']) == true ? $_ENV['userfilePath'] : $_ENV['path'].'/userfile';
 
 
