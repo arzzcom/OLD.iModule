@@ -231,7 +231,7 @@ class ModuleBoard extends Module {
 
 	function SetContent($content) {
 		$content = str_replace('http://'.$_SERVER['HTTP_HOST'],'{$moduleHost}',$content);
-		$content = str_replace($mBoard->moduleDir,'{$moduleDir}',$content);
+		$content = str_replace($this->moduleDir,'{$moduleDir}',$content);
 
 		return $content;
 	}
