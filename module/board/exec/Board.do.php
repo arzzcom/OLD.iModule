@@ -62,7 +62,7 @@ if ($action == 'post') {
 			$insert['name'] = Request('name') ? Request('name') : Alertbox('이름을 입력하여 주십시오.');
 			$insert['password'] = Request('password') ? md5(Request('password')) : Alertbox('암호를 입력하여 주십시오.');
 			$insert['email'] = CheckEmail(Request('email')) == true ? Request('email') : '';
-			$insert['homepage'] = Request('homepage') ? (eregi('http://',Request('homepage')) == true ? Request('homepage') : 'http://'.Request('homepage')) : '';
+			$insert['homepage'] = Request('homepage') ? (preg_match('/^http:\/\//',Request('homepage')) == true ? Request('homepage') : 'http://'.Request('homepage')) : '';
 			setcookie('iModuleBoardName',$insert['name'],time()+60*60*24*365,'/');
 			setcookie('iModuleBoardEmail',$insert['email'],time()+60*60*24*365,'/');
 			setcookie('iModuleBoardHomepage',$insert['homepage'],time()+60*60*24*365,'/');
@@ -101,7 +101,7 @@ if ($action == 'post') {
 			$insert['name'] = Request('name') ? Request('name') : Alertbox('이름을 입력하여 주십시오.');
 			$insert['password'] = Request('password') ? md5(Request('password')) : $post['password'];
 			$insert['email'] = CheckEmail(Request('email')) == true ? Request('email') : '';
-			$insert['homepage'] = Request('homepage') ? (eregi('http://',Request('homepage')) == true ? Request('homepage') : 'http://'.Request('homepage')) : '';
+			$insert['homepage'] = Request('homepage') ? (preg_match('/^http:\/\//',Request('homepage')) == true ? Request('homepage') : 'http://'.Request('homepage')) : '';
 			$insert['last_modify_mno'] = 0;
 			setcookie('iModuleBoardName',$insert['name'],time()+60*60*24*365,'/');
 			setcookie('iModuleBoardEmail',$insert['email'],time()+60*60*24*365,'/');
@@ -181,12 +181,11 @@ if ($action == 'ment') {
 	$insert['search'] = GetIndexingText(Request('content'));
 	$insert['is_msg'] = $mMember->IsLogged() == true && Request('is_msg') ? 'TRUE' : 'FALSE';
 	$insert['is_email'] = CheckEmail(Request('email')) == true && Request('is_email') ? 'TRUE' : 'FALSE';
-	$insert['ref'] = '('.Request('antispam').')'.$_SERVER['HTTP_REFERER'];
 	if (Request('is_mobile') == 'TRUE') $insert['is_mobile'] = 'TRUE';
 
 	$extraValue = array();
 	foreach ($_REQUEST as $extra=>$value) {
-		if (eregi('extra:',$extra) == true) {
+		if (preg_match('/^extra_/',$extra) == true) {
 			$extraValue[$extra] = Request($extra);
 		}
 	}
@@ -204,7 +203,7 @@ if ($action == 'ment') {
 			$insert['name'] = Request('name') ? Request('name') : Alertbox('이름을 입력하여 주십시오.');
 			$insert['password'] = Request('password') ? md5(Request('password')) : Alertbox('암호를 입력하여 주십시오.');
 			$insert['email'] = CheckEmail(Request('email')) == true ? Request('email') : '';
-			$insert['homepage'] = Request('homepage') ? (eregi('http://',Request('homepage')) == true ? Request('homepage') : 'http://'.Request('homepage')) : '';
+			$insert['homepage'] = Request('homepage') ? (preg_match('/^http:\/\//',Request('homepage')) == true ? Request('homepage') : 'http://'.Request('homepage')) : '';
 			setcookie('iModuleBoardName',$insert['name'],time()+60*60*24*365,'/');
 			setcookie('iModuleBoardEmail',$insert['email'],time()+60*60*24*365,'/');
 			setcookie('iModuleBoardHomepage',$insert['homepage'],time()+60*60*24*365,'/');
