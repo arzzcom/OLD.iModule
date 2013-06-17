@@ -1,6 +1,8 @@
 <?php
 class ModuleOneroom extends Module  {
 	public $table;
+	public $baseURL;
+	public $baseQueryString;
 	protected $mTemplet;
 	
 	protected $isHeaderIncluded = false;
@@ -35,6 +37,9 @@ class ModuleOneroom extends Module  {
 		
 		$this->userfile = '/oneroom';
 		$this->thumbnail = '/oneroom/thumbnail';
+		
+		$this->baseURL = array_shift(explode('?',$_SERVER['REQUEST_URI']));
+		$this->baseQueryString = sizeof(explode('?',$_SERVER['REQUEST_URI'])) > 1 ? array_pop(explode('?',$_SERVER['REQUEST_URI'])) : '';
 		
 		$this->skinDir = $this->skinPath = '';
 		$this->link = array();
@@ -428,7 +433,17 @@ class ModuleOneroom extends Module  {
 		echo '<script type="text/javascript" src="'.$this->moduleDir.'/templet/searchform/'.$skin.'/script.js"></script>'."\n";
 
 		$searchURL = $searchURL ? $searchURL : $this->baseURL;
-		$formStart = '<form name="OneroomSearchForm-'.$skin.'" method="post" action="'.$searchURL.'">';
+		$formStart = '<form name="OneroomSearchForm-'.$skin.'" action="'.$searchURL.'" enctype="application/x-www-form-urlencoded">';
+		
+		if ($this->baseQueryString) {
+			$querys = explode('&',$this->baseQueryString);
+
+			for ($i=0, $loop=sizeof($querys);$i<$loop;$i++) {
+				$temp = explode('=',$querys[$i]);
+				if (in_array($temp[0],array('search_option','search_type','region1','region2','region3','university_parent','university_idx','subway_parent','subway_idx','price_buy1','price_buy2','price_rent_all1','price_rent_all2','price_rent_deposit1','price_rent_deposit2','price_rent_month1','price_rent_month2','x','y')) == false) $formStart.= '<input type="hidden" name="'.$temp[0].'" value="'.GetString(Request($temp[0]),'inputbox').'" />';
+			}
+		}
+		
 		$formEnd = '</form>';
 		
 		if (Request('price_type') == '1') {
@@ -808,6 +823,7 @@ class ModuleOneroom extends Module  {
 	}
 	
 	function GetQueryString($var=array(),$queryString='',$encode=true) {
+		$queryString = $queryString ? $queryString : $this->baseQueryString;
 		if ($this->GetZeroValue('region1') != null) $var['region1'] = $this->GetZeroValue('region1');
 		if ($this->GetZeroValue('region2') != null) $var['region2'] = $this->GetZeroValue('region2');
 		if ($this->GetZeroValue('region3') != null) $var['region3'] = $this->GetZeroValue('region3');

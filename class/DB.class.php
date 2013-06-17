@@ -114,6 +114,8 @@ class DB {
 		}
 		
 		$return = array();
+		$isArray = isset($field[0]) == true;
+		if ($isArray == false) $field = array($field);
 		
 		for ($i=0, $loop=sizeof($field);$i<$loop;$i++) {
 			if (in_array($field[$i]['type'],$fieldType) == false) return false;
@@ -132,6 +134,8 @@ class DB {
 			$return[$i] = array('name'=>$field[$i]['name'],'type'=>$fieldType[$field[$i]['type']],'length'=>$field[$i]['length'],'default'=>$field[$i]['default'],'comment'=>$field[$i]['comment']);
 		}
 		
+		if ($isArray == false) $return = array_shift($return);
+		
 		return $return;
 	}
 	
@@ -146,6 +150,8 @@ class DB {
 		}
 		
 		$return = array();
+		$isArray = isset($index[0]) == true;
+		if ($isArray == false) $index = array($index);
 		
 		for ($i=0, $loop=sizeof($index);$i<$loop;$i++) {
 			if (in_array($index[$i]['type'],$indexType) == false) return false;
@@ -153,6 +159,8 @@ class DB {
 			
 			$return[$i] = array('name'=>$index[$i]['name'],'type'=>$indexType[$index[$i]['type']]);
 		}
+		
+		if ($isArray == false) $return = array_shift($return);
 		
 		return $return;
 	}
@@ -187,8 +195,10 @@ class DB {
 				for ($i=0, $loop=sizeof($field);$i<$loop;$i++) {
 					if (in_array($field[$i]['type'],array('varchar','char','int','bigint','enum')) == true) {
 						$field[$i] = '`'.$field[$i]['name'].'` '.$field[$i]['type'].'('.$field[$i]['length'].') NOT NULL DEFAULT \''.$field[$i]['default'].'\' COMMENT \''.$field[$i]['comment'].'\'';
-					} elseif (in_array($field[$i]['type'],array('text','date','longtext')) == true) {
+					} elseif (in_array($field[$i]['type'],array('text','date')) == true) {
 						$field[$i] = '`'.$field[$i]['name'].'` '.$field[$i]['type'].' NOT NULL DEFAULT \''.$field[$i]['default'].'\' COMMENT \''.$field[$i]['comment'].'\'';
+					} elseif (in_array($field[$i]['type'],array('longtext')) == true) {
+						$field[$i] = '`'.$field[$i]['name'].'` '.$field[$i]['type'].' NOT NULL COMMENT \''.$field[$i]['comment'].'\'';
 					}
 				}
 				
@@ -400,44 +410,83 @@ class DB {
 
 		return $isSuccess;
 	}
+	
+	function FDlist($table,$db='') {
+		if (!$db) $db = 'default';
+		if (isset($this->infor[$db]) == false) $this->DBinfor($db);
+		
+		$fields = array();
+		switch ($this->infor[$db]['type']) {
+			case 'mysql' :
+				$query = 'DESC `'.$this->infor[$db]['dbname'].'`.`'.$table.'`';
+				$sql = @mysql_query($query,$this->connector[$db]) or $this->DBerror($query,mysql_error());
+				while ($field = @mysql_fetch_assoc($sql)) {
+					$fields[] = $field['Field'];
+				}
+			break;
+		}
+		
+		return $fields;
+	}
+	
+	function FDadd($table,$field,$position='',$db='') {
+		if (!$db) $db = 'default';
+		if (isset($this->infor[$db]) == false) $this->DBinfor($db);
+		
+		$isSuccess = true;
+		
+		$field = $this->FieldType($field,$db);
 
-	function DBadd($table,$field,$after='',$db='') {
+		switch ($this->infor[$db]['type']) {
+			case 'mysql' :
+				$query = 'ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` ADD ';
+				
+				if (in_array($field['type'],array('varchar','char','int','bigint','enum')) == true) {
+					$query.= '`'.$field['name'].'` '.$field['type'].'('.$field['length'].') NOT NULL DEFAULT \''.$field['default'].'\' COMMENT \''.$field['comment'].'\'';
+				} elseif (in_array($field['type'],array('text','date')) == true) {
+					$query.= '`'.$field['name'].'` '.$field['type'].' NOT NULL DEFAULT \''.$field['default'].'\' COMMENT \''.$field['comment'].'\'';
+				} elseif (in_array($field['type'],array('longtext')) == true) {
+					$query.= '`'.$field['name'].'` '.$field['type'].' NOT NULL COMMENT \''.$field['comment'].'\'';
+				}
+				
+				if ($position == 'first') {
+					$query.= ' FIRST';
+				} elseif ($position) {
+					$query.= ' AFTER '.$position;
+				}
+
+				@mysql_query($query,$this->connector[$db]) or $isSuccess = $this->DBerror($query,mysql_error());
+			break;
+		}
+		
+		return $isSuccess;
+	}
+
+	function FDchange($table,$field,$change,$position='',$db='') {
 		if (!$db) $db = 'default';
 		if (isset($this->infor[$db]) == false) $this->DBinfor($db);
 
 		$isSuccess = true;
+		
+		$change = $this->FieldType($change,$db);
 
 		switch ($this->infor[$db]['type']) {
 			case 'mysql' :
-				$indexType = array('PRIMARY'=>'PRIMARY KEY','BTREE'=>'INDEX','UNIQUE'=>'UNIQUE');
-				$fieldType = array('VARCHAR'=>'VARCHAR','INT'=>'INT','FILE'=>'INT','TEXT'=>'TEXT','HTML'=>'LONGTEXT','DATE'=>'DATE');
+				$query = 'ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` CHANGE `'.$field.'` ';
+				if (in_array($change['type'],array('varchar','char','int','bigint','enum')) == true) {
+					$query.= '`'.$change['name'].'` '.$change['type'].'('.$change['length'].') NOT NULL DEFAULT \''.$change['default'].'\' COMMENT \''.$change['comment'].'\'';
+				} elseif (in_array($change['type'],array('text','date')) == true) {
+					$query.= '`'.$change['name'].'` '.$change['type'].' NOT NULL DEFAULT \''.$change['default'].'\' COMMENT \''.$change['comment'].'\'';
+				} elseif (in_array($change['type'],array('longtext')) == true) {
+					$query.= '`'.$change['name'].'` '.$change['type'].' NOT NULL COMMENT \''.$change['comment'].'\'';
+				}
+				
+				if ($position == 'first') {
+					$query.= ' FIRST';
+				} elseif ($position) {
+					$query.= ' AFTER '.$position;
+				}
 
-				$query = 'ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` ADD `'.$field['name'].'`';
-				if ($field['type'] != 'DATE' && $field['type'] != 'TEXT' && $field['type'] != 'HTML' && $field['type'] != 'SELECT') {
-					$query.= ' '.$fieldType[$field['type']].'('.($field['type'] == 'FILE' ? '11' : $field['length']).')';
-				} elseif ($field['type'] == 'SELECT') {
-					$query.= ' ENUM('.$field['length'].')';
-				} else {
-					$query.= ' '.$fieldType[$field['type']];
-				}
-				$query.= ' NOT NULL';
-				if (isset($field['option']) == true && $field['option'] == 'AUTO_INCREMENT') {
-					$query.= ' AUTO_INCREMENT';
-				}
-				if (isset($field['index']) == true && $indexType[$field['index']] == 'PRIMARY KEY') {
-					$query.= ' PRIMARY KEY';
-				}
-				if (isset($field['default']) == true && $field['default'] != '') {
-					$query.= ' DEFAULT \''.$field['default'].'\'';
-				}
-				if (isset($field['info']) == true && $field['info'] != '') {
-					$query.= ' COMMENT \''.$field['info'].'\'';
-				}
-				if ($after === 0) $query.= ' FIRST';
-				else $query.= ' AFTER `'.$after.'`';
-				if (isset($field['index']) == true && $field['index'] && $indexType[$field['index']] != 'PRIMARY KEY') {
-					$query.= ', ADD '.$indexType[$field['index']].'(`'.$field['name'].'`)';
-				}
 				@mysql_query($query,$this->connector[$db]) or $isSuccess = $this->DBerror($query,mysql_error());
 			break;
 		}
@@ -447,58 +496,7 @@ class DB {
 		return $isSuccess;
 	}
 
-	function DBchange($table,$name,$field,$db='') {
-		if (!$db) $db = 'default';
-		if (isset($this->infor[$db]) == false) $this->DBinfor($db);
-
-		$isSuccess = true;
-
-		switch ($this->infor[$db]['type']) {
-			case 'mysql' :
-				$indexType = array('PRIMARY'=>'PRIMARY KEY','BTREE'=>'INDEX','UNIQUE'=>'UNIQUE');
-				$fieldType = array('VARCHAR'=>'VARCHAR','INT'=>'INT','FILE'=>'INT','TEXT'=>'TEXT','HTML'=>'LONGTEXT','DATE'=>'DATE');
-
-				$query = 'ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` CHANGE `'.$name.'` `'.$field['name'].'`';
-				if ($field['type'] != 'DATE' && $field['type'] != 'TEXT' && $field['type'] != 'HTML' && $field['type'] != 'SELECT') {
-					$query.= ' '.$fieldType[$field['type']].'('.($field['type'] == 'FILE' ? '11' : $field['length']).')';
-				} elseif ($field['type'] == 'SELECT') {
-					$query.= ' ENUM('.$field['length'].')';
-				} else {
-					$query.= ' '.$fieldType[$field['type']];
-				}
-				$query.= ' NOT NULL';
-				if (isset($field['option']) == true && $field['option'] == 'AUTO_INCREMENT') {
-					$query.= ' AUTO_INCREMENT';
-				}
-				if (isset($field['index']) == true && $indexType[$field['index']] == 'PRIMARY KEY' && $this->DBindex($table,$field['name'],$db) != 'PRIMARY KEY') {
-					$query.= ' PRIMARY KEY';
-				}
-				if (isset($field['default']) == true && $field['default'] != '') {
-					$query.= ' DEFAULT \''.$field['default'].'\'';
-				}
-				if (isset($field['info']) == true && $field['info'] != '') {
-					$query.= ' COMMENT \''.$field['info'].'\'';
-				}
-				if ($this->DBindex($table,$name,$db) != '') {
-					if (isset($field['index']) == false || !$field['index'] || $this->DBindex($table,$name,$db) != $indexType[$field['index']] || $name != $field['name']) {
-						$query.= ', DROP INDEX `'.$name.'`';
-					}
-				}
-				if (isset($field['index']) == true && $field['index'] && $indexType[$field['index']] != 'PRIMARY KEY') {
-					if ($this->DBindex($table,$name,$db) != $indexType[$field['index']] || $name != $field['name']) {
-						$query.= ', ADD '.$indexType[$field['index']].'(`'.$field['name'].'`)';
-					}
-				}
-				@mysql_query($query,$this->connector[$db]) or $isSuccess = $this->DBerror($query,mysql_error());
-			break;
-		}
-		
-		$this->DBlog($query);
-
-		return $isSuccess;
-	}
-
-	function DBdrop($table,$field,$db='') {
+	function FDdrop($table,$field,$db='') {
 		if (!$db) $db = 'default';
 		if (isset($this->infor[$db]) == false) $this->DBinfor($db);
 
@@ -515,6 +513,91 @@ class DB {
 
 		return $isSuccess;
 	}
+	
+	function IDinfo($table,$field,$db='') {
+		if (!$db) $db = 'default';
+		if (isset($this->infor[$db]) == false) $this->DBinfor($db);
+
+		$index = '';
+		switch ($this->infor[$db]['type']) {
+			case 'mysql' :
+				$query = 'SHOW INDEX FROM `'.$this->infor[$db]['dbname'].'`.`'.$table.'`';
+				$sql = @mysql_query($query,$this->connector[$db]) or $this->DBerror($query,mysql_error());
+				while($fetch = @mysql_fetch_assoc($sql)) {
+					if ($fetch['Column_name'] == $field) {
+						if ($fetch['Key_name'] == 'PRIMARY') $index = 'primary';
+						elseif ($fetch['Non_unique'] == '0') $index = 'unique';
+						else $index = 'index';
+					}
+				}
+			break;
+		}
+		
+		$this->DBlog($query);
+
+		return $index;
+	}
+	
+	function IDadd($table,$index,$db='') {
+		if (!$db) $db = 'default';
+		if (isset($this->infor[$db]) == false) $this->DBinfor($db);
+		
+		$isSuccess = true;
+		
+		$index = $this->IndexType($index,$db);
+		
+		switch ($this->infor[$db]['type']) {
+			case 'mysql' :
+				if (($index['type'] != 'auto_increment' && $this->IDinfo($table,$index['name'],$db) != $index['type']) || ($index['type'] == 'auto_increment' && $this->IDinfo($table,$index['name'],$db) != 'primary')) {
+					if ($this->IDinfo($table,$index['name'],$db) != '') {
+						$this->IDdrop($table,$index['name'],$db='');
+					}
+					
+					if ($index['type'] == 'auto_increment') {
+						@mysql_query('ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` DROP PRIMARY KEY',$this->connector[$db]);
+						@mysql_query('ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` ADD PRIMARY KEY (`'.$index['name'].'`)',$this->connector[$db]);
+						@mysql_query('ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` CHANGE `'.$index['name'].'` `'.$index['name'].'` INT(11) NOT NULL AUTO_INCREMENT COMMENT \'고유값\'',$this->connector[$db]);
+					} elseif ($index['type'] == 'primary') {
+						@mysql_query('ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` DROP PRIMARY KEY',$this->connector[$db]);
+						@mysql_query('ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` ADD PRIMARY KEY (`'.$index['name'].'`)',$this->connector[$db]);
+					} elseif ($index['type'] == 'index') {
+						@mysql_query('ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` ADD INDEX (`'.$index['name'].'`)',$this->connector[$db]);
+					} elseif ($index['type'] == 'unique') {
+						@mysql_query('ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` ADD UNIQUE (`'.$index['name'].'`)',$this->connector[$db]);
+					} elseif ($index[$i]['type'] == 'fulltext') {
+						@mysql_query('ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` ADD FULLTEXT (`'.$index['name'].'`)',$this->connector[$db]);
+					}
+				}
+			break;
+		}
+		
+		return $isSuccess;
+	}
+	
+	function IDdrop($table,$field,$db='') {
+		if (!$db) $db = 'default';
+		if (isset($this->infor[$db]) == false) $this->DBinfor($db);
+		
+		$isSuccess = true;
+		
+		switch ($this->infor[$db]['type']) {
+			case 'mysql' :
+				if ($this->IDinfo($table,$field,$db) == 'primary') {
+					$query = 'ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` DROP PRIMARY KEY';
+				} else if ($this->IDinfo($table,$field,$db) != '') {
+					$query = 'ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` DROP INDEX `'.$field.'`';
+				} else {
+					$query = '';
+				}
+				
+				if ($query) {
+					@mysql_query($query,$this->connector[$db]) or $isSuccess = $this->DBerror($query,mysql_error());
+				}
+			break;
+		}
+		
+		return $isSuccess;
+	}
 
 	function DBindex($table,$column,$db='') {
 		if (!$db) $db = 'default';
@@ -524,8 +607,8 @@ class DB {
 		switch ($this->infor[$db]['type']) {
 			case 'mysql' :
 				$query = 'SHOW INDEX FROM `'.$this->infor[$db]['dbname'].'`.`'.$table.'`';
-				$list = @mysql_query($query,$this->connector[$db]) or $this->DBerror($query,mysql_error());
-				while($fetch = @mysql_fetch_assoc($list)) {
+				$sql = @mysql_query($query,$this->connector[$db]) or $this->DBerror($query,mysql_error());
+				while($fetch = @mysql_fetch_assoc($sql)) {
 					if ($fetch['Column_name'] == $column) {
 						if ($fetch['Key_name'] == 'PRIMARY') $index = 'PRIMARY KEY';
 						elseif ($fetch['Non_unique'] == '0') $index = 'UNIQUE';

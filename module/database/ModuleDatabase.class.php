@@ -2,6 +2,9 @@
 class ModuleDatabase extends Module {
 	public $mDB;
 	public $table;
+	
+	public $userfile;
+	public $thumbnail;
 
 	function __construct() {
 		parent::__construct('database');
@@ -10,6 +13,9 @@ class ModuleDatabase extends Module {
 
 		$this->table['table'] = $_ENV['code'].'_database_table';
 		$this->table['file'] = $_ENV['code'].'_database_file_table';
+		
+		$this->userfile = '/database';
+		$this->thumbnail = '/database/thumbnail';
 	}
 
 	function GetTable($idx=0,$table='') {

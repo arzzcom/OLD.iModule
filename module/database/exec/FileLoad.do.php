@@ -19,7 +19,7 @@ if ($repto != null) {
 		echo '<file>';
 		echo '<name>'.GetString($data[$i]['filename'],'xml').'</name>';
 		echo '<size>'.$data[$i]['filesize'].'</size>';
-		echo '<server>'.GetString($data[$i]['idx'].'|'.$data[$i]['filetype'].'|'.$data[$i]['filename'].'|'.$data[$i]['filesize'].($data[$i]['filetype'] == 'IMG' ? '|'.$_ENV['dir'].'/userfile/database/thumbneil/'.$data[$i]['idx'].'.thm' : ''),'xml').'</server>';
+		echo '<server>'.GetString($data[$i]['idx'].'|'.$data[$i]['filetype'].'|'.$data[$i]['filename'].'|'.$data[$i]['filesize'].($data[$i]['filetype'] == 'IMG' ? '|'.$_ENV['userfileDir'].$mDatabase->thumbnail.'/'.$data[$i]['idx'].'.thm' : ''),'xml').'</server>';
 		echo '</file>';
 	}
 }

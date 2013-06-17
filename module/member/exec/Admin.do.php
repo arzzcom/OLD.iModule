@@ -198,7 +198,7 @@ if ($action == 'member') {
 						break;
 	
 						case 'cellphone' :
-							$value = GetUnSerialize($form[$i]['value']);
+							$value = unserialize($form[$i]['value']);
 							$cellphone = Request('cellphone1').'-'.Request('cellphone2').'-'.Request('cellphone3');
 							if (Request('cellphone1') != null && Request('cellphone2') != null && Request('cellphone3') != null && (isset($value['provider']) == false || ($value['provider'] == 'on' && Request('provider')))) {
 								if (CheckPhoneNumber($cellphone) == true) {

@@ -13,6 +13,6 @@ $file = $mDB->DBfetch($mDatabase->table['file'],array('idx','filename','filepath
 
 if (isset($file['idx']) == true) {
 	$mDB->DBupdate($mDatabase->table['file'],'',array('hit'=>'`hit`+1'),"where `idx`=$idx");
-	GetFileDownload($_ENV['path'].$file['filepath'],$file['filename'],$file['filesize']);
+	GetFileDownload($_ENV['userfilePath'].$mDatabase->userfile.$file['filepath'],$file['filename'],$file['filesize']);
 }
 ?>

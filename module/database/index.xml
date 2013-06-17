@@ -1,8 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
 	<title>데이터베이스관리</title>
+	<version>2.0.0</version>
 	<path>/module/database</path>
 	<setup>TRUE</setup>
 	<manager>TRUE</manager>
-	<version>1.0.0</version>
+	<folder root="database">
+		<path>attach</path>
+		<path>thumbnail</path>
+	</folder>
+	<dependency></dependency>
+	<database>
+		<table name="{code}_database_table">
+			<field name="idx" type="int" length="11">고유값</field>
+			<field name="name" type="varchar" length="100">테이블명</field>
+			<field name="database" type="varchar" length="50">디비코드</field>
+			<field name="info" type="varchar" length="255">테이블설명</field>
+			<field name="field" type="longtext">필드구조</field>
+			<index name="idx" type="auto_increment" />
+			<index name="name,database" type="primary" />
+		</table>
+		
+		<table name="{code}_database_file_table">
+			<field name="idx" type="int" length="11">고유값</field>
+			<field name="type" type="enum" length="FILE,HTML" default="FILE">첨부종류</field>
+			<field name="tno" type="int" length="11">테이블번호</field>
+			<field name="repto" type="int" length="11">자료번호</field>
+			<field name="filename" type="varchar" length="255">파일명</field>
+			<field name="filepath" type="varchar" length="255">파일경로</field>
+			<field name="filesize" type="int" length="11">파일용량</field>
+			<field name="filetype" type="char" length="3">파일종류</field>
+			<field name="wysiwyg" type="varchar" length="50">삽입된에디터</field>
+			<field name="hit" type="int" length="11">다운로드수</field>
+			<index name="idx" type="auto_increment" />
+			<index name="type" type="index" />
+			<index name="tno" type="index" />
+			<index name="repto" type="index" />
+		</table>
+	</database>
 </module>

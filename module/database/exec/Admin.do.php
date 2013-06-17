@@ -9,326 +9,315 @@ $action = Request('action');
 $do = Request('do');
 $mDatabase = new ModuleDatabase();
 
-if ($action == 'table') {
-	header('Content-type: text/xml; charset="UTF-8"', true);
-	header("Cache-Control: no-cache, must-revalidate");
-	header("Pragma: no-cache");
+$return = array();
+$errors = array();
 
-	if ($do == 'add') {
-		$Error = array();
-		$field = GetExtData('field');
-		for ($i=0, $loop=sizeof($field);$i<$loop;$i++) {
-			unset($field[$i]['newname']);
-		}
-		$insert['name'] = preg_match('/^[[:alnum:]_]+$/i',Request('name')) == true ? Request('name') : $Error['name'] = '영문과 숫자, 언더바(_)만 입력하여 주십시오.';
-		$insert['info'] = Request('info') ? Request('info') : $Error['info'] = '테이블설명을 입력하여 주십시오.';
-		$insert['field'] = serialize($field);
-
-		if (sizeof($Error) == 0) {
-			if ($mDB->DBcreate($insert['name'],$field) == true) {
-				$mDB->DBinsert($mDatabase->table['table'],$insert);
-			} else {
-				$Error['name'] = '테이블을 생성할 수 없습니다.';
-			}
-		}
-
-		echo '<?xml version="1.0" encoding="UTF-8"?>';
-		echo '<message success="'.(sizeof($Error) == 0 ? 'true' : 'false').'">';
-
-		if (sizeof($Error) > 0) {
-			echo '<errors>';
-			foreach ($Error as $id=>$msg) {
-				echo '<field><id>'.$id.'</id><msg><![CDATA['.$msg.']]></msg></field>';
-			}
-			echo '</errors>';
-		} else {
-			echo '<errors>';
-			echo '<field><id>'.$idx.'</id></field>';
-			echo '</errors>';
-		}
-
-		echo '</message>';
-	}
-
-	if ($do == 'modify') {
-		$idx = Request('idx');
-		$table = $mDB->DBfetch($mDatabase->table['table'],array('name','field'),"where `idx`=$idx");
-		$oField = isset($table['field']) == true ? unserialize($table['field']) : array();
-		$fField = array();
-		for ($i=0, $loop=sizeof($oField);$i<$loop;$i++) {
-			$fField[] = $oField[$i]['name'];
-		}
-		$nField = GetExtData('field');
-
-		$sField = array();
-		for ($i=0, $loop=sizeof($nField);$i<$loop;$i++) {
-			$sField[] = $nField[$i]['name'];
-		}
-
-		for ($i=0, $loop=sizeof($fField);$i<$loop;$i++) {
-			if (in_array($fField[$i],$sField) == false) {
-				$mDB->DBdrop($table['name'],$fField[$i]);
-			}
-		}
-
-		$cField = array();
-		for ($i=0, $loop=sizeof($nField);$i<$loop;$i++) {
-			if ($nField[$i]['name'] != $nField[$i]['newname']) {
-				$fieldName = $nField[$i]['name'];
-				$nField[$i]['name'] = $nField[$i]['newname'];
-				unset($nField[$i]['newname']);
-				$cField[] = $fieldName;
-				$mDB->DBchange($table['name'],$fieldName,$nField[$i]);
-				$prevField = $nField[$i]['name'];
-			}
-		}
-
-		$prevField = 0;
-		for ($i=0, $loop=sizeof($nField);$i<$loop;$i++) {
-			if (isset($nField[$i]['newname']) == true && $nField[$i]['name'] == $nField[$i]['newname']) {
-				$fieldName = $nField[$i]['name'];
-				unset($nField[$i]['newname']);
-				if (in_array($fieldName,$fField) == false || in_array($fieldName,$cField) == true) {
-					$mDB->DBadd($table['name'],$nField[$i],$prevField);
-				} else {
-					$mDB->DBchange($table['name'],$fieldName,$nField[$i]);
-				}
-			}
-			$prevField = $nField[$i]['name'];
-		}
-
-		$mDB->DBupdate($mDatabase->table['table'],array('field'=>serialize($nField)),'',"where `idx`=$idx");
-
-		echo '<?xml version="1.0" encoding="UTF-8"?>';
-		echo '<message success="'.(sizeof($Error) == 0 ? 'true' : 'false').'">';
-
-		echo '<errors>';
-		echo '<field><id>'.$idx.'</id></field>';
-		echo '</errors>';
-
-		echo '</message>';
-	}
-
-	if ($do == 'truncate') {
-		$idx = Request('idx');
-		$table = $mDB->DBfetchs($mDatabase->table['table'],'*',"where `idx` IN ($idx)");
-		for ($i=0, $loop=sizeof($table);$i<$loop;$i++) {
-			$mDB->DBtruncate($table[$i]['name']);
-		}
-
-		echo '<?xml version="1.0" encoding="UTF-8"?>';
-		echo '<message success="true">';
-		echo '</message>';
-	}
-
-	if ($do == 'delete') {
-		$idx = Request('idx');
-		$table = $mDB->DBfetchs($mDatabase->table['table'],'*',"where `idx` IN ($idx)");
-		for ($i=0, $loop=sizeof($table);$i<$loop;$i++) {
-			$mDB->DBremove($table[$i]['name']);
-		}
-
-		echo '<?xml version="1.0" encoding="UTF-8"?>';
-		echo '<message success="true">';
-		echo '</message>';
-	}
+if ($mMember->IsAdmin() == false) {
+	$return['success'] = false;
+	exit(json_encode($return));
 }
 
-if ($action == 'item') {
-	header('Content-type: text/xml; charset="UTF-8"', true);
-	header("Cache-Control: no-cache, must-revalidate");
-	header("Pragma: no-cache");
-
-	if ($do == 'add' || $do == 'modify') {
-		$tno = Request('tno');
-		$Error = array();
-
-		$insert = array();
-		$data = $mDB->DBfetch($mDatabase->table['table'],array('name','field'),"where `idx`=$tno");
-
-		$field = unserialize($data['field']);
-		for ($i=0, $loop=sizeof($field);$i<$loop;$i++) {
-			if (isset($field[$i]['option']) == false || $field[$i]['option'] != 'AUTO_INCREMENT') {
-				if ($field[$i]['type'] == 'HTML') {
-					$insert[$field[$i]['name']] = str_replace($mDatabase->moduleDir,'{$moduleDir}',Request($field[$i]['name']));
-				} elseif ($field[$i]['type'] != 'FILE') {
-					$insert[$field[$i]['name']] = Request($field[$i]['name']);
+if ($action == 'user') {
+	function CheckField($field) {
+		if ($field['type'] == 'SELECT') {
+			$temp = explode(',',$field['length']);
+			for ($i=0, $loop=sizeof($temp);$i<$loop;$i++) {
+				if (preg_match('/^\'[^\']+\'$/',$temp[$i]) == false) {
+					return false;
 				}
 			}
 		}
-
-		if ($do == 'add') {
-			$idx = $mDB->DBinsert($data['name'],$insert);
-			$oData = array();
-		} else {
-			$idx = Request('idx');
-			$oData = $mDB->DBfetch($data['name'],'*',"where `idx`=$idx");
-			for ($i=0, $loop=sizeof($field);$i<$loop;$i++) {
-				if ($field[$i]['type'] == 'FILE' && Request($field[$i]['name'].'_delete') != null) {
-					$insert[$field[$i]['name']] = '';
-					if ($oData[$field[$i]['name']]) {
-						$file = $mDB->DBfetch($mDatabase->table['file'],array('filepath'),"where `idx`={$oData[$field[$i]['name']]}");
-						@unlink($_ENV['path'].$oFile['filepath']);
-						$mDB->DBdelete($mDatabase->table['file'],"where `idx`={$oData[$field[$i]['name']]}");
-						$oData[$field[$i]['name']] = '0';
-					}
-				}
-			}
-			$mDB->DBupdate($data['name'],$insert,'',"where `idx`=$idx");
-		}
-
-		$insert = array();
-		for ($i=0, $loop=sizeof($field);$i<$loop;$i++) {
-			if ($field[$i]['type'] == 'FILE' && isset($_FILES[$field[$i]['name']]) == true && $_FILES[$field[$i]['name']]['tmp_name'] != '') {
-				$file = $_FILES[$field[$i]['name']];
-				$filepath = '/userfile/database/'.$tno.'/'.md5_file($file['tmp_name']).'.'.time().'.'.rand(100000,999999);
-				if (CreateDirectory($_ENV['path'].'/userfile/database/'.$tno) == true) {
-					if (isset($oData[$field[$i]['name']]) == true && $oData[$field[$i]['name']] != '0') {
-						$oFile = $mDB->DBfetch($mDatabase->table['file'],array('filepath'),"where `idx`={$oData[$field[$i]['name']]}");
-						@unlink($_ENV['path'].$oFile['filepath']);
-						$mDB->DBdelete($mDatabase->table['file'],"where `idx`={$oData[$field[$i]['name']]}");
-					}
-					@move_uploaded_file($file['tmp_name'],$_ENV['path'].$filepath);
-					$fidx = $mDB->DBinsert($mDatabase->table['file'],array('type'=>'FILE','tno'=>$tno,'repto'=>$idx,'filename'=>$file['name'],'filepath'=>$filepath,'filetype'=>GetFileType($file['name'],$_ENV['path'].$filepath),'filesize'=>filesize($_ENV['path'].$filepath),'wysiwyg'=>''));
-					$insert[$field[$i]['name']] = $fidx;
-				}
+		
+		if ($field['type'] != 'INT') {
+			if ($field['option'] == 'AUTO_INCREMENT') {
+				$field['option'] = '';
 			}
 		}
-
-		if (sizeof($insert) > 0) {
-			$mDB->DBupdate($data['name'],$insert,'',"where `idx`=$idx");
+		
+		if (in_array($field['type'],array('FILE','TEXT','HTML','DATE')) == true) {
+			$field['length'] = '';
 		}
-
-		$uploaderFile = Request('uploaderfile');
-		for ($i=0, $loop=sizeof($uploaderfile);$i<$loop;$i++) {
-			$temp = explode('|',$uploaderfile[$i]);
-			$fidx = $temp[0];
-
-			if (sizeof($temp) == 1) {
-				$fileData = $mDB->DBfetch($mDatabase->table['file'],array('filepath','filetype'),"where `idx`=$fidx");
-				@unlink($_ENV['path'].$fileData['filepath']);
-				if ($fileData['filetype'] == 'IMG') @unlink($_ENV['path'].'/userfile/database/thumbneil/'.$fidx.'.thm');
-				$mDB->DBdelete($mDatabase->table['file'],"where `idx`=$fidx");
-			} else {
-				$mDB->DBupdate($mDatabase->table['file'],array('repto'=>$idx),'',"where `idx`=$fidx");
-			}
+		
+		if (in_array($field['type'],array('SELECT','FILE','TEXT','HTML','DATE')) == true) {
+			$field['option'] = '';
 		}
-
-		echo '<?xml version="1.0" encoding="UTF-8"?>';
-		echo '<message success="'.(sizeof($Error) == 0 ? 'true' : 'false').'">';
-
-		if (sizeof($Error) > 0) {
-			echo '<errors>';
-			foreach ($Error as $id=>$msg) {
-				echo '<field><id>'.$id.'</id><msg><![CDATA['.$msg.']]></msg></field>';
-			}
-			echo '</errors>';
-		} else {
-			echo '<errors>';
-			echo '<field><id>'.$idx.'</id></field>';
-			echo '</errors>';
+		
+		if (in_array($field['type'],array('SELECT','FILE','DATE')) == true) {
+			$field['default'] = '';
 		}
-
-		echo '</message>';
+		
+		return $field;
 	}
-/*
+	
+	function SetDatabaseField($field) {
+		$setField = array('name'=>$field['name'],'type'=>'','length'=>'','default'=>'','comment'=>$field['info']);
+		if (in_array($field['type'],array('INT','FILE')) == true) {
+			$setField['type'] = 'int';
+			$setField['length'] = $field['type'] == 'FILE' ? '11' : $field['length'];
+			$setField['default'] = $field['default'] ? $field['default'] : '0';
+		} elseif ($field['type'] == 'VARCHAR') {
+			$setField['type'] = 'varchar';
+			$setField['length'] = $field['length'];
+			$setField['default'] = $field['default'];
+		} elseif (in_array($field['type'],array('TEXT','HTML')) == true) {
+			$setField['type'] = 'longtext';
+			$setField['default'] = '';
+			$setField['index'] = '';
+		} elseif ($field['type'] == 'DATE') {
+			$setField['type'] = 'date';
+			$setField['default'] = '0000-00-00';
+		} elseif ($field['type'] == 'SELECT') {
+			$setField['type'] = 'enum';
+			$setField['length'] = '\'\','.$field['length'];
+			$setField['default'] = '';
+		}
+		
+		return $setField;
+	}
+	
+	function SetDatabaseIndex($fields) {
+		$setIndex = array();
+		
+		for ($i=0, $loop=sizeof($fields);$i<$loop;$i++) {
+			if ($fields[$i]['option'] == 'AUTO_INCREMENT') {
+				$setIndex[] = array('name'=>$fields[$i]['name'],'type'=>'auto_increment');
+			} elseif ($fields[$i]['index'] == 'BTREE') {
+				$setIndex[] = array('name'=>$fields[$i]['name'],'type'=>'index');
+			} elseif ($fields[$i]['index'] == 'UNIQUE') {
+				$setIndex[] = array('name'=>$fields[$i]['name'],'type'=>'index');
+			} elseif ($fields[$i]['index'] == 'PRIMARY') {
+				$setIndex[] = array('name'=>$fields[$i]['name'],'type'=>'primary');
+			}
+		}
+		
+		return $setIndex;
+	}
+	
+	if ($do == 'add') {
+		$database = Request('database') ? Request('database') : 'default';
+		$name = Request('name');
+		$info = Request('info');
+		$field = json_decode(Request('field'),true);
+		
+		if ($mDB->DBfind($name,$database) == true) {
+			$errors['name'] = '이미 생성되어 있는 테이블명입니다.';
+		}
+		
+		for ($i=0, $loop=sizeof($field);$i<$loop;$i++) {
+			$field[$i] = CheckField($field[$i]);
+			if ($field[$i] == false) {
+				$errors['message'] = '필드설정이 잘못되었습니다.';
+				break;
+			}
+			$databaseField[$i] = SetDatabaseField($field[$i]);
+		}
+		$databaseIndex = SetDatabaseIndex($field);
+		
+		if (sizeof($errors) == 0) {
+			$mDB->DBcreate($name,$databaseField,$databaseIndex,$database);
+			$mDB->DBinsert($mDatabase->table['table'],array('name'=>$name,'database'=>$database,'info'=>$info,'field'=>serialize($field)));
+			$return['success'] = true;
+		} else {
+			$return['success'] = false;
+			$return['errors'] = $errors;
+		}
+		
+		exit(json_encode($return));
+	}
+	
 	if ($do == 'modify') {
-		header('Content-type: text/xml; charset="UTF-8"', true);
-		header("Cache-Control: no-cache, must-revalidate");
-		header("Pragma: no-cache");
-
-		$tidx = Request('tidx');
 		$idx = Request('idx');
-		$Error = array();
-		$insert = array();
-		$data = $mDB->DBfetch($mDatabase->table['table'],array('name','field'),"where `idx`=$tidx");
-		$check = $mDB->DBfetch($data['name'],'*',"where `idx`=$idx");
-
-		$field = unserialize($data['field']);
-		for ($i=0, $loop=sizeof($field);$i<$loop;$i++) {
-			if (isset($field[$i]['option']) == false || $field[$i]['option'] != 'AUTO_INCREMENT') {
-				if ($field[$i]['type'] == 'FILE') {
-					if (Request($field[$i]['name'].'_delete') && $check[$field[$i]['name']] && file_exists($_ENV['path'].$check[$field[$i]['name']]) == true) {
-						@unlink($_ENV['path'].$check[$field[$i]['name']]);
-					}
-					if ($_FILES[$field[$i]['name']]['tmp_name']) {
-						$file = $_FILES[$field[$i]['name']];
-						$filepath = '/userfile/database/'.$tidx.'/'.md5_file($file['tmp_name']).'.'.rand(1000,9999).'.'.GetFileExec($file['name']);
-						if (CreateDirectory($_ENV['path'].'/userfile/database/'.$tidx) == true) {
-							@unlink($_ENV['path'].$check[$field[$i]['name']]);
-							@move_uploaded_file($file['tmp_name'],$_ENV['path'].$filepath);
-							$insert[$field[$i]['name']] = $filepath;
-						}
-					}
-				} else {
-					$insert[$field[$i]['name']] = Request($field[$i]['name']);
-				}
-			}
+		$data = $mDB->DBfetch($mDatabase->table['table'],'*',"where `idx`='$idx'");
+		
+		$oField = unserialize($data['field']);
+		$database = Request('database') ? Request('database') : 'default';
+		$name = Request('name');
+		$info = Request('info');
+		
+		if (($data['name'] != $name || $data['database'] != $database) && $mDB->DBfind($name,$database) == true) {
+			$errors['name'] = '이미 생성되어 있는 테이블명입니다.';
 		}
 
-		$mDB->DBupdate($data['name'],$insert,'',"where `idx`=$idx");
-
-		echo '<?xml version="1.0" encoding="UTF-8"?>';
-		echo '<message success="'.(sizeof($Error) == 0 ? 'true' : 'false').'">';
-
-		if (sizeof($Error) > 0) {
-			echo '<errors>';
-			foreach ($Error as $id=>$msg) {
-				echo '<field><id>'.$id.'</id><msg><![CDATA['.$msg.']]></msg></field>';
+		$sort = array('first');
+		
+		$field = json_decode(Request('field'),true);
+		for ($i=0, $loop=sizeof($field);$i<$loop;$i++) {
+			$field[$i] = CheckField($field[$i]);
+			if ($field[$i] == false) {
+				$errors['message'] = '필드설정이 잘못되었습니다.';
+				break;
 			}
-			echo '</errors>';
+			$sort[] = $field[$i]['name'];
+		}
+		
+		if (sizeof($errors) == 0) {
+			$delete = json_decode(Request('delete'),true);
+			for ($i=0, $loop=sizeof($delete);$i<$loop;$i++) {
+				$mDB->FDdrop($name,$delete[$i],$database);
+			}
+			
+			$update = json_decode(Request('update'),true);
+			for ($i=0, $loop=sizeof($update);$i<$loop;$i++) {
+				$updateField = SetDatabaseField($update[$i]['update']);
+				if ($update[$i]['origin']['name'] != $updateField['name']) {
+					$updateField['name'] = $updateField['name'].'-TEMP';
+				}
+				$mDB->FDchange($name,$update[$i]['origin']['name'],$updateField,'',$database);
+			}
+			
+			for ($i=0, $loop=sizeof($update);$i<$loop;$i++) {
+				$updateField = SetDatabaseField($update[$i]['update']);
+				if ($update[$i]['origin']['name'] != $updateField['name']) {
+					$update[$i]['origin']['name'] = $updateField['name'].'-TEMP';
+					$mDB->FDchange($name,$update[$i]['origin']['name'],$updateField,'',$database);
+				}
+				if ($update[$i]['origin']['option'] != $update[$i]['update']['option']) {
+					$mDB->IDdrop($name,$update[$i]['update']['name'],$database);
+				}
+			}
+			
+			$fieldList = $mDB->FDlist($name,$database);
+			for ($i=0, $loop=sizeof($field);$i<$loop;$i++) {
+				if (in_array($field[$i]['name'],$fieldList) == false) {
+					$mDB->FDadd($name,SetDatabaseField($field[$i]),'',$database);
+				}
+			}
+			
+			for ($i=0, $loop=sizeof($field);$i<$loop;$i++) {
+				$mDB->FDchange($name,$field[$i]['name'],SetDatabaseField($field[$i]),$sort[$i],$database);
+				
+				if ($field[$i]['index'] == '') {
+					$mDB->IDdrop($name,$field[$i]['name'],$database);
+				} elseif ($field[$i]['option'] == 'AUTO_INCREMENT') {
+					$mDB->IDadd($name,array('name'=>$field[$i]['name'],'type'=>'auto_increment'),$database);
+				} elseif ($field[$i]['index'] == 'BTREE') {
+					$mDB->IDadd($name,array('name'=>$field[$i]['name'],'type'=>'index'),$database);
+				} elseif ($field[$i]['index'] == 'UNIQUE') {
+					$mDB->IDadd($name,array('name'=>$field[$i]['name'],'type'=>'index'),$database);
+				} elseif ($field[$i]['index'] == 'PRIMARY') {
+					$mDB->IDadd($name,array('name'=>$field[$i]['name'],'type'=>'primary'),$database);
+				}
+			}
+			
+			$mDB->DBupdate($mDatabase->table['table'],array('name'=>$name,'database'=>$database,'info'=>$info,'field'=>serialize($field)),'',"where `idx`='$idx'");
+			$return['success'] = true;
 		} else {
-			echo '<errors>';
-			echo '<field><id>'.$idx.'</id></field>';
-			echo '</errors>';
+			$return['success'] = false;
+			$return['errors'] = $errors;
 		}
-
-		echo '</message>';
+		
+		exit(json_encode($return));
 	}
-*/
-
-	if ($do == 'delete') {
-		header('Content-type: text/xml; charset="UTF-8"', true);
-		header("Cache-Control: no-cache, must-revalidate");
-		header("Pragma: no-cache");
-
-		$idx = explode(',',Request('idx'));
+	
+	if ($do == 'record') {
+		$mode = Request('mode');
 		$tno = Request('tno');
-
-		$table = $mDB->DBfetch($mDatabase->table['table'],array('name','field'),"where `idx`=$tno");
-
-		$primary == null;
-		$files = array();
+		$primary = Request('primary');
+		
+		$table = $mDB->DBfetch($mDatabase->table['table'],array('name','database','field'),"where `idx`='$tno'");
 		$field = unserialize($table['field']);
-		for ($i=0, $loop=sizeof($field);$i<$loop;$i++) {
-			if (isset($field[$i]['index']) == true && $field[$i]['index'] == 'PRIMARY') {
-				$primary = $field[$i]['name'];
+		if ($mode == 'add' || $mode == 'modify') {
+			$insert = array();
+			for ($i=0, $loop=sizeof($field);$i<$loop;$i++) {
+				if ($field[$i]['option'] != 'AUTO_INCREMENT') {
+					if ($field[$i]['type'] == 'HTML') {
+						$value = Request($field[$i]['name']);
+						$value = str_replace('http://'.$_SERVER['HTTP_HOST'],'{$moduleHost}',$value);
+						$value = str_replace($mDatabase->moduleDir,'{$moduleDir}',$value);
+						$insert[$field[$i]['name']] = $value;
+					} else if ($field[$i]['type'] != 'FILE') {
+						$insert[$field[$i]['name']] = Request($field[$i]['name']);
+					}
+				}
 			}
-
-			if ($field[$i]['type'] == 'FILE') {
-				$files[] = $field[$i]['name'];
+			
+			if ($mode == 'add') {
+				$idx = $mDB->DBinsert($table['name'],$insert,'',$table['database']);
+			} else {
+				$idx = Request('idx');
+				$oData = $mDB->DBfetch($table['name'],'*',"where `$primary`='$idx'",'','',$table['database']);
+				$mDB->DBupdate($table['name'],$insert,'',"where `$primary`='$idx'",$table['database']);
 			}
-		}
-
-		if ($primary != null) {
-			for ($i=0, $loop=sizeof($idx);$i<$loop;$i++) {
-				if (sizeof($files) > 0) {
-					$data = $mDB->DBfetch($table['name'],$files,"where `$primary`={$idx[$i]}");
-
-					for ($j=0, $loopj=sizeof($files);$j<$loopj;$j++) {
-						if ($data[$files[$j]] && file_exists($_ENV['path'].$data[$files[$j]]) == true) {
-							@unlink($_ENV['path'].$data[$files[$j]]);
+			
+			if ($idx) {
+				for ($i=0, $loop=sizeof($field);$i<$loop;$i++) {
+					if ($field[$i]['type'] == 'HTML') {
+						$attach = Request($field[$i]['name'].'-Uploader-files');
+						if ($attach != null) {
+							for ($i=0, $loop=sizeof($attach);$i<$loop;$i++) {
+								$temp = explode('|',$attach[$i]);
+								$fidx = $temp[0];
+					
+								if (sizeof($temp) == 1) {
+									$fileData = $mDB->DBfetch($mDatabase->table['file'],array('filepath','filetype'),"where `idx`='$fidx'");
+									@unlink($_ENV['userfilePath'].$mDatabase->userfile.$fileData['filepath']);
+									if ($fileData['filetype'] == 'IMG') @unlink($_ENV['userfilePath'].$mDatabase->thumbnail.'/'.$fidx.'.thm');
+									$mDB->DBdelete($mDatabase->table['file'],"where `idx`='$fidx'");
+								} else {
+									$mDB->DBupdate($mDatabase->table['file'],array('repto'=>$idx),'',"where `idx`='$fidx'");
+								}
+							}
+						}
+					} elseif ($field[$i]['type'] == 'FILE') {
+						if (Request($field[$i]['name'].'-delete') == 'on' || (isset($_FILES[$field[$i]['name']]['tmp_name']) == true && $_FILES[$field[$i]['name']]['tmp_name'])) {
+							$file = $mDB->DBfetch($mDatabase->table['file'],array('idx','filepath','filetype'),"where `idx`='{$oData[$field[$i]['name']]}'");
+							@unlink($_ENV['userfilePath'].$mDatabase->userfile.$file['filepath']);
+							if ($file['filetype'] == 'IMG') {
+								@unlink($_ENV['userfilePath'].$mDatabase->thumbnail.'/'.$file['idx'].'.thm');
+							}
+							$mDB->DBupdate($table['name'],array($field[$i]['name']=>'0'),'',"where `idx`='$idx'",$table['database']);
+						}
+						
+						if (isset($_FILES[$field[$i]['name']]['tmp_name']) == true && $_FILES[$field[$i]['name']]['tmp_name']) {
+							$file = $_FILES[$field[$i]['name']];
+							$filename = $file['name'];
+							$temppath = $file['tmp_name'];
+							$filesize = filesize($temppath);
+							$filetype = GetFileType($filename,$temppath);
+							$filepath = '/attach/'.$tno.'/'.md5_file($temppath).'.'.time().'.'.rand(1000,9999).'.'.GetFileExec($filename);
+							
+							if (CreateDirectory($_ENV['userfilePath'].$mDatabase->userfile.'/attach/'.$tno) == true) {
+								@move_uploaded_file($temppath,$_ENV['userfilePath'].$mDatabase->userfile.$filepath);
+								$fidx = $mDB->DBinsert($mDatabase->table['file'],array('type'=>'FILE','tno'=>$tno,'repto'=>$idx,'filename'=>$filename,'filepath'=>$filepath,'filesize'=>$filesize,'filetype'=>$filetype));
+								
+								if ($filetype == 'IMG' && CreateDirectory($_ENV['userfilePath'].$mDatabase->thumbnail) == true) {
+									GetThumbnail($_ENV['userfilePath'].$mDatabase->userfile.$filepath,$_ENV['userfilePath'].$mDatabase->thumbnail.'/'.$fidx.'.thm',100,75,false);
+								}
+								
+								$mDB->DBupdate($table['name'],array($field[$i]['name']=>$fidx),'',"where `idx`='$idx'",$table['database']);
+							}
 						}
 					}
 				}
-
-				$mDB->DBdelete($table['name'],"where `$primary`={$idx[$i]}");
+				
+				$return['success'] = true;
+			} else {
+				$return['success'] = false;
 			}
+			
+			exit(json_encode($return));
 		}
-
-		echo '<?xml version="1.0" encoding="UTF-8"?>';
-		echo '<message success="true">';
-		echo '</message>';
+		
+		if ($mode == 'delete') {
+			$tno = Request('tno');
+			$primary = Request('primary');
+			$idx = Request('idx');
+			
+			$table = $mDB->DBfetch($mDatabase->table['table'],array('name','database','field'),"where `idx`='$tno'");
+			$mDB->DBdelete($table['name'],"where `$primary` IN ($idx)",$table['database']);
+			
+			$file = $mDB->DBfetchs($mDatabase->table['file'],array('idx','filepath','filetype'),"where `tno`='$tno' and `repto` IN ($idx)");
+			for ($i=0, $loop=sizeof($file);$i<$loop;$i++) {
+				@unlink($_ENV['userfilePath'].$mDatabase->userfile.$file[$i]['filepath']);
+				if ($file[$i]['filetype'] == 'IMG') {
+					@unlink($_ENV['userfilePath'].$mDatabase->thumbnail.'/'.$file[$i]['idx'].'.thm');
+				}
+				$mDB->DBdelete($mDatabase->table['file'],"where `idx`='{$file[$i]['idx']}'");
+			}
+			
+			$return['success'] = true;
+			exit(json_encode($return));
+		}
 	}
 }
 ?>

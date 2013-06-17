@@ -38,7 +38,7 @@ if ($action == 'member') {
 		$find.= $group ? " and `group`='$group'" : '';
 		$find.= $active != 'all' ? " and `is_active`='$active'" : '';
 		$find.= $keyword ? " and (`user_id`='$keyword' or `name` like '%$keyword%' or `nickname` like '%$keyword%')" : '';
-		$lists = $mDB->DBfetchs($_ENV['table']['member'],array('idx','type','is_active','group','user_id','name','nickname','email','jumin','exp','point','telephone','cellphone','reg_date','last_login'),$find,$orderer,$limiter);
+		$lists = $mDB->DBfetchs($_ENV['table']['member'],array('idx','type','is_active','group','user_id','name','nickname','email','jumin','companyno','exp','point','telephone','cellphone','reg_date','last_login'),$find,$orderer,$limiter);
 		$total = $mDB->DBcount($_ENV['table']['member'],$find);
 	
 		for ($i=0, $loop=sizeof($lists);$i<$loop;$i++) {
