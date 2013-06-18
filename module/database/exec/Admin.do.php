@@ -130,12 +130,14 @@ if ($action == 'user') {
 		$data = $mDB->DBfetch($mDatabase->table['table'],'*',"where `idx`='$idx'");
 		
 		$oField = unserialize($data['field']);
-		$database = Request('database') ? Request('database') : 'default';
+		$database = $data['database'];
 		$name = Request('name');
 		$info = Request('info');
 		
-		if (($data['name'] != $name || $data['database'] != $database) && $mDB->DBfind($name,$database) == true) {
+		if ($data['name'] != $name && $mDB->DBfind($name,$database) == true) {
 			$errors['name'] = '이미 생성되어 있는 테이블명입니다.';
+		} elseif ($data['name'] != $name) {
+			$mDB->DBrename($data['name'],$name,$data['database']);
 		}
 
 		$sort = array('first');
@@ -199,13 +201,53 @@ if ($action == 'user') {
 				}
 			}
 			
-			$mDB->DBupdate($mDatabase->table['table'],array('name'=>$name,'database'=>$database,'info'=>$info,'field'=>serialize($field)),'',"where `idx`='$idx'");
+			$mDB->DBupdate($mDatabase->table['table'],array('name'=>$name,'info'=>$info,'field'=>serialize($field)),'',"where `idx`='$idx'");
 			$return['success'] = true;
 		} else {
 			$return['success'] = false;
 			$return['errors'] = $errors;
 		}
 		
+		exit(json_encode($return));
+	}
+	
+	if ($do == 'truncate') {
+		$idx = Request('idx');
+		$table = $mDB->DBfetchs($mDatabase->table['table'],'*',"where `idx` IN ($idx)");
+		for ($i=0, $loop=sizeof($table);$i<$loop;$i++) {
+			$mDB->DBtruncate($table['table'],$table['database']);
+		}
+		
+		$file = $mDB->DBfetchs($mDatabase->table['file'],array('idx','filepath','filetype'),"where `tno` IN ($idx)");
+		for ($i=0, $loop=sizeof($file);$i<$loop;$i++) {
+			@unlink($_ENV['userfilePath'].$mDatabase->userfile.$file[$i]['filepath']);
+			if ($file[$i]['filetype'] == 'IMG') {
+				@unlink($_ENV['userfilePath'].$mDatabase->thumbnail.'/'.$file[$i]['idx'].'.thm');
+			}
+			$mDB->DBdelete($mDatabase->table['file'],"where `idx`='{$file[$i]['idx']}'");
+		}
+		
+		$return['success'] = true;
+		exit(json_encode($return));
+	}
+	
+	if ($do == 'delete') {
+		$idx = Request('idx');
+		$table = $mDB->DBfetch($mDatabase->table['table'],'*',"where `idx` IN ($idx)");
+		for ($i=0, $loop=sizeof($table);$i<$loop;$i++) {
+			$mDB->DBdrop($table['table'],$table['database']);
+		}
+		
+		$file = $mDB->DBfetchs($mDatabase->table['file'],array('idx','filepath','filetype'),"where `tno` IN ($idx)");
+		for ($i=0, $loop=sizeof($file);$i<$loop;$i++) {
+			@unlink($_ENV['userfilePath'].$mDatabase->userfile.$file[$i]['filepath']);
+			if ($file[$i]['filetype'] == 'IMG') {
+				@unlink($_ENV['userfilePath'].$mDatabase->thumbnail.'/'.$file[$i]['idx'].'.thm');
+			}
+			$mDB->DBdelete($mDatabase->table['file'],"where `idx`='{$file[$i]['idx']}'");
+		}
+		
+		$return['success'] = true;
 		exit(json_encode($return));
 	}
 	

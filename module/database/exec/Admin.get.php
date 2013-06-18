@@ -26,7 +26,10 @@ if ($mMember->IsAdmin() == false) {
 
 if ($action == 'user') {
 	if ($get == 'list') {
-		$find = '';
+		$keyword = Request('keyword');
+		
+		if ($keyword) $find = "where `name` like '%$keyword%' or `info` like '%$keyword%'";
+		else $find = '';
 		$total = $mDB->DBcount($mDatabase->table['table'],$find);
 		$lists = $mDB->DBfetchs($mDatabase->table['table'],'*',$find);
 	
@@ -75,6 +78,10 @@ if ($action == 'user') {
 			$idx = Request('idx');
 			$table = $mDB->DBfetch($mDatabase->table['table'],'*',"where `idx`='$idx'");
 			
+			$key = Request('key');
+			$keyword = Request('keyword');
+			$findMode = 'equal';
+			
 			$fileField = array();
 			$htmlField = array();
 			$field = unserialize($table['field']);
@@ -85,9 +92,14 @@ if ($action == 'user') {
 				if ($field[$i]['type'] == 'HTML') {
 					$htmlField[] = $field[$i]['name'];
 				}
+				if ($field[$i]['name'] == $key && in_array($field[$i]['type'],array('VARCHAR','CHAR','TEXT','HTML')) == true) $findMode = 'like';
 			}
 			
-			$find = '';
+			if ($key && $keyword) {
+				$find = $findMode == 'equal' ? "where `$key`='$keyword'" : "where `$key` like '%$keyword%'";
+			} else {
+				$find = '';
+			}
 			$total = $mDB->DBcount($table['name'],$find,$table['database']);
 			$lists = $mDB->DBfetchs($table['name'],'*',$find,$orderer,$limiter,$table['database']);
 			for ($i=0, $loop=sizeof($lists);$i<$loop;$i++) {

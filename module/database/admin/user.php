@@ -806,6 +806,7 @@ ContentArea = function(viewport) {
 	function ShowRecord(idx,title,field) {
 		var columns = new Array();
 		var fields = new Array();
+		var searchs = new Array();
 		var primary = {};
 		
 		for (var i=0, loop=field.length;i<loop;i++) {
@@ -874,6 +875,7 @@ ContentArea = function(viewport) {
 				});
 			}
 			fields.push(field[i].name);
+			if (field[i].type != "FILE") searchs.push([field[i].name,field[i].info]);
 		}
 		
 		var store = new Ext.data.JsonStore({
@@ -882,7 +884,7 @@ ContentArea = function(viewport) {
 				simpleSortMode:true,
 				url:"<?php echo $_ENV['dir']; ?>/module/database/exec/Admin.get.php",
 				reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-				extraParams:{action:"user",get:"record",mode:"list",idx:idx}
+				extraParams:{action:"user",get:"record",mode:"list",key:"",keyword:"",idx:idx}
 			},
 			remoteSort:true,
 			autoLoad:true,
@@ -902,12 +904,92 @@ ContentArea = function(viewport) {
 					id:"RecordPanel",
 					border:false,
 					tbar:[
+						new Ext.form.ComboBox({
+							id:"ShowRecordKey",
+							typeAhead:true,
+							triggerAction:"all",
+							lazyRender:true,
+							listClass:"x-combo-list-small",
+							store:new Ext.data.SimpleStore({
+								fields:["value","display"],
+								data:searchs
+							}),
+							width:80,
+							emptyText:"검색조건",
+							editable:false,
+							mode:"local",
+							displayField:"display",
+							valueField:"value"
+						}),
+						new Ext.form.TextField({
+							id:"ShowRecordKeyword",
+							width:150,
+							emptyText:"검색어 입력"
+						}),
+						new Ext.Button({
+							text:"검색",
+							icon:"<?php echo $_ENV['dir']; ?>/module/database/images/admin/icon_magnifier.png",
+							handler:function() {
+								if (Ext.getCmp("ShowRecordKeyword").getValue() != "" && !Ext.getCmp("ShowRecordKey").getValue()) {
+									Ext.Msg.show({title:"안내",msg:"검색조건을 선택하여 주십시오.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
+									return;
+								}
+								Ext.getCmp("RecordPanel").getStore().getProxy().setExtraParam("key",Ext.getCmp("ShowRecordKey").getValue());
+								Ext.getCmp("RecordPanel").getStore().getProxy().setExtraParam("keyword",Ext.getCmp("ShowRecordKeyword").getValue());
+								Ext.getCmp("RecordPanel").getStore().loadPage(1);
+							}
+						}),
+						'-',
 						new Ext.Button({
 							text:"레코드추가",
 							icon:"<?php echo $_ENV['dir']; ?>/module/database/images/admin/icon_textfield_add.png",
 							handler:function() {
 								AddRecord(idx,field);
 							}
+						}),
+						new Ext.Button({
+							text:"선택한 레코드를&nbsp;",
+							icon:"<?php echo $_ENV['dir']; ?>/module/database/images/admin/icon_tick.png",
+							menu:new Ext.menu.Menu({
+								items:[{
+									text:"레코드 삭제",
+									handler:function() {
+										var checked = Ext.getCmp("RecordPanel").getSelectionModel().getSelection();
+										if (checked.length == 0) {
+											Ext.Msg.show({title:"에러",msg:"삭제할 레코드를 선택하여 주십시오.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
+											return false;
+										}
+										
+										var idxs = new Array();
+										for (var i=0, loop=checked.length;i<loop;i++) {
+											idxs[i] = checked[i].get(primary.name);
+										}
+										
+										Ext.Msg.show({title:"안내",msg:"정말 선택한 레코드를 삭제하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
+											if (button == "yes") {
+												Ext.Msg.wait("레코드를 삭제중입니다.","잠시만 기다려주십시오.");
+												Ext.Ajax.request({
+													url:"<?php echo $_ENV['dir']; ?>/module/database/exec/Admin.do.php",
+													success:function(response) {
+														var data = Ext.JSON.decode(response.responseText);
+														if (data.success == true) {
+															Ext.Msg.show({title:"안내",msg:"성공적으로 삭제하였습니다.",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
+																Ext.getCmp("RecordPanel").getStore().loadPage(1);
+															}});
+														} else {
+															Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
+														}
+													},
+													failure:function() {
+														Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
+													},
+													params:{"action":"user","do":"record",mode:"delete","tno":idx,primary:primary.name,idx:idxs.join(",")}
+												});
+											}
+										}});
+									}
+								}]
+							})
 						}),
 						'->',
 						{xtype:"tbtext",text:"더블클릭 : 수정 / 우클릭 : 상세메뉴"}
@@ -968,7 +1050,12 @@ ContentArea = function(viewport) {
 						}}
 					}
 				})
-			]
+			],
+			listeners:{
+				close:{fn:function(panel) {
+					Ext.getCmp("ListPanel").getStore().reload();
+				}}
+			}
 		}).show();
 	}
 	
@@ -983,22 +1070,21 @@ ContentArea = function(viewport) {
 				AddTable(record.data.idx);
 			}
 		});
-		
 		menu.add('-');
 		
 		menu.add({
-			text:"게시물 삭제",
+			text:"테이블 비우기",
 			handler:function() {
-				Ext.Msg.show({title:"확인",msg:"선택한 게시물을 정말 삭제하시겠습니까?<br />삭제된 게시물은 휴지통으로 이동됩니다.",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
+				Ext.Msg.show({title:"확인",msg:"테이블을 비우게되면 해당테이블의 모든 레코드 및 첨부파일이 삭제됩니다.<br />선택한 테이블을 정말 비우시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
 					if (button == "yes") {
-						Ext.Msg.wait("선택한 게시물을 삭제하고 있습니다.","잠시만 기다려주십시오.");
+						Ext.Msg.wait("선택한 테이블을 비우고 있습니다.","잠시만 기다려주십시오.");
 						Ext.Ajax.request({
-							url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.do.php",
+							url:"<?php echo $_ENV['dir']; ?>/module/database/exec/Admin.do.php",
 							success:function(response) {
 								var data = Ext.JSON.decode(response.responseText);
 								if (data.success == true) {
-									Ext.Msg.show({title:"안내",msg:"성공적으로 삭제하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
-										Ext.getCmp("ListPanel").getStore().loadPage(1);
+									Ext.Msg.show({title:"안내",msg:"성공적으로 비웠습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
+										Ext.getCmp("ListPanel").getStore().reload();
 									}});
 								} else {
 									Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
@@ -1007,7 +1093,7 @@ ContentArea = function(viewport) {
 							failure:function() {
 								Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
 							},
-							params:{"action":"post","do":"delete","idx":record.data.idx}
+							params:{"action":"user","do":"truncate","idx":record.data.idx}
 						});
 					}
 				}});
@@ -1015,18 +1101,18 @@ ContentArea = function(viewport) {
 		});
 		
 		menu.add({
-			text:"게시물 삭제 및 IP차단",
+			text:"테이블 삭제",
 			handler:function() {
-				Ext.Msg.show({title:"확인",msg:"선택한 게시물을 정말 삭제 및 차단하시겠습니까?<br />삭제된 게시물은 휴지통으로 이동됩니다.",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
+				Ext.Msg.show({title:"확인",msg:"테이블을 삭제하면 해당테이블의 모든 레코드 및 첨부파일이 삭제됩니다.<br />선택한 테이블을 정말 삭제하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
 					if (button == "yes") {
-						Ext.Msg.wait("선택한 게시물을 삭제 및 차단하고 있습니다.","잠시만 기다려주십시오.");
+						Ext.Msg.wait("선택한 테이블을 삭제하고 있습니다.","잠시만 기다려주십시오.");
 						Ext.Ajax.request({
-							url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.do.php",
+							url:"<?php echo $_ENV['dir']; ?>/module/database/exec/Admin.do.php",
 							success:function(response) {
 								var data = Ext.JSON.decode(response.responseText);
 								if (data.success == true) {
 									Ext.Msg.show({title:"안내",msg:"성공적으로 삭제하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
-										Ext.getCmp("ListPanel").getStore().loadPage(1);
+										Ext.getCmp("ListPanel").getStore().reload();
 									}});
 								} else {
 									Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
@@ -1035,7 +1121,7 @@ ContentArea = function(viewport) {
 							failure:function() {
 								Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
 							},
-							params:{"action":"post","do":"spam","idx":record.data.idx}
+							params:{"action":"user","do":"delete","idx":record.data.idx}
 						});
 					}
 				}});
@@ -1056,13 +1142,110 @@ ContentArea = function(viewport) {
 				id:"ListPanel",
 				border:false,
 				tbar:[
+					new Ext.form.TextField({
+						id:"Keyword",
+						width:150,
+						emptyText:"테이블명, 테이블설명"
+					}),
+					new Ext.Button({
+						text:"검색",
+						icon:"<?php echo $_ENV['dir']; ?>/module/database/images/admin/icon_magnifier.png",
+						handler:function() {
+							Ext.getCmp("ListPanel").getStore().getProxy().setExtraParam("keyword",Ext.getCmp("Keyword").getValue());
+							Ext.getCmp("ListPanel").getStore().reload();
+						}
+					}),
+					'-',
 					new Ext.Button({
 						text:"테이블추가",
 						icon:"<?php echo $_ENV['dir']; ?>/module/database/images/admin/icon_database_add.png",
 						handler:function() {
 							AddTable();
 						}
-					})
+					}),
+					new Ext.Button({
+						text:"선택한 테이블을&nbsp;",
+						icon:"<?php echo $_ENV['dir']; ?>/module/database/images/admin/icon_tick.png",
+						menu:new Ext.menu.Menu({
+							items:[{
+								text:"테이블 비우기",
+								handler:function() {
+									var checked = Ext.getCmp("ListPanel").getSelectionModel().getSelection();
+									if (checked.length == 0) {
+										Ext.Msg.show({title:"에러",msg:"비울 테이블을 선택하여 주십시오.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
+										return false;
+									}
+									
+									var idxs = new Array();
+									for (var i=0, loop=checked.length;i<loop;i++) {
+										idxs[i] = checked[i].get("idx");
+									}
+									
+									Ext.Msg.show({title:"확인",msg:"테이블을 비우게되면 해당테이블의 모든 레코드 및 첨부파일이 삭제됩니다.<br />선택한 테이블을 정말 비우시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
+										if (button == "yes") {
+											Ext.Msg.wait("선택한 테이블을 비우고 있습니다.","잠시만 기다려주십시오.");
+											Ext.Ajax.request({
+												url:"<?php echo $_ENV['dir']; ?>/module/database/exec/Admin.do.php",
+												success:function(response) {
+													var data = Ext.JSON.decode(response.responseText);
+													if (data.success == true) {
+														Ext.Msg.show({title:"안내",msg:"성공적으로 비웠습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
+															Ext.getCmp("ListPanel").getStore().reload();
+														}});
+													} else {
+														Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
+													}
+												},
+												failure:function() {
+													Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
+												},
+												params:{"action":"user","do":"truncate","idx":idxs.join(",")}
+											});
+										}
+									}});
+								}
+							},{
+								text:"테이블 삭제",
+								handler:function() {
+									var checked = Ext.getCmp("ListPanel").getSelectionModel().getSelection();
+									if (checked.length == 0) {
+										Ext.Msg.show({title:"에러",msg:"삭제할 테이블을 선택하여 주십시오.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
+										return false;
+									}
+									
+									var idxs = new Array();
+									for (var i=0, loop=checked.length;i<loop;i++) {
+										idxs[i] = checked[i].get("idx");
+									}
+									
+									Ext.Msg.show({title:"확인",msg:"테이블을 삭제하게되면 해당테이블의 모든 레코드 및 첨부파일이 삭제됩니다.<br />선택한 테이블을 정말 삭제하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
+										if (button == "yes") {
+											Ext.Msg.wait("선택한 테이블을 삭제하고 있습니다.","잠시만 기다려주십시오.");
+											Ext.Ajax.request({
+												url:"<?php echo $_ENV['dir']; ?>/module/database/exec/Admin.do.php",
+												success:function(response) {
+													var data = Ext.JSON.decode(response.responseText);
+													if (data.success == true) {
+														Ext.Msg.show({title:"안내",msg:"성공적으로 삭제하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
+															Ext.getCmp("ListPanel").getStore().reload();
+														}});
+													} else {
+														Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
+													}
+												},
+												failure:function() {
+													Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
+												},
+												params:{"action":"user","do":"delete","idx":idxs.join(",")}
+											});
+										}
+									}});
+								}
+							}]
+						})
+					}),
+					'->',
+					{xtype:"tbtext",text:"더블클릭 : 레코드보기 / 우클릭 : 상세메뉴"}
 				],
 				columns:[
 					new Ext.grid.RowNumberer(),
@@ -1109,7 +1292,7 @@ ContentArea = function(viewport) {
 						simpleSortMode:true,
 						url:"<?php echo $_ENV['dir']; ?>/module/database/exec/Admin.get.php",
 						reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-						extraParams:{action:"user",get:"list"}
+						extraParams:{action:"user",get:"list",keyword:""}
 					},
 					remoteSort:false,
 					sorters:[{property:"name",direction:"ASC"}],

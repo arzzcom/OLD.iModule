@@ -246,7 +246,7 @@ class DB {
 		return $isSuccess;
 	}
 	
-	function DBname($table,$newname,$db='') {
+	function DBrename($table,$newname,$db='') {
 		if (!$db) $db = 'default';
 		if (isset($this->infor[$db]) == false) $this->DBinfor($db);
 		
@@ -333,68 +333,8 @@ class DB {
 		
 		return true;
 	}
-	/*
-	function DBcreate($table,$field,$db='') {
-		if (!$db) $db = 'default';
-		if (isset($this->infor[$db]) == false) $this->DBinfor($db);
 
-		$isSuccess = true;
-
-		switch ($this->infor[$db]['type']) {
-			case 'mysql' :
-				$check = @mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='".$this->infor[$db]['dbname']."' AND table_name = '$table'"));
-				if ($check[0] == 1) return;
-
-				$indexType = array('PRIMARY'=>'PRIMARY KEY','BTREE'=>'INDEX','UNIQUE'=>'UNIQUE');
-				$fieldType = array('VARCHAR'=>'VARCHAR','INT'=>'INT','FILE'=>'INT','TEXT'=>'TEXT','HTML'=>'LONGTEXT','DATE'=>'DATE');
-
-				$indexes = array();
-				$fields = array();
-				$query = 'CREATE TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` (';
-
-				for ($i=0, $loop=sizeof($field);$i<$loop;$i++) {
-					$fields[$i] = '`'.$field[$i]['name'].'`';
-					if ($field[$i]['type'] != 'DATE' && $field[$i]['type'] != 'TEXT' && $field[$i]['type'] != 'HTML' && $field[$i]['type'] != 'SELECT') {
-						$fields[$i].= ' '.$fieldType[$field[$i]['type']].'('.($field[$i]['type'] == 'FILE' ? '11' : $field[$i]['length']).')';
-					} elseif ($field[$i]['type'] == 'SELECT') {
-						$fields[$i].= ' ENUM('.$field[$i]['length'].')';
-					} else {
-						$fields[$i].= ' '.$fieldType[$field[$i]['type']];
-					}
-					$fields[$i].= ' NOT NULL';
-					if (isset($field[$i]['default']) == true && $field[$i]['default'] != '') {
-						$fields[$i].= ' DEFAULT \''.$field[$i]['default'].'\'';
-					}
-					if (isset($field[$i]['index']) == true && $field[$i]['index'] != '') {
-						if ($field[$i]['index'] == 'PRIMARY') {
-							$fields[$i].= ' PRIMARY KEY';
-						} else {
-							$indexes[] = ''.$indexType[$field[$i]['index']].'(`'.$field[$i]['name'].'`)';
-						}
-					}
-					if (isset($field[$i]['option']) == true && $field[$i]['option'] == 'AUTO_INCREMENT') {
-						$fields[$i].= ' AUTO_INCREMENT';
-					}
-					if (isset($field[$i]['info']) == true && $field[$i]['info'] != '') {
-						$fields[$i].= ' COMMENT \''.$field[$i]['info'].'\'';
-					}
-				}
-
-				$query.= implode(',',$fields);
-				if (sizeof($indexes) > 0) $query.= ','.implode(',',$indexes);
-				$query.= ') ENGINE = MYISAM';
-
-				@mysql_query($query,$this->connector[$db]) or $isSuccess = $this->DBerror($query,mysql_error());
-			break;
-		}
-		
-		$this->DBlog($query);
-
-		return $isSuccess;
-	}
-	*/
-
-	function DBremove($table,$db='') {
+	function DBdrop($table,$db='') {
 		if (!$db) $db = 'default';
 		if (isset($this->infor[$db]) == false) $this->DBinfor($db);
 
