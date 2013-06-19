@@ -904,6 +904,14 @@ ContentArea = function(viewport) {
 					id:"RecordPanel",
 					border:false,
 					tbar:[
+						new Ext.Button({
+							text:"레코드추가",
+							icon:"<?php echo $_ENV['dir']; ?>/module/database/images/admin/icon_textfield_add.png",
+							handler:function() {
+								AddRecord(idx,field);
+							}
+						}),
+						'-',
 						new Ext.form.ComboBox({
 							id:"ShowRecordKey",
 							typeAhead:true,
@@ -937,14 +945,6 @@ ContentArea = function(viewport) {
 								Ext.getCmp("RecordPanel").getStore().getProxy().setExtraParam("key",Ext.getCmp("ShowRecordKey").getValue());
 								Ext.getCmp("RecordPanel").getStore().getProxy().setExtraParam("keyword",Ext.getCmp("ShowRecordKeyword").getValue());
 								Ext.getCmp("RecordPanel").getStore().loadPage(1);
-							}
-						}),
-						'-',
-						new Ext.Button({
-							text:"레코드추가",
-							icon:"<?php echo $_ENV['dir']; ?>/module/database/images/admin/icon_textfield_add.png",
-							handler:function() {
-								AddRecord(idx,field);
 							}
 						}),
 						new Ext.Button({
@@ -1142,6 +1142,14 @@ ContentArea = function(viewport) {
 				id:"ListPanel",
 				border:false,
 				tbar:[
+					new Ext.Button({
+						text:"테이블추가",
+						icon:"<?php echo $_ENV['dir']; ?>/module/database/images/admin/icon_database_add.png",
+						handler:function() {
+							AddTable();
+						}
+					}),
+					'-',
 					new Ext.form.TextField({
 						id:"Keyword",
 						width:150,
@@ -1156,13 +1164,6 @@ ContentArea = function(viewport) {
 						}
 					}),
 					'-',
-					new Ext.Button({
-						text:"테이블추가",
-						icon:"<?php echo $_ENV['dir']; ?>/module/database/images/admin/icon_database_add.png",
-						handler:function() {
-							AddTable();
-						}
-					}),
 					new Ext.Button({
 						text:"선택한 테이블을&nbsp;",
 						icon:"<?php echo $_ENV['dir']; ?>/module/database/images/admin/icon_tick.png",
