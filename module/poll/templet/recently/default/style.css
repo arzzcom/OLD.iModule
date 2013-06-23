@@ -1,0 +1,8 @@
+.PollRecentlyDefault {}
+.PollRecentlyDefault .box {border:5px solid #F1F2F5; padding:5px;}
+.PollRecentlyDefault .box .title {font-family:NanumGothicWeb; font-size:12px; font-weight:bold; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; margin-bottom:3px;}
+.PollRecentlyDefault .box .reg_date {font-family:tahoma; font-size:11px; color:#666666;}
+.PollRecentlyDefault .box .thumbnail {border:1px solid #CCCCCC; background-size:100% auto; background-repeat:no-repeat; background-position:0 50%; height:50px; margin:5px 0px 5px 0px;}
+.PollRecentlyDefault .box .item {vertical-align:top; line-height:14px; font-size:11px; font-family:NanumGothicWeb;}
+.PollRecentlyDefault .box .button {margin-top:5px; text-align:center; font:0/0 arial;}
+.PollRecentlyDefault .box .button IMG {margin-left:5px;}

@@ -121,7 +121,7 @@ if ($action == 'board') {
 				$data['permission_'.$key] = $value;
 			}
 		} else {
-			$data = array_merge($data,array('permission_list'=>'true','permission_post'=>'true','permission_view'=>'true','permission_ment'=>'true','permission_select'=>'{$member.type} == \'ADMINISTRATOR\'','permission_secret'=>'{$member.type} == \'ADMINISTRATOR\'','permission_modify'=>'{$member.type} == \'ADMINISTRATOR\'','permission_delete'=>'{$member.type} == \'ADMINISTRATOR\'','permission_notice'=>'{$member.type} == \'ADMINISTRATOR\''));
+			$data = array_merge($data,array('permission_list'=>'true','permission_post'=>'true','permission_view'=>'true','permission_ment'=>'true','permission_secret'=>'{$member.type} == \'ADMINISTRATOR\'','permission_modify'=>'{$member.type} == \'ADMINISTRATOR\'','permission_delete'=>'{$member.type} == \'ADMINISTRATOR\'','permission_notice'=>'{$member.type} == \'ADMINISTRATOR\''));
 		}
 	} else {
 		$data = array();

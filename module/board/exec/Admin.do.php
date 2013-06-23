@@ -49,6 +49,9 @@ if ($action == 'board') {
 		$insert['use_select'] = Request('use_select') == 'on' ? 'TRUE' : 'FALSE';
 		$insert['use_rss'] = Request('use_rss') == 'on' ? 'TRUE' : 'FALSE';
 		$insert['rss_config'] = serialize(array('rss_limit'=>Request('rss_limit'),'rss_post_limit'=>Request('rss_post_limit'),'rss_link'=>Request('rss_link'),'rss_description'=>Request('rss_description'),'rss_language'=>Request('rss_language')));
+		$insert['post_point'] = Request('post_point');
+		$insert['ment_point'] = Request('ment_point');
+		$insert['select_point'] = Request('select_point');
 		$insert['permission'] = serialize(array('list'=>Request('permission_list'),'view'=>Request('permission_view'),'post'=>Request('permission_post'),'ment'=>Request('permission_ment'),'modify'=>Request('permission_modify'),'delete'=>Request('permission_delete'),'select'=>Request('permission_select'),'secret'=>Request('permission_secret'),'notice'=>Request('permission_notice')));
 
 		if ($do == 'add') {
@@ -111,6 +114,10 @@ if ($action == 'board') {
 		if (Request('is_use_uploader') == 'on') $insert['use_uploader'] = Request('use_uploader') == 'on' ? 'TRUE' : 'FALSE';
 		if (Request('is_use_charge') == 'on') $insert['use_charge'] = Request('use_charge') == 'on' ? 'TRUE' : 'FALSE';
 		if (Request('is_use_select') == 'on') $insert['use_select'] = Request('use_select') == 'on' ? 'TRUE' : 'FALSE';
+		
+		if (Request('is_post_point') == 'on') $insert['post_point'] = Request('post_point');
+		if (Request('is_ment_point') == 'on') $insert['ment_point'] = Request('ment_point');
+		if (Request('is_select_point') == 'on') $insert['select_point'] = Request('select_point');
 
 		if (sizeof($errors) == 0) {
 			for ($i=0, $loop=sizeof($bid);$i<$loop;$i++) {

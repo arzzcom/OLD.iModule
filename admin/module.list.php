@@ -99,7 +99,7 @@ ContentArea = function(viewport) {
 								failure:function() {
 									Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
 								},
-								params:{action:"module","do":"update_folder","module":record.data.module}
+								params:{action:"module","do":"update_folder","module":record.data.module,"rnd":Math.random()}
 							});
 						}
 					}});
@@ -133,7 +133,7 @@ ContentArea = function(viewport) {
 									})
 								],
 								listeners:{show:{fn:function() {
-									execFrame.location.href = "<?php echo $_ENV['dir']; ?>/exec/Admin.do.php?action=module&do=update_db&module="+record.data.module;
+									execFrame.location.href = "<?php echo $_ENV['dir']; ?>/exec/Admin.do.php?action=module&do=update_db&module="+record.data.module+"&rnd="+Math.random();
 								}}}
 							}).show();
 						}

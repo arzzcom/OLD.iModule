@@ -71,7 +71,7 @@ class Module {
 					}
 					
 					if ($this->mDB->DBFind($tablename) == true) {
-						$this->mDB->DBremove($tablename);
+						$this->mDB->DBdrop($tablename);
 					}
 					
 					if ($this->mDB->DBcreate($tablename,$fields,$indexes) == true) {
@@ -326,7 +326,7 @@ class Module {
 					if ($this->mDB->DBFind($tablename) == true) {
 						if ($this->mDB->DBcompare($tablename,$fields,$indexes) == false) {
 							if ($this->mDB->DBFind($tablename.'(NEW)') == true) {
-								$this->mDB->DBremove($tablename.'(NEW)');
+								$this->mDB->DBdrop($tablename.'(NEW)');
 							}
 							
 							if ($this->mDB->DBcreate($tablename.'(NEW)',$fields,$indexes) == true) {
@@ -349,8 +349,8 @@ class Module {
 								}
 								
 								if ($total < $dataLimit+$maxLimit) {
-									$this->mDB->DBname($tablename,$tablename.'(BK'.date('YmdHis').')');
-									$this->mDB->DBname($tablename.'(NEW)',$tablename);
+									$this->mDB->DBrename($tablename,$tablename.'(BK'.date('YmdHis').')');
+									$this->mDB->DBrename($tablename.'(NEW)',$tablename);
 									if ($progress == true) echo '<script type="text/javascript"> try { top.ModuleProgressControl("'.$tablename.'",'.($tableCode+1).','.sizeof($database->table).','.$total.','.$total.'); } catch(e) {} </script>';
 									Redirect($_SERVER['PHP_SELF'].GetQueryString(array('tableCode'=>$tableCode+1,'dataLimit'=>0),'',false));
 								} else {
@@ -392,8 +392,8 @@ class Module {
 						$this->mDB->DBinsert($tablename.'(NEW)',$insert);
 					}
 					if ($total < $dataLimit+$maxLimit) {
-						$this->mDB->DBname($tablename,$tablename.'(BK'.date('YmdHis').')');
-						$this->mDB->DBname($tablename.'(NEW)',$tablename);
+						$this->mDB->DBrename($tablename,$tablename.'(BK'.date('YmdHis').')');
+						$this->mDB->DBrename($tablename.'(NEW)',$tablename);
 						if ($progress == true) echo '<script type="text/javascript"> try { top.ModuleProgressControl("'.$tablename.'",'.($tableCode+1).','.sizeof($database->table).','.$total.','.$total.'); } catch(e) {} </script>';
 						Redirect($_SERVER['PHP_SELF'].GetQueryString(array('tableCode'=>$tableCode+1,'dataLimit'=>0),'',false));
 					} else {
