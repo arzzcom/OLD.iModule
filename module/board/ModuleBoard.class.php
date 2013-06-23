@@ -22,6 +22,7 @@ class ModuleBoard extends Module {
 	public $recentlyPath;
 	public $recentlyDir;
 	public $baseURL;
+	public $baseQueryString;
 
 	protected $isHeaderIncluded;
 	protected $isFooterIncluded;

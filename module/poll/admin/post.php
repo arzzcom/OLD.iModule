@@ -8,7 +8,7 @@ var ContentArea = function(viewport) {
 			simpleSortMode:true,
 			url:"<?php echo $_ENV['dir']; ?>/module/poll/exec/Admin.get.php",
 			reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-			extraParams:{action:"post",key:"",keyword:"",category:"",pid:""}
+			extraParams:{action:"post",get:"list",key:"",keyword:"",category:"",pid:""}
 		},
 		remoteSort:true,
 		sorters:[{property:"idx",direction:"DESC"}],
@@ -287,7 +287,7 @@ var ContentArea = function(viewport) {
 									simpleSortMode:true,
 									url:"<?php echo $_ENV['dir']; ?>/module/poll/exec/Admin.get.php",
 									reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-									extraParams:{action:"poll",get:"itemlist",idx:(idx ? idx : "0")}
+									extraParams:{action:"post",get:"item",idx:(idx ? idx : "0")}
 								},
 								remoteSort:false,
 								sorters:[{property:"sort",direction:"ASC"}],
@@ -359,7 +359,7 @@ var ContentArea = function(viewport) {
 			listeners:{show:{fn:function() {
 				if (idx) {
 					Ext.getCmp("PostForm").getForm().load({
-						url:"<?php echo $_ENV['dir']; ?>/module/poll/exec/Admin.get.php?action=poll&idx="+(idx ? idx : ""),
+						url:"<?php echo $_ENV['dir']; ?>/module/poll/exec/Admin.get.php?action=post&get=data&&idx="+(idx ? idx : ""),
 						waitTitle:"잠시만 기다려주십시오.",
 						waitMsg:"데이터를 로딩중입니다.",
 						success:function(form,action) {
@@ -382,124 +382,11 @@ var ContentArea = function(viewport) {
 		menu.add('<b class="menu-title">'+record.data.title+'</b>');
 		
 		menu.add({
-			text:"설문글 이동",
+			text:"설문글 수정",
 			handler:function() {
-				new Ext.Window({
-					id:"MoveWindow",
-					title:"설문글 이동",
-					width:400,
-					modal:true,
-					maximizable:false,
-					resizable:false,
-					layout:"fit",
-					items:[
-						new Ext.form.FormPanel({
-							id:"MoveForm",
-							bodyPadding:"10 10 5 10",
-							border:false,
-							fieldDefaults:{labelAlign:"right",labelWidth:100,anchor:"100%",allowBlank:false},
-							items:[
-								new Ext.form.ComboBox({
-									fieldLabel:"이동할 설문조사",
-									name:"pid",
-									typeAhead:true,
-									triggerAction:"all",
-									lazyRender:true,
-									store:new Ext.data.JsonStore({
-										proxy:{
-											type:"ajax",
-											simpleSortMode:true,
-											url:"<?php echo $_ENV['dir']; ?>/module/poll/exec/Admin.get.php",
-											reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-											extraParams:{"action":"list","is_all":"false"}
-										},
-										remoteSort:false,
-										sorters:[{property:"pid",direction:"ASC"}],
-										autoLoad:true,
-										pageSize:50,
-										fields:["pid","title","option"]
-									}),
-									editable:false,
-									mode:"local",
-									displayField:"title",
-									valueField:"pid",
-									emptyText:"설문조사명",
-									listeners:{
-										select:{fn:function(form,record) {
-											if (record.shift().data.option.split(",").shift() == "TRUE") {
-												Ext.getCmp("MoveForm").getForm().findField("category").getStore().getProxy().setExtraParam("pid",form.getValue());
-												Ext.getCmp("MoveForm").getForm().findField("category").getStore().loadPage(1);
-												Ext.getCmp("MoveForm").getForm().findField("category").enable();
-											} else {
-												Ext.getCmp("MoveForm").getForm().findField("category").reset();
-												Ext.getCmp("MoveForm").getForm().findField("category").disable();
-											}
-										}}
-									}
-								}),
-								new Ext.form.ComboBox({
-									fieldLabel:"이동할 카테고리",
-									name:"category",
-									typeAhead:true,
-									triggerAction:"all",
-									lazyRender:true,
-									store:new Ext.data.JsonStore({
-										proxy:{
-											type:"ajax",
-											simpleSortMode:true,
-											url:"<?php echo $_ENV['dir']; ?>/module/poll/exec/Admin.get.php",
-											reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-											extraParams:{"action":"category","is_all":"false","is_none":"true","pid":""}
-										},
-										remoteSort:false,
-										sorters:[{property:"sort",direction:"ASC"}],
-										autoLoad:true,
-										pageSize:50,
-										fields:["idx","category",{name:"sort",type:"int"}]
-									}),
-									disabled:true,
-									editable:false,
-									mode:"local",
-									displayField:"category",
-									valueField:"idx",
-									emptyText:"카테고리"
-								})
-							]
-						})
-					],
-					buttons:[
-						new Ext.Button({
-							text:"확인",
-							handler:function() {
-								Ext.getCmp("MoveForm").getForm().submit({
-									url:"<?php echo $_ENV['dir']; ?>/module/poll/exec/Admin.do.php?action=post&do=move&idx="+record.data.idx,
-									submitEmptyText:false,
-									waitTitle:"잠시만 기다려주십시오.",
-									waitMsg:"설문글을 이동중입니다.",
-									success:function(form,action) {
-										Ext.Msg.show({title:"안내",msg:"성공적으로 이동하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function(button) {
-											Ext.getCmp("ListPanel").getStore().loadPage(1);
-											Ext.getCmp("MoveWindow").close();
-										}});
-									},
-									failure:function(form,action) {
-										Ext.Msg.show({title:"에러",msg:"입력내용에 오류가 있습니다.<br />입력내용을 다시 한번 확인하여 주십시오.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
-									}
-								});
-							}
-						}),
-						new Ext.Button({
-							text:"취소",
-							handler:function() {
-								Ext.getCmp("MoveWindow").close();
-							}
-						})
-					]
-				}).show();
+				PostFormFunction(record.data.idx);
 			}
 		});
-		
-		menu.add('-');
 		
 		menu.add({
 			text:"설문글 삭제",
@@ -523,34 +410,6 @@ var ContentArea = function(viewport) {
 								Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
 							},
 							params:{"action":"post","do":"delete","idx":record.data.idx}
-						});
-					}
-				}});
-			}
-		});
-		
-		menu.add({
-			text:"설문글 삭제 및 IP차단",
-			handler:function() {
-				Ext.Msg.show({title:"확인",msg:"선택한 설문글을 정말 삭제 및 차단하시겠습니까?<br />삭제된 설문글은 휴지통으로 이동됩니다.",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
-					if (button == "yes") {
-						Ext.Msg.wait("선택한 설문글을 삭제 및 차단하고 있습니다.","잠시만 기다려주십시오.");
-						Ext.Ajax.request({
-							url:"<?php echo $_ENV['dir']; ?>/module/poll/exec/Admin.do.php",
-							success:function(response) {
-								var data = Ext.JSON.decode(response.responseText);
-								if (data.success == true) {
-									Ext.Msg.show({title:"안내",msg:"성공적으로 삭제하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
-										Ext.getCmp("ListPanel").getStore().loadPage(1);
-									}});
-								} else {
-									Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
-								}
-							},
-							failure:function() {
-								Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
-							},
-							params:{"action":"post","do":"spam","idx":record.data.idx}
 						});
 					}
 				}});
@@ -690,139 +549,6 @@ var ContentArea = function(viewport) {
 						icon:"<?php echo $_ENV['dir']; ?>/module/poll/images/admin/icon_tick.png",
 						menu:new Ext.menu.Menu({
 							items:[{
-								text:"설문글 이동",
-								handler:function() {
-									var checked = Ext.getCmp("ListPanel").getSelectionModel().getSelection();
-									if (checked.length == 0) {
-										Ext.Msg.show({title:"에러",msg:"이동할 설문글을 선택하여 주십시오.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
-										return false;
-									}
-									
-									var idxs = new Array();
-									for (var i=0, loop=checked.length;i<loop;i++) {
-										idxs[i] = checked[i].get("idx");
-									}
-									
-									new Ext.Window({
-										id:"MoveWindow",
-										title:"설문글 이동",
-										width:400,
-										modal:true,
-										maximizable:false,
-										resizable:false,
-										layout:"fit",
-										items:[
-											new Ext.form.FormPanel({
-												id:"MoveForm",
-												bodyPadding:"10 10 5 10",
-												border:false,
-												fieldDefaults:{labelAlign:"right",labelWidth:100,anchor:"100%",allowBlank:false},
-												items:[
-													new Ext.form.ComboBox({
-														fieldLabel:"이동할 설문조사",
-														name:"pid",
-														typeAhead:true,
-														triggerAction:"all",
-														lazyRender:true,
-														store:new Ext.data.JsonStore({
-															proxy:{
-																type:"ajax",
-																simpleSortMode:true,
-																url:"<?php echo $_ENV['dir']; ?>/module/poll/exec/Admin.get.php",
-																reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-																extraParams:{"action":"list","is_all":"false"}
-															},
-															remoteSort:false,
-															sorters:[{property:"pid",direction:"ASC"}],
-															autoLoad:true,
-															pageSize:50,
-															fields:["pid","title","option"]
-														}),
-														editable:false,
-														mode:"local",
-														displayField:"title",
-														valueField:"pid",
-														emptyText:"설문조사명",
-														listeners:{
-															select:{fn:function(form,record) {
-																if (record.shift().data.option.split(",").shift() == "TRUE") {
-																	Ext.getCmp("MoveForm").getForm().findField("category").getStore().getProxy().setExtraParam("pid",form.getValue());
-																	Ext.getCmp("MoveForm").getForm().findField("category").getStore().loadPage(1);
-																	Ext.getCmp("MoveForm").getForm().findField("category").enable();
-																} else {
-																	Ext.getCmp("MoveForm").getForm().findField("category").reset();
-																	Ext.getCmp("MoveForm").getForm().findField("category").disable();
-																}
-															}}
-														}
-													}),
-													new Ext.form.ComboBox({
-														fieldLabel:"이동할 카테고리",
-														name:"category",
-														typeAhead:true,
-														triggerAction:"all",
-														lazyRender:true,
-														store:new Ext.data.JsonStore({
-															proxy:{
-																type:"ajax",
-																simpleSortMode:true,
-																url:"<?php echo $_ENV['dir']; ?>/module/poll/exec/Admin.get.php",
-																reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-																extraParams:{"action":"category","is_all":"false","is_none":"true","pid":""}
-															},
-															remoteSort:false,
-															sorters:[{property:"sort",direction:"ASC"}],
-															autoLoad:true,
-															pageSize:50,
-															fields:["idx","category",{name:"sort",type:"int"}]
-														}),
-														disabled:true,
-														editable:false,
-														mode:"local",
-														displayField:"category",
-														valueField:"idx",
-														emptyText:"카테고리"
-													})
-												]
-											})
-										],
-										buttons:[
-											new Ext.Button({
-												text:"확인",
-												handler:function() {
-													var checked = Ext.getCmp("ListPanel").getSelectionModel().getSelection();
-													var idxs = new Array();
-													for (var i=0, loop=checked.length;i<loop;i++) {
-														idxs[i] = checked[i].get("idx");
-													}
-													
-													Ext.getCmp("MoveForm").getForm().submit({
-														url:"<?php echo $_ENV['dir']; ?>/module/poll/exec/Admin.do.php?action=post&do=move&idx="+idxs.join(","),
-														submitEmptyText:false,
-														waitTitle:"잠시만 기다려주십시오.",
-														waitMsg:"설문글을 이동중입니다.",
-														success:function(form,action) {
-															Ext.Msg.show({title:"안내",msg:"성공적으로 이동하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function(button) {
-																Ext.getCmp("ListPanel").getStore().loadPage(1);
-																Ext.getCmp("MoveWindow").close();
-															}});
-														},
-														failure:function(form,action) {
-															Ext.Msg.show({title:"에러",msg:"입력내용에 오류가 있습니다.<br />입력내용을 다시 한번 확인하여 주십시오.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
-														}
-													});
-												}
-											}),
-											new Ext.Button({
-												text:"취소",
-												handler:function() {
-													Ext.getCmp("MoveWindow").close();
-												}
-											})
-										]
-									}).show();
-								}
-							},'-',{
 								text:"설문글 삭제",
 								handler:function() {
 									var checked = Ext.getCmp("ListPanel").getSelectionModel().getSelection();
@@ -855,43 +581,6 @@ var ContentArea = function(viewport) {
 													Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
 												},
 												params:{"action":"post","do":"delete","idx":idxs.join(",")}
-											});
-										}
-									}});
-								}
-							},{
-								text:"설문글 삭제 및 IP차단",
-								handler:function() {
-									var checked = Ext.getCmp("ListPanel").getSelectionModel().getSelection();
-									if (checked.length == 0) {
-										Ext.Msg.show({title:"에러",msg:"삭제 및 차단할 설문글을 선택하여 주십시오.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
-										return false;
-									}
-									
-									var idxs = new Array();
-									for (var i=0, loop=checked.length;i<loop;i++) {
-										idxs[i] = checked[i].get("idx");
-									}
-									
-									Ext.Msg.show({title:"확인",msg:"선택한 설문글을 정말 삭제 및 차단하시겠습니까?<br />삭제된 설문글은 휴지통으로 이동됩니다.",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
-										if (button == "yes") {
-											Ext.Msg.wait("선택한 설문글을 삭제 및 차단하고 있습니다.","잠시만 기다려주십시오.");
-											Ext.Ajax.request({
-												url:"<?php echo $_ENV['dir']; ?>/module/poll/exec/Admin.do.php",
-												success:function(response) {
-													var data = Ext.JSON.decode(response.responseText);
-													if (data.success == true) {
-														Ext.Msg.show({title:"안내",msg:"성공적으로 삭제 및 삭제하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
-															Ext.getCmp("ListPanel").getStore().loadPage(1);
-														}});
-													} else {
-														Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
-													}
-												},
-												failure:function() {
-													Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
-												},
-												params:{"action":"post","do":"spam","idx":idxs.join(",")}
 											});
 										}
 									}});

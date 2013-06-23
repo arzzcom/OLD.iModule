@@ -1,8 +1,17 @@
 .PollRecentlyDefault {}
-.PollRecentlyDefault .box {border:5px solid #F1F2F5; padding:5px;}
+.PollRecentlyDefault .box {border:5px solid #F1F2F5; padding:8px 5px 5px 5px;}
 .PollRecentlyDefault .box .title {font-family:NanumGothicWeb; font-size:12px; font-weight:bold; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; margin-bottom:3px;}
 .PollRecentlyDefault .box .reg_date {font-family:tahoma; font-size:11px; color:#666666;}
 .PollRecentlyDefault .box .thumbnail {border:1px solid #CCCCCC; background-size:100% auto; background-repeat:no-repeat; background-position:0 50%; height:50px; margin:5px 0px 5px 0px;}
 .PollRecentlyDefault .box .item {vertical-align:top; line-height:14px; font-size:11px; font-family:NanumGothicWeb;}
 .PollRecentlyDefault .box .button {margin-top:5px; text-align:center; font:0/0 arial;}
 .PollRecentlyDefault .box .button IMG {margin-left:5px;}
+.PollRecentlyDefault .box .graph .bg {height:12px; border:1px solid #CACACA; background:#DADADA; position:relative; margin:3px 5px 3px 0px;}
+.PollRecentlyDefault .box .graph .vote {height:12px; position:absolute; top:-1px; left:-1px;}
+.PollRecentlyDefault .box .graph .color1 {border:1px solid #6D88C0; background:#88A8E5;}
+.PollRecentlyDefault .box .graph .color2 {border:1px solid #EF666B; background:#FB9497;}
+.PollRecentlyDefault .box .graph .color3 {border:1px solid #818898; background:#9DA6B7;}
+.PollRecentlyDefault .box .graph .color4 {border:1px solid #4CC225; background:#95E879;}
+.PollRecentlyDefault .box .percent {font-family:tahoma; font-weight:bold; font-size:11px; text-align:right;}
+.PollRecentlyDefault .box .voter {font-family:tahoma; color:#666666; font-size:11px; text-align:right;}
+.PollRecentlyDefault .box .numbers {margin-top:5px; border-top:1px dotted #CCCCCC; padding:5px 0px; text-align:right; font-family:NanumGothicWeb; font-size:11px; color:#666666;}

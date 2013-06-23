@@ -202,84 +202,105 @@ if ($action == 'poll_all') {
 }
 
 if ($action == 'post') {
-	$pid = Request('pid');
-	$key = Request('key');
-	$keyword = Request('keyword');
-	$category = Request('category');
-
-	$find = "where 1";
-	if ($pid) $find.= " and `pid`='$pid'";
-
-	if ($keyword != null) {
-		$mKeyword = new Keyword($keyword);
-		if ($key == 'content') {
-			$keyQuery = $mKeyword->GetFullTextKeyword(array('title','search'));
-			$find.= ' and '.$keyQuery;
-		}
-
-		if ($key == 'name') {
-			$searchMember = $mDB->DBfetchs($_ENV['table']['member'],array('idx'),"where `name` like '%$keyword%' or `nickname` like '%$keyword%'");
-			$mno = array();
-			for ($i=0, $loop=sizeof($searchMember);$i<$loop;$i++) {
-				$mno[] = $searchMember[$i]['idx'];
-			}
-			$keyQuery = $mKeyword->GetFullTextKeyword(array('name'));
-			if (sizeof($mno) > 0) {
-				$find.= ' and ('.$keyQuery.' or `mno` IN ('.implode(',',$mno).'))';
-			} else {
+	if ($get == 'list') {
+		$pid = Request('pid');
+		$key = Request('key');
+		$keyword = Request('keyword');
+		$category = Request('category');
+	
+		$find = "where 1";
+		if ($pid) $find.= " and `pid`='$pid'";
+	
+		if ($keyword != null) {
+			$mKeyword = new Keyword($keyword);
+			if ($key == 'content') {
+				$keyQuery = $mKeyword->GetFullTextKeyword(array('title','search'));
 				$find.= ' and '.$keyQuery;
 			}
-		}
-
-		if ($key == 'ment') {
-			$keyQuery = $mKeyword->GetFullTextKeyword(array('search'));
-			$searchMent = $mDB->DBfetchs($mPoll->table['ment'],array('repto'),"where ".$keyQuery);
-			$ment = array();
-			for ($i=0, $loop=sizeof($searchMent);$i<$loop;$i++) {
-				if (in_array($searchMent[$i]['repto'],$ment) == false)$ment[] = $searchMent[$i]['repto'];
+	
+			if ($key == 'name') {
+				$searchMember = $mDB->DBfetchs($_ENV['table']['member'],array('idx'),"where `name` like '%$keyword%' or `nickname` like '%$keyword%'");
+				$mno = array();
+				for ($i=0, $loop=sizeof($searchMember);$i<$loop;$i++) {
+					$mno[] = $searchMember[$i]['idx'];
+				}
+				$keyQuery = $mKeyword->GetFullTextKeyword(array('name'));
+				if (sizeof($mno) > 0) {
+					$find.= ' and ('.$keyQuery.' or `mno` IN ('.implode(',',$mno).'))';
+				} else {
+					$find.= ' and '.$keyQuery;
+				}
 			}
-
-			if (sizeof($ment) > 0) $find.= " and `idx` IN (".implode(',',$ment).")";
+	
+			if ($key == 'ment') {
+				$keyQuery = $mKeyword->GetFullTextKeyword(array('search'));
+				$searchMent = $mDB->DBfetchs($mPoll->table['ment'],array('repto'),"where ".$keyQuery);
+				$ment = array();
+				for ($i=0, $loop=sizeof($searchMent);$i<$loop;$i++) {
+					if (in_array($searchMent[$i]['repto'],$ment) == false)$ment[] = $searchMent[$i]['repto'];
+				}
+	
+				if (sizeof($ment) > 0) $find.= " and `idx` IN (".implode(',',$ment).")";
+			}
+	
+			if ($key == 'ip') {
+				$find.= " and `ip` like '%$keyword%'";
+			}
 		}
-
-		if ($key == 'ip') {
-			$find.= " and `ip` like '%$keyword%'";
+	
+		if ($category != null) {
+			$find.= " and `category`=$category";
+		}
+	
+		if ($sort == 'idx' && $dir == 'desc') {
+			$sort = 'loop';
+			$dir = 'asc';
+		}
+		$orderer = $sort != null && $dir != null ? $sort.','.$dir : '';
+		$total = $mDB->DBcount($mPoll->table['post'],$find);
+		$lists = $mDB->DBfetchs($mPoll->table['post'],'*',$find,$orderer,$limiter);
+	
+		$pollInfo = array();
+		for ($i=0, $loop=sizeof($lists);$i<$loop;$i++) {
+			if (isset($pollInfo[$lists[$i]['pid']]) == false) {
+				$pollInfo[$lists[$i]['pid']] = $mDB->DBfetch($mPoll->table['setup'],array('title','width'),"where `pid`='{$lists[$i]['pid']}'");
+			}
+			$lists[$i]['polltitle'] = $pollInfo[$lists[$i]['pid']]['title'];
+			$lists[$i]['width'] = $pollInfo[$lists[$i]['pid']]['width'];
+			
+			if ($lists[$i]['mno'] != 0) {
+				$mData = $mMember->GetMemberInfo($lists[$i]['mno']);
+				$lists[$i]['name'] = $mData['name'];
+				$lists[$i]['nickname'] = $mData['nickname'];
+			} else {
+				$lists[$i]['nickname'] = '';
+			}
+			
+			$lists[$i]['file'] = file_exists($_ENV['userfilePath'].$mPoll->userfile.'/'.$lists[$i]['idx'].'.file') == true ? 'TRUE' : 'FALSE';
+	
+			$lists[$i]['newment'] = $lists[$i]['last_ment'] > GetGMT()-60*60*24 ? 'TRUE' : 'FALSE';
+			$lists[$i]['reg_date'] = GetTime('Y.m.d H:i:s',$lists[$i]['reg_date']);
+			$lists[$i]['end_date'] = GetTime('Y.m.d H:i:s',$lists[$i]['end_date']);
 		}
 	}
-
-	if ($category != null) {
-		$find.= " and `category`=$category";
-	}
-
-	if ($sort == 'idx' && $dir == 'desc') {
-		$sort = 'loop';
-		$dir = 'asc';
-	}
-	$orderer = $sort != null && $dir != null ? $sort.','.$dir : '';
-	$total = $mDB->DBcount($mPoll->table['post'],$find);
-	$lists = $mDB->DBfetchs($mPoll->table['post'],'*',$find,$orderer,$limiter);
-
-	$pollInfo = array();
-	for ($i=0, $loop=sizeof($lists);$i<$loop;$i++) {
-		if (isset($pollInfo[$lists[$i]['pid']]) == false) {
-			$pollInfo[$lists[$i]['pid']] = $mDB->DBfetch($mPoll->table['setup'],array('title','width'),"where `pid`='{$lists[$i]['pid']}'");
-		}
-		$lists[$i]['polltitle'] = $pollInfo[$lists[$i]['pid']]['title'];
-		$lists[$i]['width'] = $pollInfo[$lists[$i]['pid']]['width'];
+	
+	if ($get == 'data') {
+		$idx = Request('idx');
 		
-		if ($lists[$i]['mno'] != 0) {
-			$mData = $mMember->GetMemberInfo($lists[$i]['mno']);
-			$lists[$i]['name'] = $mData['name'];
-			$lists[$i]['nickname'] = $mData['nickname'];
-		} else {
-			$lists[$i]['nickname'] = '';
-		}
+		$data = $mDB->DBfetch($mPoll->table['post'],'*',"where `idx`='$idx'");
+		$data['end_date'] = $data['end_date'] == '0' ? '' : GetTime('Y-m-d',$data['end_date']);
+		$data['unlimit'] = $data['end_date'] == '0' ? 'on' : 'off';
+		$data['is_multi'] = $data['vote_type'] == 'MULTI' ? 'on' : 'off';
+		$data['image'] = file_exists($_ENV['userfilePath'].$mPoll->userfile.'/'.$data['idx'].'.file') == true ? 'TRUE' : 'FALSE';
 		
-		$lists[$i]['file'] = file_exists($_ENV['userfilePath'].$mPoll->userfile.'/'.$lists[$i]['idx'].'.file') == true ? 'TRUE' : 'FALSE';
-
-		$lists[$i]['newment'] = $lists[$i]['last_ment'] > GetGMT()-60*60*24 ? 'TRUE' : 'FALSE';
-		$lists[$i]['reg_date'] = GetTime('Y.m.d H:i:s',$lists[$i]['reg_date']);
-		$lists[$i]['end_date'] = GetTime('Y.m.d H:i:s',$lists[$i]['end_date']);
+		$return['success'] = true;
+		$return['data'] = $data;
+		exit(json_encode($return));
+	}
+	
+	if ($get == 'item') {
+		$idx = Request('idx');
+		$lists = $mDB->DBfetchs($mPoll->table['item'],'*',"where `repto`='$idx'");
 	}
 }
 
