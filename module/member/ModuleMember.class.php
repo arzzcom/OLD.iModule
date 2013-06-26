@@ -492,6 +492,8 @@ class ModuleMember extends member {
 							} else {
 								Alertbox($form[$i]['title'].'이 잘못입력되었습니다.');
 							}
+						} else {
+							$insert['extra_data'][$field] = $input;
 						}
 					break;
 					
