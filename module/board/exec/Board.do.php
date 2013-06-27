@@ -364,7 +364,7 @@ if ($action == 'delete') {
 		$query = $mBoard->GetQueryString(array('mode'=>'view','idx'=>$data['repto']),$path[1],false);
 		$returnURL = $url.$query;
 
-		if ($data['mno'] != 0) $mMember->SendPoint($data['mno'],$mBoard->setup['post_point']*-1,'댓글 삭제 ('.GetCutString($data['search'],20).')','/module/board/board.php?bid='.$post['bid'].'&mode=view&idx='.$data['repto'],'board',true);
+		if ($data['mno'] != 0) $mMember->SendPoint($data['mno'],$mBoard->setup['ment_point']*-1,'댓글 삭제 ('.GetCutString($data['search'],20).')','/module/board/board.php?bid='.$post['bid'].'&mode=view&idx='.$data['repto'],'board',true);
 		Alertbox('성공적으로 삭제하였습니다.',3,$returnURL,'parent');
 	}
 }
