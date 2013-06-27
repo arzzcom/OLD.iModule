@@ -6,7 +6,7 @@
 		<tr>
 			<td class="vTop"><img src="{$skinDir}/images/icon.gif" /></td>
 			<td>
-				<div class="title">{$data.title}</div>
+				<div class="title"><a href="{$data.titlelink}">{$data.title}</a></div>
 			</td>
 			{if $data.thumbnail}
 			<td rowspan="2" class="thumbnail">
@@ -18,7 +18,7 @@
 			<td></td>
 			<td>
 				<div class="reg_date">설문기간 : {$data.reg_date|date_format:"%Y년 %m월 %d일"} ~ {$data.end_date|date_format:"%Y년 %m월 %d일"}</div>
-				<div class="numbers">총 참여인원 : {$data.voter|number_format}명 / 댓글 : {$data.ment|number_format}개</div>
+				<div class="numbers">총 참여인원 : {$data.voter|number_format}명 / 댓글 : {$data.ment|number_format}개 / 등록 : {$data.name}</div>
 			</td>
 		</tr>
 		</table>

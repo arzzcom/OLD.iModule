@@ -134,7 +134,6 @@ if ($action == 'post') {
 		$insert['pid'] = Request('pid');
 		$insert['title'] = Request('title');
 		$insert['content'] = Request('content');
-		$insert['reg_date'] = GetGMT();
 		$insert['end_date'] = GetGMT(Request('end_date').' 23:59:59');
 		$insert['vote_type'] = Request('is_multi') == 'on' ? 'MULTI' : 'SINGLE';
 		
@@ -143,7 +142,7 @@ if ($action == 'post') {
 		$item = json_decode(Request('item'),true);
 		if (sizeof($item) < 2) $errors['item'] = '설문조사 항목은 2개 이상이어야 합니다.';
 		
-		if (isset($_FILES['image']['tmp_name']) == true) {
+		if (isset($_FILES['image']['tmp_name']) == true && $_FILES['image']['tmp_name']) {
 			$check = getimagesize($_FILES['image']['tmp_name']);
 			if (in_array($check[2],array('1','2','3')) == false) {
 				$errors['image'] = '이미지파일은 GIF,JPG,PNG파일만 가능합니다.';
@@ -152,11 +151,13 @@ if ($action == 'post') {
 			
 		if (sizeof($errors) == 0) {
 			if ($do == 'add') {
+				$insert['reg_date'] = GetGMT();
 				$insert['mno'] = $member['idx'];
 				$insert['ip'] = $_SERVER['REMOTE_ADDR'];
 				$idx = $mDB->DBinsert($mPoll->table['post'],$insert);
 			} else {
-				
+				$idx = Request('idx');
+				$mDB->DBupdate($mPoll->table['post'],$insert,'',"where `idx`='$idx'");
 			}
 			
 			$itemIDX = array();
@@ -176,11 +177,11 @@ if ($action == 'post') {
 				}
 			}
 			
-			if (Request('image_delete') == 'on' || isset($_FILES['image']['tmp_name']) == true) {
+			if (Request('image_delete') == 'on' || isset($_FILES['image']['tmp_name']) == true && $_FILES['image']['tmp_name']) {
 				@unlink($mPoll->userfile.'/'.$idx.'.file');
 			}
 			
-			if (isset($_FILES['image']['tmp_name']) == true) {
+			if (isset($_FILES['image']['tmp_name']) == true && $_FILES['image']['tmp_name']) {
 				@move_uploaded_file($_FILES['image']['tmp_name'],$_ENV['userfilePath'].$mPoll->userfile.'/'.$idx.'.file');
 				GetThumbnail($_ENV['userfilePath'].$mPoll->userfile.'/'.$idx.'.file',$_ENV['userfilePath'].$mPoll->thumbnail.'/'.$idx.'.thm',200,0);
 			}

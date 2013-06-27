@@ -363,8 +363,6 @@ var ContentArea = function(viewport) {
 						waitTitle:"잠시만 기다려주십시오.",
 						waitMsg:"데이터를 로딩중입니다.",
 						success:function(form,action) {
-							form.findField("permission_vote").fireEvent("blur",form.findField("permission_vote"));
-							form.findField("permission_ment").fireEvent("blur",form.findField("permission_ment"));
 						},
 						failure:function(form,action) {
 							Ext.Msg.show({title:"에러",msg:"서버에 이상이 있어 데이터를 불러오지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});

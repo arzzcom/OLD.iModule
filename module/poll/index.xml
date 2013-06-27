@@ -64,6 +64,7 @@
 			<field name="idx" type="int" length="11">고유값</field>
 			<field name="repto" type="int" length="11">설문번호</field>
 			<field name="name" type="varchar" length="20">작성자</field>
+			<field name="password" type="char" length="32">패스워드</field>
 			<field name="content" type="text">댓글내용</field>
 			<field name="mno" type="int" length="11">회원번호</field>
 			<field name="ip" type="varchar" length="15">아이피</field>

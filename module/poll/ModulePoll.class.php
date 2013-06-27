@@ -92,11 +92,59 @@ class ModulePoll extends Module {
 		return false;
 	}
 	
+	function PrintInputPassword($msg='',$action='',$target='_self') {
+		$this->PrintHeader();
+
+		if (file_exists($this->skinPath.'/password.tpl') == true) {
+			$this->mTemplet = new Templet($this->skinPath.'/password.tpl');
+		} else {
+			$this->mTemplet = new Templet($this->modulePath.'/templet/password.tpl');
+		}
+		$formStart = '<form name="InputPassword" method="post" action="'.$action.'" target="'.$target.'">';
+		$formEnd = '</form><iframe name="execFrame" style="display:none;"></iframe>';
+		$this->mTemplet->assign('msg',$msg);
+		$this->mTemplet->assign('formStart',$formStart);
+		$this->mTemplet->assign('formEnd',$formEnd);
+
+		$this->PrintTemplet();
+
+		$this->PrintFooter();
+		return false;
+	}
+
+	function PrintConfirm($msg='',$action='',$back='',$target='') {
+		$this->PrintHeader();
+
+		if (file_exists($this->skinPath.'/confirm.tpl') == true) {
+			$this->mTemplet = new Templet($this->skinPath.'/confirm.tpl');
+		} else {
+			$this->mTemplet = new Templet($this->modulePath.'/templet/confirm.tpl');
+		}
+		$formStart = '<form name="Confirm" method="post" action="'.$action.'" target="'.$target.'">';
+		$formEnd = '</form><iframe name="execFrame" style="display:none;"></iframe>';
+		$this->link['cancel'] = $back;
+		$this->mTemplet->assign('msg',$msg);
+		$this->mTemplet->assign('formStart',$formStart);
+		$this->mTemplet->assign('formEnd',$formEnd);
+
+		$this->PrintTemplet();
+
+		$this->PrintFooter();
+		return false;
+	}
+	
 	function PrintTemplet() {
 		$this->mTemplet->assign('moduleDir',$this->moduleDir);
 		$this->mTemplet->assign('setup',$this->setup);
 		$this->mTemplet->assign('skinDir',$this->skinDir);
 		$this->mTemplet->PrintTemplet();
+	}
+	
+	function GetTemplet() {
+		$this->mTemplet->assign('moduleDir',$this->moduleDir);
+		$this->mTemplet->assign('setup',$this->setup);
+		$this->mTemplet->assign('skinDir',$this->skinDir);
+		return $this->mTemplet->GetTemplet();
 	}
 	
 	function PrintPoll($find='') {
@@ -113,20 +161,8 @@ class ModulePoll extends Module {
 				$this->PrintList();
 			break;
 
-			case 'write' :
-				$this->PrintWrite();
-			break;
-
-			case 'modify' :
-				$this->PrintWrite();
-			break;
-
 			case 'view' :
 				$this->PrintView();
-			break;
-
-			case 'delete' :
-				$this->PrintDelete();
 			break;
 
 			case 'ment_delete' :
@@ -135,6 +171,23 @@ class ModulePoll extends Module {
 		}
 
 		$this->PrintFooter();
+	}
+	
+	function PrintMentDelete() {
+		$idx = $this->idx;
+		$data = $this->mDB->DBfetch($this->table['ment'],'*',"where `idx`='$idx'");
+
+		if ($this->GetPermission('delete') == false) {
+			if ($data['mno'] == '0') {
+				$this->PrintInputPassword('댓글을 삭제하기 위하여 패스워드를 입력하여 주십시오.',$this->moduleDir.'/exec/Poll.do.php?action=delete&mode=ment&idx='.$idx,'execFrame');
+			} elseif ($data['mno'] == $this->member['idx']) {
+				$this->PrintConfirm('댓글을 삭제하시겠습니까?',$this->moduleDir.'/exec/Poll.do.php?action=delete&mode=ment&idx='.$idx,$this->baseURL.$this->GetQueryString(array('mode'=>'view','idx'=>$data['repto'])),'execFrame');
+			} else {
+				return $this->PrintError('댓글을 삭제할 권한이 없습니다.');
+			}
+		} else {
+			$this->PrintConfirm('댓글을 삭제하시겠습니까?',$this->moduleDir.'/exec/Poll.do.php?action=delete&mode=ment&idx='.$idx,$this->baseURL.$this->GetQueryString(array('mode'=>'view','idx'=>$data['repto'])),'execFrame');
+		}
 	}
 	
 	function PrintList() {
@@ -172,11 +225,12 @@ class ModulePoll extends Module {
 
 		$loopnum = $totalpost-($p-1)*$listnum;
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
-			$data[$i]['reg_date'] = GetTime('Y.m.d',$data[$i]['reg_date']);
-			$data[$i]['end_date'] = GetTime('Y.m.d',$data[$i]['end_date']);
+			$data[$i]['reg_date'] = GetTime('Y-m-d',$data[$i]['reg_date']);
+			$data[$i]['end_date'] = GetTime('Y-m-d',$data[$i]['end_date']);
 			$data[$i]['thumbnail'] = file_exists($_ENV['userfilePath'].$this->thumbnail.'/'.$data[$i]['idx'].'.thm') == true ? $_ENV['userfileDir'].$this->thumbnail.'/'.$data[$i]['idx'].'.thm' : '';
-			$data[$i]['image'] = file_exists($_ENV['userfilePath'].$this->userfile.'/'.$data[$i]['idx'].'.file') == true ? $this->moduleDir.'/exec/ShowImage.do.php?idx="'.$data[$i]['idx'] : '';
+			$data[$i]['image'] = file_exists($_ENV['userfilePath'].$this->userfile.'/'.$data[$i]['idx'].'.file') == true ? $this->moduleDir.'/exec/ShowImage.do.php?idx='.$data[$i]['idx'] : '';
 			
+			$data[$i]['titlelink'] = $link['view'].'&idx='.$data[$i]['idx'];
 			if ($data[$i]['mno'] != '0') {
 				$mData = $this->GetMemberInfo($data[$i]['mno']);
 				$data[$i]['name'] = $mData['name'];
@@ -216,6 +270,64 @@ class ModulePoll extends Module {
 		$this->PrintTemplet();
 	}
 	
+	function PrintView() {
+		$find = $this->find." and `idx`='{$this->idx}'";
+		$data = $this->mDB->DBfetch($this->table['post'],'*',$find);
+
+		if (isset($data['idx']) == false) {
+			return $this->PrintError('설문글을 찾을 수 없습니다.');
+		}
+
+		$data['reg_date'] = GetTime('Y-m-d',$data['reg_date']);
+		$data['end_date'] = GetTime('Y-m-d',$data['end_date']);
+		$data['thumbnail'] = file_exists($_ENV['userfilePath'].$this->thumbnail.'/'.$data['idx'].'.thm') == true ? $_ENV['userfileDir'].$this->thumbnail.'/'.$data['idx'].'.thm' : '';
+		$data['image'] = file_exists($_ENV['userfilePath'].$this->userfile.'/'.$data['idx'].'.file') == true ? $this->moduleDir.'/exec/ShowImage.do.php?idx='.$data['idx'] : '';
+		$data['content'] = nl2br(GetString($data['content'],'replace'));
+		
+		if ($data['mno'] != '0') {
+			$mData = $this->GetMemberInfo($data['mno']);
+			$data['name'] = $mData['name'];
+			$data['nickname'] = $mData['nickname'];
+			$data['photo'] = $mData['photo'];
+		} else {
+			$data['photo'] = $_ENV['dir'].'/images/common/nomempic60.gif';
+			$data['nickname'] = $data['name'];
+		}
+		
+		$viewmode = (Request('result') == 'true' || $data['end_date'] < GetGMT() || $this->GetVoted($data['idx']) == true) && $this->GetPermission('result') == true ? 'RESULT' : 'POLL';
+		$viewmode = Request('result') == 'false' ? 'POLL' : 'RESULT';
+		
+		$item = $this->mDB->DBfetchs($this->table['item'],'*',"where `repto`='{$data['idx']}'",'sort,asc');
+		for ($i=0, $loop=sizeof($item);$i<$loop;$i++) {
+			$item[$i]['percent'] = $data['voter'] > 0 ? sprintf('%0.2f',$item[$i]['voter']/$data['voter']*100) : '0.00';
+		}
+		
+		$data['item'] = $item;
+		
+		$ment = $this->GetMent($this->idx);
+		
+		$link = array();
+		$link['list'] = $this->baseURL.$this->GetQueryString(array('mode'=>'list','result'=>'','idx'=>''));
+		$link['result'] = $this->baseURL.$this->GetQueryString(array('result'=>'true'));
+		$link['poll'] = $this->baseURL.$this->GetQueryString(array('result'=>'false'));
+		
+		$formStart = '<form name="pollForm" method="post" action="'.$this->moduleDir.'/exec/Poll.do.php" target="pollFrame" />'."\n";
+		$formStart.= '<input type="hidden" name="action" value="vote" />'."\n";
+		$formStart.= '<input type="hidden" name="pid" value="'.$data['pid'].'" />'."\n";
+		$formStart.= '<input type="hidden" name="repto" value="'.$data['idx'].'" />'."\n";
+		$formStart.= '<input type="hidden" name="redirect" value="'.$link['result'].'" />'."\n";
+		$formEnd = '</form>'."\n".'<iframe name="pollFrame" style="display:none;"></iframe>'."\n";
+		
+		$this->mTemplet = new Templet($this->skinPath.'/view.tpl');
+		$this->mTemplet->assign('data',$data);
+		$this->mTemplet->assign('link',$link);
+		$this->mTemplet->assign('viewmode',$viewmode);
+		$this->mTemplet->assign('ment',$ment);
+		$this->mTemplet->assign('formStart',$formStart);
+		$this->mTemplet->assign('formEnd',$formEnd);
+		$this->PrintTemplet();
+	}
+	
 	function PrintRecently($skin,$page,$limit,$finder='') {
 		$this->PrintHeader();
 		
@@ -244,11 +356,11 @@ class ModulePoll extends Module {
 			for ($j=0, $loopj=sizeof($item);$j<$loopj;$j++) {
 				$item[$j]['percent'] = $data[$i]['voter'] > 0 ? sprintf('%0.2f',$item[$j]['voter']/$data[$i]['voter']*100) : '0.00';
 			}
-			$data[$i]['viewmode'] = $data[$i]['end_date'] < GetGMT() || $this->GetVoted($data[$i]['idx']) == true ? 'RESULT' : 'POLL';
+			$data[$i]['viewmode'] = ($data[$i]['end_date'] < GetGMT() || $this->GetVoted($data[$i]['idx']) == true) && $this->GetPermission('result') == true ? 'RESULT' : 'POLL';
 			$data[$i]['reg_date'] = GetTime('Y.m.d',$data[$i]['reg_date']);
 			$data[$i]['end_date'] = GetTime('Y.m.d',$data[$i]['end_date']);
 			$data[$i]['thumbnail'] = file_exists($_ENV['userfilePath'].$this->thumbnail.'/'.$data[$i]['idx'].'.thm') == true ? $_ENV['userfileDir'].$this->thumbnail.'/'.$data[$i]['idx'].'.thm' : '';
-			$data[$i]['image'] = file_exists($_ENV['userfilePath'].$this->userfile.'/'.$data[$i]['idx'].'.file') == true ? $this->moduleDir.'/exec/ShowImage.do.php?idx="'.$data[$i]['idx'] : '';
+			$data[$i]['image'] = file_exists($_ENV['userfilePath'].$this->userfile.'/'.$data[$i]['idx'].'.file') == true ? $this->moduleDir.'/exec/ShowImage.do.php?idx='.$data[$i]['idx'] : '';
 			$data[$i]['item'] = $item;
 			
 			$data[$i]['view'] = $link['view'].'&idx='.$data[$i]['idx'];
@@ -256,6 +368,7 @@ class ModulePoll extends Module {
 			
 			$data[$i]['formStart'] = '<form name="poll'.$data[$i]['idx'].'" method="post" action="'.$this->moduleDir.'/exec/Poll.do.php" target="execFrame'.$data[$i]['idx'].'" />'."\n";
 			$data[$i]['formStart'].= '<input type="hidden" name="action" value="vote" />'."\n";
+			$data[$i]['formStart'].= '<input type="hidden" name="pid" value="'.$data[$i]['pid'].'" />'."\n";
 			$data[$i]['formStart'].= '<input type="hidden" name="repto" value="'.$data[$i]['idx'].'" />'."\n";
 			$data[$i]['formStart'].= '<input type="hidden" name="redirect" value="'.$data[$i]['result'].'" />'."\n";
 			$data[$i]['formEnd'] = '</form>'."\n".'<iframe name="execFrame'.$data[$i]['idx'].'" style="display:none;"></iframe>'."\n";
@@ -286,6 +399,56 @@ class ModulePoll extends Module {
 			if ($this->mDB->DBcount($this->table['voter'],"where `repto`='$repto' and (`mno`='{$this->member['idx']}' or `ip`='{$_SERVER['REMOTE_ADDR']}')") > 0) return true;
 			return false;
 		}
+	}
+	
+	function GetMent($idx) {
+		$data = $this->mDB->DBfetchs($this->table['ment'],'*',"where `repto`=$idx",'idx,desc');
+
+		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
+			$data[$i]['reg_date'] = GetTime('Y-m-d H:i:s',$data[$i]['reg_date']);
+			$data[$i]['content'] = nl2br(GetString($data[$i]['content'],'replace'));
+
+			if ($data[$i]['mno'] == '0') {
+				$data[$i]['photo'] = $_ENV['dir'].'/images/common/nomempic60.gif';
+				$data[$i]['nickname'] = $data[$i]['name'];
+			} else {
+				$mData = $this->GetMemberInfo($data[$i]['mno']);
+				$data[$i]['name'] = $mData['name'];
+				$data[$i]['nickname'] = $mData['nickname'];
+				$data[$i]['photo'] = $mData['photo'];
+			}
+
+			$data[$i]['link'] = array();
+			$data[$i]['link']['delete'] = $this->baseURL.$this->GetQueryString(array('mode'=>'ment_delete','idx'=>$data[$i]['idx']));
+		}
+
+		if ($this->GetPermission('ment') == true) {
+			if ($this->mMember->IsLogged() == false) {
+				$mAntiSpam = new AntiSpam();
+				$antispam = $mAntiSpam->GetAntiSpamCode();
+			} else {
+				$antispam = '';
+			}
+			
+			$formStart = '<form name="ModulePollMent" method="post" action="'.$this->moduleDir.'/exec/Poll.do.php" target="execFrame" onsubmit="return CheckMent(this)">'."\n";
+			$formStart.= '<input type="hidden" name="action" value="ment" />'."\n";
+			$formStart.= '<input type="hidden" name="pid" value="'.$this->pid.'" />'."\n";
+			$formStart.= '<input type="hidden" name="repto" value="'.$this->idx.'" />'."\n";
+			$formEnd = '</form>'."\n".'<iframe name="execFrame" style="display:none;"></iframe>'."\n";
+
+			$this->mTemplet = new Templet($this->skinPath.'/ment_write.tpl');
+			$this->mTemplet->assign('formStart',$formStart);
+			$this->mTemplet->assign('member',$this->member);
+			$this->mTemplet->assign('formEnd',$formEnd);
+			$this->mTemplet->assign('data',$data);
+			$ment_write = $this->GetTemplet();
+		}
+
+		$this->mTemplet = new Templet($this->skinPath.'/ment.tpl');
+		$this->mTemplet->assign('data',$data);
+		$this->mTemplet->assign('ment_write',$ment_write);
+
+		return $this->GetTemplet();
 	}
 	
 	function GetQueryString($var=array(),$queryString='',$encode=true) {
