@@ -131,6 +131,7 @@ class Member {
 			}
 
 			$data['idx'] = 0;
+			$data['group'] = '';
 			$data['user_id'] = '';
 			$data['name'] = '';
 			$data['nickname'] = '';
