@@ -117,7 +117,7 @@ class Member {
 			$data['last_login'] = $data['last_login'] == 0 ? $data['reg_date'] : $data['last_login'];
 
 			$address = explode('||',$data['address'] ? $data['address'] : '||');
-			$data['address'] = array('address'=>$address[0].' '.$address[1],'address1'=>$address[0],'address2'=>$address[1]);
+			$data['address'] = sizeof($address) == 2 ? array('address'=>$address[0].' '.$address[1],'address1'=>$address[0],'address2'=>$address[1]) : array('address'=>'','address1'=>'','address2'=>'');
 			
 			$birthday = explode('-',$data['birthday']);
 			$data['birthday'] = array('year'=>$birthday[0],'month'=>(int)($birthday[1]),'day'=>(int)($birthday[2]));
