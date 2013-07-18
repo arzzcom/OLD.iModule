@@ -25,7 +25,7 @@ class ModuleDatabase extends Module {
 			$data = $this->mDB->DBfetch($this->table['table'],'*',"where `idx`=$idx");
 		}
 
-		$field = GetUnSerialize($data['field']);
+		$field = unserialize($data['field']);
 		$data['field'] = array();
 		for ($i=0, $loop=sizeof($field);$i<$loop;$i++) {
 			$data['field'][$field[$i]['name']] = $field[$i];

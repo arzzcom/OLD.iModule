@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="<?php echo $_ENV['dir']; ?>/css/default.css" type="text/css" title="style" />
 <script type="text/javascript" src="<?php echo $_ENV['dir']; ?>/script/php2js.php"></script>
 <script type="text/javascript" src="<?php echo $_ENV['dir']; ?>/script/default.js"></script>
+<script type="text/javascript" src="<?php echo $_ENV['dir']; ?>/script/jquery.1.9.0.min.js"></script>
 <?php
 if (isset($resource) == true && is_array($resource) == true) {
 	for ($i=0, $loop=sizeof($resource);$i<$loop;$i++) {
