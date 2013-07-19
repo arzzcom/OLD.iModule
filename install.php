@@ -92,7 +92,7 @@ if ($step == 4) {
 			<tr>
 				<td></td>
 				<td colspan="2" class="checkerror">
-					<?php echo str_replace('install.php','/config/db.conf.php',__FILE__); ?>파일과 <?php echo str_replace('install.php','/config/key.conf.php',__FILE__); ?>파일을 서버에서 삭제한 뒤 계속 진행하여 주십시오.
+					<?php echo str_replace('install.php','config/db.conf.php',__FILE__); ?>파일과 <?php echo str_replace('install.php','config/key.conf.php',__FILE__); ?>파일을 서버에서 삭제한 뒤 계속 진행하여 주십시오.
 				</td>
 			</tr>
 			<?php } ?>

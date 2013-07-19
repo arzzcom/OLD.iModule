@@ -12,7 +12,7 @@ if ($action == 'install') {
 	}
 	
 	if (Request('key','session') == null || Request('db','session') == null) {
-		Alertbox('설치정보가 잘못되었습니다.\\n아이모듈 설치를 처음부터 다시 시작합니다.',3,'install.php?step=1','parent');
+		Alertbox('설치정보가 잘못되었습니다.\\n아이모듈 설치를 처음부터 다시 시작합니다.',3,'../install.php?step=1','parent');
 	}
 	
 	$user_id = CheckUserID(Request('user_id')) == true ? strtolower(Request('user_id')) : InstallError('회원아이디를 정확하게 입력하여 주십시오.');

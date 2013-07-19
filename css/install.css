@@ -24,5 +24,4 @@ BODY {background:#2F2F2F;}
 
 .errorTitle {height:80px; background:#000000;}
 .errorTitle DIV {width:440px; height:80px; margin:0 auto; background:url(./images/error_title.gif);}
-.errorBox {width:420px; padding:10px; margin:10px auto; border:5px solid #4F4F4F; background:#000000; color:#CCCCCC; font-size:14px; font-weight:bold; font-family:돋움; line-height:160%;}
-
+.errorBox {width:420px; padding:10px; margin:10px auto; border:5px solid #4F4F4F; background:#000000; color:#CCCCCC; font-size:14px; font-weight:bold; font-family:NanumGothicWeb; line-height:160%;}
