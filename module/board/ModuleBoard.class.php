@@ -1194,7 +1194,7 @@ class ModuleBoard extends Module {
 			$cData = $this->mDB->DBfetchs($this->table['category'],array('idx','category','permission'),"where `bid`='{$this->bid}'",'sort,asc');
 			$categoryList = array();
 			for ($i=0, $loop=sizeof($cData);$i<$loop;$i++) {
-				if ($cData['permission'] == '' || eval($cData['permission'])) {
+				if ($cData[$i]['permission'] == '' || eval($cData[$i]['permission'])) {
 					if ($post['category'] == $cData[$i]['idx']) $categoryName = $cData[$i]['category'];
 					$categoryList[] = array('idx'=>$cData[$i]['idx'],'category'=>$cData[$i]['category']);
 				}
