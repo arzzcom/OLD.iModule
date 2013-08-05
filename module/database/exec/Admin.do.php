@@ -302,12 +302,14 @@ if ($action == 'user') {
 						}
 					} elseif ($field[$i]['type'] == 'FILE') {
 						if (Request($field[$i]['name'].'-delete') == 'on' || (isset($_FILES[$field[$i]['name']]['tmp_name']) == true && $_FILES[$field[$i]['name']]['tmp_name'])) {
-							$file = $mDB->DBfetch($mDatabase->table['file'],array('idx','filepath','filetype'),"where `idx`='{$oData[$field[$i]['name']]}'");
-							@unlink($_ENV['userfilePath'].$mDatabase->userfile.$file['filepath']);
-							if ($file['filetype'] == 'IMG') {
-								@unlink($_ENV['userfilePath'].$mDatabase->thumbnail.'/'.$file['idx'].'.thm');
+							if (isset($oData) == true) {
+								$file = $mDB->DBfetch($mDatabase->table['file'],array('idx','filepath','filetype'),"where `idx`='{$oData[$field[$i]['name']]}'");
+								@unlink($_ENV['userfilePath'].$mDatabase->userfile.$file['filepath']);
+								if ($file['filetype'] == 'IMG') {
+									@unlink($_ENV['userfilePath'].$mDatabase->thumbnail.'/'.$file['idx'].'.thm');
+								}
+								$mDB->DBupdate($table['name'],array($field[$i]['name']=>'0'),'',"where `idx`='$idx'",$table['database']);
 							}
-							$mDB->DBupdate($table['name'],array($field[$i]['name']=>'0'),'',"where `idx`='$idx'",$table['database']);
 						}
 						
 						if (isset($_FILES[$field[$i]['name']]['tmp_name']) == true && $_FILES[$field[$i]['name']]['tmp_name']) {

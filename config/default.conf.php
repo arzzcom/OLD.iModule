@@ -75,7 +75,7 @@ if (isset($_SERVER['HTTP_USER_AGENT'])==true) {
 }
 
 session_set_cookie_params(0,'/','.'.$_ENV['domain']);
-session_cache_expire(3600);
+session_cache_expire(86400);
 session_start();
 
 REQUIRE_ONCE $_ENV['path'].'/class/default.func.php';

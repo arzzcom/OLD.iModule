@@ -123,7 +123,7 @@ class DB {
 			if ($fieldType[$field[$i]['type']] == 'enum') $field[$i]['length'] = '\''.implode('\',\'',explode(',',str_replace('\'','',$field[$i]['length']))).'\'';
 			
 			if (in_array($fieldType[$field[$i]['type']],array('tinyint','int','bigint')) == true) {
-				$field[$i]['default'] = isset($field[$i]['default']) == true && is_numeric($field[$i]['default']) == true ? $field[$i]['default'] : '0';
+				$field[$i]['default'] = isset($field[$i]['default']) == true && $field[$i]['default'] == '0' ? '' : $field[$i]['default'];
 			} elseif ($fieldType[$field[$i]['type']] == 'date') {
 				$field[$i]['default'] = isset($field[$i]['default']) == true && $field[$i]['default'] ? $field[$i]['default'] : '0000-00-00';
 			} else {
@@ -392,7 +392,7 @@ class DB {
 				if ($position == 'first') {
 					$query.= ' FIRST';
 				} elseif ($position) {
-					$query.= ' AFTER '.$position;
+					$query.= ' AFTER `'.$position.'`';
 				}
 
 				@mysql_query($query,$this->connector[$db]) or $isSuccess = $this->DBerror($query,mysql_error());
@@ -414,7 +414,11 @@ class DB {
 			case 'mysql' :
 				$query = 'ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` CHANGE `'.$field.'` ';
 				if (in_array($change['type'],array('varchar','char','int','bigint','enum')) == true) {
-					$query.= '`'.$change['name'].'` '.$change['type'].'('.$change['length'].') NOT NULL DEFAULT \''.$change['default'].'\' COMMENT \''.$change['comment'].'\'';
+					if ($change['default'] == '') {
+						$query.= '`'.$change['name'].'` '.$change['type'].'('.$change['length'].') NOT NULL COMMENT \''.$change['comment'].'\'';
+					} else {
+						$query.= '`'.$change['name'].'` '.$change['type'].'('.$change['length'].') NOT NULL DEFAULT \''.$change['default'].'\' COMMENT \''.$change['comment'].'\'';
+					}
 				} elseif (in_array($change['type'],array('text','date')) == true) {
 					$query.= '`'.$change['name'].'` '.$change['type'].' NOT NULL DEFAULT \''.$change['default'].'\' COMMENT \''.$change['comment'].'\'';
 				} elseif (in_array($change['type'],array('longtext')) == true) {
@@ -424,7 +428,7 @@ class DB {
 				if ($position == 'first') {
 					$query.= ' FIRST';
 				} elseif ($position) {
-					$query.= ' AFTER '.$position;
+					$query.= ' AFTER `'.$position.'`';
 				}
 
 				@mysql_query($query,$this->connector[$db]) or $isSuccess = $this->DBerror($query,mysql_error());

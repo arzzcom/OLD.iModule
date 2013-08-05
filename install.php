@@ -285,7 +285,7 @@ if ($step == 4) {
 			</table>
 		</div>
 		
-		<div id="installButton"><?php echo $checking == true ? '<a href="install.php?step='.($step+1).'"><img src="./images/install/btn_next.gif" alt="다음" title="다음" /></a>' : '<a href="install.php?step='.($step+1).'"><img src="./images/install/btn_reload.gif" alt="새로고침" title="새로고침" /></a>'; ?></div>
+		<div id="installButton"><?php echo $checking == true ? '<a href="install.php?step='.($step+1).'"><img src="./images/install/btn_next.gif" alt="다음" title="다음" /></a>' : '<a href="install.php?step=2"><img src="./images/install/btn_reload.gif" alt="새로고침" title="새로고침" /></a>'; ?></div>
 		<?php } ?>
 
 		
