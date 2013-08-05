@@ -216,7 +216,7 @@ class Member {
 		$time = $time ? $time : GetGMT();
 
 		if (is_array($msg) == true) {
-			$msg = GetSerialize($msg);
+			$msg = serialize($msg);
 			$isSystem = 'TRUE';
 		} else {
 			$isSystem = 'FALSE';
