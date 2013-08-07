@@ -13,7 +13,7 @@ class Keyword {
 		$engcode = $this->GetEngCode($keycode);
 
 		if ($this->keyword) {
-			$keyData = $this->mDB->DBfetch('iboard_keyword_table',array('idx'),"where `keycode`='$keycode'");
+			$keyData = $this->mDB->DBfetch($_ENV['code'].'_keyword_table',array('idx'),"where `keycode`='$keycode'");
 			if (isset($keyData['idx']) == true) {
 				$this->mDB->DBupdate($_ENV['table']['keyword'],array('last_search'=>GetGMT()),array('hit'=>'`hit`-1'),"where `idx`='{$keyData['idx']}'");
 			} else {
@@ -27,7 +27,7 @@ class Keyword {
 		$engcode = $this->GetEngCode($keycode);
 
 		if ($this->keyword) {
-			$keyData = $this->mDB->DBfetch('iboard_keyword_table',array('idx'),"where `keycode`='$keycode'");
+			$keyData = $this->mDB->DBfetch($_ENV['code'].'_keyword_table',array('idx'),"where `keycode`='$keycode'");
 			if (isset($keyData['idx']) == true) {
 				$this->mDB->DBupdate($_ENV['table']['keyword'],array('last_search'=>GetGMT()),array('hit'=>'`hit`-1'),"where `idx`='{$keyData['idx']}'");
 			} else {
