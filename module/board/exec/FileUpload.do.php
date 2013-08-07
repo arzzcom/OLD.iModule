@@ -14,9 +14,9 @@ if (isset($_FILES['Filedata']) == true) {
 	$temppath = $file['tmp_name'];
 	$filesize = filesize($temppath);
 	$filetype = GetFileType($filename,$temppath);
-	$filepath = '/attach/'.md5_file($temppath).'.'.time().'.'.rand(1000,9999).'.'.GetFileExec($filename);
+	$filepath = '/attach/'.date('Ym').'/'.md5_file($temppath).'.'.time().'.'.rand(1000,9999).'.'.GetFileExec($filename);
 	
-	if (CreateDirectory($_ENV['userfilePath'].$mBoard->userfile) == true) {
+	if (CreateDirectory($_ENV['userfilePath'].$mBoard->userfile.'/attach/'.date('Ym')) == true) {
 		if ($temppath) {
 			@move_uploaded_file($temppath,$_ENV['userfilePath'].$mBoard->userfile.$filepath);
 			$idx = $mDB->DBinsert($mBoard->table['file'],array('type'=>$type,'filename'=>$filename,'filepath'=>$filepath,'filesize'=>$filesize,'filetype'=>$filetype,'wysiwyg'=>$wysiwyg,'reg_date'=>GetGMT()));

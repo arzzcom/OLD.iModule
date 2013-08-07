@@ -1349,7 +1349,7 @@ class ModuleBoard extends Module {
 	}
 
 	// 최근게시물 출력
-	function PrintRecently($skin,$page,$row,$limit='',$title='',$finder='') {
+	function PrintRecently($skin,$page,$row,$limit='',$title='',$finder='',$orderer='') {
 		$this->PrintHeader();
 		
 		if (preg_match('/\$/',$this->bid) == false && isset($this->setup['bid']) == false) {
@@ -1359,7 +1359,8 @@ class ModuleBoard extends Module {
 		$title = $title ? $title : $this->setup['title'];
 		$find = $this->find;
 		$find.= $finder ? ' and '.$finder : '';
-		$data = $this->mDB->DBfetchs($this->table['post'],array('idx','category','name','mno','title','content','search','image','reg_date','ment','last_ment','is_html_title','is_secret','image'),$find,'loop,asc','0,'.$row);
+		$orderer = $orderer ? $orderer : 'loop,asc';
+		$data = $this->mDB->DBfetchs($this->table['post'],array('idx','category','name','mno','title','content','search','image','reg_date','ment','last_ment','is_html_title','is_secret','image'),$find,$orderer,'0,'.$row);
 
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			$data[$i]['title'] = $limit ? GetCutString($data[$i]['title'],$limit,true) : $data[$i]['title'];
@@ -1412,8 +1413,8 @@ class ModuleBoard extends Module {
 		$find = $this->find;
 		$find.= $finder ? ' and '.$finder : '';
 
-		$mLast = array_pop($this->mDB->DBfetchs($this->table['post'],array('idx'),$find,'idx,desc','0,'.$hotPosition));
-		$find.= " and `idx`>=".(isset($mLast['idx']) == true ? $mLast['idx'] : '0');
+		$mLast = array_pop($this->mDB->DBfetchs($this->table['post'],array('reg_date'),$find,'reg_date,desc','0,'.$hotPosition));
+		$find.= " and `reg_date`>=".(isset($mLast['reg_date']) == true ? $mLast['reg_date'] : '0');
 		$find.= $finder ? ' and '.$finder : '';
 		$data = $this->mDB->DBfetchs($this->table['post'],array('idx','name','mno','title','search','image','reg_date','ment','last_ment','is_secret','is_html_title','image'),$find,'hit,desc','0,'.$row);
 
@@ -1629,6 +1630,111 @@ class ModuleBoard extends Module {
 
 	function GetTable() {
 		return $this->table;
+	}
+	
+	function InsertPostAPI($bid='',$post,$file,$isImage=true) {
+		if (isset($post['title']) == true && isset($post['content']) == true && isset($post['name']) == true) {
+			$insert = array();
+			$insert['bid'] = $bid ? $bid : $this->bid;
+			$insert['category'] = isset($post['category']) == true ? $post['category'] : '0';
+			$insert['mno'] = isset($post['mno']) == true ? $post['mno'] : '0';
+			$insert['name'] = $post['name'];
+			$insert['email'] = isset($post['email']) == true ? $post['email'] : '';
+			$insert['homepage'] = isset($post['homepage']) == true ? $post['homepage'] : '0';
+			$insert['password'] = isset($post['password']) == true ? md5(strtolower($post['passord'])) : md5('0');
+			$insert['title'] = $post['title'];
+			$insert['email'] = isset($post['email']) == true ? $post['email'] : '';
+			if ($isImage == false) {
+				$insert['content'] = $this->SetContent($post['content']);
+				$insert['search'] = GetIndexingText($post['content']);
+			}
+			$insert['extra_content'] = isset($post['extra_content']) == true ? $post['extra_content'] : '';
+			$insert['field1'] = isset($post['field1']) == true ? $post['field1'] : '';
+			$insert['field2'] = isset($post['field2']) == true ? $post['field2'] : '';
+			$insert['field3'] = isset($post['field3']) == true ? $post['field3'] : '';
+			$insert['reg_date'] = isset($post['reg_date']) == true ? $post['reg_date'] : GetGMT();
+			$insert['ip'] = isset($post['ip']) == true ? $post['ip'] : $_SERVER['SERVER_ADDR'];
+			$insert['is_notice'] = isset($post['is_notice']) == true ? $post['is_notice'] : 'FALSE';
+			$insert['is_html_title'] = isset($post['is_html_title']) == true ? $post['is_html_title'] : 'FALSE';
+			$insert['is_secret'] = isset($post['is_secret']) == true ? $post['is_secret'] : 'FALSE';
+			$insert['is_ment'] = isset($post['is_ment']) == true ? $post['is_ment'] : 'TRUE';
+			$insert['is_trackback'] = isset($post['is_trackback']) == true ? $post['is_trackback'] : 'FALSE';
+			$insert['is_msg'] = isset($post['is_msg']) == true ? $post['is_msg'] : 'FALSE';
+			$insert['is_email'] = isset($post['is_email']) == true ? $post['is_email'] : 'FALSE';
+			$insert['is_hidename'] = isset($post['is_hidename']) == true ? $post['is_hidename'] : 'FALSE';
+			
+			$idx = $this->mDB->DBinsert($this->table['post'],$insert);
+			
+			$update = array();
+			$update['loop'] = $idx*-1;
+			
+			for ($i=0, $loop=sizeof($file);$i<$loop;$i++) {
+				if ($file[$i][0] == '') continue;
+				$type = 'POST';
+				$wysiwyg = 'content';
+				$filename = $file[$i][1];
+				$temppath = $file[$i][0];
+				$filesize = filesize($temppath);
+				$filetype = GetFileType($filename,$temppath);
+				$filepath = '/attach/'.date('Ym').'/'.md5_file($temppath).'.'.time().'.'.rand(1000,9999).'.'.GetFileExec($filename);
+	
+				if (CreateDirectory($_ENV['userfilePath'].$this->userfile.'/attach/'.date('Ym')) == true) {
+					if ($temppath) {
+						@copy($temppath,$_ENV['userfilePath'].$this->userfile.$filepath);
+						$fidx = $this->mDB->DBinsert($this->table['file'],array('type'=>$type,'repto'=>$idx,'filename'=>$filename,'filepath'=>$filepath,'filesize'=>$filesize,'filetype'=>$filetype,'wysiwyg'=>$wysiwyg,'reg_date'=>$insert['reg_date']));
+						
+						if ($filetype == 'IMG' && CreateDirectory($_ENV['userfilePath'].$this->thumbnail) == true) {
+							GetThumbnail($_ENV['userfilePath'].$this->userfile.$filepath,$_ENV['userfilePath'].$this->thumbnail.'/'.$fidx.'.thm',150,120,false);
+							$update['image'] = isset($update['image']) == false ? $fidx : $update['image'];
+						}
+						
+						@unlink($temppath);
+					}
+				}
+			}
+			
+			if ($isImage == true) {
+				$update['content'] = $post['content'];
+				$imageExec = array('','gif','jpg','png');
+				$mCrawler = new Crawler();
+				if (preg_match_all('/<img(.*?)src="(.*?)"(.*?)>/i',$update['content'],$match) == true) {
+					for ($i=0, $loop=sizeof($match[0]);$i<$loop;$i++) {
+						$temppath = $mCrawler->GetFile($match[2][$i]);
+						if ($temppath) {
+							$check = getimagesize($temppath);
+							if (in_array($check[2],array('1','2','3')) == true) {
+								$type = 'POST';
+								$wysiwyg = 'content';
+								$filename = array_shift(explode('.',array_pop(explode('/',$match[2][$i])))).'.'.$imageExec[$check[2]];
+								$filesize = filesize($temppath);
+								$filetype = 'IMG';
+								$filepath = '/attach/'.date('Ym').'/'.md5_file($temppath).'.'.time().'.'.rand(1000,9999).'.'.GetFileExec($filename);
+								
+								if (CreateDirectory($_ENV['userfilePath'].$this->userfile.'/attach/'.date('Ym')) == true) {
+									@copy($temppath,$_ENV['userfilePath'].$this->userfile.$filepath);
+									$fidx = $this->mDB->DBinsert($this->table['file'],array('type'=>$type,'repto'=>$idx,'filename'=>$filename,'filepath'=>$filepath,'filesize'=>$filesize,'filetype'=>$filetype,'wysiwyg'=>$wysiwyg,'reg_date'=>$insert['reg_date']));
+									
+									if ($filetype == 'IMG' && CreateDirectory($_ENV['userfilePath'].$this->thumbnail) == true) {
+										GetThumbnail($_ENV['userfilePath'].$this->userfile.$filepath,$_ENV['userfilePath'].$this->thumbnail.'/'.$fidx.'.thm',150,120,false);
+										$update['image'] = isset($update['image']) == false ? $fidx : $update['image'];
+									}
+									
+									$update['content'] = str_replace($match[0][$i],'<img name="InsertFile" file="'.$fidx.'" src="/iModule/module/board/exec/ShowImage.do.php?idx='.$fidx.'">',$update['content']);
+								}
+							}
+							@unlink($temppath);
+						}
+					}
+				}
+				
+				$update['content'] = $this->SetContent($update['content']);
+				$update['search'] = GetIndexingText($update['content']);
+			}
+			
+			if (sizeof($update) > 0) {
+				$this->mDB->DBupdate($this->table['post'],$update,'',"where `idx`='$idx'");
+			}
+		}
 	}
 }
 ?>

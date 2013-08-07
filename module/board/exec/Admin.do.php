@@ -631,14 +631,14 @@ if ($action == 'trash') {
 
 	if ($do == 'empty') {
 		$post = $mDB->DBfetchs($mBoard->table['post'],array('idx'),"where `is_delete`='TRUE'");
-		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
+		for ($i=0, $loop=sizeof($post);$i<$loop;$i++) {
 			$ment = $mDB->DBfetchs($mBoard->table['ment'],array('idx'),"where `repto`={$post[$i]['idx']}");
 			for ($j=0, $loopj=sizeof($ment);$j<$loopj;$j++) {
 				$file = $mDB->DBfetchs($mBoard->table['file'],array('idx'),"where `type`='MENT' and `repto`={$ment[$j]['idx']}");
 				for ($k=0, $loopk=sizeof($file);$k<$loopk;$k++) $mBoard->FileDelete($file[$k]['idx']);
 			}
 			$mDB->DBdelete($mBoard->table['ment'],"where `repto`={$post[$i]['idx']}");
-			$file = $mDB->DBfetchs($mBoard->table['file'],array('idx'),"where `type`='POST' and `repto`={$data[$i]['idx']}");
+			$file = $mDB->DBfetchs($mBoard->table['file'],array('idx'),"where `type`='POST' and `repto`={$post[$i]['idx']}");
 			for ($j=0, $loopj=sizeof($file);$j<$loopj;$j++) $mBoard->FileDelete($file[$j]['idx']);
 		}
 		$mDB->DBdelete($mBoard->table['post'],"where `is_delete`='TRUE'");
