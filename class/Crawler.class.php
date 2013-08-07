@@ -5,10 +5,14 @@ class Crawler {
 	public $timeout;
 
 	function __construct() {
-		$this->cookie = $_ENV['path'].'/temp/crawler.cookie.'.time().'.'.rand(10000,99999).'.txt';
+		$this->cookie = $_ENV['userfilePath'].'/temp/crawler.cookie.'.time().'.'.rand(10000,99999).'.txt';
 		$this->agent = 'Mozilla/4.0 MSIE 8.0';
 		$this->timeout = 30;
 		$this->isDebug = false;
+	}
+	
+	function SetCookieFile($cookie) {
+		$this->cookie = $cookie;
 	}
 	
 	function SetTimeout($timeout) {
@@ -19,7 +23,7 @@ class Crawler {
 		$this->agent = $agent;
 	}
 
-	function Login($url) {
+	function Login($url,$post=array()) {
 		$parseURL = parse_url($url);
 
 		$scheme = isset($parseURL['scheme']) == true ? $parseURL['scheme'] : '';
@@ -31,11 +35,12 @@ class Crawler {
 		$agent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)';
 		$curlsession = curl_init();
 		if ($scheme == 'https') {
-			curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
-			curl_setopt($ch,CURLOPT_SSLVERSION,3);
+			curl_setopt($curlsession,CURLOPT_SSL_VERIFYPEER,false);
+			curl_setopt($curlsession,CURLOPT_SSLVERSION,3);
 		}
 		curl_setopt($curlsession,CURLOPT_URL,$url);
-		curl_setopt($curlsession,CURLOPT_POST,0);
+		curl_setopt($curlsession,CURLOPT_POST,1);
+		curl_setopt($curlsession,CURLOPT_POSTFIELDS,$post);
 		curl_setopt($curlsession,CURLOPT_USERAGENT,$this->agent);
 		curl_setopt($curlsession,CURLOPT_REFERER,$url);
 		curl_setopt($curlsession,CURLOPT_TIMEOUT,$this->timeout);
@@ -57,8 +62,8 @@ class Crawler {
 		$agent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)';
 		$curlsession = curl_init();
 		if ($scheme == 'https') {
-			curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
-			curl_setopt($ch,CURLOPT_SSLVERSION,3);
+			curl_setopt($curlsession,CURLOPT_SSL_VERIFYPEER,false);
+			curl_setopt($curlsession,CURLOPT_SSLVERSION,3);
 		}
 		curl_setopt($curlsession,CURLOPT_URL,$url);
 		curl_setopt($curlsession,CURLOPT_POST,0);
@@ -73,8 +78,6 @@ class Crawler {
 		$buffer = curl_exec($curlsession);
 		$cinfo = curl_getinfo($curlsession);
 		curl_close($curlsession);
-		
-		@unlink($this->cookie);
 		
 		if ($cinfo['http_code'] != 200) return '';
 		else return $this->GetUTF8($buffer);
@@ -118,14 +121,15 @@ class Crawler {
 		$agent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)';
 		$curlsession = curl_init();
 		if ($scheme == 'https') {
-			curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
-			curl_setopt($ch,CURLOPT_SSLVERSION,3);
+			curl_setopt($curlsession,CURLOPT_SSL_VERIFYPEER,false);
+			curl_setopt($curlsession,CURLOPT_SSLVERSION,3);
 		}
 		curl_setopt($curlsession,CURLOPT_URL,$url);
 		curl_setopt($curlsession,CURLOPT_POST,0);
 		curl_setopt($curlsession,CURLOPT_USERAGENT,$this->agent);
 		curl_setopt($curlsession,CURLOPT_REFERER,$referer ? $referer : $url);
 		curl_setopt($curlsession,CURLOPT_TIMEOUT,$this->timeout);
+		curl_setopt($curlsession,CURLOPT_FOLLOWLOCATION,true);
 		if (file_exists($this->cookie) == true) {
 			curl_setopt($curlsession,CURLOPT_COOKIEFILE,$this->cookie);
 		}
@@ -134,12 +138,11 @@ class Crawler {
 		$buffer = curl_exec($curlsession);
 		$cinfo = curl_getinfo($curlsession);
 		curl_close($curlsession);
-		
-		@unlink($this->cookie);
-		
-		if ($cinfo['http_code'] != 200 || preg_match('/text\/html/',$cinfo['content_type']) == true) return '';
+		if ($cinfo['http_code'] != 200 || preg_match('/text\/html/',$cinfo['content_type']) == true) {
+			return '';
+		}
 
-		$filepath = $_ENV['path'].'/temp/'.array_pop(explode('/',array_shift(explode('?',$path))));
+		$filepath = $_ENV['userfilePath'].'/temp/'.time().'.'.rand(100000,999999).'.tmp';
 		$fp = fopen($filepath,'w');
 		fwrite($fp,$buffer);
 		fclose($fp);
@@ -152,7 +155,7 @@ class Crawler {
 		return $filepath;
 	}
 
-	function GetThumbneil($imgPath,$thumbPath,$width,$height,$delete=false) {
+	function GetThumbnail($imgPath,$thumbPath,$width,$height,$delete=false) {
 		$result = true;
 		$imginfo = @getimagesize($imgPath);
 		$extName = $imginfo[2];
