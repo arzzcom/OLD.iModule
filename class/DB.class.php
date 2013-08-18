@@ -194,9 +194,11 @@ class DB {
 				
 				for ($i=0, $loop=sizeof($field);$i<$loop;$i++) {
 					if (in_array($field[$i]['type'],array('varchar','char','int','bigint','enum')) == true) {
-						$field[$i] = '`'.$field[$i]['name'].'` '.$field[$i]['type'].'('.$field[$i]['length'].') NOT NULL DEFAULT \''.$field[$i]['default'].'\' COMMENT \''.$field[$i]['comment'].'\'';
+						if ($field[$i]['default']) $field[$i] = '`'.$field[$i]['name'].'` '.$field[$i]['type'].'('.$field[$i]['length'].') NOT NULL DEFAULT \''.$field[$i]['default'].'\' COMMENT \''.$field[$i]['comment'].'\'';
+						else $field[$i] = '`'.$field[$i]['name'].'` '.$field[$i]['type'].'('.$field[$i]['length'].') NOT NULL COMMENT \''.$field[$i]['comment'].'\'';
 					} elseif (in_array($field[$i]['type'],array('text','date')) == true) {
-						$field[$i] = '`'.$field[$i]['name'].'` '.$field[$i]['type'].' NOT NULL DEFAULT \''.$field[$i]['default'].'\' COMMENT \''.$field[$i]['comment'].'\'';
+						if ($field[$i]['default']) $field[$i] = '`'.$field[$i]['name'].'` '.$field[$i]['type'].' NOT NULL DEFAULT \''.$field[$i]['default'].'\' COMMENT \''.$field[$i]['comment'].'\'';
+						else $field[$i] = '`'.$field[$i]['name'].'` '.$field[$i]['type'].' NOT NULL COMMENT \''.$field[$i]['comment'].'\'';
 					} elseif (in_array($field[$i]['type'],array('longtext')) == true) {
 						$field[$i] = '`'.$field[$i]['name'].'` '.$field[$i]['type'].' NOT NULL COMMENT \''.$field[$i]['comment'].'\'';
 					}
