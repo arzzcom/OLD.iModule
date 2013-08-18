@@ -384,9 +384,11 @@ class DB {
 				$query = 'ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` ADD ';
 				
 				if (in_array($field['type'],array('varchar','char','int','bigint','enum')) == true) {
-					$query.= '`'.$field['name'].'` '.$field['type'].'('.$field['length'].') NOT NULL DEFAULT \''.$field['default'].'\' COMMENT \''.$field['comment'].'\'';
+					if ($field['default'] == '') $query.= '`'.$field['name'].'` '.$field['type'].'('.$field['length'].') NOT NULL COMMENT \''.$field['comment'].'\'';
+					else $query.= '`'.$field['name'].'` '.$field['type'].'('.$field['length'].') NOT NULL DEFAULT \''.$field['default'].'\' COMMENT \''.$field['comment'].'\'';
 				} elseif (in_array($field['type'],array('text','date')) == true) {
-					$query.= '`'.$field['name'].'` '.$field['type'].' NOT NULL DEFAULT \''.$field['default'].'\' COMMENT \''.$field['comment'].'\'';
+					if ($field['default'] == '') $query.= '`'.$field['name'].'` '.$field['type'].' NOT NULL COMMENT \''.$field['comment'].'\'';
+					else $query.= '`'.$field['name'].'` '.$field['type'].' NOT NULL DEFAULT \''.$field['default'].'\' COMMENT \''.$field['comment'].'\'';
 				} elseif (in_array($field['type'],array('longtext')) == true) {
 					$query.= '`'.$field['name'].'` '.$field['type'].' NOT NULL COMMENT \''.$field['comment'].'\'';
 				}
@@ -494,16 +496,20 @@ class DB {
 		
 		switch ($this->infor[$db]['type']) {
 			case 'mysql' :
-				if (($index['type'] != 'auto_increment' && $this->IDinfo($table,$index['name'],$db) != $index['type']) || ($index['type'] == 'auto_increment' && $this->IDinfo($table,$index['name'],$db) != 'primary')) {
+				if ($index['type'] == 'auto_increment') {
+					if ($this->IDinfo($table,$index['name'],$db) == 'primary') {
+						@mysql_query('ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` CHANGE `'.$index['name'].'` `'.$index['name'].'` INT(11) NOT NULL AUTO_INCREMENT COMMENT \'고유값\'',$this->connector[$db]);
+					} else {
+						@mysql_query('ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` DROP PRIMARY KEY',$this->connector[$db]);
+						@mysql_query('ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` ADD PRIMARY KEY (`'.$index['name'].'`)',$this->connector[$db]);
+						@mysql_query('ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` CHANGE `'.$index['name'].'` `'.$index['name'].'` INT(11) NOT NULL AUTO_INCREMENT COMMENT \'고유값\'',$this->connector[$db]);
+					}
+				} elseif ($this->IDinfo($table,$index['name'],$db) != $index['type']) {
 					if ($this->IDinfo($table,$index['name'],$db) != '') {
 						$this->IDdrop($table,$index['name'],$db='');
 					}
 					
-					if ($index['type'] == 'auto_increment') {
-						@mysql_query('ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` DROP PRIMARY KEY',$this->connector[$db]);
-						@mysql_query('ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` ADD PRIMARY KEY (`'.$index['name'].'`)',$this->connector[$db]);
-						@mysql_query('ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` CHANGE `'.$index['name'].'` `'.$index['name'].'` INT(11) NOT NULL AUTO_INCREMENT COMMENT \'고유값\'',$this->connector[$db]);
-					} elseif ($index['type'] == 'primary') {
+					if ($index['type'] == 'primary') {
 						@mysql_query('ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` DROP PRIMARY KEY',$this->connector[$db]);
 						@mysql_query('ALTER TABLE `'.$this->infor[$db]['dbname'].'`.`'.$table.'` ADD PRIMARY KEY (`'.$index['name'].'`)',$this->connector[$db]);
 					} elseif ($index['type'] == 'index') {
