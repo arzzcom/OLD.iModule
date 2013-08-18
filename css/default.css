@@ -58,10 +58,11 @@ IMG {border:0px;}
 .liveSearchMatch {color:#EF5600;}
 
 /* SmartEditor */
-.smartOutput {padding:0px !important; font-size:12px; line-height:1.6; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; -ms-word-break:break-all; word-wrap:break-word;}
+.smartOutput {padding:0px; font-size:12px; line-height:1.6 !important; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; -ms-word-break:break-all; word-wrap:break-word;}
 .smartOutput p {line-height:1.6;}
-.smartOutput p SPAN {line-height:1.6;}
-.smartOutput p DIV {line-height:1.6;}
+.smartOutput SPAN {line-height:1.6;}
+.smartOutput DIV {line-height:1.6;}
+.smartOutput blockquote {color:#000000 !important; margin-top:10px !important;}
 .smartOutput blockquote.q1,
 .smartOutput blockquote.q2,
 .smartOutput blockquote.q3,
