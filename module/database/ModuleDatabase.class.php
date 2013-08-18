@@ -43,8 +43,8 @@ class ModuleDatabase extends Module {
 				if ($table['field'][$field]['type'] == 'FILE') {
 					if ($value && $value != '0') {
 						$file = $this->mDB->DBfetch($this->table['file'],array('idx','filename','filepath','filesize','filetype','hit'),"where `idx`=$value");
-						$file['filepath'] = $_ENV['path'].$file['filepath'];
-						$file['filedir'] = $file['filetype'] == 'IMG' ? $this->moduleDir.'/exec/ShowImage.do.php?idx='.$file['idx'].'&tno='.$table['idx'] : $_ENV['dir'].$file['filepath'];
+						$file['filepath'] = $_ENV['userfilePath'].$this->userfile.$file['filepath'];
+						$file['filedir'] = $file['filetype'] == 'IMG' ? $this->moduleDir.'/exec/ShowImage.do.php?idx='.$file['idx'].'&tno='.$table['idx'] : $_ENV['userfileDir'].$this->userfile.$file['filepath'];
 						$file['download'] = $this->moduleDir.'/exec/FileDownload.do.php?idx='.$file['idx'].'&tno='.$table['idx'];
 						$data[$field] = $file;
 					} else {
@@ -72,8 +72,8 @@ class ModuleDatabase extends Module {
 				if ($table['field'][$field]['type'] == 'FILE') {
 					if ($value && $value != '0') {
 						$file = $this->mDB->DBfetch($this->table['file'],array('idx','filename','filepath','filesize','filetype','hit'),"where `idx`=$value");
-						$file['filepath'] = $_ENV['path'].$file['filepath'];
-						$file['filedir'] = $file['filetype'] == 'IMG' ? $this->moduleDir.'/exec/ShowImage.do.php?idx='.$file['idx'].'&tno='.$table['idx'] : $_ENV['dir'].$file['filepath'];
+						$file['filepath'] = $_ENV['userfilePath'].$this->userfile.$file['filepath'];
+						$file['filedir'] = $file['filetype'] == 'IMG' ? $this->moduleDir.'/exec/ShowImage.do.php?idx='.$file['idx'].'&tno='.$table['idx'] : $_ENV['userfileDir'].$this->userfile.$file['filepath'];
 						$file['download'] = $this->moduleDir.'/exec/FileDownload.do.php?idx='.$file['idx'].'&tno='.$table['idx'];
 						$data[$i][$field] = $file;
 					} else {
