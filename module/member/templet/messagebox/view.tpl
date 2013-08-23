@@ -13,7 +13,7 @@
 			<table cellpadding="0" cellspacing="0" class="layoutfixed">
 			<col width="100%" /><col width="75" />
 			<tr>
-				<td>{$wysiwyg}</td>
+				<td class="vTop">{$wysiwyg}</td>
 				<td class="viewerButton">
 					<input type="image" src="{$skinDir}/images/btn_send.gif" accesskey="s" />
 				</td>

@@ -49,13 +49,13 @@
 .ModuleMember .pagenav A:active {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
 .ModuleMember .pagenav SPAN {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#DDDDDD; border:1px solid #E9E9E9; text-decoration:none;}
 
-
+.ModuleMember .wywiwyg {height:125px;}
 .ModuleMember .viewer {background:#DFDDD9; padding:5px; width:490px; height:590px;}
 .ModuleMember .viewerInner {border:1px solid #C2C2C2; background:#FFFFFF;}
 .ModuleMember .viewerTitle {height:20px; line-height:20px; font-family:verdana; font-size:10px; padding-left:5px; font-weight:bold; background:url(./images/viewer_title.gif); color:#7D8093;}
 .ModuleMember .viewerContent {height:442px; overflow-y:scroll; border-bottom:1px solid #C2C2C2;}
 .ModuleMember .viewerButton {background:url(./images/bg_tool.gif) repeat-x; vertical-align:top;}
-.ModuleMember .viewerButton INPUT {margin-top:38px; cursor:pointer;}
+.ModuleMember .viewerButton INPUT {margin-top:37px; cursor:pointer;}
 
 .ModuleMember .more {background:url(./images/more_bg.gif); height:30px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; color:#666666; text-align:center; font-weight:bold; border:1px solid #CCCCCC; border-bottom:1px solid #999999; border-right:1px solid #999999; cursor:pointer; margin:5px; line-height:30px; overflow:hidden;}
 .ModuleMember .viewerMessgeArea {margin:5px 10px 10px 10px;}
