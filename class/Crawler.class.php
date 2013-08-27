@@ -226,7 +226,13 @@ class Crawler {
 	}
 
 	function GetUTF8($str) {
-		$encording = mb_detect_encoding($str,'EUC-KR,UTF-8,ASCII,EUC-JP,AUTO');
+		$encording = mb_detect_encoding($str,'EUC-KR,UTF-8,ASCII,EUC-JP,CP949,AUTO');
+		
+		if ($encording == '') {
+			if (preg_match('/<meta (.*?)content="text\/html; charset=(.*?)"(.*?)>/i',$str,$match) == true) {
+				$encording = $match[2];
+			}
+		}
 
 		if ($encording == 'UTF-8' || $encording == '') {
 			return $str;
