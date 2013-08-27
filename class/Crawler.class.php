@@ -228,10 +228,9 @@ class Crawler {
 	function GetUTF8($str) {
 		$encording = mb_detect_encoding($str,'EUC-KR,UTF-8,ASCII,EUC-JP,AUTO');
 
-		if ($encording=='UTF-8') {
+		if ($encording == 'UTF-8' || $encording == '') {
 			return $str;
 		} else {
-			$encording = isset($encording)==false || !$encording ? 'euc-kr' : $encording;
 			return @iconv($encording,'UTF-8//IGNORE',$str);
 		}
 	}
