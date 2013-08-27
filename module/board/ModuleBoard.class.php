@@ -745,6 +745,7 @@ class ModuleBoard extends Module {
 				$notice[$i]['is_image'] = $notice[$i]['image'] != '0';
 				$notice[$i]['is_newment'] = $notice[$i]['last_ment'] > GetGMT()-60*60*24;
 
+				$notice[$i]['categoryIDX'] = $notice[$i]['category'];
 				if ($this->setup['use_category'] == 'TRUE' && $notice[$i]['category'] != '0') {
 					$notice[$i]['category'] = $this->GetCategoryName($notice[$i]['category']);
 				} else {
@@ -822,6 +823,7 @@ class ModuleBoard extends Module {
 			$data[$i]['is_image'] = $data[$i]['image'] != '0';
 			$data[$i]['is_newment'] = $data[$i]['last_ment'] > GetGMT()-60*60*24;
 
+			$data[$i]['categoryIDX'] = $data[$i]['category'];
 			if ($this->setup['use_category'] == 'TRUE' && $data[$i]['category'] != '0') {
 				$data[$i]['category'] = $this->GetCategoryName($data[$i]['category']);
 			} else {
@@ -1632,7 +1634,7 @@ class ModuleBoard extends Module {
 		return $this->table;
 	}
 	
-	function InsertPostAPI($bid='',$post,$file,$isImage=true) {
+	function InsertPostAPI($bid='',$post,$file,$isImage=true,$referer='') {
 		if (isset($post['title']) == true && isset($post['content']) == true && isset($post['name']) == true) {
 			$insert = array();
 			$insert['bid'] = $bid ? $bid : $this->bid;
@@ -1699,7 +1701,7 @@ class ModuleBoard extends Module {
 				$mCrawler = new Crawler();
 				if (preg_match_all('/<img(.*?)src="(.*?)"(.*?)>/i',$update['content'],$match) == true) {
 					for ($i=0, $loop=sizeof($match[0]);$i<$loop;$i++) {
-						$temppath = $mCrawler->GetFile($match[2][$i]);
+						$temppath = $mCrawler->GetFile($match[2][$i],$referer);
 						if ($temppath) {
 							$check = getimagesize($temppath);
 							if (in_array($check[2],array('1','2','3')) == true) {

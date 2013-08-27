@@ -40,6 +40,8 @@ if ($action == 'board') {
 		$insert['pagenum'] = Request('pagenum');
 		$insert['view_notice_page'] = array_shift(explode(',',Request('view_notice')));
 		$insert['view_notice_count'] = array_pop(explode(',',Request('view_notice')));
+		$insert['view_alllist'] = Request('view_alllist') == 'on' ? 'TRUE' : 'FALSE';
+		$insert['view_prevnext'] = Request('view_prevnext') == 'on' ? 'TRUE' : 'FALSE';
 		$insert['use_ment'] = Request('use_ment') == 'on' ? 'TRUE' : 'FALSE';
 		$insert['use_trackback'] = Request('use_trackback') == 'on' ? 'TRUE' : 'FALSE';
 		$insert['use_category'] = Request('use_category') == 'on' ? 'TRUE' : 'FALSE';

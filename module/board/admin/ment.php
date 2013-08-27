@@ -35,7 +35,7 @@ var ContentArea = function(viewport) {
 								var data = Ext.JSON.decode(response.responseText);
 								if (data.success == true) {
 									Ext.Msg.show({title:"안내",msg:"성공적으로 삭제하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
-										Ext.getCmp("ListPanel").getStore().loadPage(1);
+										Ext.getCmp("ListPanel").getStore().reload();
 									}});
 								} else {
 									Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
@@ -63,7 +63,7 @@ var ContentArea = function(viewport) {
 								var data = Ext.JSON.decode(response.responseText);
 								if (data.success == true) {
 									Ext.Msg.show({title:"안내",msg:"성공적으로 삭제하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
-										Ext.getCmp("ListPanel").getStore().loadPage(1);
+										Ext.getCmp("ListPanel").getStore().reload();
 									}});
 								} else {
 									Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
@@ -185,7 +185,7 @@ var ContentArea = function(viewport) {
 													var data = Ext.JSON.decode(response.responseText);
 													if (data.success == true) {
 														Ext.Msg.show({title:"안내",msg:"성공적으로 삭제하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
-															Ext.getCmp("ListPanel").getStore().loadPage(1);
+															Ext.getCmp("ListPanel").getStore().reload();
 														}});
 													} else {
 														Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
@@ -222,7 +222,7 @@ var ContentArea = function(viewport) {
 													var data = Ext.JSON.decode(response.responseText);
 													if (data.success == true) {
 														Ext.Msg.show({title:"안내",msg:"성공적으로 삭제 및 차단하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
-															Ext.getCmp("ListPanel").getStore().loadPage(1);
+															Ext.getCmp("ListPanel").getStore().reload();
 														}});
 													} else {
 														Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
