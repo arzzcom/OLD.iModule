@@ -1002,7 +1002,7 @@ class ModuleMember extends member {
 					$message[$i]['system']['nickname'] = $memberData['nickcon'] ? '<img src="'.$memberData['nickcon'].'" alt="'.$memberData['nickname'].'" title="'.$memberData['nickname'].'" style="vertical-align:middle;" />' : $memberData['nickname'];
 					$message[$i]['system']['nickname'] = '<span class="pointer" onclick="OpenMessage('.$message[$i]['system']['mno'].')">'.$message[$i]['system']['nickname'].'</span>';
 				} else {
-					$message[$i]['system']['name'] = $message[$i]['system']['nickname'] = $message[$i]['system']['nickname'];
+					$message[$i]['system']['nickname'] = $message[$i]['system']['name'];
 				}
 
 				$message[$i]['system']['parent'] = '<div class="smartOutput">'.$message[$i]['system']['parent'].'</div>';
