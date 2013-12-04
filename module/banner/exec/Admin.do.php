@@ -58,7 +58,7 @@ if ($action == 'section') {
 		$code = explode(',',Request('code'));
 		
 		for ($i=0, $loop=sizeof($code);$i<$loop;$i++) {
-			$mDB->DBupdate($mBanner->table['section'],"where `code`='{$code[$i]}'");
+			$mDB->DBdelete($mBanner->table['section'],"where `code`='{$code[$i]}'");
 		}
 		
 		$return['success'] = true;
