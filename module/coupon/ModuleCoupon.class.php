@@ -10,10 +10,11 @@ class ModuleCoupon extends Module {
 	public $table;
 
 	function __construct() {
+		$this->table['category'] = $_ENV['code'].'_coupon_category_table';
 		$this->table['item'] = $_ENV['code'].'_coupon_item_table';
 		$this->table['user'] = $_ENV['code'].'_coupon_user_table';
-		$this->userfile = '/userfile/coupon';
-		$this->thumbneil = '/userfile/coupon/thumbneil';
+		$this->table['category'] = $_ENV['code'].'_coupon_category_table';
+		$this->userfile = '/coupon';
 
 		parent::__construct('coupon');
 
@@ -92,6 +93,11 @@ class ModuleCoupon extends Module {
 		}
 
 		$this->PrintFooter();
+	}
+	
+	function GetCategoryName($cno) {
+		$category = $this->mDB->DBfetch($this->table['category'],array('category'),"where `idx`='$cno'");
+		return isset($category['category']) == true ? $category['category'] : '';
 	}
 
 	// 목록출력

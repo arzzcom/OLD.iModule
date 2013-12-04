@@ -6,7 +6,7 @@ var ContentArea = function(viewport) {
 		proxy:{
 			type:"ajax",
 			simpleSortMode:true,
-			url:"<?php echo $_ENV['dir']; ?>/module/banner/exec/Admin.get.php",
+			url:"<?php echo $_ENV['dir']; ?>/module/coupon/exec/Admin.get.php",
 			reader:{type:"json",root:"lists",totalProperty:"totalCount"},
 			extraParams:{action:"item",get:"list"}
 		},
@@ -14,7 +14,7 @@ var ContentArea = function(viewport) {
 		sorters:[{property:"idx",direction:"DESC"}],
 		autoLoad:true,
 		pageSize:50,
-		fields:["idx","code","mno","master","is_active","type","point","paid_point","start_date","end_date","bannerpath","bannertext","url",{name:"percent",type:"float"},"view","hit"]
+		fields:["idx","code","category","code","title","infor",{name:"point",type:"int"},{name:"expire",type:"int"},{name:"ea",type:"int"},"is_new","is_vote"]
 	});
 
 	function ItemContextMenu(grid,record,row,index,e) {
@@ -376,7 +376,7 @@ var ContentArea = function(viewport) {
 	ContentArea.superclass.constructor.call(this,{
 		id:"content",
 		region:"center",
-		title:"배너아이템관리",
+		title:"쿠폰아이템관리",
 		layout:"fit",
 		margin:"0 5 0 0",
 		tbar:[
@@ -530,81 +530,67 @@ var ContentArea = function(viewport) {
 				columns:[
 					new Ext.grid.RowNumberer(),
 					{
-						header:"배너영역",
-						dataIndex:"code",
-						sortable:true,
-						width:150
-					},{
-						header:"배너관리자",
-						dataIndex:"master",
-						sortable:true,
+						header:"카테고리",
+						dataIndex:"category",
 						width:100
 					},{
-						header:"형식",
-						dataIndex:"type",
+						header:"쿠폰제목",
+						dataIndex:"title",
 						sortable:true,
-						width:60
+						width:200
 					},{
-						header:"배너게시기간",
-						width:200,
+						header:"쿠폰코드",
+						dataIndex:"code",
+						sortable:true,
+						width:180
+					},{
+						header:"쿠폰소개",
+						dataIndex:"infor",
+						flex:1,
 						renderer:function(value,p,record) {
-							if (record.data.type == "CPC") {
-								if (record.data.paid_point == "0") {
-									return '<span style="color:#666666;">배너게시기간 만료됨</span>';
-								} else {
-									return '잔여포인트 <span style="color:blue;">('+GetNumberFormat(record.data.paid_point)+'포인트)</span> 소진시까지';
-								}
+							var sHTML = "";
+							if (record.data.is_new == "TRUE") sHTML+= '<span style="color:blue;">[신규]</span> ';
+							if (record.data.is_vote == "TRUE") sHTML+= '<span style="color:red;">[추천]</span> ';
+							sHTML+= value;
+							
+							return sHTML;
+						}
+					},{
+						header:"구매가격",
+						dataIndex:"point",
+						width:120,
+						renderer:function(value) {
+							if (value == 0) {
+								return '<div style="color:blue; text-align:center;">무료</div>';
 							} else {
-								if (record.data.start_date == "0000-00-00") {
-									return '<span style="color:red;">등록후 아직 게시상태로 변경된적 없음</span>';
-								}
-								if (new Date(record.data.start_date).getTime() > new Date().getTime()) {
-									return '<span style="color:#666666;">배너게시기간이 아님 ('+record.data.start_date+'시작)</span>';
-								} else if (new Date(record.data.end_date).getTime() < new Date().getTime()) {
-									return '<span style="color:#666666;">배너게시기간 만료됨 ('+record.data.end_date+'만료)</span>';
+								if (value >= 1000000) {
+									return '<div style="text-align:right; color:violet;">'+GetNumberFormat(value)+'포인트</div>';
+								} else if (value >= 100000) {
+									return '<div style="text-align:right; color:red;">'+GetNumberFormat(value)+'포인트</div>';
+								} else if (value >= 10000) {
+									return '<div style="text-align:right; color:orange;">'+GetNumberFormat(value)+'포인트</div>';
 								} else {
-									return record.data.start_date+' 부터 '+record.data.end_date+' 까지';
+									return '<div style="text-align:right;">'+GetNumberFormat(value)+'포인트</div>';
 								}
 							}
 						}
 					},{
-						header:"상태",
-						dataIndex:"is_active",
+						header:"만료일",
+						dataIndex:"expire",
+						sortable:true,
+						width:80,
+						renderer:function(value) {
+							if (value == 0) return '<div style="color:blue; text-align:center;">무제한</div>';
+							else return '<div style="color:red; text-align:center;">'+GetNumberFormat(value)+'일</div>';
+						}
+					},{
+						header:"남은수량",
+						dataIndex:"ea",
 						sortable:true,
 						width:60,
 						renderer:function(value) {
-							if (value == "TRUE") return '<span style="color:blue;">게시중</span>';
-							else return '<span style="color:red;">게시대기</span>';
-						}
-					},{
-						header:"클릭시이동될 주소",
-						dataIndex:"url",
-						sortable:true,
-						minWidth:150,
-						flex:1
-					},{
-						header:"누적노출수",
-						dataIndex:"view",
-						sortable:false,
-						width:80,
-						renderer:function(value) {
-							return '<div style="font-family:tahoma; text-align:right;">'+GetNumberFormat(value)+'회</div>'
-						}
-					},{
-						header:"누적클릭수",
-						dataIndex:"hit",
-						sortable:false,
-						width:80,
-						renderer:function(value) {
-							return '<div style="font-family:tahoma; text-align:right;">'+GetNumberFormat(value)+'회</div>'
-						}
-					},{
-						header:"노출확률",
-						dataIndex:"percent",
-						sortable:false,
-						width:80,
-						renderer:function(value) {
-							return '<div style="font-family:tahoma; text-align:right;">'+value.toFixed(2)+'%</div>'
+							if (value == 0) return '<div style="color:red; text-align:center;">매진</div>';
+							else return '<div style="color:blue; text-align:right;">'+GetNumberFormat(value)+'EA</div>';
 						}
 					}
 				],
