@@ -215,7 +215,7 @@ if ($action == 'user') {
 		$idx = Request('idx');
 		$table = $mDB->DBfetchs($mDatabase->table['table'],'*',"where `idx` IN ($idx)");
 		for ($i=0, $loop=sizeof($table);$i<$loop;$i++) {
-			$mDB->DBtruncate($table['table'],$table['database']);
+			$mDB->DBtruncate($table['name'],$table['database']);
 		}
 		
 		$file = $mDB->DBfetchs($mDatabase->table['file'],array('idx','filepath','filetype'),"where `tno` IN ($idx)");
@@ -233,9 +233,10 @@ if ($action == 'user') {
 	
 	if ($do == 'delete') {
 		$idx = Request('idx');
-		$table = $mDB->DBfetch($mDatabase->table['table'],'*',"where `idx` IN ($idx)");
+		$table = $mDB->DBfetchs($mDatabase->table['table'],'*',"where `idx` IN ($idx)");
 		for ($i=0, $loop=sizeof($table);$i<$loop;$i++) {
-			$mDB->DBdrop($table['table'],$table['database']);
+			$mDB->DBdrop($table[$i]['name'],$table[$i]['database']);
+			$mDB->DBdelete($mDatabase->table['table'],"where `idx`='{$table[$i]['idx']}'");
 		}
 		
 		$file = $mDB->DBfetchs($mDatabase->table['file'],array('idx','filepath','filetype'),"where `tno` IN ($idx)");
