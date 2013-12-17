@@ -303,7 +303,7 @@ if ($action == 'post') {
 
 	if ($do == 'spam') {
 		$idx = Request('idx');
-		$data = $mDB->DBfetchs($mBoard->table['post'],array('idx','title','ip'),"where `idx` IN ($idx)");
+		$data = $mDB->DBfetchs($mBoard->table['post'],array('idx','bid','title','ip'),"where `idx` IN ($idx)");
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			if ($mDB->DBcount($_ENV['table']['ipban'],"where `ip`='{$data[$i]['ip']}'") == 0) {
 				$mDB->DBinsert($_ENV['table']['ipban'],array('ip'=>$data[$i]['ip'],'memo'=>'스팸게시물 등록으로 인한 아이피차단','reg_date'=>GetGMT()));
