@@ -36,20 +36,17 @@ if ($action == 'item') {
 		$lists = $mDB->DBfetchs($mCoupon->table['item'],'*',$find,$orderer,$limiter);
 		for ($i=0, $loop=sizeof($lists);$i<$loop;$i++) {
 			$lists[$i]['category'] = $mCoupon->GetCategoryName($lists[$i]['category']);
+			$lists[$i]['sell'] = $mDB->DBcount($mCoupon->table['user'],"where `code`='{$lists[$i]['code']}'");
 		}
 	}
 	
 	if ($get == 'data') {
-		$code = Request('code');
-		$data = $mDB->DBfetch($mBanner->table['section'],'*',"where `code`='$code'");
+		$idx = Request('idx');
+		$data = $mDB->DBfetch($mCoupon->table['item'],'*',"where `idx`='$idx'");
 		
-		$fileType = explode(',',$data['filetype']);
-		if (in_array('IMG',$fileType) == true) $data['IMG'] = 'on';
-		if (in_array('SWF',$fileType) == true) $data['SWF'] = 'on';
-		if (in_array('TEXT',$fileType) == true) $data['TEXT'] = 'on';
-		
-		$data['allow_user'] = $data['allow_user'] == 'TRUE' ? 'on' : 'off';
-		$data['auto_active'] = $data['auto_active'] == 'TRUE' ? 'on' : 'off';
+		$data['is_vote'] = $data['is_vote'] == 'TRUE' ? 'on' : 'off';
+		$data['is_new'] = $data['is_new'] == 'TRUE' ? 'on' : 'off';
+		$data['is_gift'] = $data['is_gift'] == 'TRUE' ? 'on' : 'off';
 		$return['success'] = true;
 		$return['data'] = $data;
 		exit(json_encode($return));

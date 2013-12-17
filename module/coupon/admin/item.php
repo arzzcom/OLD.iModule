@@ -1,3 +1,4 @@
+<script type="text/javascript" src="<?php echo $_ENV['dir']; ?>/module/wysiwyg/script/wysiwyg.js"></script>
 <script type="text/javascript">
 var ContentArea = function(viewport) {
 	this.viewport = viewport;
@@ -14,17 +15,32 @@ var ContentArea = function(viewport) {
 		sorters:[{property:"idx",direction:"DESC"}],
 		autoLoad:true,
 		pageSize:50,
-		fields:["idx","code","category","code","title","infor",{name:"point",type:"int"},{name:"expire",type:"int"},{name:"ea",type:"int"},"is_new","is_vote"]
+		fields:["idx","code","category","code","title","infor",{name:"point",type:"int"},{name:"expire",type:"int"},{name:"ea",type:"int"},"sell","is_new","is_vote","is_gift"]
 	});
 
 	function ItemContextMenu(grid,record,row,index,e) {
 		grid.getSelectionModel().select(index);
 		var menu = new Ext.menu.Menu();
 		
-		menu.add('<b class="menu-title">배너번호 #'+record.data.idx+'</b>');
+		menu.add('<b class="menu-title">'+record.data.title+'</b>');
 		
 		menu.add({
-			text:"배너수정",
+			text:"쿠폰이미지보기",
+			handler:function() {
+				new Ext.Window({
+					id:"PreviewWindow",
+					title:"쿠폰이미지보기",
+					modal:true,
+					maxWidth:800,
+					maxHeight:500,
+					autoScroll:true,
+					html:'<img src="<?php echo $_ENV['userfileDir']; ?>/coupon/'+record.data.idx+'.gif" onload="Ext.getCmp(\'PreviewWindow\').doLayout().center()" />'
+				}).show();
+			}
+		});
+		
+		menu.add({
+			text:"쿠폰아이템수정",
 			handler:function() {
 				ItemFormFunction(record.data.idx);
 			}
@@ -33,13 +49,13 @@ var ContentArea = function(viewport) {
 		menu.add('-');
 		
 		menu.add({
-			text:"배너삭제",
+			text:"쿠폰아이템삭제",
 			handler:function () {
-				Ext.Msg.show({title:"확인",msg:"배너를 삭제하면 모든 통계 및 배너이미지가 삭제됩니다.<br />배너를 삭제하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
+				Ext.Msg.show({title:"확인",msg:"쿠폰아이템을 삭제하면 모든 구입내역 및 쿠폰아이템이미지가 삭제됩니다.<br />쿠폰아이템을 삭제하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
 					if (button == "yes") {
-						Ext.Msg.wait("배너를 삭제하고 있습니다.","잠시만 기다려주십시오.");
+						Ext.Msg.wait("쿠폰아이템을 삭제하고 있습니다.","잠시만 기다려주십시오.");
 						Ext.Ajax.request({
-							url:"<?php echo $_ENV['dir']; ?>/module/banner/exec/Admin.do.php",
+							url:"<?php echo $_ENV['dir']; ?>/module/coupon/exec/Admin.do.php",
 							success:function(response) {
 								var data = Ext.JSON.decode(response.responseText);
 								if (data.success == true) {
@@ -53,7 +69,7 @@ var ContentArea = function(viewport) {
 							failure:function() {
 								Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
 							},
-							params:{"action":"item","do":"delete","code":record.data.idx}
+							params:{"action":"item","do":"delete","idx":record.data.idx}
 						});
 					}
 				}});
@@ -66,9 +82,9 @@ var ContentArea = function(viewport) {
 
 	function ItemFormFunction(idx) {
 		if (idx) {
-			var title = "배너추가";
+			var title = "쿠폰아이템추가";
 		} else {
-			var title = "배너수정";
+			var title = "쿠폰아이템수정";
 		}
 		
 		new Ext.Window({
@@ -85,222 +101,140 @@ var ContentArea = function(viewport) {
 					bodyPadding:"10 10 5 10",
 					border:false,
 					autoScroll:true,
-					fieldDefaults:{labelAlign:"right",labelWidth:100,anchor:"100%",allowBlank:false},
+					fieldDefaults:{labelAlign:"right",labelWidth:80,anchor:"100%",allowBlank:false},
 					items:[
 						new Ext.form.FieldSet({
-							title:"광고주정보",
-							items:[
-								new Ext.form.FieldContainer({
-									fieldLabel:"광고주",
-									layout:"hbox",
-									items:[
-										new Ext.form.Hidden({
-											name:"mno",
-											allowBlank:true
-										}),
-										new Ext.form.TextField({
-											name:"master",
-											readOnly:true,
-											allowBlank:true,
-											width:100,
-											style:{marginRight:"5px"}
-										}),
-										new Ext.Button({
-											text:"광고주검색",
-											handler:function() {
-												
-											}
-										})
-									]
-								}),
-								new Ext.Panel({
-									border:false,
-									bodyPadding:"0 0 10 0",
-									html:'<div class="boxDefault">광고주를 선택하면 해당 광고주회원은 광고관리시스템에서 이 광고에 대한 통계를 보거나, 광고수정등이 가능합니다.</div>'
-								})
-							]
-						}),
-						new Ext.form.FieldSet({
-							title:"광고영역선택",
+							title:"쿠폰기본정보",
 							items:[
 								new Ext.form.ComboBox({
-									fieldLabel:"광고영역",
-									name:"code",
+									fieldLabel:"카테고리",
+									name:"category",
 									store:new Ext.data.JsonStore({
 										proxy:{
 											type:"ajax",
 											simpleSortMode:true,
-											url:"<?php echo $_ENV['dir']; ?>/module/banner/exec/Admin.get.php",
+											url:"<?php echo $_ENV['dir']; ?>/module/coupon/exec/Admin.get.php",
 											reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-											extraParams:{action:"section",get:"list"}
+											extraParams:{action:"category",get:"list"}
 										},
 										remoteSort:true,
-										sorters:[{property:"code",direction:"ASC"}],
+										sorters:[{property:"sort",direction:"ASC"}],
 										autoLoad:true,
 										pageSize:50,
-										fields:["code","title","type","point","filetype","width","height","allow_user","auto_active"]
+										fields:["idx","category",{name:"sort",type:"int"}]
 									}),
 									editable:false,
+									allowBlank:false,
 									mode:"local",
-									valueField:"code",
+									valueField:"idx",
+									displayField:"category",
 									triggerAction:"all",
-									tpl:'<tpl for="."><div class="x-boundlist-item">{title} ({code})</div></tpl>',
-									displayTpl:'<tpl for=".">{title} ({code})</tpl>',
-									emptyText:"광고를 게시할 광고영역을 선택하세요",
-									listeners:{select:{fn:function(form,selected) {
-										var record = selected.shift();
-										Ext.getCmp("ItemForm").getForm().findField("type").setValue(record.data.type);
-										Ext.getCmp("ItemForm").getForm().findField("point").setValue(record.data.point);
-										var fileType = record.data.filetype.replace("IMG","GIF,PNG,JPG");
-										if (fileType.search("GIF") > -1 || fileType.search("SWF") > -1) {
-											Ext.getCmp("ItemForm").getForm().findField("bannerfile").emptyText = "가로 "+record.data.width+"픽셀, 세로 "+record.data.height+"픽셀";
-											Ext.getCmp("ItemForm").getForm().findField("bannerfile").reset();
-											Ext.getCmp("ItemForm").getForm().findField("bannerfile").show();
-										} else {
-											Ext.getCmp("ItemForm").getForm().findField("bannerfile").hide();
-										}
-										
-										if (fileType.search("TEXT") > -1) {
-											Ext.getCmp("ItemForm").getForm().findField("bannertext").show();
-										} else {
-											Ext.getCmp("ItemForm").getForm().findField("bannertext").hide();
-										}
-									}}}
+									emptyText:"카테고리를 선택하세요."
 								}),
-								new Ext.Panel({
-									border:false,
-									bodyPadding:"0 0 10 0",
-									html:'<div class="boxDefault">광고영역에 따라 광고유형 및 광고비 등의 정보가 자동으로 설정되며, 자동설정된 값을 변경시 해당 설정값으로 광고가 등록되게 됩니다.</div>'
-								})
-							]
-						}),
-						new Ext.form.FieldSet({
-							title:"광고유형 및 광고비설정",
-							items:[
-								new Ext.form.ComboBox({
-									fieldLabel:"광고유형",
-									name:"type",
-									store:new Ext.data.ArrayStore({
-										fields:["value","display"],
-										data:[["CPC","CPC방식 (유효클릭당 정해진 배너비만큼 차감되어 배너선입금이 모두 소진되면 노출중단)"],["CPM","CPM방식 (30일동안 정해진 배너비로 고정적으로 노출 (클릭수와는 무관, 정액제)"]]
-									}),
-									editable:false,
-									mode:"local",
-									displayField:"display",
-									valueField:"value",
-									triggerAction:"all",
-									emptyText:"광고유형을 선택하세요. (광고영역선택시 자동으로 설정됩니다.)",
-									listeners:{change:{fn:function(form) {
-										if (form.getValue() == "CPC") {
-											Ext.getCmp("BannerTypeCPC1").show();
-											Ext.getCmp("BannerTypeCPC2").show();
-											Ext.getCmp("BannerTypeCPC1").enable();
-											Ext.getCmp("BannerTypeCPC2").enable();
-											Ext.getCmp("BannerTypeCPM").hide();
-											Ext.getCmp("BannerTypeCPM").disable();
-										} else {
-											Ext.getCmp("BannerTypeCPC1").hide();
-											Ext.getCmp("BannerTypeCPC2").hide();
-											Ext.getCmp("BannerTypeCPC1").disable();
-											Ext.getCmp("BannerTypeCPC2").disable();
-											Ext.getCmp("BannerTypeCPM").show();
-											Ext.getCmp("BannerTypeCPM").enable();
-										}
-									}}}
+								new Ext.form.TextField({
+									fieldLabel:"쿠폰제목",
+									name:"title",
+									allowBlank:false
 								}),
 								new Ext.form.FieldContainer({
-									id:"BannerTypeCPC1",
-									fieldLabel:"클릭당광고비",
+									fieldLabel:"쿠폰코드",
 									layout:"hbox",
-									hidden:true,
-									disabled:true,
+									items:[
+										new Ext.form.TextField({
+											name:"code",
+											allowBlank:false,
+											flex:1
+										}),
+										new Ext.form.DisplayField({
+											value:"&nbsp;(중복되지 않는 쿠폰고유코드를 입력하세요. 차후API에서 사용)"
+										})
+									]
+								}),
+								new Ext.form.TextField({
+									fieldLabel:"간략정보",
+									name:"infor",
+									allowBlank:false
+								}),
+								new Ext.form.FieldContainer({
+									fieldLabel:"쿠폰가격",
+									layout:"hbox",
 									items:[
 										new Ext.form.NumberField({
 											name:"point",
-											width:80,
-											value:0
+											width:100,
+											value:0,
+											allowBlank:false
 										}),
 										new Ext.form.DisplayField({
-											value:"&nbsp;포인트 (유효클릭당 선입금포인트에서 이 포인트금액만큼 차감됩니다.)",
-											flex:1
+											value:"&nbsp;포인트 (0 입력시 무료)"
 										})
 									]
 								}),
 								new Ext.form.FieldContainer({
-									id:"BannerTypeCPC2",
-									fieldLabel:"선입금포인트",
+									fieldLabel:"판매수량",
 									layout:"hbox",
-									hidden:true,
-									disabled:true,
 									items:[
 										new Ext.form.NumberField({
-											name:"paid_point",
-											width:80,
-											value:0
+											name:"ea",
+											width:100,
+											value:0,
+											allowBlank:false
 										}),
 										new Ext.form.DisplayField({
-											value:"&nbsp;포인트 (이 포인트가 소진될때까지 광고가 노출됩니다.)",
-											flex:1
+											value:"&nbsp;개 (0 입력시 매진)"
 										})
 									]
 								}),
 								new Ext.form.FieldContainer({
-									id:"BannerTypeCPM",
-									fieldLabel:"광고노출일",
+									fieldLabel:"만료일",
 									layout:"hbox",
-									hidden:true,
-									disabled:true,
 									items:[
-										new Ext.form.DateField({
-											name:"start_date",
-											format:"Y-m-d",
-											value:"<?php echo date('Y-m-d'); ?>",
-											width:100,
-											listeners:{change:{fn:function(form) {
-												Ext.getCmp("ItemForm").getForm().findField("end_date").setValue(Ext.Date.format(Ext.Date.add(new Date(form.getValue()),Ext.Date.DAY,30),"Y-m-d"));
-												Ext.getCmp("ItemForm").getForm().findField("end_date").setMinValue(form.getValue());
-											}}}
+										new Ext.form.NumberField({
+											name:"expire",
+											width:60,
+											value:0,
+											allowBlank:false
 										}),
 										new Ext.form.DisplayField({
-											value:"&nbsp;부터&nbsp;"
-										}),
-										new Ext.form.DateField({
-											name:"end_date",
-											format:"Y-m-d",
-											width:100,
-											minValue:"<?php echo date('Y-m-d'); ?>",
-											value:"<?php echo date('Y-m-d',mktime(0,0,0,date('m')+1,date('d'),date('Y'))); ?>"
-										}),
-										new Ext.form.DisplayField({
-											value:"&nbsp;까지"
+											value:"&nbsp;일 (구매일로 부터 설정한 일자까지만 사용할 수 있습니다. 0 입력시 무제한)"
 										})
 									]
+								}),
+								new Ext.form.FileUploadField({
+									fieldLabel:"쿠폰이미지",
+									name:"file",
+									allowBlank:(idx ? true : false),
+									buttonText:"",
+									buttonConfig:{icon:"<?php echo $_ENV['dir']; ?>/images/common/icon_disk.png"},
+									emptyText:(idx ? "이미지를 변경하고자할 경우 새로운 GIF파일을 선택하십시오." : "GIF이미지만 업로드 가능합니다.")
 								})
 							]
 						}),
 						new Ext.form.FieldSet({
-							title:"배너설정",
+							title:"쿠폰설정",
 							items:[
-								new Ext.form.FileUploadField({
-									fieldLabel:"배너파일",
-									name:"bannerfile",
-									allowBlank:true,
-									buttonText:"",
-									buttonConfig:{icon:"<?php echo $_ENV['dir']; ?>/images/common/icon_disk.png"},
-									allowBlank:true
+								new Ext.form.Checkbox({
+									name:"is_new",
+									boxLabel:"신규 쿠폰으로 표시합니다."
 								}),
+								new Ext.form.Checkbox({
+									name:"is_vote",
+									boxLabel:"추천 쿠폰으로 표시합니다."
+								}),
+								new Ext.form.Checkbox({
+									name:"is_gift",
+									boxLabel:"이 쿠폰은 선물이 가능합니다."
+								})
+							]
+						}),
+						new Ext.form.FieldSet({
+							title:"상세설명",
+							items:[
 								new Ext.form.TextArea({
-									fieldLabel:"텍스트광고문구",
-									name:"bannertext",
-									allowBlank:true,
-									height:60,
-									hidden:true,
-									emptyText:"텍스트 광고문구를 입력하여 주십시오."
-								}),
-								new Ext.form.TextField({
-									fieldLabel:"광고URL",
-									name:"url",
-									emptyText:"광고를 클릭시 이동될 주소를 입력하여 주십시오. (http:// 포함)"
+									id:"Wysiwyg",
+									anchor:"100%",
+									name:"content",
+									height:200
 								})
 							]
 						})
@@ -311,11 +245,12 @@ var ContentArea = function(viewport) {
 				new Ext.Button({
 					text:"확인",
 					handler:function() {
+						oEditors.getById["Wysiwyg-inputEl"].exec("UPDATE_IR_FIELD",[]);
 						Ext.getCmp("ItemForm").getForm().submit({
-							url:"<?php echo $_ENV['dir']; ?>/module/banner/exec/Admin.do.php?action=item&do="+(idx ? "modify&idx="+idx : "add"),
+							url:"<?php echo $_ENV['dir']; ?>/module/coupon/exec/Admin.do.php?action=item&do="+(idx ? "modify&idx="+idx : "add"),
 							submitEmptyText:false,
 							waitTitle:"잠시만 기다려주십시오.",
-							waitMsg:(idx ? "배너를 수정하고 있습니다." : "배너를 추가하고 있습니다."),
+							waitMsg:(idx ? "쿠폰아이템를 수정하고 있습니다." : "쿠폰아이템를 추가하고 있습니다."),
 							success:function(form,action) {
 								Ext.Msg.show({title:"안내",msg:"성공적으로 "+(idx ? "수정" : "추가")+"하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function(button) {
 									Ext.getCmp("ListPanel").getStore().loadPage(1);
@@ -324,8 +259,8 @@ var ContentArea = function(viewport) {
 							},
 							failure:function(form,action) {
 								if (action.result) {
-									if (action.result.errors.bannerfile) {
-										Ext.Msg.show({title:"에러",msg:action.result.errors.bannerfile,buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
+									if (action.result.errors.file) {
+										Ext.Msg.show({title:"에러",msg:action.result.errors.file,buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
 										return;
 									}
 								}
@@ -344,31 +279,19 @@ var ContentArea = function(viewport) {
 			listeners:{show:{fn:function() {
 				if (idx) {
 					Ext.getCmp("ItemForm").getForm().load({
-						url:"<?php echo $_ENV['dir']; ?>/module/banner/exec/Admin.get.php?action=item&get=data&idx="+(idx ? idx : ""),
+						url:"<?php echo $_ENV['dir']; ?>/module/coupon/exec/Admin.get.php?action=item&get=data&idx="+(idx ? idx : ""),
 						waitTitle:"잠시만 기다려주십시오.",
 						waitMsg:"데이터를 로딩중입니다.",
 						success:function(form,action) {
-							form.findField("code").disable();
-							var fileType = action.result.data.section.filetype.replace("IMG","GIF,PNG,JPG");
-							if (fileType.search("GIF") > -1 || fileType.search("SWF") > -1) {
-								form.findField("bannerfile").emptyText = "가로 "+action.result.data.section.width+"픽셀, 세로 "+action.result.data.section.height+"픽셀 (배너파일을 수정시에만 재등록하여 주십시오.)";
-								form.findField("bannerfile").reset();
-								form.findField("bannerfile").show();
-							} else {
-								form.findField("bannerfile").hide();
-							}
 							
-							if (fileType.search("TEXT") > -1) {
-								form.findField("bannertext").show();
-							} else {
-								form.findField("bannertext").hide();
-							}
 						},
 						failure:function(form,action) {
 							Ext.Msg.show({title:"에러",msg:"서버에 이상이 있어 데이터를 불러오지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
 						}
 					});
 				}
+				
+				nhn.husky.EZCreator.createInIFrame({oAppRef:oEditors,elPlaceHolder:"Wysiwyg-inputEl",sSkinURI:"<?php echo $_ENV['dir']; ?>/module/wysiwyg/wysiwyg.php?resize=false",fCreator:"createSEditorInIFrame"});
 			}}}
 		}).show();
 	}
@@ -381,8 +304,8 @@ var ContentArea = function(viewport) {
 		margin:"0 5 0 0",
 		tbar:[
 			new Ext.Button({
-				text:"배너추가",
-				icon:"<?php echo $_ENV['dir']; ?>/module/banner/images/admin/icon_layout_add.png",
+				text:"쿠폰아이템추가",
+				icon:"<?php echo $_ENV['dir']; ?>/module/coupon/images/admin/icon_item.png",
 				handler:function() {
 					ItemFormFunction();
 				}
@@ -395,7 +318,7 @@ var ContentArea = function(viewport) {
 			}),
 			new Ext.Button({
 				text:"검색",
-				icon:"<?php echo $_ENV['dir']; ?>/module/banner/images/admin/icon_magnifier.png",
+				icon:"<?php echo $_ENV['dir']; ?>/module/coupon/images/admin/icon_magnifier.png",
 				handler:function() {
 					store.getProxy().setExtraParam("keyword",Ext.getCmp("Keyword").getValue());
 					store.loadPage(1);
@@ -403,28 +326,28 @@ var ContentArea = function(viewport) {
 			}),
 			'-',
 			new Ext.Button({
-				text:"선택한 배너를&nbsp;",
-				icon:"<?php echo $_ENV['dir']; ?>/module/banner/images/admin/icon_tick.png",
+				text:"선택한 쿠폰아이템을&nbsp;",
+				icon:"<?php echo $_ENV['dir']; ?>/module/coupon/images/admin/icon_tick.png",
 				menu:new Ext.menu.Menu({
 					items:[{
-						text:"선택 배너영역 삭제",
+						text:"선택 쿠폰아이템 삭제",
 						handler:function() {
 							var checked = Ext.getCmp("ListPanel").getSelectionModel().getSelection();
 							if (checked.length == 0) {
-								Ext.Msg.show({title:"안내",msg:"배너영역을 선택하여 주십시오.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
+								Ext.Msg.show({title:"안내",msg:"쿠폰아이템을 선택하여 주십시오.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
 								return;
 							}
 							
-							var codes = new Array();
+							var idxs = new Array();
 							for (var i=0, loop=checked.length;i<loop;i++) {
-								codes.push(checked[i].get("code"));
+								idxs.push(checked[i].get("idx"));
 							}
 							
-							Ext.Msg.show({title:"확인",msg:"배너영역을 삭제하면 해당 배너영역의 모든 배너가 삭제됩니다.<br />배너영역을 삭제하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
+							Ext.Msg.show({title:"확인",msg:"쿠폰아이템를 삭제하면 모든 구입내역 및 쿠폰아이템이미지가 삭제됩니다.<br />쿠폰아이템을 삭제하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
 								if (button == "yes") {
-									Ext.Msg.wait("배너영역을 삭제하고 있습니다.","잠시만 기다려주십시오.");
+									Ext.Msg.wait("쿠폰아이템을 삭제하고 있습니다.","잠시만 기다려주십시오.");
 									Ext.Ajax.request({
-										url:"<?php echo $_ENV['dir']; ?>/module/banner/exec/Admin.do.php",
+										url:"<?php echo $_ENV['dir']; ?>/module/coupon/exec/Admin.do.php",
 										success:function(response) {
 											var data = Ext.JSON.decode(response.responseText);
 											if (data.success == true) {
@@ -438,82 +361,7 @@ var ContentArea = function(viewport) {
 										failure:function() {
 											Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
 										},
-										params:{"action":"section","do":"delete","code":codes.join(",")}
-									});
-								}
-							}});
-						}
-					},'-',{
-						text:"선택 배너 활성화",
-						handler:function() {
-							var checked = Ext.getCmp("ListPanel").getSelectionModel().getSelection();
-							if (checked.length == 0) {
-								Ext.Msg.show({title:"안내",msg:"배너를 선택하여 주십시오.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
-								return;
-							}
-							
-							var idxs = new Array();
-							for (var i=0, loop=checked.length;i<loop;i++) {
-								idxs.push(checked[i].get("idx"));
-							}
-							
-							Ext.Msg.show({title:"확인",msg:"선택 배너를 활성화 할때 CPM방식의 배너중 시작일이 오늘날짜보다 이전이면, 오늘날짜 기준으로 활성화하시겠습니까?<br />아니오를 누르면 기존 시작일을 유지하고 상태만 활성화로 변경됩니다.",buttons:Ext.Msg.YESNOCANCEL,icon:Ext.Msg.QUESTION,fn:function(button) {
-								if (button == "yes" || button == "no") {
-									var reset = button == "yes" ? "TRUE" : "FALSE";
-									Ext.Msg.wait("배너를 활성화하고 있습니다.","잠시만 기다려주십시오.");
-									Ext.Ajax.request({
-										url:"<?php echo $_ENV['dir']; ?>/module/banner/exec/Admin.do.php",
-										success:function(response) {
-											var data = Ext.JSON.decode(response.responseText);
-											if (data.success == true) {
-												Ext.Msg.show({title:"안내",msg:"성공적으로 처리하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
-													Ext.getCmp("ListPanel").getStore().loadPage(1);
-												}});
-											} else {
-												Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
-											}
-										},
-										failure:function() {
-											Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
-										},
-										params:{"action":"item","do":"activemode","value":"TRUE","reset":reset,"idx":idxs.join(",")}
-									});
-								}
-							}});
-						}
-					},{
-						text:"선택 배너 비활성화",
-						handler:function() {
-							var checked = Ext.getCmp("ListPanel").getSelectionModel().getSelection();
-							if (checked.length == 0) {
-								Ext.Msg.show({title:"안내",msg:"배너를 선택하여 주십시오.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
-								return;
-							}
-							
-							var idxs = new Array();
-							for (var i=0, loop=checked.length;i<loop;i++) {
-								idxs.push(checked[i].get("idx"));
-							}
-							
-							Ext.Msg.show({title:"확인",msg:"선택 배너를 비활성화하시겠습니까?<br />게시기간 및 잔여포인트가 남아있어도 광고가 노출되지 않습니다.",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
-								if (button == "yes" || button == "no") {
-									Ext.Msg.wait("배너를 비활성화하고 있습니다.","잠시만 기다려주십시오.");
-									Ext.Ajax.request({
-										url:"<?php echo $_ENV['dir']; ?>/module/banner/exec/Admin.do.php",
-										success:function(response) {
-											var data = Ext.JSON.decode(response.responseText);
-											if (data.success == true) {
-												Ext.Msg.show({title:"안내",msg:"성공적으로 처리하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
-													Ext.getCmp("ListPanel").getStore().loadPage(1);
-												}});
-											} else {
-												Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
-											}
-										},
-										failure:function() {
-											Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
-										},
-										params:{"action":"item","do":"activemode","value":"FALSE","idx":idxs.join(",")}
+										params:{"action":"item","do":"delete","idx":idxs.join(",")}
 									});
 								}
 							}});
@@ -551,6 +399,7 @@ var ContentArea = function(viewport) {
 							var sHTML = "";
 							if (record.data.is_new == "TRUE") sHTML+= '<span style="color:blue;">[신규]</span> ';
 							if (record.data.is_vote == "TRUE") sHTML+= '<span style="color:red;">[추천]</span> ';
+							if (record.data.is_gift == "TRUE") sHTML+= '<span style="color:green;">[선물가능]</span> ';
 							sHTML+= value;
 							
 							return sHTML;
@@ -582,6 +431,13 @@ var ContentArea = function(viewport) {
 						renderer:function(value) {
 							if (value == 0) return '<div style="color:blue; text-align:center;">무제한</div>';
 							else return '<div style="color:red; text-align:center;">'+GetNumberFormat(value)+'일</div>';
+						}
+					},{
+						header:"판매수량",
+						dataIndex:"sell",
+						width:60,
+						renderer:function(value) {
+							return '<div style="color:blue; text-align:right;">'+GetNumberFormat(value)+'EA</div>';
 						}
 					},{
 						header:"남은수량",

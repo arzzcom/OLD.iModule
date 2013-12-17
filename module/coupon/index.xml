@@ -31,6 +31,7 @@
 			<field name="ea" type="int" length="11">쿠폰수량</field>
 			<field name="is_new" type="enum" length="TRUE,FALSE" default="FALSE">신규여부</field>
 			<field name="is_vote" type="enum" length="TRUE,FALSE" default="FALSE">추천여부</field>
+			<field name="is_gift" type="enum" length="TRUE,FALSE" default="FALSE">선물가능여부</field>
 			<index name="idx" type="auto_increment" />
 			<index name="category" type="index" />
 			<index name="code" type="unique" />
