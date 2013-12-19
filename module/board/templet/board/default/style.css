@@ -43,6 +43,7 @@
 
 
 /* View */
+.ModuleBoard h4 {font-size:12px; padding-left:5px;}
 .ModuleBoard .viewbar {height:32px; background:url(./images/listbar_bg.gif); overflow:hidden;}
 .ModuleBoard .viewbar .left {background:url(./images/listbar_left.gif); overflow:hidden;}
 .ModuleBoard .viewbar .right {background:url(./images/listbar_right.gif); overflow:hidden;}
