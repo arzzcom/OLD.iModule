@@ -1,9 +1,11 @@
+<article>
+<header>
 <table cellpadding="0" cellspacing="0" class="layoutfixed">
 <col width="5" /><col width="100%" /><col width="5" />
 <thead>
 <tr class="viewbar">
 	<td class="left"></td>
-	<td class="title">{$data.title}</td>
+	<td class="title"><h4>{$data.title}</h4></td>
 	<td class="right"></td>
 </tr>
 </thead>
@@ -27,6 +29,12 @@
 		</div>
 	</td>
 </tr>
+</tbody>
+</table>
+</header>
+<table cellpadding="0" cellspacing="0" class="layoutfixed">
+<col width="5" /><col width="100%" /><col width="5" />
+<tbody>
 <tr>
 	<td></td>
 	<td>
@@ -55,17 +63,13 @@
 		<div class="height10"></div>
 		{/if}
 		<div class="height5"></div>
-
-
-	</td>
-</tr>
-<tr>
-	<td colspan="3">
-		{$ment}
 	</td>
 </tr>
 </tbody>
 </table>
+</article>
+
+{$ment}
 
 <div class="height5"></div>
 
