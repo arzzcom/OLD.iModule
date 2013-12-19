@@ -242,8 +242,8 @@ class ModuleBoard extends Module {
 		$content = str_replace('{$moduleHost}','http://'.$_SERVER['HTTP_HOST'],$content);
 		$content = strip_tags($content,'<p>,<a>,<embed>,<table>,<div>,<font>,<span>,<img>,<br>');
 		$content = str_replace(array('onclick','onload','onerror'),'event',$content);
-		if ($this->setup['mobile'] == true) $content = '<div class="smartOutputMobile">'.$content.'</div>';
-		else $content = '<div class="smartOutput">'.$content.'</div>';
+		if ($this->setup['mobile'] == true) $content = '<section class="smartOutputMobile">'.$content.'</section>';
+		else $content = '<section class="smartOutput">'.$content.'</section>';
 
 		if (preg_match_all('/<img[^>]+file="([^"]+)"[^>]+movie="([^\"]+)"[^>]+(style="[^"]+")[^>]*>/',$content,$match) == true) {
 			for ($i=0, $loop=sizeof($match[0]);$i<$loop;$i++) {
