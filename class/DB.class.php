@@ -34,19 +34,27 @@ class DB {
 		if (isset($this->connector[$db]) == false) {
 			switch ($this->infor[$db]['type'] ) {
 				case 'mysql' :
-					$this->connector[$db] = @mysql_connect($this->infor[$db]['host'],$this->infor[$db]['id'],$this->infor[$db]['password']);
+					$this->connector[$db] = @mysql_connect($this->infor[$db]['host'],$this->infor[$db]['id'],$this->infor[$db]['password'],true);
 					@mysql_query("set names utf8");
 				break;
 			}
 		}
 	}
 
-	function DBCheck() {
+	function DBcheck($infor='') {
+		$infor = is_array($infor) == true ? $infor : $this->connector['default'];
 		$success = true;
-		switch ($this->infor['default']['type'] ) {
+		switch ($infor['type']) {
 			case 'mysql' :
-				$this->connector['default'] = @mysql_connect($this->infor['default']['host'],$this->infor['default']['id'],$this->infor['default']['password']) or ($success = false);
+				$connect = @mysql_connect($infor['host'],$infor['id'],$infor['password'],true) or ($success = false);
+				if ($success == true) {
+					@mysql_select_db($infor['dbname'],$connect) or ($success = false);
+				}
 			break;
+		}
+		
+		if ($success == true) {
+			@mysql_close($connect);
 		}
 
 		return $success;
@@ -677,7 +685,7 @@ class DB {
 			case 'mysql' :
 				$query = 'INSERT INTO `'.$this->infor[$db]['dbname'].'`.`'.$table.'` '.$insertor;
 				@mysql_query($query,$this->connector[$db]) or $this->DBerror($query,mysql_error());
-				$returnValue = mysql_insert_id($this->connector[$db]);
+				$returnValue = @mysql_insert_id($this->connector[$db]);
 			break;
 		}
 		

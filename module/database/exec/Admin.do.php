@@ -365,4 +365,90 @@ if ($action == 'user') {
 		}
 	}
 }
+
+if ($action == 'server') {
+	if ($do == 'add') {
+		$insert = array();
+		$infor = array();
+		$insert['dbcode'] = Request('dbcode');
+		$insert['dbhost'] = Request('dbhost');
+		$insert['dbtype'] = Request('dbtype');
+		$insert['dbid'] = ArzzEncoder(Request('dbid'));
+		$insert['dbpassword'] = ArzzEncoder(Request('dbpassword'));
+		$insert['dbname'] = Request('dbname');
+		
+		$infor['host'] = Request('dbhost');
+		$infor['type'] = Request('dbtype');
+		$infor['id'] = Request('dbid');
+		$infor['password'] = Request('dbpassword');
+		$infor['dbname'] = Request('dbname');
+		
+		if ($insert['dbcode'] == 'default') {
+			$errors['dbcode'] = 'DB코드중 default 는 사용하지 못합니다.';
+		}
+		
+		if (preg_match('/^[a-zA-Z_]+$/',$insert['dbcode']) == false) {
+			$errors['dbcode'] = 'DB코드중 영문자 및 _(언더바)만 사용가능합니다.';
+		}
+		
+		if ($mDB->DBcount($_ENV['table']['db'],"where `dbcode`='{$insert['dbcode']}'") > 0) {
+			$errors['dbcode'] = 'DB코드가 중복됩니다.';
+		}
+		
+		if ($mDB->DBcheck($infor) == false) {
+			$errors['connect'] = '해당 DB서버에 접속할 수 없습니다.';
+		}
+		
+		if (sizeof($errors) == 0) {
+			$return['success'] = true;
+			$mDB->DBinsert($_ENV['table']['db'],$insert);
+		} else {
+			$return['success'] = false;
+			$return['errors'] = $errors;
+		}
+		
+		exit(json_encode($return));
+	}
+	
+	if ($do == 'modify') {
+		$insert = array();
+		$infor = array();
+		$dbcode = Request('dbcode');
+		$insert['dbhost'] = Request('dbhost');
+		$insert['dbtype'] = Request('dbtype');
+		$insert['dbid'] = ArzzEncoder(Request('dbid'));
+		$insert['dbpassword'] = ArzzEncoder(Request('dbpassword'));
+		$insert['dbname'] = Request('dbname');
+		
+		$infor['host'] = Request('dbhost');
+		$infor['type'] = Request('dbtype');
+		$infor['id'] = Request('dbid');
+		$infor['password'] = Request('dbpassword');
+		$infor['dbname'] = Request('dbname');
+		
+		if ($mDB->DBcheck($infor) == false) {
+			$errors['connect'] = '해당 DB서버에 접속할 수 없습니다.';
+		}
+		
+		if (sizeof($errors) == 0) {
+			$return['success'] = true;
+			$mDB->DBupdate($_ENV['table']['db'],$insert,'',"where `dbcode`='{$dbcode}'");
+		} else {
+			$return['success'] = false;
+			$return['errors'] = $errors;
+		}
+		
+		exit(json_encode($return));
+	}
+	
+	if ($do == 'delete') {
+		$dbcode = explode(',',Request('dbcode'));
+		for ($i=0, $loop=sizeof($dbcode);$i<$loop;$i++) {
+			$mDB->DBdelete($_ENV['table']['db'],"where `dbcode`='{$dbcode[$i]}'");
+		}
+		
+		$return['success'] = true;
+		exit(json_encode($return));
+	}
+}
 ?>

@@ -159,68 +159,24 @@ if ($action == 'field') {
 	$list = GetArrayToExtData($field);
 }
 
-if ($action == 'item') {
+if ($action == 'server') {
 	if ($get == 'list') {
-		$idx = Request('idx');
-		$key = Request('key');
-		$keyword = Request('keyword');
-		$table = $mDB->DBfetch($mDatabase->table['table'],array('name','field'),"where `idx`=$idx");
-
-		$fields = unserialize($table['field']);
-		$find = '';
-		if ($key && $keyword) {
-			$find = "where `$key` like '%$keyword%'";
-		}
-		$data = $mDB->DBfetchs($table['name'],'*',$find,$orderer,$limiter);
-		$total = $mDB->DBcount($table['name'],$find);
-
-		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
-			$list[$i] = array();
-			foreach ($fields as $key=>$field) {
-				if ($field['type'] == 'FILE') {
-					if ($data[$i][$field['name']]) {
-						$file = $mDB->DBfetch($mDatabase->table['file'],array('idx','filename','filepath','filesize','hit'),"where `idx`={$data[$i][$field['name']]}");
-						$list[$i][] = '"'.$field['name'].'":"'.$file['idx'].'|'.GetString($file['filename'],'ext').'|'.$file['filepath'].'|'.$file['filesize'].'|'.$file['hit'].'"';
-					}
-				} elseif ($field['type'] == 'TEXT' || $field['type'] == 'HTML') {
-					$list[$i][] = '"'.$field['name'].'":"'.GetCutString(GetString(strip_tags($data[$i][$field['name']]),'extreplace'),50).'"';
-				} else {
-					$list[$i][] = '"'.$field['name'].'":"'.GetString(strip_tags($data[$i][$field['name']]),'extreplace').'"';
-				}
-			}
-			$list[$i] = '{'.implode(',',$list[$i]).'}';
+		$lists = $mDB->DBfetchs($_ENV['table']['db'],'*');
+		for ($i=0, $loop=sizeof($lists);$i<$loop;$i++) {
+			$lists[$i]['dbid'] = ArzzDecoder($lists[$i]['dbid']);
+			$lists[$i]['status'] = $mDB->DBcheck(array('type'=>$lists[$i]['dbtype'],'host'=>$lists[$i]['dbhost'],'id'=>$lists[$i]['dbid'],'password'=>ArzzDecoder($lists[$i]['dbpassword']),'dbname'=>$lists[$i]['dbname'])) == true ? 'TRUE' : 'FALSE';
 		}
 	}
-
+	
 	if ($get == 'data') {
-		header('Content-type: text/xml; charset="UTF-8"', true);
-		header("Cache-Control: no-cache, must-revalidate");
-		header("Pragma: no-cache");
-
-		$tno = Request('tno');
-		$idx = Request('idx');
-
-		$table = $mDB->DBfetch($mDatabase->table['table'],array('name','field'),"where `idx`=$tno");
-		$data = $mDB->DBfetch($table['name'],'*',"where `idx`=$idx");
-
-		$field = unserialize($table['field']);
-
-		$item = array();
-		for ($i=0, $loop=sizeof($field);$i<$loop;$i++) {
-			if ($field[$i]['type'] == 'HTML') {
-				$item[$field[$i]['name']] = str_replace('{$moduleDir}',$mDatabase->moduleDir,$data[$field[$i]['name']]);
-			} elseif ($field[$i]['type'] == 'FILE') {
-				if ($data[$field[$i]['name']] && $data[$field[$i]['name']] != '0') {
-					$file = $mDB->DBfetch($mDatabase->table['file'],array('filename','filesize'),"where `idx`={$data[$field[$i]['name']]}");
-					$item[$field[$i]['name']] = $file['filename'].' ('.GetFileSize($file['filesize']).') 파일이 등록되어 있습니다.';
-				}
-			} else {
-				$item[$field[$i]['name']] = $data[$field[$i]['name']];
-			}
-		}
-
-		echo GetArrayToExtXML($item,true);
-		exit;
+		$dbcode = Request('dbcode');
+		$data = $mDB->DBfetch($_ENV['table']['db'],'*',"where `dbcode`='$dbcode'");
+		$data['dbid'] = ArzzDecoder($data['dbid']);
+		unset($data['dbpassword']);
+		
+		$return['success'] = true;
+		$return['data'] = $data;
+		exit(json_encode($return));
 	}
 }
 
