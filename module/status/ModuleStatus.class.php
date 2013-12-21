@@ -14,7 +14,7 @@ class ModuleStatus extends Module {
 		$this->table['referer'] = $_ENV['code'].'_status_referer_table';
 		$this->table['keyword'] = $_ENV['code'].'_status_keyword_table';
 		
-		$this->bot = array('NaverBot'=>'네이버봇(NaberBot)','Daumoa'=>'다음봇(Daumoa)','Googlebot'=>'구글봇(Googlebot)','Yeti'=>'네이버봇(Yeti)','bingbot'=>'Bing봇(bingbot)','Mediapartners-Google'=>'구글(GooglePartner)','checkprivacy'=>'한국인터넷진흥원(KISA)','facebook'=>'페이스북');
+		$this->bot = array('Daumoa'=>'다음봇(Daumoa)','Googlebot'=>'구글봇(Googlebot)','Yeti'=>'네이버봇(Yeti)','bingbot'=>'Bing봇(bingbot)','Baiduspider'=>'바이두봇(Baiduspider)','Mediapartners-Google'=>'구글(GooglePartner)','checkprivacy'=>'한국인터넷진흥원(KISA)');
 		
 		parent::__construct('status');
 	}
@@ -42,7 +42,7 @@ class ModuleStatus extends Module {
 	}
 	
 	function IsBot() {
-		if (preg_match('/(TurnitinBot|checkprivacy|NaverBot|Daumoa|Googlebot|msnbot|WebAuto|Yeti|bingbot|Mediapartners-Google|nagios-plugins|Ezooms|MJ12bot|WBSearchBot|Wizdata_Crawler|facebook|first)/',$_SERVER['HTTP_USER_AGENT'],$match) == true) {
+		if (preg_match('/(TurnitinBot|checkprivacy|NaverBot|Daumoa|Googlebot|msnbot|WebAuto|Yeti|bingbot|Mediapartners-Google|nagios-plugins|Ezooms|MJ12bot|WBSearchBot|Wizdata_Crawler|facebook|first|AhrefsBot|Baiduspider)/',$_SERVER['HTTP_USER_AGENT'],$match) == true) {
 			return $match[1];
 		} else {
 			return false;
