@@ -42,7 +42,7 @@ class ModuleStatus extends Module {
 	}
 	
 	function IsBot() {
-		if (preg_match('/(TurnitinBot|checkprivacy|NaverBot|Daumoa|Googlebot|msnbot|WebAuto|Yeti|bingbot|Mediapartners-Google|nagios-plugins|Ezooms|MJ12bot|WBSearchBot|Wizdata_Crawler|facebook|first|AhrefsBot|Baiduspider)/',$_SERVER['HTTP_USER_AGENT'],$match) == true) {
+		if (preg_match('/(TurnitinBot|checkprivacy|NaverBot|Daumoa|Googlebot|msnbot|WebAuto|Yeti|bingbot|Mediapartners-Google|nagios-plugins|Ezooms|MJ12bot|WBSearchBot|Wizdata_Crawler|facebook|first|AhrefsBot|Baiduspider|DigExt)/',$_SERVER['HTTP_USER_AGENT'],$match) == true) {
 			return $match[1];
 		} else {
 			return false;
