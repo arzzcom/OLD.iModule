@@ -82,6 +82,9 @@ class ModuleStatus extends Module {
 				
 				$isKeyword = false;
 				$parseReferer = parse_url($_SERVER['HTTP_REFERER']);
+				$parseReferer['host'] = isset($parseReferer['host']) == true ? $parseReferer['host'] : '';
+				$parseReferer['query'] = isset($parseReferer['query']) == true ? $parseReferer['query'] : '';
+
 				if (preg_match('/naver.com/',$parseReferer['host']) == true && $this->GetQueryString($parseReferer['query'],'query')) {
 					$isKeyword = $this->GetQueryString($parseReferer['query'],'query');
 				} elseif (preg_match('/google/',$parseReferer['host']) == true && $this->GetQueryString($parseReferer['query'],'q')) {
