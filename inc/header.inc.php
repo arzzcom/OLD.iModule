@@ -3,7 +3,6 @@
 <html lang="ko">
 <head>
 <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
-<META http-equiv="X-UA-Compatible" content="IE=8" />
 <title><?php echo isset($title) == true ? $title : ''; ?></title>
 <link rel="stylesheet" href="<?php echo $_ENV['dir']; ?>/css/default.css" type="text/css" title="style" />
 <script type="text/javascript" src="<?php echo $_ENV['dir']; ?>/script/php2js.php"></script>
