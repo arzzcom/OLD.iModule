@@ -13,7 +13,7 @@ class AntiSpam {
 			$spamCode = $this->ArzzEncoder($rand1.' 더하기 '.$rand2);
 		}
 
-		return '<img src="'.$_ENV['dir'].'/class/AntiSpam.class.php?code='.$spamCode.'" style="border:1px solid #CCCCCC;" />';
+		return '<img src="'.$_ENV['dir'].'/class/AntiSpam.class.php?code='.$spamCode.'" style="border:1px solid #CCCCCC;" class="AntiSpamImage" />';
 	}
 
 	function GetImage($code) {
