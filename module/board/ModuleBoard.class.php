@@ -84,7 +84,6 @@ class ModuleBoard extends Module {
 				}
 			
 				if ($this->setup['mobile'] == true) {
-					$this->setup['listnum'] = 15;
 					$this->setup['pagenum'] = 3;
 				}
 		
@@ -1004,11 +1003,6 @@ class ModuleBoard extends Module {
 		$file = $this->mDB->DBfetchs($this->table['file'],'*',"where `type`='post' and `repto`=$idx");
 
 		for ($i=0, $loop=sizeof($file);$i<$loop;$i++) {
-			if ($this->setup['mobile'] == true && $file[$i]['filetype'] == 'IMG') {
-				if (preg_match('/ShowImage.do.php\?idx='.$file[$i]['idx'].'/',$data['content']) == false) {
-					$data['content'] = '<div style="margin:5px;"><img src="http://'.$_SERVER['HTTP_HOST'].$this->moduleDir.'/exec/ShowImage.do.php?idx='.$file[$i]['idx'].'" /></div>'.$data['content'];
-				}
-			}
 			$file[$i]['filesize'] = GetFileSize($file[$i]['filesize']);
 			$file[$i]['link'] = $this->moduleDir.'/exec/FileDownload.do.php?idx='.$file[$i]['idx'];
 		}
