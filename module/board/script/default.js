@@ -286,65 +286,32 @@ if (isIncludeBoard === undefined) {
 	/***********************************************************************************
 	 * Event Listeners
 	 ***********************************************************************************/
-	var ResizeImages = {};
-	var ResizeImagesZoom = {};
-	try {
-		window.addEventListener('load',function(event){
-			var BoardContents = GetElementsByClassName("smartOutput","div");
-			for (var i=0, loop=BoardContents.length;i<loop;i++) {
-				var images = BoardContents[i].getElementsByTagName("img");
-				for (var j=0, loopj=images.length;j<loopj;j++) {
-					if (images[j].offsetWidth > BoardContents[i].offsetWidth) {
-						ResizeImages[images[j].getAttribute("src")] = [images[j].offsetWidth,images[j].offsetHeight];
-						images[j].style.width = (BoardContents[i].offsetWidth)+"px";
-						images[j].style.cursor = "pointer";
-						
-						if (isMobile == true) {
-							var d = document.createElement("div");
-							d.style.color = "#EF5600";
-							d.style.marginTop = "3px";
-							d.innerHTML = "이미지 클릭시 원래크기로 볼 수 있습니다.";
-							images[j].parentNode.insertBefore(d,images[j].nextSibling);
-						}
-					}
-				}
-			}
-		},false);
+	$(document).ready(function() {
+		var contentSection = $(".smartOutput");
+		var contentSectionMobile = $(".smartOutputMobile");
 		
+		for (var i=0, loop=contentSection.length;i<loop;i++) {
+			$($(contentSection[i]).find("img")).attr("maxWidth",$(contentSection[i]).innerWidth());
+			$(contentSection[i]).find("img").load(function() {
+				if ($(this).width() > $(this).attr("maxWidth")) {
+					$(this).css("width",$(this).attr("maxWidth"));
+				}
+			});
+		}
 		
-		window.addEventListener('click',function(event){
-			var e = event ? event : window.event;
-			var object = e.target ? e.target : e.srcElement;
-			
-			if (isMobile == true) {
-				if (object.tagName == "IMG") {
-					if (ResizeImages[object.getAttribute("src")]) {
-						ResizeImagesZoom[object.getAttribute("src")] = [object.offsetWidth,object.offsetHeight];
-						object.style.width = ResizeImages[object.getAttribute("src")][0]+"px";
-						object.style.height = ResizeImages[object.getAttribute("src")][1]+"px";
-						delete ResizeImages[object.getAttribute("src")];
-					} else if (ResizeImagesZoom[object.getAttribute("src")]) {
-						ResizeImages[object.getAttribute("src")] = [object.offsetWidth,object.offsetHeight];
-						object.style.width = ResizeImagesZoom[object.getAttribute("src")][0]+"px";
-						object.style.height = ResizeImagesZoom[object.getAttribute("src")][1]+"px";
-						delete ResizeImagesZoom[object.getAttribute("src")];
-					}
+		for (var i=0, loop=contentSectionMobile.length;i<loop;i++) {
+			$($(contentSectionMobile[i]).find("img")).attr("maxWidth",$(contentSectionMobile[i]).innerWidth());
+			$(contentSectionMobile[i]).find("img").load(function() {
+				if ($(this).width() > $(this).attr("maxWidth")) {
+					$(this).css("width",$(this).attr("maxWidth"));
+					$(this).css("cursor","pointer");
+					$(this).parent().css("lineHeight",1);
+					$(this).parent().append($("<div>").css("fontSize","12px").css("color","gray").html("이미지 클릭시 원래크기로 볼 수 있습니다."));
+					$(this).click(function() {
+						window.open($(this).attr("src"));
+					});
 				}
-			}
-		},false);
-	} catch(e) {
-		window.attachEvent('onload',function(event) {
-			var BoardContents = GetElementsByClassName("smartOutput","div");
-			for (var i=0, loop=BoardContents.length;i<loop;i++) {
-				var images = BoardContents[i].getElementsByTagName("img");
-				for (var j=0, loopj=images.length;j<loopj;j++) {
-					if (images[j].offsetWidth > BoardContents[i].offsetWidth) {
-						ResizeImages[images[j].getAttribute("src")] = [images[j].offsetWidth,images[j].offsetHeight];
-						images[j].style.width = (BoardContents[i].offsetWidth)+"px";
-						images[j].style.cursor = "pointer";
-					}
-				}
-			}
-		});
-	}
+			});
+		}
+	});
 }
