@@ -24,11 +24,23 @@ $step = Request('step') ? intval(Request('step')) : 1;
 $step = $step > 1 && $step < 6 && $checking == false ? 2 : $step;
 
 if ($step == 4) {
-	$key = preg_match('/[a-zA-Z0-9\.]{16}/',urldecode(Request('key'))) == true ? urldecode(Request('key')) : Alertbox('암호화키를 영문, 숫자, 점(.)을 이용하여 16자리로 입력하여 주십시오.');
-	$host = Request('host');
-	$id = Request('id');
-	$password = Request('password');
-	$name = Request('name');
+	if (isset($_ENV['key']) == true) {
+		$key = preg_match('/[a-zA-Z0-9\.]{16}/',$_ENV['key']) == true ? $_ENV['key'] : Alertbox('암호화키를 영문, 숫자, 점(.)을 이용하여 16자리로 입력하여 주십시오.');
+	} else {
+		$key = preg_match('/[a-zA-Z0-9\.]{16}/',urldecode(Request('key'))) == true ? urldecode(Request('key')) : Alertbox('암호화키를 영문, 숫자, 점(.)을 이용하여 16자리로 입력하여 주십시오.');
+	}
+	
+	if (isset($_ENV['db']) == true) {
+		$host = $_ENV['db']['host'];
+		$id = $_ENV['db']['id'];
+		$password = $_ENV['db']['password'];
+		$name = $_ENV['db']['dbname'];
+	} else {
+		$host = Request('host');
+		$id = Request('id');
+		$password = Request('password');
+		$name = Request('name');
+	}
 	
 	@mysql_connect($host,$id,$password) or Alertbox('DB정보가 정확하지 않습니다.');
 	@mysql_select_db($name) or Alertbox('DB명이 정확하지 않습니다.');
@@ -297,12 +309,25 @@ if ($step == 4) {
 			<tr>
 				<td>암호화키</td>
 				<td>:</td>
-				<td><input type="text" name="key" class="inputbox" /></td>
+				<td>
+					<?php if (isset($_ENV['key']) == true) { ?>
+					<span style="color:yellow;">iModule.conf.php 파일에 정의되어 있습니다.</span>
+					<?php } else { ?>
+					<input type="text" name="key" class="inputbox" />
+					<?php } ?>
+				</td>
 			</tr>
 			<tr>
 				<td></td>
 				<td colspan="2" class="info">아이모듈은 중요정보를 RSA 128비트 방식으로 암호화하여 저장합니다. RSA 128비트 암호화에 사용될 16자리의 암호화키를 입력하여 주십시오. (영문, 숫자, 점(.))</td>
 			</tr>
+			<?php if (isset($_ENV['db']) == true) { ?>
+			<tr>
+				<td>DB정보</td>
+				<td>:</td>
+				<td><span style="color:yellow;">iModule.conf.php 파일에 정의되어 있습니다.</span></td>
+			</tr>
+			<?php } else { ?>
 			<tr>
 				<td>DB호스트</td>
 				<td>:</td>
@@ -327,10 +352,17 @@ if ($step == 4) {
 				<td></td>
 				<td colspan="2" class="info">DB호스트는 일반적으로 localhost 이며, DB아이디 및 DB패스워드는 호스팅업체에 문의하시면 확인가능합니다.<br />DB명은 보통 DB아이디와 동일하거나 user_DB아이디 형태로 많이 사용되고 있습니다.</td>
 			</tr>
+			<?php } ?>
 			<tr>
 				<td>DB코드</td>
 				<td>:</td>
-				<td><input type="text" name="code" class="inputbox" value="<?php echo $_ENV['code']; ?>" readonly="readonly" /></td>
+				<td>
+					<?php if (isset($_ENV['code']) == true) { ?>
+					<span style="color:yellow;">iModule.conf.php 파일에 정의되어 있습니다.</span>
+					<?php } else { ?>
+					<input type="text" name="code" class="inputbox" value="<?php echo $_ENV['code']; ?>" readonly="readonly" />
+					<?php } ?>
+				</td>
 			</tr>
 			<tr>
 				<td></td>

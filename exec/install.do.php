@@ -24,15 +24,19 @@ if ($action == 'install') {
 	if (Request('isInstalling','session') == 'TRUE') InstallError('설치가 진행중입니다.\\n잠시만 기다려주십시오.');
 	$_SESSION['isInstalling'] = 'TRUE';
 
-	$keyFile = @fopen('../config/key.conf.php','w') or InstallError('KEY 설정파일을 생성할 수 없습니다.');
-	@fwrite($keyFile,"<?php /*\n".Request('key','session')."\n*/ ?>");
-	@fclose($keyFile);
-	@chmod('../config/key.conf.php',0707);
+	if (isset($_ENV['key']) == false) {
+		$keyFile = @fopen('../config/key.conf.php','w') or InstallError('KEY 설정파일을 생성할 수 없습니다.');
+		@fwrite($keyFile,"<?php /*\n".Request('key','session')."\n*/ ?>");
+		@fclose($keyFile);
+		@chmod('../config/key.conf.php',0707);
+	}
 	
-	$dbFile = @fopen('../config/db.conf.php','w') or InstallError('DB 설정파일을 생성할 수 없습니다.');
-	@fwrite($dbFile,"<?php /*\nmysql\n".Request('db','session')."\n*/ ?>");
-	@fclose($dbFile);
-	@chmod('../config/db.conf.php',0707);
+	if (isset($_ENV['db']) == false) {
+		$dbFile = @fopen('../config/db.conf.php','w') or InstallError('DB 설정파일을 생성할 수 없습니다.');
+		@fwrite($dbFile,"<?php /*\nmysql\n".Request('db','session')."\n*/ ?>");
+		@fclose($dbFile);
+		@chmod('../config/db.conf.php',0707);
+	}
 	
 	if (is_dir($_ENV['userfilePath'].'/temp') == false) {
 		@mkdir($_ENV['userfilePath'].'/temp') or InstallError('TEMP폴더를 생성할 수 없습니다.');
