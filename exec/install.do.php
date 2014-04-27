@@ -120,7 +120,7 @@ if ($action == 'update') {
 		if ($mDB->DBFind($tablename) == true) {
 			if ($mDB->DBcompare($tablename,$fields,$indexes) == false) {
 				if ($mDB->DBFind($tablename.'(NEW)') == true) {
-					$mDB->DBremove($tablename.'(NEW)');
+					$mDB->DBdrop($tablename.'(NEW)');
 				}
 							
 				if ($mDB->DBcreate($tablename.'(NEW)',$fields,$indexes) == true) {
@@ -134,8 +134,8 @@ if ($action == 'update') {
 						$mDB->DBinsert($tablename.'(NEW)',$insert);
 					}
 					
-					$mDB->DBname($tablename,$tablename.'(BK'.date('YmdHis').')');
-					$mDB->DBname($tablename.'(NEW)',$tablename);
+					$mDB->DBrename($tablename,$tablename.'(BK'.date('YmdHis').')');
+					$mDB->DBrename($tablename.'(NEW)',$tablename);
 				}
 			}
 		} else {
