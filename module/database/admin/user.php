@@ -582,6 +582,9 @@ ContentArea = function(viewport) {
 	}
 	
 	function AddRecord(tno,field,idx) {
+		var uniqueID = tno.toString()+(idx ? idx.toString() : "0");
+		if (Ext.getCmp("AddRecordWindow"+uniqueID)) return;
+		
 		var forms = new Array();
 		var fields = new Array();
 		var wysiwygs = new Array();
@@ -633,24 +636,22 @@ ContentArea = function(viewport) {
 					})
 				);
 			} else if (field[i].type == "HTML") {
-				wysiwygs.push(field[i].name);
+				wysiwygs.push(uniqueID+"-"+field[i].name);
 				forms.push(
 					new Ext.form.TextArea({
-						id:field[i].name+"-Wysiwyg",
+						id:uniqueID+"-"+field[i].name+"-Wysiwyg",
 						fieldLabel:field[i].info,
 						name:field[i].name,
 						height:250,
 						listeners:{render:{fn:function(form) {
-							console.log(form);
-							console.log(field[i]);
-							nhn.husky.EZCreator.createInIFrame({oAppRef:oEditors,elPlaceHolder:form.name+"-Wysiwyg-inputEl",sSkinURI:"<?php echo $_ENV['dir']; ?>/module/wysiwyg/wysiwyg.php?resize=false",fCreator:"createSEditorInIFrame"});
+							nhn.husky.EZCreator.createInIFrame({oAppRef:oEditors,elPlaceHolder:uniqueID+"-"+form.name+"-Wysiwyg-inputEl",sSkinURI:"<?php echo $_ENV['dir']; ?>/module/wysiwyg/wysiwyg.php?resize=false",fCreator:"createSEditorInIFrame"});
 						}}}
 					}),
 					new Ext.Panel({
-						id:field[i].name+"-Uploader-Panel",
+						id:uniqueID+"-"+field[i].name+"-Uploader-Panel",
 						border:false,
 						padding:"0 0 5 105",
-						html:'<div id="'+field[i].name+'-Uploader-area"></div><div id="'+field[i].name+'-Uploader-image"></div><div id="'+field[i].name+'-Uploader-file"></div>',
+						html:'<div id="'+uniqueID+'-'+field[i].name+'-Uploader-area"></div><div id="'+uniqueID+'-'+field[i].name+'-Uploader-image"></div><div id="'+field[i].name+'-Uploader-file"></div>',
 						listeners:{render:{fn:function(panel) {
 							var uploaderID = panel.getId().replace("-Panel","");
 							
@@ -666,7 +667,7 @@ ContentArea = function(viewport) {
 								height:20,
 								moduleDir:"<?php echo $_ENV['dir']; ?>/module/database",
 								formElement:"AddRecordForm",
-								wysiwygElement:panel.getId().split("-").shift()+"-Wysiwyg-inputEl",
+								wysiwygElement:uniqueID+"-"+panel.getId().split("-")[1]+"-Wysiwyg-inputEl",
 								panelElement:panel.getId(),
 								maxFileSize:0,
 								listeners:{
@@ -727,15 +728,14 @@ ContentArea = function(viewport) {
 		}
 		
 		new Ext.Window({
-			id:"AddRecordWindow",
+			id:"AddRecordWindow"+uniqueID,
 			title:idx ? "레코드수정" : "레코드추가",
 			width:800,
 			maxHeight:500,
-			modal:true,
 			layout:"fit",
 			items:[
 				new Ext.form.FormPanel({
-					id:"AddRecordForm",
+					id:"AddRecordForm"+uniqueID,
 					bodyPadding:"5 5 0 5",
 					border:false,
 					autoScroll:true,
@@ -750,15 +750,15 @@ ContentArea = function(viewport) {
 						for (var i=0, loop=wysiwygs.length;i<loop;i++) {
 							oEditors.getById[wysiwygs[i]+"-Wysiwyg-inputEl"].exec("UPDATE_IR_FIELD",[]);
 						}
-						Ext.getCmp("AddRecordForm").getForm().submit({
+						Ext.getCmp("AddRecordForm"+uniqueID).getForm().submit({
 							url:"<?php echo $_ENV['dir']; ?>/module/database/exec/Admin.do.php?action=user&do=record&tno="+tno+"&primary="+primary.name+"&mode="+(idx ? "modify&idx="+idx : "add"),
 							submitEmptyText:false,
 							waitTitle:"잠시만 기다려주십시오.",
 							waitMsg:"레코드를 "+(idx ? "수정" : "추가")+"중입니다.",
 							success:function(form,action) {
 								Ext.Msg.show({title:"안내",msg:"성공적으로 "+(idx ? "수정" : "추가")+"하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function(button) {
-									Ext.getCmp("RecordPanel").getStore().loadPage(1);
-									Ext.getCmp("AddRecordWindow").close();
+									if (Ext.getCmp("RecordPanel"+tno)) Ext.getCmp("RecordPanel"+tno).getStore().loadPage(1);
+									Ext.getCmp("AddRecordWindow"+uniqueID).close();
 								}});
 							},
 							failure:function(form,action) {
@@ -770,14 +770,14 @@ ContentArea = function(viewport) {
 				new Ext.Button({
 					text:"취소",
 					handler:function() {
-						Ext.getCmp("AddRecordWindow").close();
+						Ext.getCmp("AddRecordWindow"+uniqueID).close();
 					}
 				})
 			],
 			listeners:{
 				show:{fn:function() {
 					if (idx) {
-						Ext.getCmp("AddRecordForm").getForm().load({
+						Ext.getCmp("AddRecordForm"+uniqueID).getForm().load({
 							url:"<?php echo $_ENV['dir']; ?>/module/database/exec/Admin.get.php?action=user&get=record&tno="+tno+"&mode=data&primary="+primary.name+"&idx="+idx,
 							waitTitle:"잠시만 기다려주십시오.",
 							waitMsg:"데이터를 로딩중입니다.",
@@ -787,9 +787,9 @@ ContentArea = function(viewport) {
 								}
 								
 								for (field in action.result.data) {
-									if (action.result.data[field] && Ext.getCmp("AddRecordForm").getForm().findField(field+"-delete")) {
-										Ext.getCmp("AddRecordForm").getForm().findField(field+"-delete").setBoxLabel("첨부파일삭제 : "+action.result.data[field]);
-										Ext.getCmp("AddRecordForm").getForm().findField(field+"-delete").show();
+									if (action.result.data[field] && Ext.getCmp("AddRecordForm"+uniqueID).getForm().findField(field+"-delete")) {
+										Ext.getCmp("AddRecordForm"+uniqueID).getForm().findField(field+"-delete").setBoxLabel("첨부파일삭제 : "+action.result.data[field]);
+										Ext.getCmp("AddRecordForm"+uniqueID).getForm().findField(field+"-delete").show();
 									}
 								}
 							},
@@ -804,6 +804,8 @@ ContentArea = function(viewport) {
 	}
 
 	function ShowRecord(idx,title,field) {
+		if (Ext.getCmp("ShowRecordWindow"+idx)) return;
+		
 		var columns = new Array();
 		var fields = new Array();
 		var searchs = new Array();
@@ -893,15 +895,15 @@ ContentArea = function(viewport) {
 		});
 		
 		new Ext.Window({
+			id:"ShowRecordWindow"+idx,
 			title:title+" 레코드",
-			modal:true,
 			maximizable:true,
 			width:900,
 			height:550,
 			layout:"fit",
 			items:[
 				new Ext.grid.GridPanel({
-					id:"RecordPanel",
+					id:"RecordPanel"+idx,
 					border:false,
 					tbar:[
 						new Ext.Button({
@@ -913,7 +915,7 @@ ContentArea = function(viewport) {
 						}),
 						'-',
 						new Ext.form.ComboBox({
-							id:"ShowRecordKey",
+							id:"ShowRecordKey"+idx,
 							typeAhead:true,
 							triggerAction:"all",
 							lazyRender:true,
@@ -930,7 +932,7 @@ ContentArea = function(viewport) {
 							valueField:"value"
 						}),
 						new Ext.form.TextField({
-							id:"ShowRecordKeyword",
+							id:"ShowRecordKeyword"+idx,
 							width:150,
 							emptyText:"검색어 입력"
 						}),
@@ -938,13 +940,13 @@ ContentArea = function(viewport) {
 							text:"검색",
 							icon:"<?php echo $_ENV['dir']; ?>/module/database/images/admin/icon_magnifier.png",
 							handler:function() {
-								if (Ext.getCmp("ShowRecordKeyword").getValue() != "" && !Ext.getCmp("ShowRecordKey").getValue()) {
+								if (Ext.getCmp("ShowRecordKeyword"+idx).getValue() != "" && !Ext.getCmp("ShowRecordKey"+idx).getValue()) {
 									Ext.Msg.show({title:"안내",msg:"검색조건을 선택하여 주십시오.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
 									return;
 								}
-								Ext.getCmp("RecordPanel").getStore().getProxy().setExtraParam("key",Ext.getCmp("ShowRecordKey").getValue());
-								Ext.getCmp("RecordPanel").getStore().getProxy().setExtraParam("keyword",Ext.getCmp("ShowRecordKeyword").getValue());
-								Ext.getCmp("RecordPanel").getStore().loadPage(1);
+								Ext.getCmp("RecordPanel"+idx).getStore().getProxy().setExtraParam("key",Ext.getCmp("ShowRecordKey"+idx).getValue());
+								Ext.getCmp("RecordPanel"+idx).getStore().getProxy().setExtraParam("keyword",Ext.getCmp("ShowRecordKeyword"+idx).getValue());
+								Ext.getCmp("RecordPanel"+idx).getStore().loadPage(1);
 							}
 						}),
 						new Ext.Button({
@@ -954,7 +956,7 @@ ContentArea = function(viewport) {
 								items:[{
 									text:"레코드 삭제",
 									handler:function() {
-										var checked = Ext.getCmp("RecordPanel").getSelectionModel().getSelection();
+										var checked = Ext.getCmp("RecordPanel"+idx).getSelectionModel().getSelection();
 										if (checked.length == 0) {
 											Ext.Msg.show({title:"에러",msg:"삭제할 레코드를 선택하여 주십시오.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
 											return false;
@@ -974,7 +976,7 @@ ContentArea = function(viewport) {
 														var data = Ext.JSON.decode(response.responseText);
 														if (data.success == true) {
 															Ext.Msg.show({title:"안내",msg:"성공적으로 삭제하였습니다.",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
-																Ext.getCmp("RecordPanel").getStore().loadPage(1);
+																Ext.getCmp("RecordPanel"+idx).getStore().loadPage(1);
 															}});
 														} else {
 															Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
@@ -1027,7 +1029,7 @@ ContentArea = function(viewport) {
 													var data = Ext.JSON.decode(response.responseText);
 													if (data.success == true) {
 														Ext.Msg.show({title:"안내",msg:"성공적으로 삭제하였습니다.",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
-															Ext.getCmp("RecordPanel").getStore().loadPage(1);
+															Ext.getCmp("RecordPanel"+idx).getStore().loadPage(1);
 														}});
 													} else {
 														Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
