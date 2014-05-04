@@ -642,10 +642,7 @@ ContentArea = function(viewport) {
 						id:uniqueID+"-"+field[i].name+"-Wysiwyg",
 						fieldLabel:field[i].info,
 						name:field[i].name,
-						height:250,
-						listeners:{render:{fn:function(form) {
-							nhn.husky.EZCreator.createInIFrame({oAppRef:oEditors,elPlaceHolder:uniqueID+"-"+form.name+"-Wysiwyg-inputEl",sSkinURI:"<?php echo $_ENV['dir']; ?>/module/wysiwyg/wysiwyg.php?resize=false",fCreator:"createSEditorInIFrame"});
-						}}}
+						height:250
 					}),
 					new Ext.Panel({
 						id:uniqueID+"-"+field[i].name+"-Uploader-Panel",
@@ -792,11 +789,19 @@ ContentArea = function(viewport) {
 										Ext.getCmp("AddRecordForm"+uniqueID).getForm().findField(field+"-delete").show();
 									}
 								}
+								
+								for (var i=0, loop=wysiwygs.length;i<loop;i++) {
+									nhn.husky.EZCreator.createInIFrame({oAppRef:oEditors,elPlaceHolder:wysiwygs[i]+"-Wysiwyg-inputEl",sSkinURI:"<?php echo $_ENV['dir']; ?>/module/wysiwyg/wysiwyg.php?resize=false",fCreator:"createSEditorInIFrame"});
+								}
 							},
 							failure:function(form,action) {
 								Ext.Msg.show({title:"에러",msg:"서버에 이상이 있어 데이터를 불러오지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
 							}
 						});
+					} else {
+						for (var i=0, loop=wysiwygs.length;i<loop;i++) {
+							nhn.husky.EZCreator.createInIFrame({oAppRef:oEditors,elPlaceHolder:wysiwygs[i]+"-Wysiwyg-inputEl",sSkinURI:"<?php echo $_ENV['dir']; ?>/module/wysiwyg/wysiwyg.php?resize=false",fCreator:"createSEditorInIFrame"});
+						}
 					}
 				}}
 			}
