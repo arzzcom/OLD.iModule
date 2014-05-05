@@ -90,8 +90,8 @@ function AzUploaderSkinShowFile(id,file) {
 		var object = document.getElementById("UploaderPreviewImage-"+uploader.id);
 		sHTML+= '<div id="AzUploadedFile-'+data[0]+'" class="previewImage">';
 
-		if (uploader.formElement && document.forms[uploader.formElement].image.value) {
-			if (!document.forms[uploader.formElement].image.value || document.forms[uploader.formElement].image.value == data[0]) {
+		if (uploader.formElement && document.forms[uploader.formElement].image) {
+			if (document.forms[uploader.formElement].image.value == "" || document.forms[uploader.formElement].image.value == "0" || document.forms[uploader.formElement].image.value == data[0]) {
 				document.forms[uploader.formElement].image.value = data[0];
 				sHTML+= '<div id="AzUploadedFileImage-'+data[0]+'" class="imageon"><img src="'+data[4]+'" alt="'+data[2]+'" style="width:71px;" onclick="AzUploaderSetDefaultImage(\''+uploader.id+'\','+data[0]+');" /></div>';
 			} else {
