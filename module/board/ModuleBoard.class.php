@@ -239,7 +239,7 @@ class ModuleBoard extends Module {
 	function GetContent($content) {
 		$content = str_replace('{$moduleDir}',$this->moduleDir,$content);
 		$content = str_replace('{$moduleHost}','http://'.$_SERVER['HTTP_HOST'],$content);
-		$content = strip_tags($content,'<p>,<a>,<embed>,<table>,<div>,<font>,<span>,<img>,<br>');
+		$content = strip_tags($content,'<p>,<a>,<embed>,<blockquote>,<table>,<tr>,<td>,<b>,<i>,<u>,<div>,<font>,<span>,<img>,<br>');
 		$content = str_replace(array('onclick','onload','onerror'),'event',$content);
 		if ($this->setup['mobile'] == true) $content = '<section class="smartOutputMobile">'.$content.'</section>';
 		else $content = '<section class="smartOutput">'.$content.'</section>';
@@ -597,6 +597,8 @@ class ModuleBoard extends Module {
 			$this->mTemplet->register_object('mBoard',$this,array('PrintUploader'));
 
 			$ment_write = $this->GetTemplet();
+		} else {
+			$ment_write = '';
 		}
 
 		$this->link['postment'] = $this->baseURL.GetQueryString(array('mode'=>'ment_write','repto'=>$idx,'idx'=>''));
