@@ -1,5 +1,5 @@
 .rPostTitle {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; height:25px; color:#083772;}
-.rPostContent {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; line-height:1.6; height:80px; vertical-align:top; -ms-word-break:break-all; word-wrap:break-word;}
+.rPostContent {padding-top:5px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; line-height:1.6; height:72px; vertical-align:top; -ms-word-break:break-all; word-wrap:break-word;}
 .rPostTitle A {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; height:25px; color:#083772; text-decoration:none;}
 .rPostTitle A:HOVER {text-decoration:underline;}
 .rPostDate {font-family:tahoma; font-size:10px; padding-right:5px;}

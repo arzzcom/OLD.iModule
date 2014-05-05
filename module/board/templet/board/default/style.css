@@ -66,6 +66,7 @@
 .ModuleBoard .mentbar {height:38px; background:url(./images/mentbar_bg.gif);}
 .ModuleBoard .mentbar .reply {background:#FFFFFF url(./images/icon_ment_reply.gif) no-repeat 0px 5px;}
 .ModuleBoard .mentbar .left {background:url(./images/mentbar_left.gif) no-repeat;}
+.ModuleBoard .mentbar .photo {vertical-align:middle; font:0/0 arial;}
 .ModuleBoard .mentbar .photo IMG {width:30px; height:30px; border:1px solid #CCCCCC;}
 .ModuleBoard .mentbar .right {background:url(./images/mentbar_right.gif);}
 .ModuleBoard .mentbar .name {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; color:#2F2F2F;}

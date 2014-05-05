@@ -24,7 +24,7 @@
 					</div>
 				</div>
 			</td>
-			<td class="rPostContent">{if $data[idx].content}{$data[idx].content|cutstring:90:true}{else}이 게시물은 내용없이 이미지 또는 동영상으로만 이루어져 있습니다.<br />제목을 클릭하시면 이미지 또는 동영상을 보실 수 있습니다.{/if}<div class="height5"></div><span class="rPostDate">Post At <span class="bold">{$data[idx].reg_date|date_format:"%Y.%m.%d %H:%M:%S"}</span></span></td>
+			<td class="rPostContent">{if $data[idx].content}{$data[idx].content|cutstring:50:true}{else}이 게시물은 내용없이 이미지 또는 동영상으로만 이루어져 있습니다.<br />제목을 클릭하시면 이미지 또는 동영상을 보실 수 있습니다.{/if}<div class="height5"></div><span class="rPostDate">Post At <span class="bold">{$data[idx].reg_date|date_format:"%Y.%m.%d %H:%M:%S"}</span></span></td>
 		</tr>
 		{/section}
 		</table>
