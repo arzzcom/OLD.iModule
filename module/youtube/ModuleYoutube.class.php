@@ -5,8 +5,8 @@ class ModuleYoutube extends Module {
 		
 		//echo $this->module['youtubeapi'];
 		
-		$this->module['user_id'] = 'arzzcom@gmail.com';
-		$this->module['password'] = 'google0270';
+		$this->module['user_id'] = '';
+		$this->module['password'] = '';
 		
 		$this->module['timeout'] = 30;
 	}
