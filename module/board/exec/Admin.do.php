@@ -421,117 +421,91 @@ if ($action == 'ment') {
 
 if ($action == 'file') {
 	if ($do == 'retrench') {
-		GetDefaultHeader('첨부파일 정리중');
-
-		$dirCode = Request('dirCode') ? Request('dirCode') : 0;
-		$fileLimit = Request('fileLimit') ? Request('fileLimit') : 0;
-		
+		$mFlush = new Flush();
 		$dirs = scandir($_ENV['userfilePath'].$mBoard->userfile.'/attach',0);
 		
-		if ($dirCode == sizeof($dirs)) {
-			echo '<script type="text/javascript">top.RetrenchProgressControl("",'.$dirCode.','.sizeof($dirs).',0,0,0);</script>';
-		} else {
-			$dirname = $dirs[$dirCode];
+		for ($i=0, $loop=sizeof($dirs);$i<$loop;$i++) {
+			$dirname = $dirs[$i];
 
-			if ($dirs[$dirCode] != '.' && $dirs[$dirCode] != '..' && is_dir($_ENV['userfilePath'].$mBoard->userfile.'/attach/'.$dirs[$dirCode]) == true) {
-				$files = scandir($_ENV['userfilePath'].$mBoard->userfile.'/attach/'.$dirs[$dirCode],0);
-				
-				if ($fileLimit == 0) {
-					$totalFile = sizeof($files);
-					$deleteFile = 0;
-				} else {
-					$totalFile = Request('totalFile');
-					$deleteFile = Request('deleteFile');
-				}
-				
-				for ($i=$fileLimit-$deleteFile;$i<$fileLimit+100;$i++) {
-					if (isset($files[$i]) == false) {
-						break;
-					} elseif (is_dir($_ENV['userfilePath'].$mBoard->userfile.'/attach/'.$dirs[$dirCode].'/'.$files[$i]) == false) {
-						if ($mDB->DBcount($mBoard->table['file'],"where `filepath`='/attach/{$dirs[$dirCode]}/{$files[$i]}'") == 0) {
+			if ($dirname != '.' && $dirname != '..' && is_dir($_ENV['userfilePath'].$mBoard->userfile.'/attach/'.$dirname) == true) {
+				$files = scandir($_ENV['userfilePath'].$mBoard->userfile.'/attach/'.$dirname,0);
+			
+				$totalFile = sizeof($files);
+				$deleteFile = 0;
+			
+				for ($j=0;$j<$totalFile;$j++) {
+					if (is_dir($_ENV['userfilePath'].$mBoard->userfile.'/attach/'.$dirname.'/'.$files[$j]) == false) {
+						if ($mDB->DBcount($mBoard->table['file'],"where `filepath`='/attach/{$dirname}/{$files[$j]}'") == 0) {
 							$deleteFile++;
-							@unlink($_ENV['userfilePath'].$mBoard->userfile.'/attach/'.$dirs[$dirCode].'/'.$files[$i]) or $deleteFile--;
+							//@unlink($_ENV['userfilePath'].$mBoard->userfile.'/attach/'.$dirname.'/'.$files[$j]) or $deleteFile--;
+							
+							echo '<script type="text/javascript">top.RetrenchProgressControl("'.$dirname.'",'.($i+1).','.$loop.','.$j.','.$totalFile.','.$deleteFile.');</script>';
+							$mFlush->flush();
 						}
 					}
+					
+					if ($j%10 == 0) {
+						echo '<script type="text/javascript">top.RetrenchProgressControl("'.$dirname.'",'.($i+1).','.$loop.','.$j.','.$totalFile.','.$deleteFile.');</script>';
+						$mFlush->flush();
+					}
 				}
-				
-				if ($totalFile > $fileLimit+100) {
-					echo '<script type="text/javascript">top.RetrenchProgressControl("'.$dirname.'",'.($dirCode+1).','.sizeof($dirs).','.($fileLimit+100).','.$totalFile.','.$deleteFile.');</script>';
-				Redirect($_SERVER['PHP_SELF'].GetQueryString(array('dirCode'=>$dirCode,'fileLimit'=>$fileLimit+100,'totalFile'=>$totalFile,'deleteFile'=>$deleteFile),'',false));
-				} else {
-					echo '<script type="text/javascript">top.RetrenchProgressControl("'.$dirname.'",'.($dirCode+1).','.sizeof($dirs).','.$totalFile.','.$totalFile.','.$deleteFile.');</script>';
-					Redirect($_SERVER['PHP_SELF'].GetQueryString(array('dirCode'=>$dirCode+1,'fileLimit'=>0),'',false));
-				}
-			} else {
-				echo '<script type="text/javascript">top.RetrenchProgressControl("'.$dirname.'",'.($dirCode+1).','.sizeof($dirs).',0,0,0);</script>';
-				Redirect($_SERVER['PHP_SELF'].GetQueryString(array('dirCode'=>$dirCode+1,'fileLimit'=>0),'',false));
 			}
+			
+			echo '<script type="text/javascript">top.RetrenchProgressControl("'.$dirname.'",'.($i+1).','.$loop.','.$loop.','.$totalFile.','.$deleteFile.');</script>';
+			$mFlush->flush();
+			sleep(1);
 		}
-		GetDefaultFooter();
+		
+		echo '<script type="text/javascript">top.RetrenchProgressControl("",'.$loop.','.$loop.',0,0,0);</script>';
+		$mFlush->flush();
 	}
 	
 	if ($do == 'norepto') {
-		GetDefaultHeader('첨부파일 정리중');
+		$mFlush = new Flush();
 		
-		$fileLimit = Request('fileLimit') ? Request('fileLimit') : 0;
-		$deleteFile = Request('deleteFile') ? Request('deleteFile') : 0;
-		if ($fileLimit == 0) {
-			$totalFile = $mDB->DBcount($mBoard->table['file'],"where `repto`!=0");
-		} else {
-			$totalFile = Request('totalFile');
-		}
-		
-		$data = $mDB->DBfetchs($mBoard->table['file'],array('idx','type','repto'),"where `repto`!=0",'idx,asc',($fileLimit-$deleteFile).',1000');
+		$totalFile = $mDB->DBcount($mBoard->table['file'],"where `repto`!=0");
+		$data = $mDB->DBfetchs($mBoard->table['file'],array('idx','type','repto'),"where `repto`>0");
 		
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			if ($data[$i]['type'] == 'POST') {
 				if ($mDB->DBcount($mBoard->table['post'],"where `idx`={$data[$i]['repto']}") == 0) {
-					$mBoard->FileDelete($data[$i]['idx']);
+					//$mBoard->FileDelete($data[$i]['idx']);
 					$deleteFile++;
 				}
 			} else {
 				if ($mDB->DBcount($mBoard->table['ment'],"where `idx`={$data[$i]['repto']}") == 0) {
-					$mBoard->FileDelete($data[$i]['idx']);
+					//$mBoard->FileDelete($data[$i]['idx']);
 					$deleteFile++;
 				}
 			}
+			
+			if ($i%50 == 0) {
+				echo '<script type="text/javascript">top.NoReptoProgressControl('.$i.','.$totalFile.','.$deleteFile.');</script>';
+				$mFlush->flush();
+			}
 		}
 		
-		if ($totalFile > $fileLimit + 1000) {
-			echo '<script type="text/javascript">top.NoReptoProgressControl('.($fileLimit+1000).','.$totalFile.','.$deleteFile.');</script>';
-			Redirect($_SERVER['PHP_SELF'].GetQueryString(array('fileLimit'=>$fileLimit+1000,'deleteFile'=>$deleteFile,'totalFile'=>$totalFile),'',false));
-		} else {
-			echo '<script type="text/javascript">top.NoReptoProgressControl('.$totalFile.','.$totalFile.','.$deleteFile.');</script>';
-		}
-		
-		GetDefaultFooter();
+		echo '<script type="text/javascript">top.NoReptoProgressControl('.$totalFile.','.$totalFile.','.$deleteFile.');</script>';
+		$mFlush->flush();
 	}
 
 	if ($do == 'removetemp') {
-		GetDefaultHeader('첨부파일 정리중');
+		$mFlush = new Flush();
 		
-		$fileLimit = Request('fileLimit') ? Request('fileLimit') : 0;
-		$deleteFile = Request('deleteFile') ? Request('deleteFile') : 0;
-		if ($fileLimit == 0) {
-			$totalFile = $mDB->DBcount($mBoard->table['file'],"where `repto`=0");
-		} else {
-			$totalFile = Request('totalFile');
-		}
-		
-		$data = $mDB->DBfetchs($mBoard->table['file'],array('idx'),"where `repto`=0",'idx,asc',($fileLimit-$deleteFile).',1000');
+		$totalFile = $mDB->DBcount($mBoard->table['file'],"where `repto`=0");
+		$data = $mDB->DBfetchs($mBoard->table['file'],array('idx'),"where `repto`=0");
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			$deleteFile++;
-			$mBoard->FileDelete($data[$i]['idx']);
+			//$mBoard->FileDelete($data[$i]['idx']);
+			
+			if ($i%50 == 0) {
+				echo '<script type="text/javascript">top.TempProgressControl('.$i.','.$totalFile.','.$deleteFile.');</script>';
+				$mFlush->flush();
+			}
 		}
-		
-		if ($totalFile > $fileLimit + 1000) {
-			echo '<script type="text/javascript">top.TempProgressControl('.($fileLimit+1000).','.$totalFile.','.$deleteFile.');</script>';
-			Redirect($_SERVER['PHP_SELF'].GetQueryString(array('fileLimit'=>$fileLimit+1000,'deleteFile'=>$deleteFile,'totalFile'=>$totalFile),'',false));
-		} else {
-			echo '<script type="text/javascript">top.TempProgressControl('.$totalFile.','.$totalFile.','.$deleteFile.');</script>';
-		}
-		
-		GetDefaultFooter();
+
+		echo '<script type="text/javascript">top.TempProgressControl('.$totalFile.','.$totalFile.','.$deleteFile.');</script>';
+		$mFlush->flush();
 	}
 
 	if ($do == 'delete') {

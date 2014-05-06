@@ -286,122 +286,92 @@ class Module {
 	}
 	
 	function CreateDatabase($progress=false) {
+		$mFlush = new Flush();
 		$database = $this->GetModuleXML('database');
-
-		$tableCode = Request('tableCode') ? intval(Request('tableCode')) : 0;
-		$dataLimit = Request('dataLimit') ? intval(Request('dataLimit')) : 0;
 		
 		if ($database) {
 			$table = $database->table;
 			
-			if ($tableCode == sizeof($table)) {
-				if (file_exists($this->modulePath.'/update.php') == true) {
-					@REQUIRE_ONCE $this->modulePath.'/update.php';
-				}
-				if ($this->IsSetup() == true) {
-					$this->mDB->DBupdate($_ENV['table']['module'],array('version'=>$this->GetModuleXML('version')),'',"where `module`='{$this->moduleName}'");
-				} else {
-					$this->mDB->DBinsert($_ENV['table']['module'],array('module'=>$this->moduleName,'name'=>$this->GetModuleXML('title'),'version'=>$this->GetModuleXML('version'),'is_admin'=>$this->GetModuleXML('is_manager')));
-				}
-
-				if ($progress == true) echo '<script type="text/javascript"> try { top.ModuleProgressControl("",'.$tableCode.','.sizeof($database->table).',0,0); } catch(e) {} </script>';
-			} else {
-				$table = $table[$tableCode];
-				$tablename = str_replace('{code}',$_ENV['code'],(string)($table->attributes()->name));
-
-				$field = $table->field;
+			for ($i=0, $loop=sizeof($table);$i<$loop;$i++) {
+				$tablename = str_replace('{code}',$_ENV['code'],(string)($table[$i]->attributes()->name));
+				
+				$field = $table[$i]->field;
 				$fields = array();
-				for ($i=0, $loop=sizeof($field);$i<$loop;$i++) {
-					$fields[$i] = array('name'=>(string)($field[$i]->attributes()->name),'type'=>(string)($field[$i]->attributes()->type),'length'=>(string)($field[$i]->attributes()->length),'default'=>(string)($field[$i]->attributes()->default),'comment'=>(string)($field[$i]));
+				for ($j=0, $loopj=sizeof($field);$j<$loopj;$j++) {
+					$fields[$j] = array('name'=>(string)($field[$j]->attributes()->name),'type'=>(string)($field[$j]->attributes()->type),'length'=>(string)($field[$j]->attributes()->length),'default'=>(string)($field[$j]->attributes()->default),'comment'=>(string)($field[$j]));
 				}
 				
-				$index = $table->index;
+				$index = $table[$i]->index;
 				$indexes = array();
-				for ($i=0, $loop=sizeof($index);$i<$loop;$i++) {
-					$indexes[$i] = array('name'=>(string)($index[$i]->attributes()->name),'type'=>(string)($index[$i]->attributes()->type));
+				for ($j=0, $loopj=sizeof($index);$j<$loopj;$j++) {
+					$indexes[$j] = array('name'=>(string)($index[$j]->attributes()->name),'type'=>(string)($index[$j]->attributes()->type));
 				}
 				
-				
-				if ($dataLimit == 0) {
-					if ($this->mDB->DBFind($tablename) == true) {
-						if ($this->mDB->DBcompare($tablename,$fields,$indexes) == false) {
-							if ($this->mDB->DBFind($tablename.'(NEW)') == true) {
-								$this->mDB->DBdrop($tablename.'(NEW)');
-							}
-							
-							if ($this->mDB->DBcreate($tablename.'(NEW)',$fields,$indexes) == true) {
-								$total = $this->mDB->DBcount($tablename);
-								if ($total > 1000000) $maxLimit = 10000;
-								elseif ($total > 500000) $maxLimit = 5000;
-								elseif ($total > 100000) $maxLimit = 3000;
-								elseif ($total > 50000) $maxLimit = 1500;
-								elseif ($total > 10000) $maxLimit = 500;
-								else $maxLimit = 100;
-								
-								$data = $this->mDB->DBfetchs($tablename,'*','',$fields[0]['name'].',asc','0,'.$maxLimit);
-								for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
-									$insert = array();
-									for ($j=0, $loopj=sizeof($fields);$j<$loopj;$j++) {
-										if (isset($data[$i][$fields[$j]['name']]) == true) $insert[$fields[$j]['name']] = $data[$i][$fields[$j]['name']];
-									}
-									
-									$this->mDB->DBinsert($tablename.'(NEW)',$insert);
-								}
-								
-								if ($total < $dataLimit+$maxLimit) {
-									$this->mDB->DBrename($tablename,$tablename.'(BK'.date('YmdHis').')');
-									$this->mDB->DBrename($tablename.'(NEW)',$tablename);
-									if ($progress == true) echo '<script type="text/javascript"> try { top.ModuleProgressControl("'.$tablename.'",'.($tableCode+1).','.sizeof($database->table).','.$total.','.$total.'); } catch(e) {} </script>';
-									Redirect($_SERVER['PHP_SELF'].GetQueryString(array('tableCode'=>$tableCode+1,'dataLimit'=>0),'',false));
-								} else {
-									if ($progress == true) echo '<script type="text/javascript"> try { top.ModuleProgressControl("'.$tablename.'",'.($tableCode+1).','.sizeof($database->table).','.$dataLimit.','.$total.'); } catch(e) {} </script>';
-									Redirect($_SERVER['PHP_SELF'].GetQueryString(array('tableCode'=>$tableCode,'dataLimit'=>$dataLimit+$maxLimit),'',false));
-								}
-							}
-						} else {
-							if ($progress == true) echo '<script type="text/javascript"> try { top.ModuleProgressControl("'.$tablename.'",'.($tableCode+1).','.sizeof($database->table).',0,0); } catch(e) {} </script>';
-							Redirect($_SERVER['PHP_SELF'].GetQueryString(array('tableCode'=>$tableCode+1,'dataLimit'=>0),'',false));
-						}
-					} else {
-						if ($this->mDB->DBcreate($tablename,$fields,$indexes) == true) {
-							$data = isset($table->data) == true ? $table->data : array();
-							
-							for ($j=0, $loopj=sizeof($data);$j<$loopj;$j++) {
-								$insert = array_pop(array_values((array)($data[$j]->attributes())));
-								$this->mDB->DBinsert($tablename,$insert);
-							}
-							if ($progress == true) echo '<script type="text/javascript"> try { top.ModuleProgressControl("'.$tablename.'",'.($tableCode+1).','.sizeof($database->table).',0,0); } catch(e) {} </script>';
-							Redirect($_SERVER['PHP_SELF'].GetQueryString(array('tableCode'=>$tableCode+1,'dataLimit'=>0),'',false));
-						}
-					}
-				} else {
-					$total = $this->mDB->DBcount($tablename);
-					if ($total > 1000000) $maxLimit = 10000;
-					elseif ($total > 500000) $maxLimit = 5000;
-					elseif ($total > 100000) $maxLimit = 3000;
-					elseif ($total > 50000) $maxLimit = 1500;
-					elseif ($total > 10000) $maxLimit = 500;
-					else $maxLimit = 100;
-					$data = $this->mDB->DBfetchs($tablename,'*','',$fields[0]['name'].',asc',$dataLimit.','.$maxLimit);
-					for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
-						$insert = array();
-						for ($j=0, $loopj=sizeof($fields);$j<$loopj;$j++) {
-							if (isset($data[$i][$fields[$j]['name']]) == true) $insert[$fields[$j]['name']] = $data[$i][$fields[$j]['name']];
+				if ($this->mDB->DBFind($tablename) == true) {
+					if ($this->mDB->DBcompare($tablename,$fields,$indexes) == false) {
+						if ($this->mDB->DBFind($tablename.'(NEW)') == true) {
+							$this->mDB->DBdrop($tablename.'(NEW)');
 						}
 						
-						$this->mDB->DBinsert($tablename.'(NEW)',$insert);
-					}
-					if ($total < $dataLimit+$maxLimit) {
-						$this->mDB->DBrename($tablename,$tablename.'(BK'.date('YmdHis').')');
-						$this->mDB->DBrename($tablename.'(NEW)',$tablename);
-						if ($progress == true) echo '<script type="text/javascript"> try { top.ModuleProgressControl("'.$tablename.'",'.($tableCode+1).','.sizeof($database->table).','.$total.','.$total.'); } catch(e) {} </script>';
-						Redirect($_SERVER['PHP_SELF'].GetQueryString(array('tableCode'=>$tableCode+1,'dataLimit'=>0),'',false));
+						if ($this->mDB->DBcreate($tablename.'(NEW)',$fields,$indexes) == true) {
+							$data = $this->mDB->DBfetchs($tablename,'*');
+							for ($j=0, $loopj=sizeof($data);$j<$loopj;$j++) {
+								$insert = array();
+								for ($k=0, $loopk=sizeof($fields);$k<$loopk;$k++) {
+									if (isset($data[$j][$fields[$k]['name']]) == true) $insert[$fields[$k]['name']] = $data[$j][$fields[$k]['name']];
+								}
+								
+								$this->mDB->DBinsert($tablename.'(NEW)',$insert);
+								
+								if ($j%50 == 0) {
+									if ($progress == true) echo '<script type="text/javascript"> try { top.ModuleProgressControl("'.$tablename.'",'.($i+1).','.$loop.','.$j.','.$loopj.'); } catch(e) {} </script>';
+									$mFlush->flush();
+								}
+							}
+							
+							$this->mDB->DBrename($tablename,$tablename.'(BK'.date('YmdHis').')');
+							$this->mDB->DBrename($tablename.'(NEW)',$tablename);
+							
+							if ($progress == true) echo '<script type="text/javascript"> try { top.ModuleProgressControl("'.$tablename.'",'.($i+1).','.$loop.','.$loopj.','.$loopj.'); } catch(e) {} </script>';
+							$mFlush->flush();
+						}
 					} else {
-						if ($progress == true) echo '<script type="text/javascript"> try { top.ModuleProgressControl("'.$tablename.'",'.($tableCode+1).','.sizeof($database->table).','.$dataLimit.','.$total.'); } catch(e) {} </script>';
-						Redirect($_SERVER['PHP_SELF'].GetQueryString(array('tableCode'=>$tableCode,'dataLimit'=>$dataLimit+$maxLimit),'',false));
+						if ($progress == true) echo '<script type="text/javascript"> try { top.ModuleProgressControl("'.$tablename.'",'.($i+1).','.$loop.',0,0); } catch(e) {} </script>';
+						$mFlush->flush();
+					}
+				} else {
+					if ($this->mDB->DBcreate($tablename,$fields,$indexes) == true) {
+						$data = isset($table[$i]->data) == true ? $table[$i]->data : array();
+						
+						for ($j=0, $loopj=sizeof($data);$j<$loopj;$j++) {
+							$insert = array_pop(array_values((array)($data[$j]->attributes())));
+							$this->mDB->DBinsert($tablename,$insert);
+							
+							if ($j%50 == 0) {
+								if ($progress == true) echo '<script type="text/javascript"> try { top.ModuleProgressControl("'.$tablename.'",'.($i+1).','.$loop.','.$j.','.$loopj.'); } catch(e) {} </script>';
+								$mFlush->flush();
+							}
+						}
+						if ($progress == true) echo '<script type="text/javascript"> try { top.ModuleProgressControl("'.$tablename.'",'.($i+1).','.$loop.','.$loopj.','.$loopj.'); } catch(e) {} </script>';
+						$mFlush->flush();
 					}
 				}
+				
+				sleep(1);
 			}
+			
+			if (file_exists($this->modulePath.'/update.php') == true) {
+				INCLUDE_ONCE $this->modulePath.'/update.php';
+			}
+			
+			if ($this->IsSetup() == true) {
+				$this->mDB->DBupdate($_ENV['table']['module'],array('version'=>$this->GetModuleXML('version')),'',"where `module`='{$this->moduleName}'");
+			} else {
+				$this->mDB->DBinsert($_ENV['table']['module'],array('module'=>$this->moduleName,'name'=>$this->GetModuleXML('title'),'version'=>$this->GetModuleXML('version'),'is_admin'=>$this->GetModuleXML('is_manager')));
+			}
+
+			if ($progress == true) echo '<script type="text/javascript"> try { top.ModuleProgressControl("",'.$loop.','.$loop.',0,0); } catch(e) {} </script>';
+			$mFlush->flush();
 		}
 	}
 	

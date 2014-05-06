@@ -52,11 +52,9 @@ if ($action == 'module') {
 	}
 
 	if ($do == 'update_db') {
-		GetDefaultHeader('모듈 디비 업데이트중');
 		$mModule = new Module($module);
 		$mModule->CreateDatabase(true);
 		$mModule->GetDatabaseSize(true);
-		GetDefaultFooter();
 	}
 
 	if ($do == 'direct') {
