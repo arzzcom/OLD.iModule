@@ -19,7 +19,7 @@ function FindUserIDInner(XML) {
 			document.getElementById("FindUserIDInfo").innerHTML = result.getAttribute("msg");
 			document.getElementById("FindPasswordButton").style.display = "none";
 		} else {
-			document.getElementById("FindUserIDInfo").innerHTML = '회원님께서는 <span class="blud bold">'+result.getAttribute("user_id")+'</span> 아이디로 가입하셨습니다.<br />계속해서 패스워드를 찾으시려면 아래 패스워드찾기 버튼을 클릭하여 주십시오.';
+			document.getElementById("FindUserIDInfo").innerHTML = '회원님께서는 <span class="bold">'+result.getAttribute("reg_date")+'</span>에 <span class="blud bold">'+result.getAttribute("user_id")+'</span> 아이디로 가입하셨습니다.<br />계속해서 패스워드를 찾으시려면 아래의 패스워드찾기 버튼을 클릭하여 주십시오.';
 			document.getElementById("FindPasswordButton").style.display = "";
 			document.getElementById("FindPasswordButton").setAttribute("user_id",result.getAttribute("user_id"));
 		}
@@ -70,7 +70,7 @@ function FindPasswordInner(XML) {
 			document.getElementById("FindPasswordStep2").style.display = "";
 			document.getElementById("FindPasswordQuestion").innerHTML = result.getAttribute("question");
 			document.forms["passwordForm"].answer.focus();
-			document.getElementById("FindPasswordInfo").innerHTML = '패스워드 찾기 질문에 대한 답을 입력하신 후 패스워드발급 버튼을 누르시면<br> 등록하신 이메일로 변경된 패스워드가 발송됩니다.';
+			document.getElementById("FindPasswordInfo").innerHTML = '패스워드 찾기 질문에 대한 답을 입력하신 후 패스워드발급 버튼을 누르시면 등록하신 이메일로 변경된 패스워드가 발송됩니다.';
 			document.getElementById("FindPasswordNextButton").style.display = "none";
 			document.getElementById("SendPasswordButton").style.display = "";
 		}
