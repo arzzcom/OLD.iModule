@@ -1133,8 +1133,6 @@ class ModuleMember extends member {
 		$mTemplet = new Templet($this->modulePath.'/templet/help/'.$skin.'/help.tpl');
 		$mTemplet->assign('formStart',$formStart);
 		$mTemplet->assign('formEnd',$formEnd);
-		$mTemplet->assign('mypoint',$member['point']);
-		$mTemplet->assign('user_id',$user_id);
 		$mTemplet->assign('skinDir',$this->moduleDir.'/templet/help/'.$skin);
 		$mTemplet->PrintTemplet();
 
