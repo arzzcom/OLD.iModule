@@ -95,5 +95,13 @@ class ModuleDatabase extends Module {
 		$table = $this->GetTable(0,$table);
 		return $this->mDB->DBcount($table['name'],$find,$table['database']);
 	}
+	
+	function DBinsert($table,$insertValue,$functionValue='') {
+		return $this->mDB->DBinsert($table,$insertValue,$functionValue);
+	}
+	
+	function DBdelete($table,$find='') {
+		return $this->mDB->DBdelete($table,$find);
+	}
 }
 ?>
