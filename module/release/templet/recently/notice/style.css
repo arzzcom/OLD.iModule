@@ -1,0 +1,16 @@
+.RecentlyNotice .board_title {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:14px; font-weight:bold; height:25px; vertical-align:top; padding-top:3px;}
+.RecentlyNotice .board_title A {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:14px; font-weight:bold; text-decoration:none; color:#000000;}
+.RecentlyNotice .board_title A:HOVER {text-decoration:underline;}
+
+.RecentlyNotice .board_line DIV {margin-top:2px; border-top:1px dashed #CCCCCC; height:5px; overflow:hidden;}
+
+.RecentlyNotice .board_body {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; line-height:1.8; text-align:justify; padding:0px 0px 5px 1px; color:#666666;}
+.RecentlyNotice .board_body DIV.scroll {height:200px; padding:3px; overflow-y:scroll;}
+
+.RecentlyNotice .title {height:23px; font-size:12px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; background:url(./images/icon_bullet.gif) no-repeat 0px center; padding-left:12px; color:#3F3F3F;}
+.RecentlyNotice .title A {text-decoration:none; color:#000000; font-size:12px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum;}
+.RecentlyNotice .title A:HOVER {text-decoration:underline;}
+
+.RecentlyNotice .date {text-align:right; color:#666666; font-family:tahoma; font-size:9px;}
+
+.RecentlyNotice .comment {color:#EF0000; font-family:tahoma; font-size:9px; font-weight:normal;}
