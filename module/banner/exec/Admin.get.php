@@ -69,7 +69,7 @@ if ($action == 'item') {
 			}
 			
 			if ($lists[$i]['type'] == 'CPC' && $lists[$i]['paid_point'] > 0) {
-				$lists[$i]['percent'] = $lists[$i]['point']/$itemCount['totalCPCPoint']*($itemCount['totalCPC']/$itemCount['totalItem']*100);
+				$lists[$i]['percent'] = $itemCount['totalCPCPoint'] == 0 ? 100 : $lists[$i]['point']/$itemCount['totalCPCPoint']*($itemCount['totalCPC']/$itemCount['totalItem']*100);
 			}
 		}
 	}
