@@ -74,6 +74,7 @@ class ModuleBanner extends Module {
 	
 	function PrintBannerSection($section,$skin,$limit) {
 		$item = $this->GetItem($section,$limit);
+		if (sizeof($item) == 0) return;
 		
 		if (file_exists($this->skinPath.'/'.$skin.'/style.css') == true) {
 			echo '<link rel="stylesheet" href="'.$this->skinDir.'/'.$skin.'/style.css" type="text/css" title="style" />'."\n";
@@ -83,7 +84,7 @@ class ModuleBanner extends Module {
 		$data = $this->mDB->DBfetchs($this->table['item'],'*',"where `idx` IN (".implode(',',$item).")");
 		
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
-			$data[$i]['bannerStart'] = '<div style="display:inline-block; width:'.$section['width'].'px; height:'.$section['height'].'; position:relative; cursor:pointer; font:0/0 arial;" onclick="window.open(\''.$this->moduleDir.'/exec/Click.do.php?idx='.$data[$i]['idx'].'\');">';
+			$data[$i]['bannerStart'] = '<div style="display:inline-block; width:'.$section['width'].'px; height:'.$section['height'].'px; position:relative; cursor:pointer; font:0/0 arial;" onclick="window.open(\''.$this->moduleDir.'/exec/Click.do.php?idx='.$data[$i]['idx'].'\');">';
 			
 			if ($data[$i]['bannertype'] == 'IMG') {
 				$data[$i]['bannerfile'] = '<img src="'.$this->moduleDir.'/exec/ShowBanner.do.php?idx='.$data[$i]['idx'].'" style="width:'.$section['width'].'px; height:'.$section['height'].'px;" />';
@@ -115,15 +116,21 @@ class ModuleBanner extends Module {
 	}
 
 	function ItemClick($idx) {
+		$clicked = Request('bannerClick','session') != null ? json_decode(Request('bannerClick','session'),true) : array();
+		if (in_array($idx,$clicked) == true) return;
+		
+		$clicked[] = $idx;
 		$date = date('Y-m-d');
 		$hour = date('G');
+		
+		$_SESSION['bannerClick'] = json_encode($clicked);
 
 		if ($this->mDB->DBcount($this->table['log_count'],"where `bno`='$idx' and `date`='$date' and `hour`='$hour'") == 0) {
 			$this->mDB->DBinsert($this->table['log_count'],array('bno'=>$idx,'date'=>$date,'hour'=>$hour,'view'=>0,'hit'=>1));
 		} else {
 			$this->mDB->DBupdate($this->table['log_count'],'',array('hit'=>'`hit`+1'),"where `bno`='$idx' and `date`='$date' and `hour`='$hour'");
 		}
-		$this->mDB->DBupdate($this->table['item'],'',array('hit'=>'`hit`+1'),"where `idx`='$idx'");
+		$this->mDB->DBupdate($this->table['item'],'',array('hit'=>'`hit`+1','paid_point'=>'`paid_point`-`point`'),"where `idx`='$idx'");
 
 		$this->mDB->DBinsert($this->table['log_click'],array('bno'=>$idx,'ip'=>$_SERVER['REMOTE_ADDR'],'referer'=>$_SERVER['HTTP_REFERER'],'reg_date'=>GetGMT()));
 	}
