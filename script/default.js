@@ -941,11 +941,11 @@ function FormSubmitWaiting(mode,msg) {
 /*****************************************************************************************
  * Modules Commons
  *****************************************************************************************/
-function OpenBoard(object) {
-	OpenPopup(object.href,750,500,true);
+function OpenLinkToPopup(object) {
+	var link = $(object);
+	OpenPopup(link.attr("href"),link.attr("width"),link.attr("height"),true);
 	return false;
 }
-
 
 /*****************************************************************************************
  * Designed Input
