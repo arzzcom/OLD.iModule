@@ -1,26 +1,17 @@
-.ModuleMember .listbar {height:32px; background:url(./images/listbar_bg.gif);}
-.ModuleMember .listbar .left {background:url(./images/listbar_left.gif);}
-.ModuleMember .listbar .right {background:url(./images/listbar_right.gif);}
-.ModuleMember .listbar .text {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; font-weight:bold; color:#666666; text-align:center;}
-.ModuleMember .listrow {height:28px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px;}
-.ModuleMember .listrow:hover {background:#F4F4F4;}
-.ModuleMember .listrow .number {font-family:tahoma; font-size:11px;}
-.ModuleMember .listrow A:link {color:#2F2F2F; text-decoration:none;}
-.ModuleMember .listrow A:hover {color:#82C118; text-decoration:underline;}
-.ModuleMember .listrow A:visited {color:#2F2F2F; text-decoration:none;}
-.ModuleMember .listrow A:active {color:#2F2F2F; text-decoration:none;}
-.ModuleMember .listrow .ment {font-family:tahoma; font-size:10px; color:#FA6F46;}
-.ModuleMember .listrowbar {height:1px; overflow:hidden; background:#E5E5E5;}
-.ModuleMember .pageinfo {text-align:center; font-family:verdana; color:#2F2F2F; font-size:10px;}
+.ModuleMember .pageinfo {text-align:center; font-family:verdana; color:#2f2f2f; font-size:10px;}
 .ModuleMember .category {color:#666666;}
-.ModuleMember .select {color:#78BD37;}
 .ModuleMember .save {font-famliy:verdana; font-size:11px; font-weight:bold; color:#0060FF;}
 .ModuleMember .use {font-famliy:verdana; font-size:11px; font-weight:bold; color:#EF0000;}
+.ModuleMember .number {font-family:tahoma; font-size:11px;}
 
-.ModuleMember .pagenav {width:100%; height:26px; text-align:center;}
-.ModuleMember .pagenav STRONG {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#FA6F46; border:1px solid #E9E9E9;}
-.ModuleMember .pagenav A:link {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
-.ModuleMember .pagenav A:hover {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; background:#F4F4F4; text-decoration:none;}
-.ModuleMember .pagenav A:visited {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
-.ModuleMember .pagenav A:active {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
-.ModuleMember .pagenav SPAN {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; color:#DDDDDD; border:1px solid #E9E9E9; text-decoration:none;}
+.ModuleMember .pointTable {width:100%; table-layout:fixed; font-family:NanumGothicWeb; font-size:12px;}
+.ModuleMember .pointTable .sectionBar {background:#a4b4cd; height:2px; overflow:hidden;}
+.ModuleMember .pointTable .sectionEnd {height:3px; background:#E5E5E5; overflow:hidden;}
+.ModuleMember .pointTable .sectionEnd DIV {height:1px; overflow:hidden; border-bottom:2px solid #f4f4f4;}
+.ModuleMember .pointTable .splitBar {background:#cfdbe7; height:1px; overflow:hidden;}
+.ModuleMember .pointTable .headerCell {height:36px; padding:0px 10px 0px 10px; font-weight:bold; background:#f8f8f9; color:#758191; text-align:center;}
+.ModuleMember .pointTable .bodyCell {padding:12px;}
+.ModuleMember .pointTable .bodyCell DIV {white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.ModuleMember .pointTable .bodyCell DIV.reference {background:url(./images/attach.png) no-repeat 0 50%; padding-left:20px;}
+.ModuleMember .pointTable .bodyCell DIV A {font-weight:bold; color:#083772; text-decoration:none;}
+.ModuleMember .pointTable .bodyCell DIV A:HOVER {font-weight:bold; color:#083772; text-decoration:underline;}
