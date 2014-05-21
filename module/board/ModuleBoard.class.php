@@ -16,11 +16,11 @@ class ModuleBoard extends Module {
 	public $totalpost;
 	public $skinPath;
 	public $skinDir;
-	public $mode;
-	public $idx;
-
 	public $recentlyPath;
 	public $recentlyDir;
+	public $mode;
+	public $idx;
+	
 	public $baseURL;
 	public $baseQueryString;
 
@@ -57,7 +57,6 @@ class ModuleBoard extends Module {
 		$this->idx = $this->mDB->AntiInjection(Request('idx'));
 		$this->mode = Request('mode') ? Request('mode') : ($this->idx == null ? 'list' : 'view');
 
-		$this->totalpost = $this->mDB->DBcount($this->table['post'],$this->find);
 		$this->isHeaderIncluded = false;
 		$this->isFooterIncluded = false;
 		$this->mUploader = null;
@@ -69,7 +68,7 @@ class ModuleBoard extends Module {
 			if ($bid == '$mypost') {
 				$this->setup = array('skin'=>'default','width'=>'100%','listnum'=>20,'pagenum'=>10,'view_list'=>true,'use_category'=>'FALSE','use_select'=>'FALSE','view_list'=>'loopnum,reg_date,hit,vote','use_mode'=>'TRUE','permission'=>'','view_notice_page'=>'NONE');
 			} else {
-				$this->setup = $this->mDB->DBfetch($this->table['setup'],array('bid','skin','title','width','use_uploader','use_category','use_charge','use_select','use_rss','listnum','pagenum','view_alllist','view_list','view_notice_page','view_notice_count','view_notice_list','post_point','ment_point','permission'),"where `bid`='{$bid}'");
+				$this->setup = $this->mDB->DBfetch($this->table['setup'],array('bid','skin','title','width','use_uploader','use_category','use_charge','use_select','use_rss','listnum','pagenum','view_alllist','view_list','view_notice_page','view_notice_count','view_notice_list','post_point','ment_point','select_point','permission'),"where `bid`='{$bid}'");
 				$this->setup['use_mode'] = 'FALSE';
 			}
 			
@@ -101,6 +100,10 @@ class ModuleBoard extends Module {
 		$this->recentlyDir = $this->moduleDir.'/templet/recently';
 
 		$this->mPlugin = new Plugin($this);
+	}
+	
+	function GetSetup($key) {
+		return isset($this->setup[$key]) == true ? $this->setup[$key] : '';
 	}
 	
 	function SetLinkedModule($module) {
@@ -157,72 +160,6 @@ class ModuleBoard extends Module {
 		$bid = $bid ? $bid : $this->bid;
 		$data = $this->mDB->DBfetch($this->table['setup'],array('title'),"where `bid`='$bid'");
 		return $data['title'];
-	}
-
-	function GetJsonList($page,$limit,$find='') {
-		$find = $find ? $this->find.' and '.$find : $this->find;
-
-		$data = $this->mDB->DBfetchs($this->table['post'],array('idx','name','mno','title','ment','last_ment','image','reg_date'),$find,'idx,desc',(($page-1)*$limit).','.$limit);
-		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
-			$data[$i]['title'] = GetString(strip_tags($data[$i]['title']),'decode');
-			if ($data[$i]['last_ment'] + 60*60*24 > GetGMT()) {
-				$data[$i]['is_new_ment'] = 'TRUE';
-			} else {
-				$data[$i]['is_new_ment'] = 'FALSE';
-			}
-			$data[$i]['ment'] = number_format($data[$i]['ment']);
-			$data[$i]['reg_date'] = GetTime('Y.m.d H:i:s',$data[$i]['reg_date']);
-
-			if ($data[$i]['image'] && file_exists($_ENV['path'].$this->thumbnail.'/'.$data[$i]['image'].'.thm') == true) {
-				$data[$i]['image'] = 'http://'.$_SERVER['HTTP_HOST'].$_ENV['dir'].$this->thumbnail.'/'.$data[$i]['image'].'.thm';
-			} else {
-				$data[$i]['image'] = '';
-			}
-
-			if ($data[$i]['mno'] != 0) $data[$i]['name'] = $this->mMember->GetMemberName($data[$i]['mno'],'nickname',false,false);
-			unset($data[$i]['last_ment']);
-		}
-
-		return json_encode($data);
-	}
-
-	function GetJsonView($idx,$get='*') {
-		$data = $this->mDB->DBfetch($this->table['post'],$get,"where `idx`='$idx' and `is_delete`='FALSE'");
-
-		$data['isError'] = 'FALSE';
-		if ($data['is_secret'] == 'TRUE' && $this->GetPermission('secret') == false) {
-			if ($data['mno'] != '0' && $data['mno'] != $this->member['idx']) {
-				$data['isError'] = 'SECRET';
-			} else if ($data['mno'] == '0') {
-				$password = Request('password');
-				if (md5($password) != $data['password']) {
-					$data['isError'] = 'PASSWORD';
-				}
-			}
-		}
-
-		if ($this->GetPermission('view') == false) $data['isError'] = 'PERMISSION';
-
-		if ($data['isError'] == 'FALSE') {
-			if ($this->mDB->DBcount($this->table['log'],"where `repto`=$idx and `type`='HIT' and (`mno`={$this->member['idx']} or `ip`='".$_SERVER['REMOTE_ADDR']."')") == 0) {
-				$this->mDB->DBupdate($this->table['post'],'',array('hit'=>'`hit`+1'),"where `idx`='$idx'");
-				$this->mDB->DBinsert($this->table['log'],array('bid'=>$data['bid'],'repto'=>$idx,'type'=>'HIT','mno'=>($this->mMember->IsLogged() == true ? $this->member['idx'] : -1),'ip'=>$_SERVER['REMOTE_ADDR'],'reg_date'=>GetGMT()));
-				if ($this->mMember->IsLogged() == true) $this->mMember->SendExp($this->member['idx'],2);
-			}
-		}
-
-		return json_encode($data);
-	}
-
-	function GetJsonCategory() {
-		if ($this->setup['use_category'] == 'TRUE') {
-			$category = $this->mDB->DBfetchs($this->table['category'],array('idx','category'),"where `bid`='{$this->bid}'",'sort,asc');
-			$data = array_merge(array(array('idx'=>0,'category'=>'전체보기')),$category);
-		} else {
-			$data = array();
-		}
-
-		return json_encode($data);
 	}
 
 	function CheckAdmin() {
@@ -613,6 +550,127 @@ class ModuleBoard extends Module {
 
 		return $this->GetTemplet();
 	}
+	
+	// 목록출력
+	function PrintMyList($skin,$listnum,$mno='') {
+		$this->PrintHeader();
+		
+		$mno = $mno ? $mno : $this->member['idx'];
+		
+		$find = "where `mno`='$mno' and `is_delete`='FALSE'";
+		$pagenum = 10;
+		
+		$p = is_numeric(Request('p')) == true && Request('p') > 0 ? Request('p') : 1;
+		$totalpost = $this->mDB->DBcount($this->table['post'],$find);
+		$totalpage = ceil($totalpost/$listnum) == 0 ? 1 : ceil($totalpost/$listnum);
+		$p = $p > $totalpage ? $totalpage : $p;
+
+		$sort = Request('sort') ? Request('sort') : 'idx';
+		$dir = Request('dir') ? Request('dir') : 'desc';
+		if ($sort == 'idx' and $dir == 'desc') {
+			$sort = 'loop';
+			$dir = 'asc';
+		}
+
+		if ($this->idx != null) {
+			$idx = $this->idx;
+			$post = $this->mDB->DBfetch($this->table['post'],array($sort,'is_notice'),"where `idx`='$idx'");
+			if ($post['is_notice'] == 'TRUE' && Request('p') != null) {
+				$p = Request('p');
+			} else {
+				$prevFind = $find.' and (`'.$sort.'`'.($dir == 'desc' ? '>=' : '<=')."'".$post[$sort]."')";
+				$prevNum = $this->mDB->DBcount($this->table['post'],$prevFind);
+				$p = ceil($prevNum/$listnum);
+			}
+		}
+		$orderer = $sort.','.$dir;
+		$limiter = ($p-1)*$listnum.','.$listnum;
+
+		$data = $this->mDB->DBfetchs($this->table['post'],'*',$find,$orderer,$limiter);
+		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
+			$data[$i]['title'] = $data[$i]['is_html_title'] == 'TRUE' ? $data[$i]['title'] : GetString($data[$i]['title'],'replace');
+			$data[$i]['title'] = $this->GetReplaceKeyword($data[$i]['title']);
+			$data[$i]['postlink'] = $this->moduleDir.'/board.php?bid='.$data[$i]['bid'].'&amp;mode=view&amp;idx='.$data[$i]['idx'];
+			
+			$data[$i]['reg_date'] = strtotime(GetTime('c',$data[$i]['reg_date']));
+			$data[$i]['hit'] = number_format($data[$i]['hit']);
+			$data[$i]['vote'] = number_format($data[$i]['vote']);
+			$data[$i]['avgvote'] = $data[$i]['voter'] > 0 ? sprintf('%0.2f',$data[$i]['vote']/$data[$i]['voter']) : '0.00';
+
+			$data[$i]['is_secret'] = $data[$i]['is_secret'] == 'TRUE';
+			$data[$i]['is_file'] = $this->mDB->DBcount($this->table['file'],"where `repto`={$data[$i]['idx']} and `filetype`!='IMG'") > 0;
+			$data[$i]['is_image'] = $data[$i]['image'] != '0';
+			$data[$i]['is_newment'] = $data[$i]['last_ment'] > GetGMT()-60*60*24;
+
+			$data[$i]['categoryIDX'] = $data[$i]['category'];
+			if ($this->setup['use_category'] == 'TRUE' && $data[$i]['category'] != '0') {
+				$data[$i]['category'] = $this->GetCategoryName($data[$i]['category']);
+			} else {
+				$data[$i]['category'] = '';
+			}
+
+			$data[$i]['board'] = $this->GetBoardTitle($data[$i]['bid']);
+
+			$data[$i]['is_select'] = false;
+		}
+
+		$page = array();
+		$startpage = floor(($p-1)/$pagenum)*$pagenum+1;
+		$endpage = $startpage+$pagenum-1 > $totalpage ? $totalpage : $startpage+$pagenum-1;
+		$prevpage = $startpage > $pagenum ? $startpage-$pagenum : false;
+		$nextpage = $endpage < $totalpage ? $endpage+1 : false;
+		$prevlist = $p > 1 ? $p-1 : false;
+		$nextlist = $p < $endpage ? $p+1 : false;
+
+		for ($i=$startpage;$i<=$endpage;$i++) {
+			$page[] = $i;
+		}
+
+		$searchFormStart = '<form name="ModuleBoardSearch" action="'.$this->baseURL.'" enctype="application/x-www-form-urlencoded">';
+
+		if ($this->baseQueryString) {
+			$querys = explode('&',$this->baseQueryString);
+
+			for ($i=0, $loop=sizeof($querys);$i<$loop;$i++) {
+				$temp = explode('=',$querys[$i]);
+				if (in_array($temp[0],array('key','keyword','idx','mode')) == false) $searchFormStart.= '<input type="hidden" name="'.$temp[0].'" value="'.GetString(Request($temp[0]),'inputbox').'" />';
+			}
+		}
+		foreach ($_POST as $keyname=>$value) {
+			if (in_array($keyname,array('key','keyword')) == false) $searchFormStart.= '<input type="hidden" name="'.$keyname.'" value="'.GetString(Request($keyname),'inputbox').'" />';
+		}
+		foreach ($_POST as $keyname=>$value) {
+			if (in_array($keyname,array('key','keyword')) == false) $searchFormStart.= '<input type="hidden" name="'.$keyname.'" value="'.GetString(Request($keyname),'inputbox').'" />';
+		}
+		$searchFormEnd = '</form>';
+		
+		if (file_exists($this->modulePath.'/templet/mylist/'.$skin.'/style.css') == true) {
+			echo '<link rel="stylesheet" href="'.$this->moduleDir.'/templet/mylist/'.$skin.'/style.css" type="text/css" title="style" />'."\n";
+		}
+
+		$query = $this->GetQueryString(array('p'=>''));
+		$link = array('page'=>$this->baseURL.$query.(preg_match('/\?/',$query) == true ? '&amp;' : '?').'p=');
+		$this->mTemplet = new Templet($this->modulePath.'/templet/mylist/'.$skin.'/list.tpl');
+		$this->mTemplet->assign('skinDir',$this->moduleDir.'/templet/mylist/'.$skin);
+		$this->mTemplet->assign('data',$data);
+		$this->mTemplet->assign('page',$page);
+		$this->mTemplet->assign('pagenum',$pagenum);
+		$this->mTemplet->assign('prevpage',$prevpage);
+		$this->mTemplet->assign('nextpage',$nextpage);
+		$this->mTemplet->assign('prevlist',$prevlist);
+		$this->mTemplet->assign('nextlist',$nextlist);
+		$this->mTemplet->assign('totalpost',number_format($totalpost));
+		$this->mTemplet->assign('totalpage',number_format($totalpage));
+		$this->mTemplet->assign('searchFormStart',$searchFormStart);
+		$this->mTemplet->assign('searchFormEnd',$searchFormEnd);
+		$this->mTemplet->assign('key',$key);
+		$this->mTemplet->assign('keyword',$keyword);
+		$this->mTemplet->assign('p',$p);
+		$this->mTemplet->assign('link',$link);
+		$this->mTemplet->PrintTemplet();
+		
+		$this->PrintFooter();
+	}
 
 	// 상황별 페이지 출력
 	function PrintBoard($find='') {
@@ -720,7 +778,8 @@ class ModuleBoard extends Module {
 		$p = is_numeric(Request('p')) == true && Request('p') > 0 ? Request('p') : 1;
 
 		if ($this->setup['view_notice_page'] != 'NONE' && ($this->setup['view_notice_page'] == 'ALL' || $p == '1')) {
-			$notice = $this->mDB->DBfetchs($this->table['post'],array('idx','bid','category','mno','name','email','homepage','title','image','reg_date','hit','ment','last_ment','trackback','vote','voter','is_notice','is_html_title','is_secret','is_mobile','field1','field2','field3'),$this->find." and `is_notice`='TRUE'",'idx,desc');
+			$notice = $this->mDB->DBfetchs($this->table['post'],'*',$this->find." and `is_notice`='TRUE'",'loop,asc');
+			
 			for ($i=0, $loop=sizeof($notice);$i<$loop;$i++) {
 				$notice[$i]['title'] = $notice[$i]['is_html_title'] == 'TRUE' ? $notice[$i]['title'] : GetString($notice[$i]['title'],'replace');
 				$notice[$i]['title'] = $this->GetReplaceKeyword($notice[$i]['title']);
@@ -795,15 +854,17 @@ class ModuleBoard extends Module {
 		$orderer = $sort.','.$dir;
 		$limiter = ($p-1)*$listnum.','.$listnum;
 
-		$data = $this->mDB->DBfetchs($this->table['post'],array('idx','bid','category','mno','name','email','homepage','title','image','reg_date','hit','ment','last_ment','trackback','vote','voter','is_notice','is_html_title','is_secret','is_mobile','field1','field2','field3'),$find,$orderer,$limiter);
+		$data = $this->mDB->DBfetchs($this->table['post'],'*',$find,$orderer,$limiter);
 
 		$loopnum = $totalpost-($p-1)*$listnum;
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			$data[$i]['title'] = $data[$i]['is_html_title'] == 'TRUE' ? $data[$i]['title'] : GetString($data[$i]['title'],'replace');
 			$data[$i]['title'] = $this->GetReplaceKeyword($data[$i]['title']);
+			$data[$i]['postlink'] = $this->baseURL.$this->GetQueryString(array('mode'=>'view','idx'=>$data[$i]['idx']));
+			
 			$data[$i]['is_read'] = $data[$i]['idx'] == Request('idx');
 			$data[$i]['loopnum'] = $loopnum--;
-			$data[$i]['postlink'] = $this->setup['use_mode'] == 'TRUE' ? $this->moduleDir.'/board.php?bid='.$data[$i]['bid'].'&amp;mode=view&amp;idx='.$data[$i]['idx'] : $this->baseURL.$this->GetQueryString(array('mode'=>'view','idx'=>$data[$i]['idx']));
+			
 			$data[$i]['reg_date'] = strtotime(GetTime('c',$data[$i]['reg_date']));
 			$data[$i]['hit'] = number_format($data[$i]['hit']);
 			$data[$i]['vote'] = number_format($data[$i]['vote']);
@@ -918,7 +979,7 @@ class ModuleBoard extends Module {
 		$data = $this->mDB->DBfetch($this->table['post'],'*',$find);
 
 		if ($this->module === false) return;
-		if (isset($data['idx']) == false) {
+		if (isset($data['idx']) == false || $data['is_delete'] == 'TRUE') {
 			return $this->PrintError('해당 게시물을 찾을 수 없습니다.<br />글이 지워졌거나, 링크가 잘못되었습니다.');
 		}
 
@@ -1115,7 +1176,6 @@ class ModuleBoard extends Module {
 
 	// 쓰기 출력
 	function PrintWrite() {
-		if ($this->setup['use_mode'] == 'TRUE') return $this->PrintError('현재 모드에서는 게시물을 작성하거나 수정할 수 없습니다.');
 		$idx = $this->idx;
 		$mode = Request('mode') == 'modify' && $idx != null ? 'modify' : 'post';
 

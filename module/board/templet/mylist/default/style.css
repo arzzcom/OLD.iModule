@@ -1,0 +1,11 @@
+.ModuleBoardMyList .mylistTable {width:100%; table-layout:fixed; font-family:NanumGothicWeb; font-size:12px;}
+.ModuleBoardMyList .mylistTable .sectionBar {background:#a4b4cd; height:2px; overflow:hidden;}
+.ModuleBoardMyList .mylistTable .sectionEnd {height:3px; background:#E5E5E5; overflow:hidden;}
+.ModuleBoardMyList .mylistTable .sectionEnd DIV {height:1px; overflow:hidden; border-bottom:2px solid #f4f4f4;}
+.ModuleBoardMyList .mylistTable .splitBar {background:#cfdbe7; height:1px; overflow:hidden;}
+.ModuleBoardMyList .mylistTable .headerCell {height:36px; padding:0px 10px 0px 10px; font-weight:bold; background:#f8f8f9; color:#758191; text-align:center;}
+.ModuleBoardMyList .mylistTable .bodyCell {padding:8px 8px;}
+.ModuleBoardMyList .mylistTable .bodyCell DIV {height:16px; line-height:16px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.ModuleBoardMyList .mylistTable .bodyCell DIV IMG {vertical-align:middle;}
+.ModuleBoardMyList .mylistTable .bodyCell DIV A {color:#083772; text-decoration:none;}
+.ModuleBoardMyList .mylistTable .bodyCell DIV A:HOVER {font-weight:bold; color:#083772; text-decoration:underline;}
