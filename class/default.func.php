@@ -84,7 +84,7 @@ function Alertbox($msg,$code=0,$redirect=null,$target=null) {
 			break;
 
 			case 3 :
-				$print.= $goUrl!='reload' ? $goTarget.'location.href = "'.$goUrl.'";' : $goTarget.'location.href = '.$goTarget.'location.href;';
+				$print.= $goUrl!='reload' ? $goTarget.'location.href = "'.$goUrl.'";' : $goTarget.'location.href = '.$goTarget.'location.href.split("#").shift();';
 			break;
 
 			case 5 :
@@ -92,7 +92,7 @@ function Alertbox($msg,$code=0,$redirect=null,$target=null) {
 			break;
 			
 			case 6 :
-				$print.= ($target!=null ? $target.'.' : '').'opener.location.href = '.($target!=null ? $target.'.' : '').'opener.location.href;';
+				$print.= ($target!=null ? $target.'.' : '').'opener.location.href = '.($target!=null ? $target.'.' : '').'opener.location.href.split("#").shift();';
 				$print.= ($target!=null ? $target.'.' : '').'window.close();';
 			break;
 		}
@@ -112,7 +112,7 @@ function Redirect($url,$target='') {
 	$target = $target ? $target.'.' : '';
 	echo '<script type="text/javascript">';
 	if ($url == 'reload') {
-		echo $target.'location.href = '.$target.'location.href;';
+		echo $target.'location.href = '.$target.'location.href.split("#").shift();';
 	} else {
 		echo $target.'location.href = "'.$url.'";';
 	}
@@ -621,23 +621,23 @@ function GetFileDownload($path,$name='',$size='') {
 	header("Cache-control: private");
 
 	if (preg_match('/IE/',$_ENV['browser']) == true || preg_match('/OP/',$_ENV['browser']) == true) {
-		Header("Content-type:application/octet-stream");
-		Header("Content-Length:".$size);
-		Header("Content-Disposition:attachment;filename=".iconv('UTF-8','CP949//IGNORE',str_replace(' ','_',$name)));
-		Header("Content-Transfer-Encoding:binary");
+		header("Content-type:application/octet-stream");
+		header("Content-Length:".$size);
+		header("Content-Disposition:attachment;filename=".iconv('UTF-8','CP949//IGNORE',str_replace(' ','_',$name)));
+		header("Content-Transfer-Encoding:binary");
 		header("Refresh:0; http://".$_SERVER['HTTP_HOST'].$_ENV['dir']."/inc/blank.php");
-		Header("Pragma:no-cache");
-		Header("Expires:0");
-		Header("Connection:close");
+		header("Pragma:no-cache");
+		header("Expires:0");
+		header("Connection:close");
 	} else {
-		Header("Content-type:".GetFileMime($name));
-		Header("Content-Length:".$size);
-		Header("Content-Disposition:attachment; filename=".str_replace(' ','_',$name));
-		Header("Content-Description:PHP3 Generated Data");
+		header("Content-type:".GetFileMime($name));
+		header("Content-Length:".$size);
+		header("Content-Disposition:attachment; filename=".str_replace(' ','_',$name));
+		header("Content-Description:PHP3 Generated Data");
 		header("Refresh:0; http://".$_SERVER['HTTP_HOST'].$_ENV['dir']."/inc/blank.php");
-		Header("Pragma: no-cache");
-		Header("Expires: 0");
-		Header("Connection:close");
+		header("Pragma: no-cache");
+		header("Expires: 0");
+		header("Connection:close");
 	}
 
 	$fp = fopen($path,'rb');
@@ -1023,6 +1023,19 @@ function GetTimer($time) {
 function GetMicrotime() {
 	$microtimestmp = explode(" ",microtime());
 	return $microtimestmp[0]+$microtimestmp[1];
+}
+
+function PrintLoadingTime($msg) {
+	$mMember = &Member::instance();
+	$member = $mMember->GetMemberInfo();
+	
+	if ($member['type'] == 'ADMINISTRATOR') {
+		if ($msg) echo $msg.'<br />';
+		echo 'Loaded Time : '.(GetMicrotime()-$_ENV['starttime']).'<br /><br />';
+		
+		//$mFlush = new Flush();
+		//$mFlush->flush();
+	}
 }
 
 function ExcelProgress($percent,$text) {
