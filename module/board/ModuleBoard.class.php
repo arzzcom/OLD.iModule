@@ -405,8 +405,10 @@ class ModuleBoard extends Module {
 				if ($select['mno'] == '0') {
 					$select['photo'] = $_ENV['dir'].'/images/common/nomempic60.gif';
 					$select['nickname'] = $select['name'];
+					$select['member'] = $this->mMember->GetMemberInfo(0);
 				} else {
 					$mData = $this->GetMemberInfo($select['mno']);
+					$select['member'] = $this->mMember->GetMemberInfo($select['mno']);
 					$select['name'] = $mData['name'];
 					$select['nickname'] = $mData['nickname'];
 					$select['photo'] = $mData['photo'];
@@ -438,8 +440,10 @@ class ModuleBoard extends Module {
 			if ($data[$i]['mno'] == '0') {
 				$data[$i]['photo'] = $_ENV['dir'].'/images/common/nomempic60.gif';
 				$data[$i]['nickname'] = $data[$i]['name'];
+				$data[$i]['member'] = $this->mMember->GetMemberInfo(0);
 			} else {
 				$mData = $this->GetMemberInfo($data[$i]['mno']);
+				$data[$i]['member'] = $this->mMember->GetMemberInfo($data[$i]['mno']);
 				$data[$i]['name'] = $mData['name'];
 				$data[$i]['nickname'] = $mData['nickname'];
 				$data[$i]['photo'] = $mData['photo'];
@@ -567,7 +571,7 @@ class ModuleBoard extends Module {
 
 		$sort = Request('sort') ? Request('sort') : 'idx';
 		$dir = Request('dir') ? Request('dir') : 'desc';
-		if ($sort == 'idx' and $dir == 'desc') {
+		if ($sort == 'idx' && $dir == 'desc') {
 			$sort = 'loop';
 			$dir = 'asc';
 		}
@@ -584,6 +588,7 @@ class ModuleBoard extends Module {
 			}
 		}
 		$orderer = $sort.','.$dir;
+		$sort = Request('sort') ? Request('sort') : 'idx';
 		$limiter = ($p-1)*$listnum.','.$listnum;
 
 		$data = $this->mDB->DBfetchs($this->table['post'],'*',$find,$orderer,$limiter);
@@ -625,31 +630,21 @@ class ModuleBoard extends Module {
 		for ($i=$startpage;$i<=$endpage;$i++) {
 			$page[] = $i;
 		}
-
-		$searchFormStart = '<form name="ModuleBoardSearch" action="'.$this->baseURL.'" enctype="application/x-www-form-urlencoded">';
-
-		if ($this->baseQueryString) {
-			$querys = explode('&',$this->baseQueryString);
-
-			for ($i=0, $loop=sizeof($querys);$i<$loop;$i++) {
-				$temp = explode('=',$querys[$i]);
-				if (in_array($temp[0],array('key','keyword','idx','mode')) == false) $searchFormStart.= '<input type="hidden" name="'.$temp[0].'" value="'.GetString(Request($temp[0]),'inputbox').'" />';
-			}
-		}
-		foreach ($_POST as $keyname=>$value) {
-			if (in_array($keyname,array('key','keyword')) == false) $searchFormStart.= '<input type="hidden" name="'.$keyname.'" value="'.GetString(Request($keyname),'inputbox').'" />';
-		}
-		foreach ($_POST as $keyname=>$value) {
-			if (in_array($keyname,array('key','keyword')) == false) $searchFormStart.= '<input type="hidden" name="'.$keyname.'" value="'.GetString(Request($keyname),'inputbox').'" />';
-		}
-		$searchFormEnd = '</form>';
 		
 		if (file_exists($this->modulePath.'/templet/mylist/'.$skin.'/style.css') == true) {
 			echo '<link rel="stylesheet" href="'.$this->moduleDir.'/templet/mylist/'.$skin.'/style.css" type="text/css" title="style" />'."\n";
 		}
 
 		$query = $this->GetQueryString(array('p'=>''));
-		$link = array('page'=>$this->baseURL.$query.(preg_match('/\?/',$query) == true ? '&amp;' : '?').'p=');
+		$link = array(
+			'page'=>$this->baseURL.$query.(preg_match('/\?/',$query) == true ? '&amp;' : '?').'p=',
+			'sort'=>array(
+				'idx'=>$this->baseURL.$this->GetQueryString(array('p'=>'','sort'=>'idx')),
+				'last_ment'=>$this->baseURL.$this->GetQueryString(array('p'=>'','sort'=>'last_ment')),
+				'hit'=>$this->baseURL.$this->GetQueryString(array('p'=>'','sort'=>'last_ment')),
+				'vote'=>$this->baseURL.$this->GetQueryString(array('p'=>'','sort'=>'last_ment'))
+			)
+		);
 		$this->mTemplet = new Templet($this->modulePath.'/templet/mylist/'.$skin.'/list.tpl');
 		$this->mTemplet->assign('skinDir',$this->moduleDir.'/templet/mylist/'.$skin);
 		$this->mTemplet->assign('data',$data);
@@ -661,11 +656,8 @@ class ModuleBoard extends Module {
 		$this->mTemplet->assign('nextlist',$nextlist);
 		$this->mTemplet->assign('totalpost',number_format($totalpost));
 		$this->mTemplet->assign('totalpage',number_format($totalpage));
-		$this->mTemplet->assign('searchFormStart',$searchFormStart);
-		$this->mTemplet->assign('searchFormEnd',$searchFormEnd);
-		$this->mTemplet->assign('key',$key);
-		$this->mTemplet->assign('keyword',$keyword);
 		$this->mTemplet->assign('p',$p);
+		$this->mTemplet->assign('sort',$sort);
 		$this->mTemplet->assign('link',$link);
 		$this->mTemplet->PrintTemplet();
 		
@@ -735,6 +727,7 @@ class ModuleBoard extends Module {
 		if ($category != null) $find.= " and `category`=$category";
 		if ($select == 'true') $find.= " and `is_select`='TRUE'";
 		elseif ($select == 'false') $find.= " and `is_select`='FALSE'";
+		elseif ($select == 'my' && $this->mMember->IsLogged() == true) $find.= " and `mno`='{$this->member['idx']}'";
 
 		$key = Request('key') ? Request('key') : 'tc';
 		$keyword = Request('keyword') ? urldecode(Request('keyword')) : '';
@@ -853,6 +846,9 @@ class ModuleBoard extends Module {
 		}
 		$orderer = $sort.','.$dir;
 		$limiter = ($p-1)*$listnum.','.$listnum;
+		
+		$sort = Request('sort') ? Request('sort') : 'idx';
+		$dir = Request('dir') ? Request('dir') : 'desc';
 
 		$data = $this->mDB->DBfetchs($this->table['post'],'*',$find,$orderer,$limiter);
 
@@ -894,9 +890,16 @@ class ModuleBoard extends Module {
 
 			if ($this->setup['use_mode'] == 'TRUE') $data[$i]['category'] = $this->GetBoardTitle($data[$i]['bid']);
 
-			$data[$i]['is_select'] = false;
 			if ($this->setup['use_select'] == 'TRUE') {
-				if ($this->mDB->DBcount($this->table['ment'],"where `repto`={$data[$i]['idx']} and `is_select`='TRUE'") > 0) $data[$i]['is_select'] = true;
+				if ($data[$i]['is_select'] == 'TRUE') {
+					if ($this->mDB->DBcount($this->table['ment'],"where `repto`='{$data[$i]['idx']}' and `is_delete`='FALSE' and `is_select`='TRUE'") > 0) {
+						$data[$i]['is_select'] = 'TRUE';
+					} else {
+						$data[$i]['is_select'] = 'COMPLETE';
+					}
+				} else {
+					$data[$i]['is_select'] = 'FALSE';
+				}
 			}
 		}
 
@@ -949,6 +952,8 @@ class ModuleBoard extends Module {
 		$this->mTemplet->assign('notice',$notice);
 		$this->mTemplet->assign('data',$data);
 		$this->mTemplet->assign('page',$page);
+		$this->mTemplet->assign('sort',$sort);
+		$this->mTemplet->assign('dir',$dir);
 		$this->mTemplet->assign('pagenum',$pagenum);
 		$this->mTemplet->assign('prevpage',$prevpage);
 		$this->mTemplet->assign('nextpage',$nextpage);
@@ -1024,8 +1029,10 @@ class ModuleBoard extends Module {
 		if ($data['mno'] == '0') {
 			$data['photo'] = $_ENV['dir'].'/images/common/nomempic60.gif';
 			$data['nickname'] = $data['name'];
+			$data['member'] = $this->mMember->GetMemberInfo(0);
 		} else {
 			$mData = $this->GetMemberInfo($data['mno']);
+			$data['member'] = $this->mMember->GetMemberInfo($data['mno']);
 			$data['name'] = $mData['name'];
 			$data['nickname'] = $mData['nickname'];
 			$data['photo'] = $mData['photo'];
@@ -1072,7 +1079,13 @@ class ModuleBoard extends Module {
 
 		$ment = $this->GetMent($idx);
 		$this->action['vote'] = 'PostVote('.$idx.')';
+		$this->action['complete'] = 'CompletePost('.$idx.');';
 		$this->link['postment'] = $this->baseURL.GetQueryString(array('mode'=>'ment_write','repto'=>$idx,'idx'=>''));
+		
+		$data['select'] = false;
+		if ($this->setup['use_select'] == 'TRUE' && $data['is_select'] == 'FALSE'  && ($this->GetPermission('select') == true || ($data['mno'] == $this->member['idx'] && $data['mno'] != '0'))) {
+			$data['select'] = true;
+		}
 
 		$this->mTemplet = new Templet($this->skinPath.'/view.tpl');
 		$this->mTemplet->assign('data',$data);
@@ -1220,6 +1233,7 @@ class ModuleBoard extends Module {
 			}
 		} else {
 			if ($this->GetPermission('post') == false) return $this->PrintError('글을 작성할 수 있는 권한이 없습니다.');
+			if ($this->setup['use_select'] == 'TRUE' && $this->mMember->IsLogged() == true && $this->mDB->DBcount($this->table['post'],$this->find." and `mno`='{$this->member['idx']}' and `is_select`='FALSE' and `is_notice`='FALSE' and `reg_date`<".(GetGMT()-60*60*24*14)) > 0) return $this->PrintError('답변을 채택하지 않거나, 완료처리를 하지 않은 2주일 이전질문이 있습니다.<br />이전 질문을 완료하신 후 새 질문을 등록하여 주십시오.<br /><br /><a href="'.$this->baseURL.$this->GetQueryString(array('mode'=>'list','select'=>'my','p'=>'1','key'=>'','keyword'=>'')).'">나의 질문목록보기</a>');
 			$post = array('name'=>GetString(Request('iModuleBoardName','cookie'),'ext'),'category'=>Request('category'),'title'=>'','content'=>'','email'=>GetString(Request('iModuleBoardEmail','cookie'),'ext'),'homepage'=>GetString(Request('iModuleBoardHomepage','cookie'),'ext'),'is_notice'=>'FALSE','is_html_title'=>'FALSE','is_secret'=>'FALSE','is_ment'=>'TRUE','is_msg'=>'TRUE');
 			$password = '';
 			$image = '';

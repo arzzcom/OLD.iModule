@@ -178,8 +178,24 @@ if (isIncludeBoard === undefined) {
 			GetHttpRequestXML(ENV.dir+"/module/board/exec/Board.do.php","action=select&idx="+idx,"SelectMentInner");
 		}
 	}
+	
+	function CompletePost(idx) {
+		if (confirm("해당 글을 미해결완료로 처리하시겠습니까?") == true) {
+			GetHttpRequestXML(ENV.dir+"/module/board/exec/Board.do.php","action=complete&idx="+idx,"CompletePostInner");
+		}
+	}
 
 	function SelectMentInner(XML) {
+		if (XML) {
+			var result = XML.documentElement.childNodes.item(0);
+			alert(result.getAttribute("msg"));
+			if (result.getAttribute("success") == "TRUE") {
+				location.href = location.href;
+			}
+		}
+	}
+	
+	function CompletePostInner(XML) {
 		if (XML) {
 			var result = XML.documentElement.childNodes.item(0);
 			alert(result.getAttribute("msg"));

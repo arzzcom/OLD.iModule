@@ -1,6 +1,12 @@
 <div class="ModuleBoardMyList">
+	<div class="sortList">
+		<a href="{$link.sort.idx}"{if $sort == 'idx'} class="on"{/if}>최근등록순</a> |
+		<a href="{$link.sort.last_ment}"{if $sort == 'last_ment'} class="on"{/if}>최근댓글순</a> |
+		<a href="{$link.sort.hit}"{if $sort == 'hit'} class="on"{/if}>조회순</a> |
+		<a href="{$link.sort.vote}"{if $sort == 'vote'} class="on"{/if}>추천순</a>
+	</div>
 	<table cellpadding="0" cellspacing="0" class="mylistTable">
-	<col width="110" /><col width="1" /><col width="100%" /><col width="1" /><col width="100" /><col width="1" /><col width="70" /><col width="1" /><col width="70" />
+	<col width="120" /><col width="1" /><col width="100%" /><col width="1" /><col width="100" /><col width="1" /><col width="60" /><col width="1" /><col width="60" />
 	<tr class="sectionBar">
 		<td colspan="9"></td>
 	</tr>
@@ -52,11 +58,19 @@
 	<col width="150" /><col width="100%" /><col width="150" />
 	<tr>
 		<td class="innerimg">
-			<a href="{$link.page}{$prevlist}" class="btn btn-sm btn-primary"{if $prevlist == false} disabled="disabled"{/if}>이전페이지</a>
+			{if $prevlist != false}
+				<a href="{$link.page}{$prevlist}"><img src="{$skinDir}/images/btn_prev.gif" /></a>
+			{else}
+				<img src="{$skinDir}/images/btn_prev_off.gif" />
+			{/if}
 		</td>
-		<td class="pageinfo"><span class="bold">{$totalpost}</span> posts / <span style="color:#EF5900;">{$p}</span> of {$totalpage} page{if $totalpage > 1}s{/if}</td>
+		<td class="pageinfo"><span class="bold">{$totalpost}</span> topics / <span style="color:#EF5900;">{$p}</span> of {$totalpage} page{if $totalpage > 1}s{/if}</td>
 		<td class="innerimg right">
-			<a href="{$link.page}{$nextlist}" class="btn btn-sm btn-primary"{if $nextlist == false} disabled="disabled"{/if}>다음페이지</a>
+			{if $nextlist != false}
+				<a href="{$link.page}{$nextlist}"><img src="{$skinDir}/images/btn_next.gif" /></a>
+			{else}
+				<img src="{$skinDir}/images/btn_next_off.gif" />
+			{/if}
 		</td>
 	</tr>
 	</table>

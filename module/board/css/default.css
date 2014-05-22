@@ -7,5 +7,7 @@ DIV.confirmTitle {width:440px; height:80px; margin:0 auto; background:url(../ima
 .errorBox {color:#CCCCCC; font-weight:bold; font-size:14px; line-height:200%; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; width:420px; padding:10px; margin:15px auto; border:5px solid #4F4F4F; background:#000000;}
 .errorBox .inputbox {border:2px solid #4F4F4F; background:#2F2F2F; color:#EEEEEE; font-family:verdana; font-size:16px; padding:3px; width:290px; height:18px;}
 .errorBox LABEL {cursor:pointer;}
+.errorBox A {color:#ffffff; text-decoration:none;}
+.errorBox A:HOVER {text-decoration:underline;}
 .errorButton {margin:10px 5px 0px 5px; border-top:1px dashed #4F4F4F; text-align:center; font:0/0 arial; padding-top:10px;}
 .errorButton IMG {margin-left:5px;}

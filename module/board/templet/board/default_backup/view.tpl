@@ -41,6 +41,10 @@
 		<div class="height10"></div>
 		{$data.content}
 		<div class="height10"></div>
+		{if $data.select == true}
+			<div class="selecttext" onclick="{$data.action.select}">답변이 도움되셨다면, 이곳을 눌러 답변채택을 하여주시기 바랍니다.</div>
+		{/if}
+		
 		<div class="addthis_toolbox addthis_default_style addthis_32x32_style" style="float:right;">
 			<a class="addthis_button_facebook"></a>
 			<a class="addthis_button_twitter"></a>

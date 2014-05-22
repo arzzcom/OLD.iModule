@@ -454,7 +454,36 @@ if ($action == 'select') {
 			echo '<result success="FALSE" msg="답변을 채탤할 수 있는 권한이 없습니다."></result>';
 		}
 	} else {
-		echo '<result success="FALSE" msg="답변을 채탤할 수 있는 게시판이 아닙니다."></result>';
+		echo '<result success="FALSE" msg="답변을 채택할 수 있는 게시판이 아닙니다."></result>';
+	}
+	echo '</Ajax>';
+}
+
+if ($action == 'complete') {
+	header('Content-type: text/xml; charset=UTF-8', true);
+	header("Cache-Control: no-cache, must-revalidate");
+	header("Pragma: no-cache");
+
+	$idx = Request('idx');
+
+	$post = $mDB->DBfetch($mBoard->table['post'],array('bid','mno','title','is_select'),"where `idx`='$idx'");
+	$board = $mDB->DBfetch($mBoard->table['setup'],array('use_select'),"where `bid`='{$post['bid']}'");
+
+	echo '<?xml version="1.0" encoding="UTF-8" ?><Ajax>';
+	if ($board['use_select'] == 'TRUE') {
+		if ($post['is_select'] == 'FALSE' && ($mBoard->GetPermission('select') == true || ($post['mno'] != '0' && $post['mno'] == $member['idx']))) {
+			if ($mDB->DBcount($mBoard->table['ment'],"where `repto`='$idx' and `is_select`='TRUE' and `is_delete`='FALSE'") == 0) {
+				$mDB->DBupdate($mBoard->table['post'],array('is_select'=>'TRUE'),'',"where `idx`='$idx'");
+
+				echo '<result success="TRUE" msg="미해결완료로 처리하였습니다."></result>';
+			} else {
+				echo '<result success="FALSE" msg="이미 채택된 답변이 있습니다."></result>';
+			}
+		} else {
+			echo '<result success="FALSE" msg="미해결완료처리할 수 있는 권한이 없습니다."></result>';
+		}
+	} else {
+		echo '<result success="FALSE" msg="답변을 채택할 수 있는 게시판이 아닙니다."></result>';
 	}
 	echo '</Ajax>';
 }

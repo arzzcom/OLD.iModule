@@ -1,3 +1,7 @@
+.ModuleBoardMyList .sortList {font-family:NanumGothicWeb; font-size:12px; padding:5px 0px 8px 0px; text-align:right;}
+.ModuleBoardMyList .sortList A {text-decoration:none; color:#000000;}
+.ModuleBoardMyList .sortList A.on {text-decoration:underline; color:#82C118; font-weight:bold;}
+
 .ModuleBoardMyList .mylistTable {width:100%; table-layout:fixed; font-family:NanumGothicWeb; font-size:12px;}
 .ModuleBoardMyList .mylistTable .sectionBar {background:#a4b4cd; height:2px; overflow:hidden;}
 .ModuleBoardMyList .mylistTable .sectionEnd {height:3px; background:#E5E5E5; overflow:hidden;}

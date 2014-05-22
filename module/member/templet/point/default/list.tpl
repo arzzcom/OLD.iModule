@@ -40,11 +40,19 @@
 <col width="150" /><col width="100%" /><col width="150" />
 <tr>
 	<td class="innerimg">
-		<a href="{$link.page}{$prevlist}" class="btn btn-sm btn-primary"{if $prevlist == false} disabled="disabled"{/if}>이전페이지</a>
+		{if $prevlist != false}
+			<a href="{$link.page}{$prevlist}"><img src="{$skinDir}/images/btn_prev.gif" /></a>
+		{else}
+			<img src="{$skinDir}/images/btn_prev_off.gif" />
+		{/if}
 	</td>
-	<td class="pageinfo"><span class="bold">{$total}</span> records / <span style="color:#EF5900;">{$p}</span> of {$totalpage} page{if $totalpage > 1}s{/if}</td>
+	<td class="pageinfo"><span class="bold">{$total|number_format}</span> records / <span style="color:#EF5900;">{$p}</span> of {$totalpage} page{if $totalpage > 1}s{/if}</td>
 	<td class="innerimg right">
-		<a href="{$link.page}{$nextlist}" class="btn btn-sm btn-primary"{if $nextlist == false} disabled="disabled"{/if}>다음페이지</a>
+		{if $nextlist != false}
+			<a href="{$link.page}{$nextlist}"><img src="{$skinDir}/images/btn_next.gif" /></a>
+		{else}
+			<img src="{$skinDir}/images/btn_next_off.gif" />
+		{/if}
 	</td>
 </tr>
 </table>
