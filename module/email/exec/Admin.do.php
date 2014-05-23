@@ -19,6 +19,40 @@ if ($mMember->IsAdmin() == false) {
 }
 
 if ($action == 'log') {
+	if ($do == 'resend') {
+		$mFlush = new Flush();
+		$repto = Request('repto');
+
+		$mail = $mDB->DBfetch($mEmail->table['email'],array('subject','body'),"where `idx`='$repto'");
+
+		$total = $mDB->DBcount($mEmail->table['send'],"where `repto`='$repto'");
+		$wait = $mDB->DBcount($mEmail->table['send'],"where `repto`='$repto' and `result`='WAIT'");
+
+		echo '<script type="text/javascript">parent.Ext.Msg.hide(); parent.ShowProgress('.($total-$wait).','.$total.');</script>';
+		
+		$data = $mDB->DBfetchs($mEmail->table['send'],'*',"where `repto`='$repto' and `result`='WAIT'",'idx,asc');
+		$mFlush->flush();
+		
+		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
+			$from = unserialize($data[$i]['from']);
+			$to = unserialize($data[$i]['to']);
+			$mEmail = new ModuleEmail($is_smtp == 'true');
+			$mEmail->SetFrom($from[1],$from[0]);
+			$mEmail->SetContent($mail['subject'],$mail['body'],true);
+			$mEmail->AddTo($to[1],$to[0]);
+			$mEmail->SendEmail($data[$i]['idx']);
+			$wait--;
+			
+			if ($i % 20 == 0) {
+				echo '<script type="text/javascript">parent.ShowProgress('.($total-$wait).','.$total.');</script>';
+				$mFlush->flush();
+			}
+		}
+		
+		echo '<script type="text/javascript">parent.ShowProgress(0,'.$total.');</script>';
+		$mFlush->flush();
+	}
+	
 	if ($do == 'delete') {
 		$mode = Request('mode');
 		$idx = Request('idx');
@@ -179,19 +213,18 @@ if ($action == 'send') {
 	}
 	
 	if ($do == 'send') {
+		$mFlush = new Flush();
 		$is_smtp = Request('is_smtp');
 		$repto = Request('repto');
 
-		GetDefaultHeader('메일발송');
-
 		$mail = $mDB->DBfetch($mEmail->table['email'],array('subject','body'),"where `idx`='$repto'");
 
-		$total = Request('total') ? Request('total') : $mDB->DBcount($mEmail->table['send'],"where `repto`='$repto'");
-		$wait = Request('wait') ? Request('wait') : $mDB->DBcount($mEmail->table['send'],"where `repto`='$repto' and `result`='WAIT'");
+		$total = $mDB->DBcount($mEmail->table['send'],"where `repto`='$repto'");
+		$wait = $mDB->DBcount($mEmail->table['send'],"where `repto`='$repto' and `result`='WAIT'");
 
 		echo '<script type="text/javascript">parent.ShowProgress('.($total-$wait).','.$total.');</script>';
 		
-		$data = $mDB->DBfetchs($mEmail->table['send'],'*',"where `repto`='$repto' and `result`='WAIT'",'idx,asc','0,1');
+		$data = $mDB->DBfetchs($mEmail->table['send'],'*',"where `repto`='$repto' and `result`='WAIT'",'idx,asc');
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			$from = unserialize($data[$i]['from']);
 			$to = unserialize($data[$i]['to']);
@@ -201,14 +234,15 @@ if ($action == 'send') {
 			$mEmail->AddTo($to[1],$to[0]);
 			$mEmail->SendEmail($data[$i]['idx']);
 			$wait--;
+			
+			if ($i % 20 == 0) {
+				echo '<script type="text/javascript">parent.ShowProgress('.($total-$wait).','.$total.');</script>';
+				$mFlush->flush();
+			}
 		}
 		
-		if ($wait > 0) {
-			Redirect($mEmail->moduleDir.'/exec/Admin.do.php?action=send&do=send&repto='.$repto.'&total='.$total.'&wait='.$wait.'&is_smtp='.$is_smtp);
-		} else {
-			echo '<script type="text/javascript">parent.ShowProgress('.($total-$wait).','.$total.');</script>';
-		}
-		GetDefaultFooter();
+		echo '<script type="text/javascript">parent.ShowProgress(0,'.$total.');</script>';
+		$mFlush->flush();
 	}
 }
 

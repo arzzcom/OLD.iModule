@@ -1,4 +1,53 @@
 <script type="text/javascript">
+var ShowProgress = function(count,total) {
+	if (!Ext.getCmp("ProgressWindow")) {
+		new Ext.Window({
+			id:"ProgressWindow",
+			width:500,
+			title:"메일발송",
+			modal:true,
+			closable:true,
+			resizable:false,
+			draggable:false,
+			bodyPadding:"5 5 5 5",
+			items:[
+				new Ext.ProgressBar({
+					id:"ProgressBar",
+					text:"메일발송 대기중..."
+				})
+			],
+			listeners:{beforeclose:SendCancel}
+		}).show();
+	}
+
+	if (count == total) {
+		Ext.getCmp("ProgressBar").updateProgress(count/total,"현재 총 "+total+"명 중 "+count+"명 전송완료... ("+(100*count/total).toFixed(2)+"%)",true);
+		Ext.getCmp("ProgressWindow").removeListener("beforeclose",SendCancel);
+		Ext.Msg.show({title:"안내",msg:"전송이 완료되었습니다.<br />전송기록을 확인하시겠습니까?",buttons:Ext.Msg.OKCANCEL,icon:Ext.Msg.QUESTION,fn:function(button) {
+			Ext.getCmp("ProgressWindow").close();
+			if (button == "ok") {
+				location.href = location.href.replace("category=send","category=log");
+			}
+		}});
+	} else if (count > 0) {
+		Ext.getCmp("ProgressBar").updateProgress(count/total,"현재 총 "+total+"명 중 "+count+"명 전송완료... ("+(100*count/total).toFixed(2)+"%)",true);
+	} else if (count == -1) {
+		Ext.getCmp("ProgressWindow").removeListener("beforeclose",SendCancel);
+		Ext.Msg.show({title:"안내",msg:"전송이 취소되었습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() { Ext.getCmp("ProgressWindow").close(); }});
+	}
+}
+
+var SendCancel = function() {
+	Ext.Msg.show({title:"안내",msg:"전송작업을 취소하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
+		if (button == "yes") {
+			execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/email/exec/Admin.do.php?action=cancel&key="+gKey;
+			Ext.getCmp("ProgressWindow").removeListener("beforeclose",SendCancel);
+		}
+	}});
+
+	return false;
+};
+
 ContentArea = function(viewport) {
 	this.viewport = viewport;
 
@@ -14,7 +63,7 @@ ContentArea = function(viewport) {
 		sorters:[{property:"idx",direction:"DESC"}],
 		autoLoad:true,
 		pageSize:50,
-		fields:[{name:"idx",type:"int"},"from","to","repto","subject","send_date","read_date",{name:"success",type:"int"},{name:"fail",type:"int"},{name:"wait",type:"int"},{name:"total",type:"int"}]
+		fields:[{name:"idx",type:"int"},"from","to","repto","subject","send_date","read_date",{name:"success",type:"int"},{name:"fail",type:"int"},{name:"wait",type:"int"},{name:"read",type:"int"},{name:"total",type:"int"}]
 	});
 	
 	function ItemContextMenu(grid,record,row,index,e) {
@@ -53,6 +102,20 @@ ContentArea = function(viewport) {
 				}).show();
 			}
 		});
+
+		if (Ext.getCmp("ListPanel").getStore().getProxy().extraParams.type == "group") {
+			menu.add({
+				text:"메일재발송",
+				handler:function(item) {
+					Ext.Msg.show({title:"확인",msg:"대기중인 메일에 대하여 메일을 재발송하시겠습니까?<br />이 기능은 메일전송중 오류로 인해 메일전송이 중단된 경우에만 사용하시기 바랍니다.",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
+						if (button == "yes") {
+							Ext.Msg.wait("메일을 재발송하기 위해 준비중입니다.","잠시만 기다려주십시오.");
+							execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/email/exec/Admin.do.php?action=log&do=resend&repto="+record.data.idx+"&is_smtp=true";
+						}
+					}});
+				}
+			});
+		}
 		
 		menu.add({
 			text:"기록삭제",
