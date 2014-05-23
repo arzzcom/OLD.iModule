@@ -564,6 +564,13 @@ class ModuleBoard extends Module {
 		$find = "where `mno`='$mno' and `is_delete`='FALSE'";
 		$pagenum = 10;
 		
+		$keyword = Request('keyword') ? urldecode(Request('keyword')) : '';
+		if ($keyword != null) {
+			$mKeyword = new Keyword($keyword);
+			$keyQuery = $mKeyword->GetFullTextKeyword(array('title','search'));
+			$find.= ' and '.$keyQuery;
+		}
+		
 		$p = is_numeric(Request('p')) == true && Request('p') > 0 ? Request('p') : 1;
 		$totalpost = $this->mDB->DBcount($this->table['post'],$find);
 		$totalpage = ceil($totalpost/$listnum) == 0 ? 1 : ceil($totalpost/$listnum);
@@ -645,6 +652,10 @@ class ModuleBoard extends Module {
 				'vote'=>$this->baseURL.$this->GetQueryString(array('p'=>'','sort'=>'last_ment'))
 			)
 		);
+		
+		$searchFormStart = '<form name="ModuleBoardSearch" action="'.$this->baseURL.'" enctype="application/x-www-form-urlencoded">';
+		$searchFormEnd = '</form>';
+		
 		$this->mTemplet = new Templet($this->modulePath.'/templet/mylist/'.$skin.'/list.tpl');
 		$this->mTemplet->assign('skinDir',$this->moduleDir.'/templet/mylist/'.$skin);
 		$this->mTemplet->assign('data',$data);
@@ -656,6 +667,9 @@ class ModuleBoard extends Module {
 		$this->mTemplet->assign('nextlist',$nextlist);
 		$this->mTemplet->assign('totalpost',number_format($totalpost));
 		$this->mTemplet->assign('totalpage',number_format($totalpage));
+		$this->mTemplet->assign('searchFormStart',$searchFormStart);
+		$this->mTemplet->assign('searchFormEnd',$searchFormEnd);
+		$this->mTemplet->assign('keyword',GetString(urldecode($keyword),'inputbox'));
 		$this->mTemplet->assign('p',$p);
 		$this->mTemplet->assign('sort',$sort);
 		$this->mTemplet->assign('link',$link);
@@ -964,7 +978,7 @@ class ModuleBoard extends Module {
 		$this->mTemplet->assign('searchFormStart',$searchFormStart);
 		$this->mTemplet->assign('searchFormEnd',$searchFormEnd);
 		$this->mTemplet->assign('key',$key);
-		$this->mTemplet->assign('keyword',$keyword);
+		$this->mTemplet->assign('keyword',GetString(urldecode($keyword),'inputbox'));
 		$this->mTemplet->assign('category',$category);
 		$this->mTemplet->assign('select',$select);
 		$this->mTemplet->assign('categoryName',$categoryName);

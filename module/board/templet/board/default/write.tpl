@@ -7,7 +7,7 @@
 <tr class="sectionBar">
 	<td colspan="4"></td>
 </tr>
-{if $member.idx != 0}
+{if $member.idx == 0}
 <tr>
 	<td class="headerCell">작성자</td>
 	<td class="splitBar"></td>

@@ -13,3 +13,12 @@
 .ModuleBoardMyList .mylistTable .bodyCell DIV IMG {vertical-align:middle;}
 .ModuleBoardMyList .mylistTable .bodyCell DIV A {color:#083772; text-decoration:none;}
 .ModuleBoardMyList .mylistTable .bodyCell DIV A:HOVER {font-weight:bold; color:#083772; text-decoration:underline;}
+
+.ModuleBoardMyList .searchbox {width:354px; margin:0 auto;}
+.ModuleBoardMyList .searchbox .searchinput {width:350px; height:22px; border:2px solid #51AF10; font:0/0 arial; position:relative; margin:0 auto;}
+.ModuleBoardMyList .searchbox .searchinput .inputbox {width:320px; height:14px; border:1px solid #51AF10; padding:3px 0px 3px 3px; margin:0px;font-size:12px; font-weight:bold; font-family:NanumGothicWeb; float:left;}
+.ModuleBoardMyList .searchbox .buttonbox {width:25px; height:22px; background-image:url(./images/btn_search.gif); background-repeat:repeat; float:right; border:0px; cursor:pointer; background-position:0px 0px;}
+.ModuleBoardMyList .searchbox .buttonbox:hover {background-position:0px 22px;}
+.ModuleBoardMyList .searchbox .livelist {position:absolute; width:322px; top:22px; left:1px; z-index:100; border:1px solid #C8C8C8; border-top:0px; background:#FFFFFF; font-size:12px; font-family:NanumGothicWeb; color:#888888;}
+.ModuleBoardMyList .searchbox .livelist DIV {padding:5px 3px 5px 3px; margin:2px; cursor:pointer;}
+.ModuleBoardMyList .searchbox .livelist DIV:hover {padding:5px 3px 5px 3px; margin:2px; background:#E5E5E5; cursor:pointer;}

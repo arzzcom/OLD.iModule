@@ -86,4 +86,26 @@
 			<li{if $nextpage == false} class="disabled"{/if}><a href="{if $nextpage != false}{$link.page}{$nextpage}{else}javascript:void(0);{/if}">다음{$pagenum}페이지</a></li>
 		</ul>
 	</div>
+	
+	<div class="height10"></div>
+	
+	{$searchFormStart}
+	<div class="searchbox">
+		<table cellpadding="0" cellspacing="0" class="layoutfixed">
+		<tr>
+			<td>
+				<div class="searchinput">
+					<input id="ModuleBoardkeyword_{$bid}" type="text" name="keyword" value="{$keyword}" class="inputbox" autocomplete="off" onfocus="LiveSearchStart(this.id)" onblur="LiveSearchStop(this.id)" onkeydown="LiveSearchListMove(event,this.id)" value="<?php echo $keyword; ?>" />
+					<input type="submit" class="buttonbox" value="" />
+					<div id="ModuleBoardkeyword_{$bid}-live-arrow" class="searchlivebutton" show="background-position:0px -11px;" hide="background-position:0px 0px;"></div>
+					<div id="ModuleBoardkeyword_{$bid}-live-list" class="livelist" style="display:none;" select="background:#E5E5E5;" unselect="background:#FFFFFF;"></div>
+				</div>
+			</td>
+			<td>
+
+			</td>
+		</tr>
+		</table>
+	</div>
+	{$searchFormEnd}
 </div>
