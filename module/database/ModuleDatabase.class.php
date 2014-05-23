@@ -90,6 +90,10 @@ class ModuleDatabase extends Module {
 
 		return $data;
 	}
+	
+	function DBupdate($table,$insertValue,$functionValue='',$find='') {
+		return $this->mDB->DBupdate($table,$insertValue,$functionValue,$find);
+	}
 
 	function DBcount($table,$find='') {
 		$table = $this->GetTable(0,$table);
