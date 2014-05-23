@@ -615,7 +615,7 @@ class ModuleBoard extends Module {
 			$data[$i]['is_newment'] = $data[$i]['last_ment'] > GetGMT()-60*60*24;
 
 			$data[$i]['categoryIDX'] = $data[$i]['category'];
-			if ($this->setup['use_category'] == 'TRUE' && $data[$i]['category'] != '0') {
+			if ($this->setup['use_category'] != 'FALSE' && $data[$i]['category'] != '0') {
 				$data[$i]['category'] = $this->GetCategoryName($data[$i]['category']);
 			} else {
 				$data[$i]['category'] = '';
@@ -813,7 +813,7 @@ class ModuleBoard extends Module {
 				$notice[$i]['is_newment'] = $notice[$i]['last_ment'] > GetGMT()-60*60*24;
 
 				$notice[$i]['categoryIDX'] = $notice[$i]['category'];
-				if ($this->setup['use_category'] == 'TRUE' && $notice[$i]['category'] != '0') {
+				if ($this->setup['use_category'] != 'FALSE' && $notice[$i]['category'] != '0') {
 					$notice[$i]['category'] = $this->GetCategoryName($notice[$i]['category']);
 				} else {
 					$notice[$i]['category'] = '';
@@ -896,7 +896,7 @@ class ModuleBoard extends Module {
 			$data[$i]['is_newment'] = $data[$i]['last_ment'] > GetGMT()-60*60*24;
 
 			$data[$i]['categoryIDX'] = $data[$i]['category'];
-			if ($this->setup['use_category'] == 'TRUE' && $data[$i]['category'] != '0') {
+			if ($this->setup['use_category'] != 'FALSE' && $data[$i]['category'] != '0') {
 				$data[$i]['category'] = $this->GetCategoryName($data[$i]['category']);
 			} else {
 				$data[$i]['category'] = '';
@@ -949,7 +949,7 @@ class ModuleBoard extends Module {
 
 		$categoryName = '';
 		$categoryList = array();
-		if ($this->setup['use_category'] == 'TRUE') {
+		if ($this->setup['use_category'] != 'FALSE') {
 			$categoryList = $this->mDB->DBfetchs($this->table['category'],array('idx','category'),"where `bid`='{$this->bid}'",'sort,asc');
 			for ($i=0, $loop=sizeof($categoryList);$i<$loop;$i++) {
 				if ($categoryList[$i]['idx'] == $category) $categoryName = $categoryList[$i]['category'];
@@ -1074,7 +1074,7 @@ class ModuleBoard extends Module {
 		$data['content'] = $this->GetContent($data['content']);
 		$data['reg_date'] = strtotime(GetTime('c',$data['reg_date']));
 
-		if ($this->setup['use_category'] == 'TRUE' && $data['category'] != '0') {
+		if ($this->setup['use_category'] != 'FALSE' && $data['category'] != '0') {
 			$data['category'] = $this->GetCategoryName($data['category']);
 		} else {
 			$data['category'] = '';
@@ -1165,7 +1165,7 @@ class ModuleBoard extends Module {
 		$data['content'] = $this->GetContent($data['content']);
 		$data['reg_date'] = strtotime(GetTime('c',$data['reg_date']));
 
-		if ($this->setup['use_category'] == 'TRUE' && $data['category'] != '0') {
+		if ($this->setup['use_category'] != 'FALSE' && $data['category'] != '0') {
 			$data['category'] = $this->GetCategoryName($data['category']);
 		} else {
 			$data['category'] = '';
@@ -1276,11 +1276,14 @@ class ModuleBoard extends Module {
 
 		$categoryName = '';
 		$categoryList = array();
-		if ($this->setup['use_category'] == 'TRUE') {
+		if ($this->setup['use_category'] != 'FALSE') {
 			$cData = $this->mDB->DBfetchs($this->table['category'],array('idx','category','permission'),"where `bid`='{$this->bid}'",'sort,asc');
 			$categoryList = array();
 			for ($i=0, $loop=sizeof($cData);$i<$loop;$i++) {
-				if ($cData[$i]['permission'] == '' || eval($cData[$i]['permission'])) {
+				$cData[$i]['permission'] = str_replace('{$category.idx}',$cData[$i]['idx'],$cData[$i]['permission']);
+				$cData[$i]['permission'] = str_replace('{$category.name}',$cData[$i]['category'],$cData[$i]['permission']);
+				
+				if ($cData[$i]['permission'] == '' || GetPermission($cData[$i]['permission']) == true) {
 					if ($post['category'] == $cData[$i]['idx']) $categoryName = $cData[$i]['category'];
 					$categoryList[] = array('idx'=>$cData[$i]['idx'],'category'=>$cData[$i]['category']);
 				}
@@ -1470,7 +1473,7 @@ class ModuleBoard extends Module {
 			if ($data[$i]['is_secret'] == 'TRUE' && ($data[$i]['mno'] != 0 && $data[$i]['mno'] != $this->member['idx'] || $data[$i]['mno'] == '0') && $this->GetPermission('secret') == false) {
 				$data[$i]['content'] = $data[$i]['search'] = '이 글은 비밀글입니다. 권한이 없으므로 내용을 보실 수 없습니다.';
 			}
-			if ($this->setup['use_category'] == 'TRUE' && $data[$i]['category'] != '0') {
+			if ($this->setup['use_category'] != 'FALSE' && $data[$i]['category'] != '0') {
 				$data[$i]['category'] = $this->GetCategoryName($data[$i]['category']);
 			} else {
 				$data[$i]['category'] = '';
@@ -1551,7 +1554,7 @@ class ModuleBoard extends Module {
 				$data[$i]['image'] = $data[$i]['image'] != '0' ? $_ENV['userfileDir'].$this->thumbnail.'/'.$data[$i]['image'].'.thm' : '';
 				$data[$i]['reg_date'] = strtotime(GetTime('c',$data[$i]['reg_date']));
 
-				if ($this->setup['use_category'] == 'TRUE' && $data[$i]['category'] != '0') {
+				if ($this->setup['use_category'] != 'FALSE' && $data[$i]['category'] != '0') {
 					$data[$i]['category'] = $this->GetCategoryName($data[$i]['category']);
 				} else {
 					$data[$i]['category'] = '';
