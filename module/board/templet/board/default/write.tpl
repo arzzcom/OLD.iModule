@@ -56,20 +56,22 @@
 		<input type="text" name="title" value="{$post.title}" style="width:90%;" blank="제목을 입력하여 주십시오." autosave="true" />
 	</td>
 </tr>
-{if $categoryList}
+{if $setup.use_category != 'FALSE'}
 <tr class="splitBar">
 	<td colspan="4"></td>
 </tr>
 <tr>
 	<td class="headerCell">분류</td>
+	<td class="splitBar"></td>
 	<td>
+		
 		<input type="hidden" name="category" value="{$post.category}" />
 		<div style="margin:5px 0px 5px 10px;">
 		<div id="iBoardCategory" class="selectbox" style="width:150px;">
 			<div onclick="InputSelectBox('iBoardCategory')" clicker="iBoardCategory">{if $categoryName}{$categoryName}{else}카테고리{/if}</div>
 
 			<ul style="display:none;" clicker="iBoardCategory">
-				<li onclick="InputSelectBoxSelect('iBoardCategory','분류없음','',WriteSelectCategory)">분류없음</li>
+				{if $setup.use_category == 'OPTION'}<li onclick="InputSelectBoxSelect('iBoardCategory','분류없음','',WriteSelectCategory)">분류없음</li>{/if}
 				{foreach from=$categoryList item=categoryList}
 				<li onclick="InputSelectBoxSelect('iBoardCategory','{$categoryList.category}','{$categoryList.idx}',WriteSelectCategory)">{$categoryList.category}</li>
 				{/foreach}
