@@ -15,3 +15,5 @@
 .ModuleMember .pointTable .bodyCell DIV.reference {background:url(./images/attach.png) no-repeat 0 50%; padding-left:20px;}
 .ModuleMember .pointTable .bodyCell DIV A {font-weight:bold; color:#083772; text-decoration:none;}
 .ModuleMember .pointTable .bodyCell DIV A:HOVER {font-weight:bold; color:#083772; text-decoration:underline;}
+
+.ModuleMember .pageinfo {text-align:center; font-family:verdana; color:#2F2F2F; font-size:10px;}

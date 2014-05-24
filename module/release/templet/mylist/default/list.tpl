@@ -1,4 +1,4 @@
-<div class="ModuleBoardMyList">
+<div class="ModuleReleaseMyList">
 	<div class="sortList">
 		<a href="{$link.sort.idx}"{if $sort == 'idx'} class="on"{/if}>최근등록순</a> |
 		<a href="{$link.sort.last_ment}"{if $sort == 'last_ment'} class="on"{/if}>최근댓글순</a> |

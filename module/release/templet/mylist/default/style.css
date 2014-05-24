@@ -1,24 +1,26 @@
-.ModuleBoardMyList .sortList {font-family:NanumGothicWeb; font-size:12px; padding:5px 0px 8px 0px; text-align:right;}
-.ModuleBoardMyList .sortList A {text-decoration:none; color:#000000;}
-.ModuleBoardMyList .sortList A.on {text-decoration:underline; color:#82C118; font-weight:bold;}
+.ModuleReleaseMyList .sortList {font-family:NanumGothicWeb; font-size:12px; padding:5px 0px 8px 0px; text-align:right;}
+.ModuleReleaseMyList .sortList A {text-decoration:none; color:#000000;}
+.ModuleReleaseMyList .sortList A.on {text-decoration:underline; color:#82C118; font-weight:bold;}
 
-.ModuleBoardMyList .mylistTable {width:100%; table-layout:fixed; font-family:NanumGothicWeb; font-size:12px;}
-.ModuleBoardMyList .mylistTable .sectionBar {background:#a4b4cd; height:2px; overflow:hidden;}
-.ModuleBoardMyList .mylistTable .sectionEnd {height:3px; background:#E5E5E5; overflow:hidden;}
-.ModuleBoardMyList .mylistTable .sectionEnd DIV {height:1px; overflow:hidden; border-bottom:2px solid #f4f4f4;}
-.ModuleBoardMyList .mylistTable .splitBar {background:#cfdbe7; height:1px; overflow:hidden;}
-.ModuleBoardMyList .mylistTable .headerCell {height:36px; padding:0px 10px 0px 10px; font-weight:bold; background:#f8f8f9; color:#758191; text-align:center;}
-.ModuleBoardMyList .mylistTable .bodyCell {padding:8px 8px;}
-.ModuleBoardMyList .mylistTable .bodyCell DIV {height:16px; line-height:16px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
-.ModuleBoardMyList .mylistTable .bodyCell DIV IMG {vertical-align:middle;}
-.ModuleBoardMyList .mylistTable .bodyCell DIV A {color:#083772; text-decoration:none;}
-.ModuleBoardMyList .mylistTable .bodyCell DIV A:HOVER {font-weight:bold; color:#083772; text-decoration:underline;}
+.ModuleReleaseMyList .mylistTable {width:100%; table-layout:fixed; font-family:NanumGothicWeb; font-size:12px;}
+.ModuleReleaseMyList .mylistTable .sectionBar {background:#a4b4cd; height:2px; overflow:hidden;}
+.ModuleReleaseMyList .mylistTable .sectionEnd {height:3px; background:#E5E5E5; overflow:hidden;}
+.ModuleReleaseMyList .mylistTable .sectionEnd DIV {height:1px; overflow:hidden; border-bottom:2px solid #f4f4f4;}
+.ModuleReleaseMyList .mylistTable .splitBar {background:#cfdbe7; height:1px; overflow:hidden;}
+.ModuleReleaseMyList .mylistTable .headerCell {height:36px; padding:0px 10px 0px 10px; font-weight:bold; background:#f8f8f9; color:#758191; text-align:center;}
+.ModuleReleaseMyList .mylistTable .bodyCell {padding:8px 8px;}
+.ModuleReleaseMyList .mylistTable .bodyCell DIV {height:16px; line-height:16px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.ModuleReleaseMyList .mylistTable .bodyCell DIV IMG {vertical-align:middle;}
+.ModuleReleaseMyList .mylistTable .bodyCell DIV A {color:#083772; text-decoration:none;}
+.ModuleReleaseMyList .mylistTable .bodyCell DIV A:HOVER {font-weight:bold; color:#083772; text-decoration:underline;}
 
-.ModuleBoardMyList .searchbox {width:354px; margin:0 auto;}
-.ModuleBoardMyList .searchbox .searchinput {width:350px; height:22px; border:2px solid #51AF10; font:0/0 arial; position:relative; margin:0 auto;}
-.ModuleBoardMyList .searchbox .searchinput .inputbox {width:320px; height:14px; border:1px solid #51AF10; padding:3px 0px 3px 3px; margin:0px;font-size:12px; font-weight:bold; font-family:NanumGothicWeb; float:left;}
-.ModuleBoardMyList .searchbox .buttonbox {width:25px; height:22px; background-image:url(./images/btn_search.gif); background-repeat:repeat; float:right; border:0px; cursor:pointer; background-position:0px 0px;}
-.ModuleBoardMyList .searchbox .buttonbox:hover {background-position:0px 22px;}
-.ModuleBoardMyList .searchbox .livelist {position:absolute; width:322px; top:22px; left:1px; z-index:100; border:1px solid #C8C8C8; border-top:0px; background:#FFFFFF; font-size:12px; font-family:NanumGothicWeb; color:#888888;}
-.ModuleBoardMyList .searchbox .livelist DIV {padding:5px 3px 5px 3px; margin:2px; cursor:pointer;}
-.ModuleBoardMyList .searchbox .livelist DIV:hover {padding:5px 3px 5px 3px; margin:2px; background:#E5E5E5; cursor:pointer;}
+.ModuleReleaseMyList .searchbox {width:354px; margin:0 auto;}
+.ModuleReleaseMyList .searchbox .searchinput {width:350px; height:22px; border:2px solid #51AF10; font:0/0 arial; position:relative; margin:0 auto;}
+.ModuleReleaseMyList .searchbox .searchinput .inputbox {width:320px; height:14px; border:1px solid #51AF10; padding:3px 0px 3px 3px; margin:0px;font-size:12px; font-weight:bold; font-family:NanumGothicWeb; float:left;}
+.ModuleReleaseMyList .searchbox .buttonbox {width:25px; height:22px; background-image:url(./images/btn_search.gif); background-repeat:repeat; float:right; border:0px; cursor:pointer; background-position:0px 0px;}
+.ModuleReleaseMyList .searchbox .buttonbox:hover {background-position:0px 22px;}
+.ModuleReleaseMyList .searchbox .livelist {position:absolute; width:322px; top:22px; left:1px; z-index:100; border:1px solid #C8C8C8; border-top:0px; background:#FFFFFF; font-size:12px; font-family:NanumGothicWeb; color:#888888;}
+.ModuleReleaseMyList .searchbox .livelist DIV {padding:5px 3px 5px 3px; margin:2px; cursor:pointer;}
+.ModuleReleaseMyList .searchbox .livelist DIV:hover {padding:5px 3px 5px 3px; margin:2px; background:#E5E5E5; cursor:pointer;}
+
+.ModuleReleaseMyList .pageinfo {text-align:center; font-family:verdana; color:#2F2F2F; font-size:10px;}

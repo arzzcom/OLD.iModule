@@ -22,3 +22,5 @@
 .ModuleBoardMyList .searchbox .livelist {position:absolute; width:322px; top:22px; left:1px; z-index:100; border:1px solid #C8C8C8; border-top:0px; background:#FFFFFF; font-size:12px; font-family:NanumGothicWeb; color:#888888;}
 .ModuleBoardMyList .searchbox .livelist DIV {padding:5px 3px 5px 3px; margin:2px; cursor:pointer;}
 .ModuleBoardMyList .searchbox .livelist DIV:hover {padding:5px 3px 5px 3px; margin:2px; background:#E5E5E5; cursor:pointer;}
+
+.ModuleBoardMyList .pageinfo {text-align:center; font-family:verdana; color:#2F2F2F; font-size:10px;}
