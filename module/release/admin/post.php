@@ -6,15 +6,15 @@ var ContentArea = function(viewport) {
 		proxy:{
 			type:"ajax",
 			simpleSortMode:true,
-			url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.get.php",
+			url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.get.php",
 			reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-			extraParams:{action:"post",key:"",keyword:"",category:"",bid:""}
+			extraParams:{action:"post",key:"",keyword:"",category:"",rid:""}
 		},
 		remoteSort:true,
 		sorters:[{property:"idx",direction:"DESC"}],
 		autoLoad:true,
 		pageSize:50,
-		fields:["idx","bid","boardtitle","category","title","mno","name","nickname","width","newment",{name:"ment",type:"int"},{name:"trackback",type:"int"},{name:"hit",type:"int"},{name:"vote",type:"int"},{name:"avgvote",type:"float"},"reg_date","file","ip"]
+		fields:["idx","rid","releasetitle","category","title","mno","name","nickname","width","newment",{name:"ment",type:"int"},{name:"hit",type:"int"},{name:"vote",type:"int"},{name:"avgvote",type:"float"},"last_version","version_count","reg_date","file","ip"]
 	});
 	
 	function ItemContextMenu(grid,record,row,index,e) {
@@ -29,7 +29,7 @@ var ContentArea = function(viewport) {
 				new Ext.Window({
 					id:"MoveWindow",
 					title:"게시물 이동",
-					width:400,
+					width:440,
 					modal:true,
 					maximizable:false,
 					resizable:false,
@@ -39,11 +39,11 @@ var ContentArea = function(viewport) {
 							id:"MoveForm",
 							bodyPadding:"10 10 5 10",
 							border:false,
-							fieldDefaults:{labelAlign:"right",labelWidth:100,anchor:"100%",allowBlank:false},
+							fieldDefaults:{labelAlign:"right",labelWidth:140,anchor:"100%",allowBlank:false},
 							items:[
 								new Ext.form.ComboBox({
-									fieldLabel:"이동할 게시판",
-									name:"bid",
+									fieldLabel:"이동할 릴리즈게시판",
+									name:"rid",
 									typeAhead:true,
 									triggerAction:"all",
 									lazyRender:true,
@@ -51,25 +51,25 @@ var ContentArea = function(viewport) {
 										proxy:{
 											type:"ajax",
 											simpleSortMode:true,
-											url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.get.php",
+											url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.get.php",
 											reader:{type:"json",root:"lists",totalProperty:"totalCount"},
 											extraParams:{"action":"list","is_all":"false"}
 										},
 										remoteSort:false,
-										sorters:[{property:"bid",direction:"ASC"}],
+										sorters:[{property:"rid",direction:"ASC"}],
 										autoLoad:true,
 										pageSize:50,
-										fields:["bid","title","option"]
+										fields:["rid","title","option"]
 									}),
 									editable:false,
 									mode:"local",
 									displayField:"title",
-									valueField:"bid",
-									emptyText:"게시판명",
+									valueField:"rid",
+									emptyText:"릴리즈게시판명",
 									listeners:{
 										select:{fn:function(form,record) {
 											if (record.shift().data.option.split(",").shift() == "TRUE") {
-												Ext.getCmp("MoveForm").getForm().findField("category").getStore().getProxy().setExtraParam("bid",form.getValue());
+												Ext.getCmp("MoveForm").getForm().findField("category").getStore().getProxy().setExtraParam("rid",form.getValue());
 												Ext.getCmp("MoveForm").getForm().findField("category").getStore().loadPage(1);
 												Ext.getCmp("MoveForm").getForm().findField("category").enable();
 											} else {
@@ -89,9 +89,9 @@ var ContentArea = function(viewport) {
 										proxy:{
 											type:"ajax",
 											simpleSortMode:true,
-											url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.get.php",
+											url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.get.php",
 											reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-											extraParams:{"action":"category","is_all":"false","is_none":"true","bid":""}
+											extraParams:{"action":"category","is_all":"false","is_none":"true","rid":""}
 										},
 										remoteSort:false,
 										sorters:[{property:"sort",direction:"ASC"}],
@@ -114,7 +114,7 @@ var ContentArea = function(viewport) {
 							text:"확인",
 							handler:function() {
 								Ext.getCmp("MoveForm").getForm().submit({
-									url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.do.php?action=post&do=move&idx="+record.data.idx,
+									url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.do.php?action=post&do=move&idx="+record.data.idx,
 									submitEmptyText:false,
 									waitTitle:"잠시만 기다려주십시오.",
 									waitMsg:"게시물을 이동중입니다.",
@@ -150,7 +150,7 @@ var ContentArea = function(viewport) {
 					if (button == "yes") {
 						Ext.Msg.wait("선택한 게시물을 삭제하고 있습니다.","잠시만 기다려주십시오.");
 						Ext.Ajax.request({
-							url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.do.php",
+							url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.do.php",
 							success:function(response) {
 								var data = Ext.JSON.decode(response.responseText);
 								if (data.success == true) {
@@ -165,34 +165,6 @@ var ContentArea = function(viewport) {
 								Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
 							},
 							params:{"action":"post","do":"delete","idx":record.data.idx}
-						});
-					}
-				}});
-			}
-		});
-		
-		menu.add({
-			text:"게시물 삭제 및 IP차단",
-			handler:function() {
-				Ext.Msg.show({title:"확인",msg:"선택한 게시물을 정말 삭제 및 차단하시겠습니까?<br />삭제된 게시물은 휴지통으로 이동됩니다.",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
-					if (button == "yes") {
-						Ext.Msg.wait("선택한 게시물을 삭제 및 차단하고 있습니다.","잠시만 기다려주십시오.");
-						Ext.Ajax.request({
-							url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.do.php",
-							success:function(response) {
-								var data = Ext.JSON.decode(response.responseText);
-								if (data.success == true) {
-									Ext.Msg.show({title:"안내",msg:"성공적으로 삭제하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
-										Ext.getCmp("ListPanel").getStore().reload();
-									}});
-								} else {
-									Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
-								}
-							},
-							failure:function() {
-								Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
-							},
-							params:{"action":"post","do":"spam","idx":record.data.idx}
 						});
 					}
 				}});
@@ -216,7 +188,7 @@ var ContentArea = function(viewport) {
 				autoScroll:true,
 				tbar:[
 					new Ext.form.ComboBox({
-						id:"BoardID",
+						id:"ReleaseID",
 						typeAhead:true,
 						triggerAction:"all",
 						lazyRender:true,
@@ -224,39 +196,39 @@ var ContentArea = function(viewport) {
 							proxy:{
 								type:"ajax",
 								simpleSortMode:true,
-								url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.get.php",
+								url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.get.php",
 								reader:{type:"json",root:"lists",totalProperty:"totalCount"},
 								extraParams:{"action":"list","is_all":"true"}
 							},
 							remoteSort:false,
-							sorters:[{property:"bid",direction:"ASC"}],
+							sorters:[{property:"rid",direction:"ASC"}],
 							autoLoad:true,
 							pageSize:50,
-							fields:["bid","title","option"]
+							fields:["rid","title","option"]
 						}),
 						width:120,
 						editable:false,
 						mode:"local",
 						displayField:"title",
-						valueField:"bid",
-						emptyText:"게시판명",
+						valueField:"rid",
+						emptyText:"릴리즈게시판명",
 						listeners:{
 							select:{fn:function(form,record) {
 								if (record.shift().data.option.split(",").shift() == "TRUE") {
-									Ext.getCmp("BoardCategory").getStore().getProxy().setExtraParam("bid",form.getValue());
-									Ext.getCmp("BoardCategory").getStore().loadPage(1);
-									Ext.getCmp("BoardCategory").show();
+									Ext.getCmp("ReleaseCategory").getStore().getProxy().setExtraParam("rid",form.getValue());
+									Ext.getCmp("ReleaseCategory").getStore().loadPage(1);
+									Ext.getCmp("ReleaseCategory").show();
 								} else {
-									Ext.getCmp("BoardCategory").reset();
-									Ext.getCmp("BoardCategory").hide();
+									Ext.getCmp("ReleaseCategory").reset();
+									Ext.getCmp("ReleaseCategory").hide();
 								}
-								store.getProxy().setExtraParam("bid",form.getValue());
+								store.getProxy().setExtraParam("rid",form.getValue());
 								store.loadPage(1);
 							}}
 						}
 					}),
 					new Ext.form.ComboBox({
-						id:"BoardCategory",
+						id:"ReleaseCategory",
 						typeAhead:true,
 						triggerAction:"all",
 						lazyRender:true,
@@ -265,9 +237,9 @@ var ContentArea = function(viewport) {
 							proxy:{
 								type:"ajax",
 								simpleSortMode:true,
-								url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.get.php",
+								url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.get.php",
 								reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-								extraParams:{"action":"category","is_all":"true","is_none":"true","bid":""}
+								extraParams:{"action":"category","is_all":"true","is_none":"true","rid":""}
 							},
 							remoteSort:false,
 							sorters:[{property:"sort",direction:"ASC"}],
@@ -311,7 +283,7 @@ var ContentArea = function(viewport) {
 					}),
 					new Ext.Button({
 						text:"검색",
-						icon:"<?php echo $_ENV['dir']; ?>/module/board/images/admin/icon_magnifier.png",
+						icon:"<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_magnifier.png",
 						handler:function() {
 							store.getProxy().setExtraParam("key",Ext.getCmp("Key").getValue());
 							store.getProxy().setExtraParam("keyword",Ext.getCmp("Keyword").getValue());
@@ -321,7 +293,7 @@ var ContentArea = function(viewport) {
 					'-',
 					new Ext.Button({
 						text:"선택한 게시물을&nbsp;",
-						icon:"<?php echo $_ENV['dir']; ?>/module/board/images/admin/icon_tick.png",
+						icon:"<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_tick.png",
 						menu:new Ext.menu.Menu({
 							items:[{
 								text:"게시물 이동",
@@ -340,7 +312,7 @@ var ContentArea = function(viewport) {
 									new Ext.Window({
 										id:"MoveWindow",
 										title:"게시물 이동",
-										width:400,
+										width:440,
 										modal:true,
 										maximizable:false,
 										resizable:false,
@@ -350,11 +322,11 @@ var ContentArea = function(viewport) {
 												id:"MoveForm",
 												bodyPadding:"10 10 5 10",
 												border:false,
-												fieldDefaults:{labelAlign:"right",labelWidth:100,anchor:"100%",allowBlank:false},
+												fieldDefaults:{labelAlign:"right",labelWidth:140,anchor:"100%",allowBlank:false},
 												items:[
 													new Ext.form.ComboBox({
-														fieldLabel:"이동할 게시판",
-														name:"bid",
+														fieldLabel:"이동할 릴리즈게시판",
+														name:"rid",
 														typeAhead:true,
 														triggerAction:"all",
 														lazyRender:true,
@@ -362,25 +334,25 @@ var ContentArea = function(viewport) {
 															proxy:{
 																type:"ajax",
 																simpleSortMode:true,
-																url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.get.php",
+																url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.get.php",
 																reader:{type:"json",root:"lists",totalProperty:"totalCount"},
 																extraParams:{"action":"list","is_all":"false"}
 															},
 															remoteSort:false,
-															sorters:[{property:"bid",direction:"ASC"}],
+															sorters:[{property:"rid",direction:"ASC"}],
 															autoLoad:true,
 															pageSize:50,
-															fields:["bid","title","option"]
+															fields:["rid","title","option"]
 														}),
 														editable:false,
 														mode:"local",
 														displayField:"title",
-														valueField:"bid",
-														emptyText:"게시판명",
+														valueField:"rid",
+														emptyText:"릴리즈게시판명",
 														listeners:{
 															select:{fn:function(form,record) {
 																if (record.shift().data.option.split(",").shift() == "TRUE") {
-																	Ext.getCmp("MoveForm").getForm().findField("category").getStore().getProxy().setExtraParam("bid",form.getValue());
+																	Ext.getCmp("MoveForm").getForm().findField("category").getStore().getProxy().setExtraParam("rid",form.getValue());
 																	Ext.getCmp("MoveForm").getForm().findField("category").getStore().loadPage(1);
 																	Ext.getCmp("MoveForm").getForm().findField("category").enable();
 																} else {
@@ -400,9 +372,9 @@ var ContentArea = function(viewport) {
 															proxy:{
 																type:"ajax",
 																simpleSortMode:true,
-																url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.get.php",
+																url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.get.php",
 																reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-																extraParams:{"action":"category","is_all":"false","is_none":"true","bid":""}
+																extraParams:{"action":"category","is_all":"false","is_none":"true","rid":""}
 															},
 															remoteSort:false,
 															sorters:[{property:"sort",direction:"ASC"}],
@@ -431,7 +403,7 @@ var ContentArea = function(viewport) {
 													}
 													
 													Ext.getCmp("MoveForm").getForm().submit({
-														url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.do.php?action=post&do=move&idx="+idxs.join(","),
+														url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.do.php?action=post&do=move&idx="+idxs.join(","),
 														submitEmptyText:false,
 														waitTitle:"잠시만 기다려주십시오.",
 														waitMsg:"게시물을 이동중입니다.",
@@ -474,7 +446,7 @@ var ContentArea = function(viewport) {
 										if (button == "yes") {
 											Ext.Msg.wait("선택한 게시물을 삭제하고 있습니다.","잠시만 기다려주십시오.");
 											Ext.Ajax.request({
-												url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.do.php",
+												url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.do.php",
 												success:function(response) {
 													var data = Ext.JSON.decode(response.responseText);
 													if (data.success == true) {
@@ -489,43 +461,6 @@ var ContentArea = function(viewport) {
 													Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
 												},
 												params:{"action":"post","do":"delete","idx":idxs.join(",")}
-											});
-										}
-									}});
-								}
-							},{
-								text:"게시물 삭제 및 IP차단",
-								handler:function() {
-									var checked = Ext.getCmp("ListPanel").getSelectionModel().getSelection();
-									if (checked.length == 0) {
-										Ext.Msg.show({title:"에러",msg:"삭제 및 차단할 게시물을 선택하여 주십시오.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
-										return false;
-									}
-									
-									var idxs = new Array();
-									for (var i=0, loop=checked.length;i<loop;i++) {
-										idxs[i] = checked[i].get("idx");
-									}
-									
-									Ext.Msg.show({title:"확인",msg:"선택한 게시물을 정말 삭제 및 차단하시겠습니까?<br />삭제된 게시물은 휴지통으로 이동됩니다.",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
-										if (button == "yes") {
-											Ext.Msg.wait("선택한 게시물을 삭제 및 차단하고 있습니다.","잠시만 기다려주십시오.");
-											Ext.Ajax.request({
-												url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.do.php",
-												success:function(response) {
-													var data = Ext.JSON.decode(response.responseText);
-													if (data.success == true) {
-														Ext.Msg.show({title:"안내",msg:"성공적으로 삭제 및 삭제하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
-															Ext.getCmp("ListPanel").getStore().reload();
-														}});
-													} else {
-														Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
-													}
-												},
-												failure:function() {
-													Ext.Msg.show({title:"안내",msg:"서버에 이상이 있어 처리하지 못하였습니다.<br />잠시후 다시 시도해보시기 바랍니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.WARNING});
-												},
-												params:{"action":"post","do":"spam","idx":idxs.join(",")}
 											});
 										}
 									}});
@@ -546,12 +481,12 @@ var ContentArea = function(viewport) {
 							return GridNumberFormat(value);
 						}
 					}),{
-						header:"게시판명",
-						dataIndex:"boardtitle",
+						header:"릴리즈게시판명",
+						dataIndex:"releasetitle",
 						sortable:false,
 						width:130,
 						renderer:function(value,p,record) {
-							return value+'<span style="font-family:tahoma;">('+record.data.bid+')</span>';
+							return value+'<span style="font-family:tahoma;">('+record.data.rid+')</span>';
 						}
 					},{
 						header:"제목",
@@ -580,11 +515,24 @@ var ContentArea = function(viewport) {
 							var sHTML = "";
 							if (value) {
 								p.tdCls = Ext.baseCSSPrefix + 'pointer';
-								sHTML+= '<div style="height:10px; background:url(<?php echo $_ENV['dir']; ?>/module/board/images/admin/icon_bullet_disk.png) no-repeat 50% 50%;)"></div>';
+								sHTML+= '<div style="height:10px; background:url(<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_bullet_disk.png) no-repeat 50% 50%;)"></div>';
 							}
 
 							return sHTML;
 						}
+					},{
+						header:"최신버전",
+						dataIndex:"last_version",
+						sortable:false,
+						menuDisabled:true,
+						width:60
+					},{
+						header:"버전수",
+						dataIndex:"version_count",
+						sortable:false,
+						menuDisabled:true,
+						width:60,
+						renderer:GridNumberFormat
 					},{
 						header:"작성자",
 						dataIndex:"name",
@@ -643,7 +591,7 @@ var ContentArea = function(viewport) {
 							height:500,
 							layout:"fit",
 							maximizable:true,
-							html:'<iframe src="<?php echo $_ENV['dir']; ?>/module/board/board.php?bid='+record.data.bid+'&mode=view&idx='+record.data.idx+'" style="width:100%; height:100%; background:#FFFFFF;" frameborder="0"></iframe>'
+							html:'<iframe src="<?php echo $_ENV['dir']; ?>/module/release/release.php?rid='+record.data.rid+'&mode=view&idx='+record.data.idx+'" style="width:100%; height:100%; background:#FFFFFF;" frameborder="0"></iframe>'
 						}).show();
 					}},
 					cellclick:{fn:function(grid,td,col,record,tr,row,e) {
@@ -660,7 +608,7 @@ var ContentArea = function(viewport) {
 										text:"<span style='font-weight:bold;'>"+fileInfor[1]+"</span> <span style='font-family:tahoma; font-size:10px;'>("+GetFileSize(fileInfor[2])+", <span style='font-weight:bold;'>"+Ext.util.Format.number(fileInfor[3],"0,0")+"</span> Hits)</span>",
 										icon:GetFileIcon(fileInfor[1]),
 										handler:function() {
-											execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/board/exec/FileDownload.do.php?idx="+fileInfor[0];
+											execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/release/exec/FileDownload.do.php?idx="+fileInfor[0];
 										}
 									});
 								}

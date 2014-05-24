@@ -6,30 +6,30 @@ var ContentArea = function(viewport) {
 		proxy:{
 			type:"ajax",
 			simpleSortMode:true,
-			url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.get.php",
+			url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.get.php",
 			reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-			extraParams:{action:"log",get:"HIT",key:"name",keyword:"",bid:""}
+			extraParams:{action:"log",get:"HIT",key:"name",keyword:"",rid:""}
 		},
 		remoteSort:true,
 		sorters:[{property:"reg_date",direction:"DESC"}],
 		autoLoad:true,
 		pageSize:50,
-		fields:["idx","postidx","reg_date","bid","boardtitle","category","title","mno","name","nickname","width","newment",{name:"ment",type:"int"},"ip"]
+		fields:["idx","postidx","reg_date","rid","releasetitle","category","title","mno","name","nickname","width","newment",{name:"ment",type:"int"},"ip"]
 	});
 
 	var store2 = new Ext.data.JsonStore({
 		proxy:{
 			type:"ajax",
 			simpleSortMode:true,
-			url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.get.php",
+			url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.get.php",
 			reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-			extraParams:{action:"log",get:"VOTE",key:"name",keyword:"",bid:""}
+			extraParams:{action:"log",get:"VOTE",key:"name",keyword:"",rid:""}
 		},
 		remoteSort:true,
 		sorters:[{property:"reg_date",direction:"DESC"}],
 		autoLoad:true,
 		pageSize:50,
-		fields:["idx","postidx","reg_date","bid","boardtitle","category","title","mno","name","nickname","width","newment",{name:"ment",type:"int"},{name:"vote",type:"int"},"ip"]
+		fields:["idx","postidx","reg_date","rid","releasetitle","category","title","mno","name","nickname","width","newment",{name:"ment",type:"int"},{name:"vote",type:"int"},"ip"]
 	});
 	
 	function ItemDblClick(grid,record) {
@@ -39,7 +39,7 @@ var ContentArea = function(viewport) {
 			height:500,
 			layout:"fit",
 			maximizable:true,
-			html:'<iframe src="<?php echo $_ENV['dir']; ?>/module/board/board.php?bid='+record.data.bid+'&mode=trash&idx='+record.data.postidx+'" style="width:100%; height:100%; background:#FFFFFF;" frameborder="0"></iframe>'
+			html:'<iframe src="<?php echo $_ENV['dir']; ?>/module/release/release.php?rid='+record.data.rid+'&mode=trash&idx='+record.data.postidx+'" style="width:100%; height:100%; background:#FFFFFF;" frameborder="0"></iframe>'
 		}).show();
 	}
 	
@@ -97,7 +97,7 @@ var ContentArea = function(viewport) {
 					height:500,
 					layout:"fit",
 					maximizable:true,
-					html:'<iframe src="<?php echo $_ENV['dir']; ?>/module/board/board.php?bid='+record.data.bid+'&mode=trash&idx='+record.data.postidx+'" style="width:100%; height:100%; background:#FFFFFF;" frameborder="0"></iframe>'
+					html:'<iframe src="<?php echo $_ENV['dir']; ?>/module/release/release.php?rid='+record.data.rid+'&mode=trash&idx='+record.data.postidx+'" style="width:100%; height:100%; background:#FFFFFF;" frameborder="0"></iframe>'
 				}).show();
 			}
 		});
@@ -119,7 +119,7 @@ var ContentArea = function(viewport) {
 				border:false,
 				tbar:[
 					new Ext.form.ComboBox({
-						id:"BoardID",
+						id:"ReleaseID",
 						typeAhead:true,
 						triggerAction:"all",
 						lazyRender:true,
@@ -127,25 +127,25 @@ var ContentArea = function(viewport) {
 							proxy:{
 								type:"ajax",
 								simpleSortMode:true,
-								url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.get.php",
+								url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.get.php",
 								reader:{type:"json",root:"lists",totalProperty:"totalCount"},
 								extraParams:{"action":"list","is_all":"true"}
 							},
 							remoteSort:false,
-							sorters:[{property:"bid",direction:"ASC"}],
+							sorters:[{property:"rid",direction:"ASC"}],
 							autoLoad:true,
 							pageSize:50,
-							fields:["bid","title","option"]
+							fields:["rid","title","option"]
 						}),
 						width:120,
 						editable:false,
 						mode:"local",
 						displayField:"title",
-						valueField:"bid",
+						valueField:"rid",
 						emptyText:"게시판명",
 						listeners:{
 							select:{fn:function(form,record) {
-								Ext.getCmp("ListTab").getActiveTab().getStore().getProxy().setExtraParam("bid",form.getValue());
+								Ext.getCmp("ListTab").getActiveTab().getStore().getProxy().setExtraParam("rid",form.getValue());
 								Ext.getCmp("ListTab").getActiveTab().getStore().loadPage(1);
 							}}
 						}
@@ -173,7 +173,7 @@ var ContentArea = function(viewport) {
 					}),
 					new Ext.Button({
 						text:"검색",
-						icon:"<?php echo $_ENV['dir']; ?>/module/board/images/admin/icon_magnifier.png",
+						icon:"<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_magnifier.png",
 						handler:function() {
 							Ext.getCmp("ListTab").getActiveTab().getStore().getProxy().setExtraParam("key",Ext.getCmp("Key").getValue());
 							Ext.getCmp("ListTab").getActiveTab().getStore().getProxy().setExtraParam("keyword",Ext.getCmp("Keyword").getValue());
@@ -183,13 +183,13 @@ var ContentArea = function(viewport) {
 					'-',
 					new Ext.Button({
 						text:"1개월이전 로그데이터 삭제",
-						icon:"<?php echo $_ENV['dir']; ?>/module/board/images/admin/icon_trash.png",
+						icon:"<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_trash.png",
 						handler:function() {
 							Ext.Msg.show({title:"확인",msg:"1개월이전 로그데이터를 삭제하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
 								if (button == "yes") {
 									Ext.Msg.wait("로그를 삭제하고 있습니다.","잠시만 기다려주십시오.");
 									Ext.Ajax.request({
-										url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.do.php",
+										url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.do.php",
 										success:function(response) {
 											var data = Ext.JSON.decode(response.responseText);
 											if (data.success == true) {
@@ -228,11 +228,11 @@ var ContentArea = function(viewport) {
 								}
 							},{
 								header:"게시판명",
-								dataIndex:"boardtitle",
+								dataIndex:"releasetitle",
 								sortable:false,
 								width:130,
 								renderer:function(value,p,record) {
-									return value+'<span style="font-family:tahoma;">('+record.data.bid+')</span>';
+									return value+'<span style="font-family:tahoma;">('+record.data.rid+')</span>';
 								}
 							},{
 								header:"제목",
@@ -304,11 +304,11 @@ var ContentArea = function(viewport) {
 								}
 							},{
 								header:"게시판명",
-								dataIndex:"boardtitle",
+								dataIndex:"releasetitle",
 								sortable:false,
 								width:130,
 								renderer:function(value,p,record) {
-									return value+'<span style="font-family:tahoma;">('+record.data.bid+')</span>';
+									return value+'<span style="font-family:tahoma;">('+record.data.rid+')</span>';
 								}
 							},{
 								header:"제목",
@@ -373,10 +373,10 @@ var ContentArea = function(viewport) {
 					})
 				],
 				listeners:{tabchange:{fn:function(tabs,tab) {
-					if (tab.getStore().getProxy().extraParams.bid) {
-						Ext.getCmp("BoardID").setValue(tab.getStore().getProxy().extraParams.bid);
+					if (tab.getStore().getProxy().extraParams.rid) {
+						Ext.getCmp("ReleaseID").setValue(tab.getStore().getProxy().extraParams.rid);
 					} else {
-						Ext.getCmp("BoardID").reset();
+						Ext.getCmp("ReleaseID").reset();
 					}
 					Ext.getCmp("Key").setValue(tab.getStore().getProxy().extraParams.key);
 					Ext.getCmp("Keyword").setValue(tab.getStore().getProxy().extraParams.keyword);

@@ -437,7 +437,7 @@ if ($action == 'file') {
 					if (is_dir($_ENV['userfilePath'].$mBoard->userfile.'/attach/'.$dirname.'/'.$files[$j]) == false) {
 						if ($mDB->DBcount($mBoard->table['file'],"where `filepath`='/attach/{$dirname}/{$files[$j]}'") == 0) {
 							$deleteFile++;
-							//@unlink($_ENV['userfilePath'].$mBoard->userfile.'/attach/'.$dirname.'/'.$files[$j]) or $deleteFile--;
+							@unlink($_ENV['userfilePath'].$mBoard->userfile.'/attach/'.$dirname.'/'.$files[$j]) or $deleteFile--;
 							
 							echo '<script type="text/javascript">top.RetrenchProgressControl("'.$dirname.'",'.($i+1).','.$loop.','.$j.','.$totalFile.','.$deleteFile.');</script>';
 							$mFlush->flush();
@@ -469,12 +469,12 @@ if ($action == 'file') {
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			if ($data[$i]['type'] == 'POST') {
 				if ($mDB->DBcount($mBoard->table['post'],"where `idx`={$data[$i]['repto']}") == 0) {
-					//$mBoard->FileDelete($data[$i]['idx']);
+					$mBoard->FileDelete($data[$i]['idx']);
 					$deleteFile++;
 				}
 			} else {
 				if ($mDB->DBcount($mBoard->table['ment'],"where `idx`={$data[$i]['repto']}") == 0) {
-					//$mBoard->FileDelete($data[$i]['idx']);
+					$mBoard->FileDelete($data[$i]['idx']);
 					$deleteFile++;
 				}
 			}
@@ -496,7 +496,7 @@ if ($action == 'file') {
 		$data = $mDB->DBfetchs($mBoard->table['file'],array('idx'),"where `repto`=0");
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			$deleteFile++;
-			//$mBoard->FileDelete($data[$i]['idx']);
+			$mBoard->FileDelete($data[$i]['idx']);
 			
 			if ($i%50 == 0) {
 				echo '<script type="text/javascript">top.TempProgressControl('.$i.','.$totalFile.','.$deleteFile.');</script>';

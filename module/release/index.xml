@@ -83,7 +83,6 @@
 			<field name="is_email" type="enum" length="TRUE,FALSE" default="FALSE">답변이메일알림여부</field>
 			<field name="is_hidename" type="enum" length="TRUE,FALSE" default="FALSE">익명여부</field>
 			<field name="is_delete" type="enum" length="TRUE,FALSE" default="FALSE">삭제여부</field>
-			<field name="is_mobile" type="enum" length="TRUE,FALSE" default="FALSE">모바일작성여부</field>
 			<field name="last_modify_mno" type="int" length="11">최종수정한회원번호</field>
 			<field name="last_modify_date" type="int" length="11">최종수정시각</field>
 			<field name="last_modify_hit" type="int" length="11">수정횟수</field>
@@ -122,7 +121,6 @@
 			<field name="last_ment" type="int" length="11">마지막댓글시각</field>
 			<field name="last_version" type="varchar" length="20">마지막버전</field>
 			<field name="last_version_date" type="int" length="11">마지막버전시각</field>
-			<field name="is_html_title" type="enum" length="TRUE,FALSE" default="FALSE">제목HTML사용여부</field>
 			<field name="is_ment" type="enum" length="TRUE,FALSE" default="FALSE">댓글작성허용여부</field>
 			<field name="is_msg" type="enum" length="TRUE,FALSE" default="FALSE">답변쪽지알림여부</field>
 			<field name="is_email" type="enum" length="TRUE,FALSE" default="FALSE">답변이메일알림여부</field>
@@ -175,7 +173,6 @@
 			<field name="width" type="varchar" length="10">릴리즈게시판넓이</field>
 			<field name="use_category" type="enum" length="TRUE,FALSE,OPTION" default="FALSE">카테고리사용여부</field>
 			<field name="use_ment" type="enum" length="TRUE,FALSE" default="TRUE">댓글사용여부</field>
-			<field name="use_trackback" type="enum" length="TRUE,FALSE" default="FALSE">트랙백사용여부</field>
 			<field name="use_charge" type="enum" length="TRUE,FALSE" default="FALSE">포인트결제사용여부</field>
 			<field name="listnum" type="int" length="2">페이지당게시물수</field>
 			<field name="pagenum" type="int" length="2">페이지링크범위</field>

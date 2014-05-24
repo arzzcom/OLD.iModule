@@ -6,15 +6,15 @@ var ContentArea = function(viewport) {
 		proxy:{
 			type:"ajax",
 			simpleSortMode:true,
-			url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.get.php",
+			url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.get.php",
 			reader:{type:"json",root:"lists",totalProperty:"totalCount"},
-			extraParams:{action:"ment",key:"",keyword:"",category:"",bid:""}
+			extraParams:{action:"ment",key:"",keyword:"",category:"",rid:""}
 		},
 		remoteSort:true,
 		sorters:[{property:"idx",direction:"DESC"}],
 		autoLoad:true,
 		pageSize:50,
-		fields:["idx","bid","boardtitle","posttitle","postdelete","width","repto","name","nickname","mno","content","reg_date","file","ip"]
+		fields:["idx","rid","releasetitle","posttitle","postdelete","width","repto","name","nickname","mno","content","reg_date","file","ip"]
 	});
 	
 	function ItemContextMenu(grid,record,row,index,e) {
@@ -30,7 +30,7 @@ var ContentArea = function(viewport) {
 					if (button == "yes") {
 						Ext.Msg.wait("선택한 댓글을 삭제하고 있습니다.","잠시만 기다려주십시오.");
 						Ext.Ajax.request({
-							url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.do.php",
+							url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.do.php",
 							success:function(response) {
 								var data = Ext.JSON.decode(response.responseText);
 								if (data.success == true) {
@@ -58,7 +58,7 @@ var ContentArea = function(viewport) {
 					if (button == "yes") {
 						Ext.Msg.wait("선택한 댓글을 삭제 및 차단하고 있습니다.","잠시만 기다려주십시오.");
 						Ext.Ajax.request({
-							url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.do.php",
+							url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.do.php",
 							success:function(response) {
 								var data = Ext.JSON.decode(response.responseText);
 								if (data.success == true) {
@@ -96,7 +96,7 @@ var ContentArea = function(viewport) {
 				autoScroll:true,
 				tbar:[
 					new Ext.form.ComboBox({
-						id:"BoardID",
+						id:"ReleaseID",
 						typeAhead:true,
 						triggerAction:"all",
 						lazyRender:true,
@@ -104,25 +104,25 @@ var ContentArea = function(viewport) {
 							proxy:{
 								type:"ajax",
 								simpleSortMode:true,
-								url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.get.php",
+								url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.get.php",
 								reader:{type:"json",root:"lists",totalProperty:"totalCount"},
 								extraParams:{"action":"list","is_all":"true"}
 							},
 							remoteSort:false,
-							sorters:[{property:"bid",direction:"ASC"}],
+							sorters:[{property:"rid",direction:"ASC"}],
 							autoLoad:true,
 							pageSize:50,
-							fields:["bid","title","option"]
+							fields:["rid","title","option"]
 						}),
 						width:120,
 						editable:false,
 						mode:"local",
 						displayField:"title",
-						valueField:"bid",
-						emptyText:"게시판명",
+						valueField:"rid",
+						emptyText:"릴리즈게시판명",
 						listeners:{
 							select:{fn:function(form,record) {
-								store.getProxy().setExtraParam("bid",form.getValue());
+								store.getProxy().setExtraParam("rid",form.getValue());
 								store.loadPage(1);
 							}}
 						}
@@ -150,7 +150,7 @@ var ContentArea = function(viewport) {
 					}),
 					new Ext.Button({
 						text:"검색",
-						icon:"<?php echo $_ENV['dir']; ?>/module/board/images/admin/icon_magnifier.png",
+						icon:"<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_magnifier.png",
 						handler:function() {
 							store.getProxy().setExtraParam("key",Ext.getCmp("Key").getValue());
 							store.getProxy().setExtraParam("keyword",Ext.getCmp("Keyword").getValue());
@@ -160,7 +160,7 @@ var ContentArea = function(viewport) {
 					'-',
 					new Ext.Button({
 						text:"선택한 댓글을&nbsp;",
-						icon:"<?php echo $_ENV['dir']; ?>/module/board/images/admin/icon_tick.png",
+						icon:"<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_tick.png",
 						menu:new Ext.menu.Menu({
 							items:[{
 								text:"댓글삭제",
@@ -180,7 +180,7 @@ var ContentArea = function(viewport) {
 										if (button == "yes") {
 											Ext.Msg.wait("선택한 댓글을 삭제하고 있습니다.","잠시만 기다려주십시오.");
 											Ext.Ajax.request({
-												url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.do.php",
+												url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.do.php",
 												success:function(response) {
 													var data = Ext.JSON.decode(response.responseText);
 													if (data.success == true) {
@@ -217,7 +217,7 @@ var ContentArea = function(viewport) {
 										if (button == "yes") {
 											Ext.Msg.wait("선택한 댓글을 삭제 및 차단하고 있습니다.","잠시만 기다려주십시오.");
 											Ext.Ajax.request({
-												url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.do.php",
+												url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.do.php",
 												success:function(response) {
 													var data = Ext.JSON.decode(response.responseText);
 													if (data.success == true) {
@@ -252,12 +252,12 @@ var ContentArea = function(viewport) {
 							return GridNumberFormat(value);
 						}
 					}),{
-						header:"게시판명",
-						dataIndex:"boardtitle",
+						header:"릴리즈게시판명",
+						dataIndex:"releasetitle",
 						sortable:false,
 						width:130,
 						renderer:function(value,p,record) {
-							return value+'<span style="font-family:tahoma;">('+record.data.bid+')</span>';
+							return value+'<span style="font-family:tahoma;">('+record.data.rid+')</span>';
 						}
 					},{
 						header:"게시물제목",
@@ -288,7 +288,7 @@ var ContentArea = function(viewport) {
 							var sHTML = "";
 							if (value) {
 								p.tdCls = Ext.baseCSSPrefix + 'pointer';
-								sHTML+= '<div style="height:10px; background:url(<?php echo $_ENV['dir']; ?>/module/board/images/admin/icon_bullet_disk.png) no-repeat 50% 50%;)"></div>';
+								sHTML+= '<div style="height:10px; background:url(<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_bullet_disk.png) no-repeat 50% 50%;)"></div>';
 							}
 
 							return sHTML;
@@ -330,7 +330,7 @@ var ContentArea = function(viewport) {
 							height:500,
 							layout:"fit",
 							maximizable:true,
-							html:'<iframe src="<?php echo $_ENV['dir']; ?>/module/board/board.php?bid='+record.data.bid+'&mode=view&idx='+record.data.repto+'" style="width:100%; height:100%; background:#FFFFFF;" frameborder="0"></iframe>'
+							html:'<iframe src="<?php echo $_ENV['dir']; ?>/module/release/release.php?rid='+record.data.rid+'&mode=view&idx='+record.data.repto+'" style="width:100%; height:100%; background:#FFFFFF;" frameborder="0"></iframe>'
 						}).show();
 					}},
 					cellclick:{fn:function(grid,td,col,record,tr,row,e) {
@@ -347,7 +347,7 @@ var ContentArea = function(viewport) {
 										text:"<span style='font-weight:bold;'>"+fileInfor[1]+"</span> <span style='font-family:tahoma; font-size:10px;'>("+GetFileSize(fileInfor[2])+", <span style='font-weight:bold;'>"+Ext.util.Format.number(fileInfor[3],"0,0")+"</span> Hits)</span>",
 										icon:GetFileIcon(fileInfor[1]),
 										handler:function() {
-											execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/board/exec/FileDownload.do.php?idx="+fileInfor[0];
+											execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/release/exec/FileDownload.do.php?idx="+fileInfor[0];
 										}
 									});
 								}

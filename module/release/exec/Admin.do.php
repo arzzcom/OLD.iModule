@@ -33,14 +33,13 @@ if ($action == 'release') {
 		$insert['view_alllist'] = Request('view_alllist') == 'on' ? 'TRUE' : 'FALSE';
 		$insert['view_prevnext'] = Request('view_prevnext') == 'on' ? 'TRUE' : 'FALSE';
 		$insert['use_ment'] = Request('use_ment') == 'on' ? 'TRUE' : 'FALSE';
-		$insert['use_trackback'] = Request('use_trackback') == 'on' ? 'TRUE' : 'FALSE';
 		$insert['use_category'] = Request('use_category') == 'on' ? 'TRUE' : 'FALSE';
 		if ($insert['use_category'] == 'TRUE') $insert['use_category'] = Request('use_category_option') == 'on' ? 'TRUE' : 'OPTION';
 		$insert['use_charge'] = Request('use_charge') == 'on' ? 'TRUE' : 'FALSE';
 		$insert['post_point'] = Request('post_point');
 		$insert['ment_point'] = Request('ment_point');
 		$insert['tax_point'] = Request('tax_point');
-		$insert['permission'] = serialize(array('list'=>Request('permission_list'),'view'=>Request('permission_view'),'post'=>Request('permission_post'),'ment'=>Request('permission_ment'),'modify'=>Request('permission_modify'),'delete'=>Request('permission_delete'),'select'=>Request('permission_select'),'secret'=>Request('permission_secret'),'notice'=>Request('permission_notice')));
+		$insert['permission'] = serialize(array('list'=>Request('permission_list'),'view'=>Request('permission_view'),'post'=>Request('permission_post'),'ment'=>Request('permission_ment'),'modify'=>Request('permission_modify'),'delete'=>Request('permission_delete')));
 
 		if ($do == 'add') {
 			$insert['rid'] = Request('rid') && preg_match('/^[a-z0-9_]+$/i',Request('rid')) == true ? Request('rid') : $errors['rid'] = '릴리즈게시판ID를 영문,숫자,_(언더바)를 이용하여 입력하여 주십시오.';
@@ -89,6 +88,14 @@ if ($action == 'release') {
 					}
 				}
 				$mDB->DBdelete($mRelease->table['log'],"where `repto`={$post[$j]['idx']}");
+				
+				$version = $mDB->DBfetchs($mRelease->table['version'],'*',"where `repto`='{$post[$j]['idx']}'");
+				for ($k=0, $loopk=sizeof($version);$k<$loopk;$k++) {
+					@unlink($_ENV['userfilePath'].$mRelease->file.$version[$k]['file']);
+				}
+				$mDB->DBdelete($mRelease->table['version'],"where `repto`='{$post[$j]['idx']}'");
+				
+				@unlink($_ENV['userfilePath'].$this->logo.'/'.$post[$j]['idx'].'.thm');
 			}
 
 			$ment = $mDB->DBfetchs($mRelease->table['ment'],array('idx'),"where `rid`='{$rid[$i]}'");
@@ -207,35 +214,18 @@ if ($action == 'post') {
 		$idx = Request('idx');
 		$data = $mDB->DBfetchs($mRelease->table['post'],array('idx','rid','is_delete','mno','title'),"where `idx` IN ($idx)");
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
-			if ($data[$i]['is_delete'] == 'FALSE' && $data[$i]['mno'] != '0') {
+			if ($data[$i]['is_delete'] == 'FALSE') {
 				$check = $mDB->DBfetch($mRelease->table['setup'],array('post_point'),"where `rid`='{$data[$i]['rid']}'");
-				$mMember->SendPoint($data[$i]['mno'],$check['post_point']*-1,$msg='관리자에 의한 게시물 삭제 ('.GetCutString($data[$i]['title'],20).')','/module/release/release.php?rid='.$data[$i]['rid'].'&mode=view&idx='.$data[$i]['idx'],'release',true);
+				$mMember->SendPoint($data[$i]['mno'],$check['post_point']*-1,$msg='관리자에 의한 프로그램 삭제 ('.GetCutString($data[$i]['title'],20).')','/module/release/release.php?rid='.$data[$i]['rid'].'&mode=view&idx='.$data[$i]['idx'],'release',true);
 
-				$message = array('module'=>'release','mno'=>$member['idx'],'type'=>'delete','parent'=>$data[$i]['title'],'message'=>'관리자에 의해 게시물이 삭제됨에 따라  '.number_format($check['post_point']).'포인트가 차감되었습니다.');
+				$message = array('module'=>'release','mno'=>$member['idx'],'type'=>'delete','parent'=>$data[$i]['title'],'message'=>'관리자에 의해 프로그램이 삭제됨에 따라  '.number_format($check['post_point']).'포인트가 차감되었습니다.');
 				$mMember->SendMessage($data[$i]['mno'],$message,'/module/release/release.php?rid='.$data[$i]['rid'].'&mode=view&idx='.$data[$i]['idx'],-1);
 			}
 
 			$mDB->DBupdate($mRelease->table['post'],array('is_delete'=>'TRUE'),'',"where `idx`={$data[$i]['idx']}");
 
-			SaveAdminLog('release','['.$data[$i]['title'].'] 게시물을 삭제하였습니다.','/module/release/release.php?rid='.$data[$i]['rid'].'&mode=view&idx='.$data[$i]['idx']);
+			SaveAdminLog('release','['.$data[$i]['title'].'] 프로그램을 삭제하였습니다.','/module/release/release.php?rid='.$data[$i]['rid'].'&mode=view&idx='.$data[$i]['idx']);
 		}
-		
-		$return['success'] = true;
-		exit(json_encode($return));
-	}
-
-	if ($do == 'spam') {
-		$idx = Request('idx');
-		$data = $mDB->DBfetchs($mRelease->table['post'],array('idx','rid','title','ip'),"where `idx` IN ($idx)");
-		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
-			if ($mDB->DBcount($_ENV['table']['ipban'],"where `ip`='{$data[$i]['ip']}'") == 0) {
-				$mDB->DBinsert($_ENV['table']['ipban'],array('ip'=>$data[$i]['ip'],'memo'=>'스팸게시물 등록으로 인한 아이피차단','reg_date'=>GetGMT()));
-			}
-
-			SaveAdminLog('release','['.$data[$i]['title'].'] 게시물을 스팸차단하였습니다.','/module/release/release.php?rid='.$data[$i]['rid'].'&mode=view&idx='.$data[$i]['idx']);
-		}
-
-		$mDB->DBupdate($mRelease->table['post'],array('is_delete'=>'TRUE'),'',"where `idx` IN ($idx)");
 		
 		$return['success'] = true;
 		exit(json_encode($return));
@@ -344,67 +334,50 @@ if ($action == 'ment') {
 
 if ($action == 'file') {
 	if ($do == 'retrench') {
-		GetDefaultHeader('첨부파일 정리중');
-
-		$dirCode = Request('dirCode') ? Request('dirCode') : 0;
-		$fileLimit = Request('fileLimit') ? Request('fileLimit') : 0;
-		
+		$mFlush = new Flush();
 		$dirs = scandir($_ENV['userfilePath'].$mRelease->userfile.'/attach',0);
 		
-		if ($dirCode == sizeof($dirs)) {
-			echo '<script type="text/javascript">top.RetrenchProgressControl("",'.$dirCode.','.sizeof($dirs).',0,0,0);</script>';
-		} else {
-			$dirname = $dirs[$dirCode];
+		for ($i=0, $loop=sizeof($dirs);$i<$loop;$i++) {
+			$dirname = $dirs[$i];
 
-			if ($dirs[$dirCode] != '.' && $dirs[$dirCode] != '..' && is_dir($_ENV['userfilePath'].$mRelease->userfile.'/attach/'.$dirs[$dirCode]) == true) {
-				$files = scandir($_ENV['userfilePath'].$mRelease->userfile.'/attach/'.$dirs[$dirCode],0);
-				
-				if ($fileLimit == 0) {
-					$totalFile = sizeof($files);
-					$deleteFile = 0;
-				} else {
-					$totalFile = Request('totalFile');
-					$deleteFile = Request('deleteFile');
-				}
-				
-				for ($i=$fileLimit-$deleteFile;$i<$fileLimit+100;$i++) {
-					if (isset($files[$i]) == false) {
-						break;
-					} elseif (is_dir($_ENV['userfilePath'].$mRelease->userfile.'/attach/'.$dirs[$dirCode].'/'.$files[$i]) == false) {
-						if ($mDB->DBcount($mRelease->table['file'],"where `filepath`='/attach/{$dirs[$dirCode]}/{$files[$i]}'") == 0) {
+			if ($dirname != '.' && $dirname != '..' && is_dir($_ENV['userfilePath'].$mRelease->userfile.'/attach/'.$dirname) == true) {
+				$files = scandir($_ENV['userfilePath'].$mRelease->userfile.'/attach/'.$dirname,0);
+			
+				$totalFile = sizeof($files);
+				$deleteFile = 0;
+			
+				for ($j=0;$j<$totalFile;$j++) {
+					if (is_dir($_ENV['userfilePath'].$mRelease->userfile.'/attach/'.$dirname.'/'.$files[$j]) == false) {
+						if ($mDB->DBcount($mRelease->table['file'],"where `filepath`='/attach/{$dirname}/{$files[$j]}'") == 0) {
 							$deleteFile++;
-							@unlink($_ENV['userfilePath'].$mRelease->userfile.'/attach/'.$dirs[$dirCode].'/'.$files[$i]) or $deleteFile--;
+							@unlink($_ENV['userfilePath'].$mRelease->userfile.'/attach/'.$dirname.'/'.$files[$j]) or $deleteFile--;
+							
+							echo '<script type="text/javascript">top.RetrenchProgressControl("'.$dirname.'",'.($i+1).','.$loop.','.$j.','.$totalFile.','.$deleteFile.');</script>';
+							$mFlush->flush();
 						}
 					}
+					
+					if ($j%10 == 0) {
+						echo '<script type="text/javascript">top.RetrenchProgressControl("'.$dirname.'",'.($i+1).','.$loop.','.$j.','.$totalFile.','.$deleteFile.');</script>';
+						$mFlush->flush();
+					}
 				}
-				
-				if ($totalFile > $fileLimit+100) {
-					echo '<script type="text/javascript">top.RetrenchProgressControl("'.$dirname.'",'.($dirCode+1).','.sizeof($dirs).','.($fileLimit+100).','.$totalFile.','.$deleteFile.');</script>';
-				Redirect($_SERVER['PHP_SELF'].GetQueryString(array('dirCode'=>$dirCode,'fileLimit'=>$fileLimit+100,'totalFile'=>$totalFile,'deleteFile'=>$deleteFile),'',false));
-				} else {
-					echo '<script type="text/javascript">top.RetrenchProgressControl("'.$dirname.'",'.($dirCode+1).','.sizeof($dirs).','.$totalFile.','.$totalFile.','.$deleteFile.');</script>';
-					Redirect($_SERVER['PHP_SELF'].GetQueryString(array('dirCode'=>$dirCode+1,'fileLimit'=>0),'',false));
-				}
-			} else {
-				echo '<script type="text/javascript">top.RetrenchProgressControl("'.$dirname.'",'.($dirCode+1).','.sizeof($dirs).',0,0,0);</script>';
-				Redirect($_SERVER['PHP_SELF'].GetQueryString(array('dirCode'=>$dirCode+1,'fileLimit'=>0),'',false));
 			}
+			
+			echo '<script type="text/javascript">top.RetrenchProgressControl("'.$dirname.'",'.($i+1).','.$loop.','.$loop.','.$totalFile.','.$deleteFile.');</script>';
+			$mFlush->flush();
+			sleep(1);
 		}
-		GetDefaultFooter();
+		
+		echo '<script type="text/javascript">top.RetrenchProgressControl("",'.$loop.','.$loop.',0,0,0);</script>';
+		$mFlush->flush();
 	}
 	
 	if ($do == 'norepto') {
-		GetDefaultHeader('첨부파일 정리중');
+		$mFlush = new Flush();
 		
-		$fileLimit = Request('fileLimit') ? Request('fileLimit') : 0;
-		$deleteFile = Request('deleteFile') ? Request('deleteFile') : 0;
-		if ($fileLimit == 0) {
-			$totalFile = $mDB->DBcount($mRelease->table['file'],"where `repto`!=0");
-		} else {
-			$totalFile = Request('totalFile');
-		}
-		
-		$data = $mDB->DBfetchs($mRelease->table['file'],array('idx','type','repto'),"where `repto`!=0",'idx,asc',($fileLimit-$deleteFile).',1000');
+		$totalFile = $mDB->DBcount($mRelease->table['file'],"where `repto`!=0");
+		$data = $mDB->DBfetchs($mRelease->table['file'],array('idx','type','repto'),"where `repto`>0");
 		
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			if ($data[$i]['type'] == 'POST') {
@@ -418,43 +391,34 @@ if ($action == 'file') {
 					$deleteFile++;
 				}
 			}
+			
+			if ($i%50 == 0) {
+				echo '<script type="text/javascript">top.NoReptoProgressControl('.$i.','.$totalFile.','.$deleteFile.');</script>';
+				$mFlush->flush();
+			}
 		}
 		
-		if ($totalFile > $fileLimit + 1000) {
-			echo '<script type="text/javascript">top.NoReptoProgressControl('.($fileLimit+1000).','.$totalFile.','.$deleteFile.');</script>';
-			Redirect($_SERVER['PHP_SELF'].GetQueryString(array('fileLimit'=>$fileLimit+1000,'deleteFile'=>$deleteFile,'totalFile'=>$totalFile),'',false));
-		} else {
-			echo '<script type="text/javascript">top.NoReptoProgressControl('.$totalFile.','.$totalFile.','.$deleteFile.');</script>';
-		}
-		
-		GetDefaultFooter();
+		echo '<script type="text/javascript">top.NoReptoProgressControl('.$totalFile.','.$totalFile.','.$deleteFile.');</script>';
+		$mFlush->flush();
 	}
 
 	if ($do == 'removetemp') {
-		GetDefaultHeader('첨부파일 정리중');
+		$mFlush = new Flush();
 		
-		$fileLimit = Request('fileLimit') ? Request('fileLimit') : 0;
-		$deleteFile = Request('deleteFile') ? Request('deleteFile') : 0;
-		if ($fileLimit == 0) {
-			$totalFile = $mDB->DBcount($mRelease->table['file'],"where `repto`=0");
-		} else {
-			$totalFile = Request('totalFile');
-		}
-		
-		$data = $mDB->DBfetchs($mRelease->table['file'],array('idx'),"where `repto`=0",'idx,asc',($fileLimit-$deleteFile).',1000');
+		$totalFile = $mDB->DBcount($mRelease->table['file'],"where `repto`=0");
+		$data = $mDB->DBfetchs($mRelease->table['file'],array('idx'),"where `repto`=0");
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			$deleteFile++;
 			$mRelease->FileDelete($data[$i]['idx']);
+			
+			if ($i%50 == 0) {
+				echo '<script type="text/javascript">top.TempProgressControl('.$i.','.$totalFile.','.$deleteFile.');</script>';
+				$mFlush->flush();
+			}
 		}
-		
-		if ($totalFile > $fileLimit + 1000) {
-			echo '<script type="text/javascript">top.TempProgressControl('.($fileLimit+1000).','.$totalFile.','.$deleteFile.');</script>';
-			Redirect($_SERVER['PHP_SELF'].GetQueryString(array('fileLimit'=>$fileLimit+1000,'deleteFile'=>$deleteFile,'totalFile'=>$totalFile),'',false));
-		} else {
-			echo '<script type="text/javascript">top.TempProgressControl('.$totalFile.','.$totalFile.','.$deleteFile.');</script>';
-		}
-		
-		GetDefaultFooter();
+
+		echo '<script type="text/javascript">top.TempProgressControl('.$totalFile.','.$totalFile.','.$deleteFile.');</script>';
+		$mFlush->flush();
 	}
 
 	if ($do == 'delete') {
@@ -545,6 +509,14 @@ if ($action == 'trash') {
 				for ($k=0, $loopk=sizeof($file);$k<$loopk;$k++) $mRelease->FileDelete($file[$k]['idx']);
 			}
 			$mDB->DBdelete($mRelease->table['ment'],"where `repto`={$post[$i]['idx']}");
+			
+			$version = $mDB->DBfetchs($mRelease->table['version'],'*',"where `repto`='{$post[$i]['idx']}'");
+			for ($j=0, $loopj=sizeof($version);$j<$loopj;$j++) {
+				@unlink($_ENV['userfilePath'].$mRelease->file.$version[$j]['file']);
+			}
+			$mDB->DBdelete($mRelease->table['version'],"where `repto`='{$post[$i]['idx']}'");
+			
+			@unlink($_ENV['userfilePath'].$mRelease->logo.'/'.$post[$i]['idx'].'.thm');
 			$file = $mDB->DBfetchs($mRelease->table['file'],array('idx'),"where `type`='POST' and `repto`={$data[$i]['idx']}");
 			for ($j=0, $loopj=sizeof($file);$j<$loopj;$j++) $mRelease->FileDelete($file[$j]['idx']);
 			$mDB->DBdelete($mRelease->table['post'],"where `idx`='{$post[$i]['idx']}'");
@@ -563,6 +535,15 @@ if ($action == 'trash') {
 				for ($k=0, $loopk=sizeof($file);$k<$loopk;$k++) $mRelease->FileDelete($file[$k]['idx']);
 			}
 			$mDB->DBdelete($mRelease->table['ment'],"where `repto`={$post[$i]['idx']}");
+			
+			$version = $mDB->DBfetchs($mRelease->table['version'],'*',"where `repto`='{$post[$i]['idx']}'");
+			for ($j=0, $loopj=sizeof($version);$j<$loopj;$j++) {
+				@unlink($_ENV['userfilePath'].$mRelease->file.$version[$j]['file']);
+			}
+			$mDB->DBdelete($mRelease->table['version'],"where `repto`='{$post[$i]['idx']}'");
+			
+			@unlink($_ENV['userfilePath'].$mRelease->logo.'/'.$post[$i]['idx'].'.thm');
+			
 			$file = $mDB->DBfetchs($mRelease->table['file'],array('idx'),"where `type`='POST' and `repto`={$post[$i]['idx']}");
 			for ($j=0, $loopj=sizeof($file);$j<$loopj;$j++) $mRelease->FileDelete($file[$j]['idx']);
 		}

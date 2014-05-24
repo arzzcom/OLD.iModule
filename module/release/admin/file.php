@@ -3,7 +3,7 @@
 #ImageView .select {border:1px solid #044AA9; background:#DAE6F3;}
 #ImageView .item .image {width:150px; height:120px;}
 #ImageView .item .filename {width:150px; margin:5px 0px 0px 0px; font-size:12px; font-weight:bold; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;}
-#ImageView .item .boardtitle {width:150px; margin:5px 0px 0px 0px; color:#666666; font-size:11px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;}
+#ImageView .item .releasetitle {width:150px; margin:5px 0px 0px 0px; color:#666666; font-size:11px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;}
 .x-view-selector {position:absolute;left:0;top:0;width:0;border:1px dotted;opacity: .5;-moz-opacity: .5;filter:alpha(opacity=50);zoom:1;background-color:#c3daf9;border-color:#3399bb;}.ext-strict .ext-ie .x-tree .x-panel-bwrap{position:relative;overflow:hidden;}
 </style>
 <script type="text/javascript">
@@ -63,7 +63,7 @@ var ContentArea = function(viewport) {
 		proxy:{
 			type:"ajax",
 			simpleSortMode:true,
-			url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.get.php",
+			url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.get.php",
 			reader:{type:"json",root:"lists",totalProperty:"totalCount"},
 			extraParams:{action:"file",get:"register",keyword:""}
 		},
@@ -71,14 +71,14 @@ var ContentArea = function(viewport) {
 		sorters:[{property:"idx",direction:"DESC"}],
 		autoLoad:true,
 		pageSize:50,
-		fields:["idx","postidx","postdelete","repto","bid","width","boardtitle","category","type","title","mno","name","nickname","reg_date","filename","filetype","filesize","filepath","hit"]
+		fields:["idx","postidx","postdelete","repto","rid","width","releasetitle","category","type","title","mno","name","nickname","reg_date","filename","filetype","filesize","filepath","hit"]
 	});
 	
 	var store2 = new Ext.data.JsonStore({
 		proxy:{
 			type:"ajax",
 			simpleSortMode:true,
-			url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.get.php",
+			url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.get.php",
 			reader:{type:"json",root:"lists",totalProperty:"totalCount"},
 			extraParams:{action:"file",get:"temp",keyword:""}
 		},
@@ -86,14 +86,14 @@ var ContentArea = function(viewport) {
 		sorters:[{property:"idx",direction:"DESC"}],
 		autoLoad:true,
 		pageSize:50,
-		fields:["idx","postidx","postdelete","repto","bid","width","boardtitle","category","type","title","mno","name","nickname","reg_date","filename","filetype","filesize","filepath","hit"]
+		fields:["idx","postidx","postdelete","repto","rid","width","releasetitle","category","type","title","mno","name","nickname","reg_date","filename","filetype","filesize","filepath","hit"]
 	});
 
 	var store3 = new Ext.data.JsonStore({
 		proxy:{
 			type:"ajax",
 			simpleSortMode:true,
-			url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.get.php",
+			url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.get.php",
 			reader:{type:"json",root:"lists",totalProperty:"totalCount"},
 			extraParams:{action:"file",get:"image",keyword:""}
 		},
@@ -101,7 +101,7 @@ var ContentArea = function(viewport) {
 		sorters:[{property:"idx",direction:"DESC"}],
 		autoLoad:true,
 		pageSize:50,
-		fields:["idx","image","postidx","postdelete","repto","bid","width","boardtitle","category","type","title","mno","name","nickname","reg_date","filename","filetype","filesize","filepath","hit"]
+		fields:["idx","image","postidx","postdelete","repto","rid","width","releasetitle","category","type","title","mno","name","nickname","reg_date","filename","filetype","filesize","filepath","hit"]
 	});
 	
 	function ItemDblClick(grid,record,row,index,e) {
@@ -112,7 +112,7 @@ var ContentArea = function(viewport) {
 				height:500,
 				layout:"fit",
 				maximizable:true,
-				html:'<iframe src="<?php echo $_ENV['dir']; ?>/module/board/board.php?bid='+record.data.bid+'&mode=view&idx='+record.data.postidx+'" style="width:100%; height:100%; background:#FFFFFF;" frameborder="0"></iframe>'
+				html:'<iframe src="<?php echo $_ENV['dir']; ?>/module/release/release.php?rid='+record.data.rid+'&mode=view&idx='+record.data.postidx+'" style="width:100%; height:100%; background:#FFFFFF;" frameborder="0"></iframe>'
 			}).show();
 		} else {
 			Ext.Msg.show({title:"에러",msg:"이 파일은 게시물이 등록되지 않았거나, 첨부된 게시물이 삭제되었습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.ERROR});
@@ -128,7 +128,7 @@ var ContentArea = function(viewport) {
 		menu.add({
 			text:"파일다운로드",
 			handler:function() {
-				execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/board/exec/FileDownload.do.php?idx="+record.data.idx;
+				execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/release/exec/FileDownload.do.php?idx="+record.data.idx;
 			}
 		});
 		
@@ -151,7 +151,7 @@ var ContentArea = function(viewport) {
 						height:500,
 						layout:"fit",
 						maximizable:true,
-						html:'<iframe src="<?php echo $_ENV['dir']; ?>/module/board/board.php?bid='+record.data.bid+'&mode=view&idx='+record.data.postidx+'" style="width:100%; height:100%; background:#FFFFFF;" frameborder="0"></iframe>'
+						html:'<iframe src="<?php echo $_ENV['dir']; ?>/module/release/release.php?rid='+record.data.rid+'&mode=view&idx='+record.data.postidx+'" style="width:100%; height:100%; background:#FFFFFF;" frameborder="0"></iframe>'
 					}).show();
 				}
 			});
@@ -180,7 +180,7 @@ var ContentArea = function(viewport) {
 					}),
 					new Ext.Button({
 						text:"검색",
-						icon:"<?php echo $_ENV['dir']; ?>/module/board/images/admin/icon_magnifier.png",
+						icon:"<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_magnifier.png",
 						handler:function() {
 							if (Ext.getCmp("ListTab").getActiveTab().getId() == "ListPanel3") {
 								store3.getProxy().setExtraParam("keyword",Ext.getCmp("Keyword").getValue());
@@ -194,7 +194,7 @@ var ContentArea = function(viewport) {
 					'-',
 					new Ext.Button({
 						text:"선택한 파일을&nbsp;",
-						icon:"<?php echo $_ENV['dir']; ?>/module/board/images/admin/icon_tick.png",
+						icon:"<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_tick.png",
 						menu:new Ext.menu.Menu({
 							items:[{
 								text:"파일삭제",
@@ -219,7 +219,7 @@ var ContentArea = function(viewport) {
 										if (button == "yes") {
 											Ext.Msg.wait("선택한 파일을 삭제하고 있습니다.","잠시만 기다려주십시오.");
 											Ext.Ajax.request({
-												url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.do.php",
+												url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.do.php",
 												success:function(response) {
 													var data = Ext.JSON.decode(response.responseText);
 													if (data.success == true) {
@@ -263,7 +263,7 @@ var ContentArea = function(viewport) {
 										if (button == "yes") {
 											Ext.Msg.wait("선택한 파일이 첨부된 게시물/댓글을 삭제하고 있습니다.","잠시만 기다려주십시오.");
 											Ext.Ajax.request({
-												url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.do.php",
+												url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.do.php",
 												success:function(response) {
 													var data = Ext.JSON.decode(response.responseText);
 													if (data.success == true) {
@@ -291,7 +291,7 @@ var ContentArea = function(viewport) {
 					new Ext.Button({
 						id:"BtnRetrench",
 						text:"미기록파일정리",
-						icon:"<?php echo $_ENV['dir']; ?>/module/board/images/admin/icon_link_error.png",
+						icon:"<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_link_error.png",
 						handler:function() {
 							Ext.Msg.show({title:"안내",msg:"DB에서 관리되고 있지 않은 첨부파일을 찾아 전부 삭제합니다.<br />이 작업은 첨부파일폴더전체를 검색하기때문에 시간이 많이 소요될 수 있습니다.<br />기록되지 않은 파일은 찾아 삭제하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
 								if (button == "yes") {
@@ -317,7 +317,7 @@ var ContentArea = function(viewport) {
 											})
 										],
 										listeners:{show:{fn:function() {
-											execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.do.php?action=file&do=retrench";
+											execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.do.php?action=file&do=retrench";
 										}}}
 									}).show();
 								}
@@ -327,7 +327,7 @@ var ContentArea = function(viewport) {
 					new Ext.Button({
 						id:"BtnNoRepto",
 						text:"첨부파일정리",
-						icon:"<?php echo $_ENV['dir']; ?>/module/board/images/admin/icon_link_break.png",
+						icon:"<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_link_break.png",
 						handler:function() {
 							Ext.Msg.show({title:"안내",msg:"파일이 첨부된 게시물 또는 댓글이 삭제된 파일을 서버에서 삭제합니다.<br />휴지통에 보관된 게시물의 첨부파일은 삭제되지 않으므로 휴지통비우기를 실행하여 주십시오.<br />이 작업은 시간이 많이 소요될 수 있습니다. 첨부파일정리를 계속 하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
 								if (button == "yes") {
@@ -347,7 +347,7 @@ var ContentArea = function(viewport) {
 											})
 										],
 										listeners:{show:{fn:function() {
-											execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.do.php?action=file&do=norepto";
+											execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.do.php?action=file&do=norepto";
 										}}}
 									}).show();
 								}
@@ -357,7 +357,7 @@ var ContentArea = function(viewport) {
 					new Ext.Button({
 						id:"BtnRemovetemp",
 						text:"임시파일정리",
-						icon:"<?php echo $_ENV['dir']; ?>/module/board/images/admin/icon_link_delete.png",
+						icon:"<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_link_delete.png",
 						handler:function() {
 							Ext.Msg.show({title:"안내",msg:"게시물에 첨부되지 않고 임시로 업로드된 파일을 정리합니다.<br />임시파일정리를 계속 하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
 								if (button == "yes") {
@@ -377,7 +377,7 @@ var ContentArea = function(viewport) {
 											})
 										],
 										listeners:{show:{fn:function() {
-											execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.do.php?action=file&do=removetemp";
+											execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.do.php?action=file&do=removetemp";
 										}}}
 									}).show();
 								}
@@ -389,7 +389,7 @@ var ContentArea = function(viewport) {
 						text:"총 첨부된 파일용량 : 계산중...",
 						listeners:{render:{fn:function(button) {
 							Ext.Ajax.request({
-								url:"<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.get.php",
+								url:"<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.get.php",
 								success:function(response) {
 									var data = Ext.JSON.decode(response.responseText);
 									button.setText("총 첨부된 파일용량 : "+GetFileSize(data.totalsize));
@@ -441,11 +441,11 @@ var ContentArea = function(viewport) {
 								renderer:GridNumberFormat
 							},{
 								header:"게시판명",
-								dataIndex:"boardtitle",
+								dataIndex:"releasetitle",
 								sortable:false,
 								width:130,
 								renderer:function(value,p,record) {
-									if (value) return value+'<span style="font-family:tahoma;">('+record.data.bid+')</span>';
+									if (value) return value+'<span style="font-family:tahoma;">('+record.data.rid+')</span>';
 									else if (record.data.repto == 0) return '<span style="color:#999999;">첨부되지않은파일</span>';
 									else return '<span style="color:#EF5600;">첨부글이 삭제된 파일</span>';
 								}
@@ -542,11 +542,11 @@ var ContentArea = function(viewport) {
 								renderer:GridNumberFormat
 							},{
 								header:"게시판명",
-								dataIndex:"boardtitle",
+								dataIndex:"releasetitle",
 								sortable:false,
 								width:130,
 								renderer:function(value,p,record) {
-									if (value) return value+'<span style="font-family:tahoma;">('+record.data.bid+')</span>';
+									if (value) return value+'<span style="font-family:tahoma;">('+record.data.rid+')</span>';
 									else if (record.data.repto == 0) return '<span style="color:#999999;">첨부되지않은파일</span>';
 									else return '<span style="color:#EF5600;">첨부글이 삭제된 파일</span>';
 								}
@@ -623,7 +623,7 @@ var ContentArea = function(viewport) {
 									'<div class="item">',
 										'<div class="image"><img src="{image}" /></div>',
 										'<div class="filename">{filename}</div>',
-										'<div class="boardtitle"><span style="color:#99BBE8;"><tpl if="postdelete == \'TRUE\'">휴지통<tpl elseif="type == \'POST\'">게시물<tpl else>댓글</tpl></span>, <tpl if="boardtitle != \'\'">{boardtitle}<tpl else>원본게시물없음</tpl></div>',
+										'<div class="releasetitle"><span style="color:#99BBE8;"><tpl if="postdelete == \'TRUE\'">휴지통<tpl elseif="type == \'POST\'">게시물<tpl else>댓글</tpl></span>, <tpl if="releasetitle != \'\'">{releasetitle}<tpl else>원본게시물없음</tpl></div>',
 									'</div>',
 									'</tpl>',
 									'</div>'
@@ -646,7 +646,7 @@ var ContentArea = function(viewport) {
 											maxWidth:800,
 											maxHeight:500,
 											autoScroll:true,
-											html:'<img src="<?php echo $_ENV['dir']; ?>/module/board/exec/ShowImage.do.php?idx='+record.data.idx+'" onload="Ext.getCmp(\'PreviewWindow\').doLayout().center()" />'
+											html:'<img src="<?php echo $_ENV['dir']; ?>/module/release/exec/ShowImage.do.php?idx='+record.data.idx+'" onload="Ext.getCmp(\'PreviewWindow\').doLayout().center()" />'
 										}).show();
 									}},
 									itemcontextmenu:ItemContextMenu
@@ -660,7 +660,7 @@ var ContentArea = function(viewport) {
 								'-',
 								new Ext.Button({
 									id:"SortIDX",
-									icon:"<?php echo $_ENV['dir']; ?>/module/board/images/admin/icon_calendar.png",
+									icon:"<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_calendar.png",
 									text:"등록순으로 보기",
 									pressed:true,
 									handler:function(button) {
@@ -674,7 +674,7 @@ var ContentArea = function(viewport) {
 								new Ext.Button({
 									id:"SortHit",
 									text:"다운로드순으로 보기",
-									icon:"<?php echo $_ENV['dir']; ?>/module/board/images/admin/icon_download.png",
+									icon:"<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_download.png",
 									handler:function(button) {
 										store3.sort("hit","DESC");
 										Ext.getCmp("SortIDX").toggle(false);
@@ -686,7 +686,7 @@ var ContentArea = function(viewport) {
 								new Ext.Button({
 									id:"SortSize",
 									text:"파일크기순으로 보기",
-									icon:"<?php echo $_ENV['dir']; ?>/module/board/images/admin/icon_disk.png",
+									icon:"<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_disk.png",
 									handler:function(button) {
 										store3.sort("filesize","DESC");
 										Ext.getCmp("SortIDX").toggle(false);

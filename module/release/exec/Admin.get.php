@@ -45,7 +45,7 @@ if ($action == 'list') {
 				$lists[$i]['last_date'] = '';
 			}
 		}
-		$lists[$i]['option'] = ($lists[$i]['use_category'] == 'FALSE' ? 'FALSE' : 'TRUE').','.$lists[$i]['use_ment'].','.$lists[$i]['use_trackback'].','.$lists[$i]['use_charge'];
+		$lists[$i]['option'] = ($lists[$i]['use_category'] == 'FALSE' ? 'FALSE' : 'TRUE').','.$lists[$i]['use_ment'].','.$lists[$i]['use_charge'];
 	}
 
 	if ($is_all == 'true') {
@@ -86,7 +86,6 @@ if ($action == 'release') {
 	
 	if (isset($data['rid']) == true) {
 		$data['use_ment'] = $data['use_ment'] == 'TRUE' ? 'on' : 'off';
-		$data['use_trackback'] = $data['use_trackback'] == 'TRUE' ? 'on' : 'off';
 		$data['use_category_option'] = $data['use_category'] == 'OPTION' ? 'off' : 'on';
 		$data['use_category'] = $data['use_category'] == 'FALSE' ? 'off' : 'on';
 		$data['use_charge'] = $data['use_charge'] == 'TRUE' ? 'on' : 'off';
@@ -100,16 +99,16 @@ if ($action == 'release') {
 				$data['permission_'.$key] = $value;
 			}
 		} else {
-			$data = array_merge($data,array('permission_list'=>'true','permission_post'=>'true','permission_view'=>'true','permission_ment'=>'true','permission_secret'=>'{$member.type} == \'ADMINISTRATOR\'','permission_modify'=>'{$member.type} == \'ADMINISTRATOR\'','permission_delete'=>'{$member.type} == \'ADMINISTRATOR\'','permission_notice'=>'{$member.type} == \'ADMINISTRATOR\''));
+			$data = array_merge($data,array('permission_list'=>'true','permission_post'=>'{$member.type} != \'GUEST\'','permission_view'=>'true','permission_ment'=>'true','permission_modify'=>'{$member.type} == \'ADMINISTRATOR\'','permission_delete'=>'{$member.type} == \'ADMINISTRATOR\''));
 		}
 	} else {
 		$data = array();
 		
 		$data['width'] = '100%';
-		$data['use_ment'] = $data['use_trackback'] = 'on';
+		$data['use_ment'] = 'on';
 		$data['view_alllist'] = 'on';
 		
-		$data = array_merge($data,array('permission_list'=>'true','permission_post'=>'true','permission_view'=>'true','permission_ment'=>'true','permission_select'=>'{$member.type} == \'ADMINISTRATOR\'','permission_secret'=>'{$member.type} == \'ADMINISTRATOR\'','permission_modify'=>'{$member.type} == \'ADMINISTRATOR\'','permission_delete'=>'{$member.type} == \'ADMINISTRATOR\'','permission_notice'=>'{$member.type} == \'ADMINISTRATOR\''));
+		$data = array_merge($data,array('permission_list'=>'true','permission_post'=>'{$member.type} != \'GUEST\'','permission_view'=>'true','permission_ment'=>'true','permission_modify'=>'{$member.type} == \'ADMINISTRATOR\'','permission_delete'=>'{$member.type} == \'ADMINISTRATOR\''));
 	}
 
 	$return['success'] = true;
@@ -203,6 +202,8 @@ if ($action == 'post') {
 		$lists[$i]['newment'] = $lists[$i]['last_ment'] > GetGMT()-60*60*24 ? 'TRUE' : 'FALSE';
 		$lists[$i]['reg_date'] = GetTime('Y.m.d H:i:s',$lists[$i]['reg_date']);
 		$lists[$i]['avgvote'] = $lists[$i]['voter'] > 0 ? sprintf('%0.2f',$lists[$i]['vote']/$lists[$i]['voter']) : '0.001';
+		
+		$lists[$i]['version_count'] = $mDB->DBcount($mRelease->table['version'],"where `repto`='{$lists[$i]['idx']}'");
 	}
 }
 
@@ -302,7 +303,7 @@ if ($action == 'file') {
 			$post = $ment = array();
 			if ($lists[$i]['repto'] != 0) {
 				if ($lists[$i]['type'] == 'POST') {
-					$post = $mDB->DBfetch($mRelease->table['post'],array('idx','is_delete','rid','title','mno','name','reg_date'),"where `idx`={$lists[$i]['repto']}");
+					$post = $mDB->DBfetch($mRelease->table['post'],array('idx','is_delete','rid','title','mno','reg_date'),"where `idx`={$lists[$i]['repto']}");
 				} elseif ($lists[$i]['type'] == 'MENT') {
 					$ment = $mDB->DBfetch($mRelease->table['ment'],array('repto','mno','name','reg_date'),"where `idx`={$lists[$i]['repto']}");
 					if (isset($ment['repto']) == true) {
@@ -319,19 +320,10 @@ if ($action == 'file') {
 			if (isset($post['title']) == true) $lists[$i]['title'] = $post['title'];
 			else $lists[$i]['title'] = '';
 			
-			if (isset($post['mno']) == true && $post['mno'] != 0) {
-				$mData = $mMember->GetMemberInfo($post['mno']);
-				$lists[$i]['name'] = $mData['name'];
-				$lists[$i]['nickname'] = $mData['nickname'];
-				$lists[$i]['mno'] = $post['mno'];
-			} elseif (isset($post['name']) ==  true) {
-				$lists[$i]['name'] = $post['name'];
-				$lists[$i]['nickname'] = '';
-				$lists[$i]['mno'] = 0;
-			} else {
-				$lists[$i]['name'] = $lists[$i]['nickname'] = '';
-				$lists[$i]['mno'] = 0;
-			}
+			$mData = $mMember->GetMemberInfo($post['mno']);
+			$lists[$i]['name'] = $mData['name'];
+			$lists[$i]['nickname'] = $mData['nickname'];
+			$lists[$i]['mno'] = $post['mno'];
 			
 			if (isset($post['is_delete']) == true) {
 				$lists[$i]['postdelete'] = $post['is_delete'];
@@ -530,39 +522,6 @@ if ($action == 'log') {
 		$lists[$i]['ment'] = $post['ment'];
 		
 		$lists[$i]['reg_date'] = GetTime('Y.m.d H:i:s',$lists[$i]['reg_date']);
-	}
-}
-
-if ($action == 'status') {
-	$date = Request('date') ? Request('date') : date('Y-m');
-	$monthLast = date('t',strtotime($date.'-01'));
-	
-	for ($i=1;$i<=$monthLast;$i++) {
-		$day = $date.'-'.sprintf('%02d',$i);
-		$dayStart = GetGMT($day.' 00:00:00');
-		$dayEnd = GetGMT($day.' 23:59:59');
-		
-		$lists[$i-1] = array();
-		$lists[$i-1]['date'] = $i;
-		if ($dayStart < GetGMT()) {
-			$status = $mDB->DBfetch($mRelease->table['status'],'*',"where `date`='$day'");
-			if (isset($status['date']) == false) {
-				$lists[$i-1]['post'] = $mDB->DBcount($mRelease->table['post'],"where `reg_date`>$dayStart and `reg_date`<$dayEnd");
-				$lists[$i-1]['ment'] = $mDB->DBcount($mRelease->table['ment'],"where `reg_date`>$dayStart and `reg_date`<$dayEnd");
-				$lists[$i-1]['hit'] = $mDB->DBcount($mRelease->table['log'],"where `reg_date`>$dayStart and `reg_date`<$dayEnd and `type`='HIT'");
-				
-				if ($day != date('Y-m-d')) {
-					$mDB->DBinsert($mRelease->table['status'],array('date'=>$day,'post'=>$lists[$i-1]['post'],'ment'=>$lists[$i-1]['ment'],'hit'=>$lists[$i-1]['hit']));
-				}
-			} else {
-				$status['date'] = $i;
-				$lists[$i-1] = $status;
-			}
-		} else {
-			$lists[$i-1]['post'] = 0;
-			$lists[$i-1]['ment'] = 0;
-			$lists[$i-1]['hit'] = 0;
-		}
 	}
 }
 

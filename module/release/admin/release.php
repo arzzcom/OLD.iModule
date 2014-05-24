@@ -175,10 +175,6 @@ var ContentArea = function(viewport) {
 									name:"use_ment"
 								}),
 								new Ext.form.Checkbox({
-									boxLabel:"트랙백기능을 활성화 합니다.",
-									name:"use_trackback"
-								}),
-								new Ext.form.Checkbox({
 									boxLabel:"카테고리기능을 활성화 합니다.",
 									name:"use_category",
 									listeners:{change:{fn:function(form) {
@@ -381,7 +377,7 @@ var ContentArea = function(viewport) {
 											lazyRender:true,
 											store:new Ext.data.ArrayStore({
 												fields:["display","value"],
-												data:[["전체","true"],["회원권한 이상","{$member.type} != 'GUEST'"],["모더레이터권한 이상","{$member.type} == 'MODERATOR'"],["최고관리자","{$member.type} == 'ADMINISTRATOR'"],["회원레벨 10이상","{$member.level} >= 10"],["사용자정의",""]]
+												data:[["회원권한 이상","{$member.type} != 'GUEST'"],["모더레이터권한 이상","{$member.type} == 'MODERATOR'"],["최고관리자","{$member.type} == 'ADMINISTRATOR'"],["회원레벨 10이상","{$member.level} >= 10"],["사용자정의",""]]
 											}),
 											width:150,
 											editable:false,
@@ -455,7 +451,7 @@ var ContentArea = function(viewport) {
 											lazyRender:true,
 											store:new Ext.data.ArrayStore({
 												fields:["display","value"],
-												data:[["전체","true"],["회원권한 이상","{$member.type} != 'GUEST'"],["모더레이터권한 이상","{$member.type} == 'MODERATOR'"],["최고관리자","{$member.type} == 'ADMINISTRATOR'"],["회원레벨 10이상","{$member.level} >= 10"],["사용자정의",""]]
+												data:[["회원권한 이상","{$member.type} != 'GUEST'"],["모더레이터권한 이상","{$member.type} == 'MODERATOR'"],["최고관리자","{$member.type} == 'ADMINISTRATOR'"],["회원레벨 10이상","{$member.level} >= 10"],["사용자정의",""]]
 											}),
 											width:150,
 											editable:false,
@@ -1199,15 +1195,14 @@ var ContentArea = function(viewport) {
 						header:"옵션",
 						dataIndex:"option",
 						sortable:false,
-						width:170,
+						width:130,
 						renderer:function(value) {
 							var sHTML = '<div style="font:0/0 arial;">';
 							var option = value.split(",");
 
 							sHTML+= '<img src="<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_category_'+option[0].toLowerCase()+'.gif" style="margin-right:2px;" />';
 							sHTML+= '<img src="<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_ment_'+option[1].toLowerCase()+'.gif" style="margin-right:2px;" />';
-							sHTML+= '<img src="<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_trackback_'+option[2].toLowerCase()+'.gif" style="margin-right:2px;" />';
-							sHTML+= '<img src="<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_charge_'+option[3].toLowerCase()+'.gif" style="margin-right:2px;" />';
+							sHTML+= '<img src="<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_charge_'+option[2].toLowerCase()+'.gif" style="margin-right:2px;" />';
 							sHTML+= '</div>';
 
 							return sHTML;

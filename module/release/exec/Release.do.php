@@ -28,7 +28,6 @@ if ($action == 'post') {
 	$insert['title'] = Request('title') ? Request('title') : Alertbox('제목을 입력하여 주십시오.');
 	$insert['content'] = Request('content') ? $mRelease->SetContent(Request('content')) : Alertbox('내용을 입력하여 주십시오.');
 	$insert['search'] = GetIndexingText(Request('content'));
-	$insert['is_html_title'] = $mRelease->GetPermission('notice') == true && Request('is_html_title') ? 'TRUE' : 'FALSE';
 	$insert['is_ment'] = Request('is_ment') ? 'TRUE' : 'FALSE';
 	$insert['is_msg'] = $mMember->IsLogged() == true && Request('is_msg') ? 'TRUE' : 'FALSE';
 	$insert['is_email'] = Request('is_email') ? 'TRUE' : 'FALSE';
@@ -38,8 +37,6 @@ if ($action == 'post') {
 	$insert['field3'] = Request('field3');
 	$insert['homepage'] = Request('homepage') ? (preg_match('/^http:\/\//',Request('homepage')) == true ? Request('homepage') : 'http://'.Request('homepage')) : '';
 	$insert['price'] = Request('price');
-	
-	if (Request('is_mobile') == 'TRUE') $insert['is_mobile'] = 'TRUE';
 
 	if ($mRelease->setup['use_category'] == 'TRUE' && !Request('category')) Alertbox('이 릴리즈게시판은 카테고리를 반드시 선택하도록 설정되어 있습니다.');
 
@@ -120,7 +117,6 @@ if ($action == 'post') {
 		}
 	}
 
-	$mDB->DBdelete($mRelease->table['autosave'],$autosaveFind);
 	$path = explode('?',$_SERVER['HTTP_REFERER']);
 	$url = $path[0];
 	$query = $mRelease->GetQueryString(array('mode'=>'view','idx'=>$idx),$path[1],false);
@@ -236,7 +232,6 @@ if ($action == 'ment') {
 	$insert['search'] = GetIndexingText(Request('content'));
 	$insert['is_msg'] = $mMember->IsLogged() == true && Request('is_msg') ? 'TRUE' : 'FALSE';
 	$insert['is_email'] = CheckEmail(Request('email')) == true && Request('is_email') ? 'TRUE' : 'FALSE';
-	if (Request('is_mobile') == 'TRUE') $insert['is_mobile'] = 'TRUE';
 
 	$extraValue = array();
 	foreach ($_REQUEST as $extra=>$value) {
@@ -363,12 +358,8 @@ if ($action == 'delete') {
 		$data = $mDB->DBfetch($mRelease->table['post'],array('idx','rid','mno','password','title'),"where `idx`='$idx'");
 		$mRelease = new ModuleRelease($data['rid']);
 
-		if ($mRelease->GetPermission('delete') == false) {
-			if ($data['mno'] == '0') {
-				if (md5(Request('password')) != $data['password']) Alertbox('패스워드가 일치하지 않습니다.');
-			} elseif ($data['mno'] != $member['idx']) {
-				Alertbox('게시물을 삭제할 권한이 없습니다.');
-			}
+		if ($mRelease->GetPermission('delete') == false && $data['mno'] != $member['idx']) {
+			Alertbox('게시물을 삭제할 권한이 없습니다.');
 		}
 
 		$mDB->DBupdate($mRelease->table['post'],array('is_delete'=>'TRUE'),'',"where `idx`='$idx'");
@@ -452,50 +443,6 @@ if ($action == 'delete') {
 		if ($data['mno'] != 0) $mMember->SendPoint($data['mno'],$mRelease->setup['post_point']*-1,'버전 삭제 ('.GetCutString($post['title'],20).')','/module/release/release.php?rid='.$post['rid'].'&mode=view&idx='.$idx,'release',true);
 		Alertbox('성공적으로 삭제하였습니다.',3,$returnURL,'parent');
 	}
-}
-
-// 자동저장
-if ($action == 'autosave') {
-	$insert = array();
-	$tid = md5($_SERVER['REMOTE_ADDR'].Request('rid').Request('repto'));
-	$insert['rid'] = Request('rid');
-	$insert['repto'] = Request('repto');
-	$data = array();
-
-	$file = array();
-	$files = explode(',',Request('file'));
-	for ($i=0, $loop=sizeof($files);$i<$loop;$i++) {
-		$temp = explode('|',$files[$i]);
-		$fidx = $temp[0];
-
-		if ($fidx) {
-			if (sizeof($temp) == 1) {
-				$fileData = $mDB->DBfetch($mRelease->table['file'],array('filepath','filetype'),"where `idx`='$fidx'");
-				@unlink($_ENV['userfilePath'].$mRelease->userfile.$fileData['filepath']);
-				if ($fileData['filetype'] == 'IMG') @unlink($_ENV['userfilePath'].$mRelease->thumbnail.'/'.$fidx.'.thm');
-				$mDB->DBdelete($mRelease->table['file'],"where `idx`='$fidx'");
-			} else {
-				$file[] = $files[$i];
-			}
-		}
-	}
-	if (sizeof($file) > 0) $data['file'] = implode(',',$file);
-
-	foreach ($_REQUEST as $key=>$value) {
-		if (in_array($key,array('action','rid','repto','file','PHPSESSID')) == false) $data[$key] = Request($key);
-	}
-	$insert['data'] = serialize($data);
-	$insert['ip'] = $_SERVER['REMOTE_ADDR'];
-	$insert['reg_date'] = GetGMT();
-
-	if ($mDB->DBcount($mRelease->table['autosave'],"where `tid`='$tid'") == 0) {
-		$insert['tid'] = $tid;
-		$mDB->DBinsert($mRelease->table['autosave'],$insert);
-	} else {
-		$mDB->DBupdate($mRelease->table['autosave'],$insert,'',"where `tid`='$tid'");
-	}
-
-	echo GetTime('Y년 m월 d일 H시 m분 s초',$insert['reg_date']);
 }
 
 // 게시물추천

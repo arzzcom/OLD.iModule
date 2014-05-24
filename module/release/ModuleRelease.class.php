@@ -511,7 +511,7 @@ class ModuleRelease extends Module {
 
 		$data = $this->mDB->DBfetchs($this->table['post'],'*',$find,$orderer,$limiter);
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
-			$data[$i]['title'] = $data[$i]['is_html_title'] == 'TRUE' ? $data[$i]['title'] : GetString($data[$i]['title'],'replace');
+			$data[$i]['title'] = GetString($data[$i]['title'],'replace');
 			$data[$i]['title'] = $this->GetReplaceKeyword($data[$i]['title']);
 			$data[$i]['postlink'] = $this->moduleDir.'/release.php?rid='.$data[$i]['rid'].'&amp;mode=view&amp;idx='.$data[$i]['idx'];
 			
@@ -726,7 +726,7 @@ class ModuleRelease extends Module {
 
 		$loopnum = $totalpost-($p-1)*$listnum;
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
-			$data[$i]['title'] = $data[$i]['is_html_title'] == 'TRUE' ? $data[$i]['title'] : GetString($data[$i]['title'],'replace');
+			$data[$i]['title'] = GetString($data[$i]['title'],'replace');
 			$data[$i]['title'] = $this->GetReplaceKeyword($data[$i]['title']);
 			$data[$i]['is_read'] = $data[$i]['idx'] == Request('idx');
 			$data[$i]['loopnum'] = $loopnum--;
@@ -879,7 +879,7 @@ class ModuleRelease extends Module {
 			$data['last_modify'] = array('hit'=>0,'editor'=>'','date'=>'');
 		}
 
-		$data['title'] = $data['is_html_title'] == 'TRUE' ? $data['title'] : GetString($data['title'],'replace');
+		$data['title'] = GetString($data['title'],'replace');
 		$data['content'] = $this->GetContent($data['content']);
 		$data['reg_date'] = strtotime(GetTime('c',$data['reg_date']));
 		$data['payment'] = $this->CheckPayment($idx);
@@ -1201,7 +1201,6 @@ class ModuleRelease extends Module {
 			$data['email'] = GetString($data['email'],'inputbox');
 			$data['homepage'] = GetString($data['homepage'],'inputbox');
 			$data['content'] = str_replace('{$moduleDir}',$this->moduleDir,$data['content']);
-			$data['is_secret'] = $data['is_secret'];
 			$data['is_msg'] = $data['is_msg'];
 			$data['is_email'] = $data['is_email'];
 		} else {
@@ -1285,11 +1284,11 @@ class ModuleRelease extends Module {
 		$find = $this->find;
 		$find.= $finder ? ' and '.$finder : '';
 		$orderer = $orderer ? $orderer : 'loop,asc';
-		$data = $this->mDB->DBfetchs($this->table['post'],array('idx','category','name','mno','title','content','search','image','reg_date','ment','last_ment','is_html_title','is_secret','image'),$find,$orderer,'0,'.$row);
+		$data = $this->mDB->DBfetchs($this->table['post'],array('idx','category','name','mno','title','content','search','image','reg_date','ment','last_ment','image'),$find,$orderer,'0,'.$row);
 
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			$data[$i]['title'] = $limit ? GetCutString($data[$i]['title'],$limit,true) : $data[$i]['title'];
-			$data[$i]['title'] = $data[$i]['is_html_title'] == 'TRUE' ? $data[$i]['title'] : GetString($data[$i]['title'],'replace');
+			$data[$i]['title'] = GetString($data[$i]['title'],'replace');
 			$data[$i]['content'] = $this->GetContent($data[$i]['content']);
 			$data[$i]['is_newment'] = $data[$i]['last_ment'] > GetGMT()-60*60*24;
 			$data[$i]['postlink'] = $page.(preg_match('/\?/',$page) == true ? '&amp;' : '?').'mode=view&amp;idx='.$data[$i]['idx'];
@@ -1306,9 +1305,6 @@ class ModuleRelease extends Module {
 				$data[$i]['photo'] = $mData['photo'];
 			}
 
-			if ($data[$i]['is_secret'] == 'TRUE' && ($data[$i]['mno'] != 0 && $data[$i]['mno'] != $this->member['idx'] || $data[$i]['mno'] == '0') && $this->GetPermission('secret') == false) {
-				$data[$i]['content'] = $data[$i]['search'] = '이 글은 비밀글입니다. 권한이 없으므로 내용을 보실 수 없습니다.';
-			}
 			if ($this->setup['use_category'] != 'FALSE' && $data[$i]['category'] != '0') {
 				$data[$i]['category'] = $this->GetCategoryName($data[$i]['category']);
 			} else {
@@ -1341,11 +1337,11 @@ class ModuleRelease extends Module {
 		$mLast = array_pop($this->mDB->DBfetchs($this->table['post'],array('reg_date'),$find,'reg_date,desc','0,'.$hotPosition));
 		$find.= " and `reg_date`>=".(isset($mLast['reg_date']) == true ? $mLast['reg_date'] : '0');
 		$find.= $finder ? ' and '.$finder : '';
-		$data = $this->mDB->DBfetchs($this->table['post'],array('idx','mno','title','search','image','reg_date','ment','last_ment','is_html_title','image'),$find,'hit,desc','0,'.$row);
+		$data = $this->mDB->DBfetchs($this->table['post'],array('idx','mno','title','search','image','reg_date','ment','last_ment','image'),$find,'hit,desc','0,'.$row);
 
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			$data[$i]['title'] = $limit ? GetCutString($data[$i]['title'],$limit,true) : $data[$i]['title'];
-			$data[$i]['title'] = $data[$i]['is_html_title'] == 'TRUE' ? $data[$i]['title'] : GetString($data[$i]['title'],'replace');
+			$data[$i]['title'] = GetString($data[$i]['title'],'replace');
 			$data[$i]['content'] = $data[$i]['search'];
 			$data[$i]['is_newment'] = $data[$i]['last_ment'] > GetGMT()-60*60*24;
 			$data[$i]['postlink'] = $page.(preg_match('/\?/',$page) == true ? '&amp;' : '?').'mode=view&amp;idx='.$data[$i]['idx'];
@@ -1376,11 +1372,11 @@ class ModuleRelease extends Module {
 		if ($this->mMember->IsLogged() == true) {
 			$find = "where `mno`={$this->member['idx']} and `is_delete`='FALSE'";
 			$find.= $finder ? ' and '.$finder : '';
-			$data = $this->mDB->DBfetchs($this->table['post'],array('idx','rid','category','name','mno','title','search','image','is_html_title','reg_date','ment','last_ment'),$find,'loop,asc','0,'.$row);
+			$data = $this->mDB->DBfetchs($this->table['post'],array('idx','rid','category','name','mno','title','search','image','reg_date','ment','last_ment'),$find,'loop,asc','0,'.$row);
 
 			for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 				$data[$i]['title'] = $limit ? GetCutString($data[$i]['title'],$limit,true) : $data[$i]['title'];
-				$data[$i]['title'] = $data[$i]['is_html_title'] == 'TRUE' ? $data[$i]['title'] : GetString($data[$i]['title'],'replace');
+				$data[$i]['title'] = GetString($data[$i]['title'],'replace');
 				$data[$i]['content'] = $data[$i]['search'];
 				$data[$i]['is_newment'] = $data[$i]['last_ment'] > GetGMT()-60*60*24;
 				$data[$i]['postlink'] = $this->moduleDir.'/release.php?rid='.$data[$i]['rid'].'&amp;mode=view&amp;idx='.$data[$i]['idx'];
