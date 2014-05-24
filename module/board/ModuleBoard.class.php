@@ -50,8 +50,7 @@ class ModuleBoard extends Module {
 
 		if ($bid) {
 			$this->bid = $bid;
-			if ($bid == '$mypost') $this->find = "where `mno`=".($this->member['idx'] ? $this->member['idx'] : '-1')." and `is_delete`='FALSE'";
-			else $this->find = "where `bid`='{$bid}' and `is_delete`='FALSE'";
+			$this->find = "where `bid`='{$bid}' and `is_delete`='FALSE'";
 		}
 
 		$this->idx = $this->mDB->AntiInjection(Request('idx'));
@@ -65,12 +64,7 @@ class ModuleBoard extends Module {
 		$this->baseQueryString = sizeof(explode('?',$_SERVER['REQUEST_URI'])) > 1 ? array_pop(explode('?',$_SERVER['REQUEST_URI'])) : '';
 
 		if ($bid) {
-			if ($bid == '$mypost') {
-				$this->setup = array('skin'=>'default','width'=>'100%','listnum'=>20,'pagenum'=>10,'view_list'=>true,'use_category'=>'FALSE','use_select'=>'FALSE','view_list'=>'loopnum,reg_date,hit,vote','use_mode'=>'TRUE','permission'=>'','view_notice_page'=>'NONE');
-			} else {
-				$this->setup = $this->mDB->DBfetch($this->table['setup'],array('bid','skin','title','width','use_uploader','use_category','use_charge','use_select','use_rss','listnum','pagenum','view_alllist','view_list','view_notice_page','view_notice_count','view_notice_list','post_point','ment_point','select_point','permission'),"where `bid`='{$bid}'");
-				$this->setup['use_mode'] = 'FALSE';
-			}
+			$this->setup = $this->mDB->DBfetch($this->table['setup'],array('bid','skin','title','width','use_uploader','use_category','use_charge','use_select','use_rss','listnum','pagenum','view_alllist','view_list','view_notice_page','view_notice_count','view_notice_list','post_point','ment_point','select_point','permission'),"where `bid`='{$bid}'");
 			
 			if (isset($this->setup['skin']) == true) {
 				$this->skinPath = $this->modulePath.'/templet/board/'.$this->setup['skin'];
@@ -104,14 +98,6 @@ class ModuleBoard extends Module {
 	
 	function GetSetup($key) {
 		return isset($this->setup[$key]) == true ? $this->setup[$key] : '';
-	}
-	
-	function SetLinkedModule($module) {
-		$this->linkedModule[$module->moduleName] = $module;
-	}
-
-	function SetFinder($find) {
-		$this->find.= " and $find";
 	}
 
 	// GET 변수 정리
@@ -555,7 +541,7 @@ class ModuleBoard extends Module {
 		return $this->GetTemplet();
 	}
 	
-	// 목록출력
+	// 나의 게시물 출력
 	function PrintMyList($skin,$listnum,$mno='') {
 		$this->PrintHeader();
 		
@@ -791,7 +777,7 @@ class ModuleBoard extends Module {
 				$notice[$i]['title'] = $notice[$i]['is_html_title'] == 'TRUE' ? $notice[$i]['title'] : GetString($notice[$i]['title'],'replace');
 				$notice[$i]['title'] = $this->GetReplaceKeyword($notice[$i]['title']);
 				$notice[$i]['is_read'] = $notice[$i]['idx'] == Request('idx');
-				$notice[$i]['postlink'] = $this->setup['use_mode'] == 'TRUE' ? $this->moduleDir.'/board.php?bid='.$notice[$i]['bid'].'&mode=view&amp;p='.$p.'&amp;idx='.$notice[$i]['idx'] : $this->baseURL.$this->GetQueryString(array('mode'=>'view','p'=>$p,'idx'=>$notice[$i]['idx']));
+				$notice[$i]['postlink'] = $this->baseURL.$this->GetQueryString(array('mode'=>'view','p'=>$p,'idx'=>$notice[$i]['idx']));
 				$notice[$i]['reg_date'] = strtotime(GetTime('c',$notice[$i]['reg_date']));
 				$notice[$i]['hit'] = number_format($notice[$i]['hit']);
 				$notice[$i]['vote'] = number_format($notice[$i]['vote']);
@@ -818,8 +804,6 @@ class ModuleBoard extends Module {
 				} else {
 					$notice[$i]['category'] = '';
 				}
-
-				if ($this->setup['use_mode'] == 'TRUE') $notice[$i]['category'] = $this->GetBoardTitle($notice[$i]['bid']);
 
 				$notice[$i]['is_select'] = false;
 				if ($this->setup['use_select'] == 'TRUE') {
@@ -901,8 +885,6 @@ class ModuleBoard extends Module {
 			} else {
 				$data[$i]['category'] = '';
 			}
-
-			if ($this->setup['use_mode'] == 'TRUE') $data[$i]['category'] = $this->GetBoardTitle($data[$i]['bid']);
 
 			if ($this->setup['use_select'] == 'TRUE') {
 				if ($data[$i]['is_select'] == 'TRUE') {
@@ -1669,10 +1651,6 @@ class ModuleBoard extends Module {
 		if (isset($permission[$geter]) == false || $permission[$geter] === '') return true;
 
 		return GetPermission($permission[$geter]);
-	}
-
-	function GetConfig($geter) {
-		return $this->setup[$geter];
 	}
 
 	function GetThumbnail($var) {

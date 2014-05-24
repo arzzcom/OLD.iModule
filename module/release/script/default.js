@@ -202,6 +202,10 @@ if (isIncludeRelease === undefined) {
 		document.forms["ModuleReleaseSearch"].submit();
 	}
 	
+	function ListSelectSelectSort(text,value) {
+		location.href = value;
+	}
+	
 	function ListSelectSelectAnswer(text,value) {
 		if (!document.forms["ModuleReleaseSearch"]["select"]) {
 			var form = document.forms["ModuleReleaseSearch"];

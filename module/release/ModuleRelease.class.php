@@ -53,8 +53,7 @@ class ModuleRelease extends Module {
 
 		if ($rid) {
 			$this->rid = $rid;
-			if ($rid == '$mypost') $this->find = "where `mno`=".($this->member['idx'] ? $this->member['idx'] : '-1')." and `is_delete`='FALSE'";
-			else $this->find = "where `rid`='{$rid}' and `is_delete`='FALSE'";
+			$this->find = "where `rid`='{$rid}' and `is_delete`='FALSE'";
 		}
 
 		$this->idx = $this->mDB->AntiInjection(Request('idx'));
@@ -69,12 +68,7 @@ class ModuleRelease extends Module {
 		$this->baseQueryString = sizeof(explode('?',$_SERVER['REQUEST_URI'])) > 1 ? array_pop(explode('?',$_SERVER['REQUEST_URI'])) : '';
 
 		if ($rid) {
-			if ($rid == '$mypost') {
-				$this->setup = array('skin'=>'default','width'=>'100%','listnum'=>20,'pagenum'=>10,'view_list'=>true,'use_category'=>'FALSE','use_mode'=>'TRUE','permission'=>'');
-			} else {
-				$this->setup = $this->mDB->DBfetch($this->table['setup'],array('rid','skin','title','width','use_category','use_charge','listnum','pagenum','view_alllist','post_point','ment_point','tax_point','permission'),"where `rid`='{$rid}'");
-				$this->setup['use_mode'] = 'FALSE';
-			}
+			$this->setup = $this->mDB->DBfetch($this->table['setup'],array('rid','skin','title','width','use_category','use_charge','listnum','pagenum','view_alllist','post_point','ment_point','tax_point','permission'),"where `rid`='{$rid}'");
 			
 			if (isset($this->setup['skin']) == true) {
 				$this->skinPath = $this->modulePath.'/templet/release/'.$this->setup['skin'];
@@ -471,6 +465,128 @@ class ModuleRelease extends Module {
 		
 		return $this->mDB->DBcount($this->table['payment'],"where `repto`='$repto' and `mno`='$mno'") > 0;
 	}
+	
+	// 나의 게시물 출력
+	function PrintMyList($skin,$listnum,$mno='') {
+		$this->PrintHeader();
+		
+		$mno = $mno ? $mno : $this->member['idx'];
+		
+		$find = "where `mno`='$mno' and `is_delete`='FALSE'";
+		$pagenum = 10;
+		
+		$keyword = Request('keyword') ? urldecode(Request('keyword')) : '';
+		if ($keyword != null) {
+			$mKeyword = new Keyword($keyword);
+			$keyQuery = $mKeyword->GetFullTextKeyword(array('title','search'));
+			$find.= ' and '.$keyQuery;
+		}
+		
+		$p = is_numeric(Request('p')) == true && Request('p') > 0 ? Request('p') : 1;
+		$totalpost = $this->mDB->DBcount($this->table['post'],$find);
+		$totalpage = ceil($totalpost/$listnum) == 0 ? 1 : ceil($totalpost/$listnum);
+		$p = $p > $totalpage ? $totalpage : $p;
+
+		$sort = Request('sort') ? Request('sort') : 'idx';
+		$dir = Request('dir') ? Request('dir') : 'desc';
+		if ($sort == 'idx' && $dir == 'desc') {
+			$sort = 'loop';
+			$dir = 'asc';
+		}
+
+		if ($this->idx != null) {
+			$idx = $this->idx;
+			$post = $this->mDB->DBfetch($this->table['post'],array($sort,'is_notice'),"where `idx`='$idx'");
+			if ($post['is_notice'] == 'TRUE' && Request('p') != null) {
+				$p = Request('p');
+			} else {
+				$prevFind = $find.' and (`'.$sort.'`'.($dir == 'desc' ? '>=' : '<=')."'".$post[$sort]."')";
+				$prevNum = $this->mDB->DBcount($this->table['post'],$prevFind);
+				$p = ceil($prevNum/$listnum);
+			}
+		}
+		$orderer = $sort.','.$dir;
+		$sort = Request('sort') ? Request('sort') : 'idx';
+		$limiter = ($p-1)*$listnum.','.$listnum;
+
+		$data = $this->mDB->DBfetchs($this->table['post'],'*',$find,$orderer,$limiter);
+		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
+			$data[$i]['title'] = $data[$i]['is_html_title'] == 'TRUE' ? $data[$i]['title'] : GetString($data[$i]['title'],'replace');
+			$data[$i]['title'] = $this->GetReplaceKeyword($data[$i]['title']);
+			$data[$i]['postlink'] = $this->moduleDir.'/release.php?rid='.$data[$i]['rid'].'&amp;mode=view&amp;idx='.$data[$i]['idx'];
+			
+			$data[$i]['reg_date'] = strtotime(GetTime('c',$data[$i]['reg_date']));
+			$data[$i]['hit'] = number_format($data[$i]['hit']);
+			$data[$i]['vote'] = number_format($data[$i]['vote']);
+			$data[$i]['avgvote'] = $data[$i]['voter'] > 0 ? sprintf('%0.2f',$data[$i]['vote']/$data[$i]['voter']) : '0.00';
+
+			$data[$i]['is_file'] = $this->mDB->DBcount($this->table['file'],"where `repto`={$data[$i]['idx']} and `filetype`!='IMG'") > 0;
+			$data[$i]['is_image'] = $data[$i]['image'] != '0';
+			$data[$i]['is_newment'] = $data[$i]['last_ment'] > GetGMT()-60*60*24;
+
+			$data[$i]['categoryIDX'] = $data[$i]['category'];
+			if ($this->setup['use_category'] != 'FALSE' && $data[$i]['category'] != '0') {
+				$data[$i]['category'] = $this->GetCategoryName($data[$i]['category']);
+			} else {
+				$data[$i]['category'] = '';
+			}
+
+			$data[$i]['board'] = $this->GetReleaseTitle($data[$i]['rid']);
+
+			$data[$i]['is_select'] = false;
+		}
+
+		$page = array();
+		$startpage = floor(($p-1)/$pagenum)*$pagenum+1;
+		$endpage = $startpage+$pagenum-1 > $totalpage ? $totalpage : $startpage+$pagenum-1;
+		$prevpage = $startpage > $pagenum ? $startpage-$pagenum : false;
+		$nextpage = $endpage < $totalpage ? $endpage+1 : false;
+		$prevlist = $p > 1 ? $p-1 : false;
+		$nextlist = $p < $endpage ? $p+1 : false;
+
+		for ($i=$startpage;$i<=$endpage;$i++) {
+			$page[] = $i;
+		}
+		
+		if (file_exists($this->modulePath.'/templet/mylist/'.$skin.'/style.css') == true) {
+			echo '<link rel="stylesheet" href="'.$this->moduleDir.'/templet/mylist/'.$skin.'/style.css" type="text/css" title="style" />'."\n";
+		}
+
+		$query = $this->GetQueryString(array('p'=>''));
+		$link = array(
+			'page'=>$this->baseURL.$query.(preg_match('/\?/',$query) == true ? '&amp;' : '?').'p=',
+			'sort'=>array(
+				'idx'=>$this->baseURL.$this->GetQueryString(array('p'=>'','sort'=>'idx')),
+				'last_ment'=>$this->baseURL.$this->GetQueryString(array('p'=>'','sort'=>'last_ment')),
+				'hit'=>$this->baseURL.$this->GetQueryString(array('p'=>'','sort'=>'last_ment')),
+				'vote'=>$this->baseURL.$this->GetQueryString(array('p'=>'','sort'=>'last_ment'))
+			)
+		);
+		
+		$searchFormStart = '<form name="ModuleBoardSearch" action="'.$this->baseURL.'" enctype="application/x-www-form-urlencoded">';
+		$searchFormEnd = '</form>';
+		
+		$this->mTemplet = new Templet($this->modulePath.'/templet/mylist/'.$skin.'/list.tpl');
+		$this->mTemplet->assign('skinDir',$this->moduleDir.'/templet/mylist/'.$skin);
+		$this->mTemplet->assign('data',$data);
+		$this->mTemplet->assign('page',$page);
+		$this->mTemplet->assign('pagenum',$pagenum);
+		$this->mTemplet->assign('prevpage',$prevpage);
+		$this->mTemplet->assign('nextpage',$nextpage);
+		$this->mTemplet->assign('prevlist',$prevlist);
+		$this->mTemplet->assign('nextlist',$nextlist);
+		$this->mTemplet->assign('totalpost',number_format($totalpost));
+		$this->mTemplet->assign('totalpage',number_format($totalpage));
+		$this->mTemplet->assign('searchFormStart',$searchFormStart);
+		$this->mTemplet->assign('searchFormEnd',$searchFormEnd);
+		$this->mTemplet->assign('keyword',GetString(urldecode($keyword),'inputbox'));
+		$this->mTemplet->assign('p',$p);
+		$this->mTemplet->assign('sort',$sort);
+		$this->mTemplet->assign('link',$link);
+		$this->mTemplet->PrintTemplet();
+		
+		$this->PrintFooter();
+	}
 
 	// 상황별 페이지 출력
 	function PrintRelease($find='') {
@@ -606,7 +722,7 @@ class ModuleRelease extends Module {
 		$orderer = $sort.','.$dir;
 		$limiter = ($p-1)*$listnum.','.$listnum;
 
-		$data = $this->mDB->DBfetchs($this->table['post'],array('idx','rid','category','mno','homepage','title','image','reg_date','price','hit','download','license','ment','last_ment','search','last_version','vote','voter','is_html_title','field1','field2','field3'),$find,$orderer,$limiter);
+		$data = $this->mDB->DBfetchs($this->table['post'],'*',$find,$orderer,$limiter);
 
 		$loopnum = $totalpost-($p-1)*$listnum;
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
@@ -614,7 +730,7 @@ class ModuleRelease extends Module {
 			$data[$i]['title'] = $this->GetReplaceKeyword($data[$i]['title']);
 			$data[$i]['is_read'] = $data[$i]['idx'] == Request('idx');
 			$data[$i]['loopnum'] = $loopnum--;
-			$data[$i]['postlink'] = $this->setup['use_mode'] == 'TRUE' ? $this->moduleDir.'/release.php?rid='.$data[$i]['rid'].'&amp;mode=view&amp;idx='.$data[$i]['idx'] : $this->baseURL.$this->GetQueryString(array('mode'=>'view','idx'=>$data[$i]['idx']));
+			$data[$i]['postlink'] = $this->baseURL.$this->GetQueryString(array('mode'=>'view','idx'=>$data[$i]['idx']));
 			$data[$i]['reg_date'] = strtotime(GetTime('c',$data[$i]['reg_date']));
 			$data[$i]['hit'] = number_format($data[$i]['hit']);
 			$data[$i]['vote'] = number_format($data[$i]['vote']);
@@ -624,21 +740,20 @@ class ModuleRelease extends Module {
 			$mData = $this->GetMemberInfo($data[$i]['mno']);
 			$data[$i]['name'] = $mData['name'];
 			$data[$i]['nickname'] = $mData['nickname'];
+			$data[$i]['member'] = $this->mMember->GetMemberInfo($data[$i]['mno']);
 
-			$data[$i]['is_new'] = $data[$i]['reg_date'] > GetGMT()-60*60*24;
 			$data[$i]['is_newment'] = $data[$i]['last_ment'] > GetGMT()-60*60*24;
 
 			$data[$i]['categoryIDX'] = $data[$i]['category'];
-			if ($this->setup['use_category'] == 'TRUE' && $data[$i]['category'] != '0') {
+			if ($this->setup['use_category'] != 'FALSE' && $data[$i]['category'] != '0') {
 				$data[$i]['category'] = $this->GetCategoryName($data[$i]['category']);
 			} else {
 				$data[$i]['category'] = '';
 			}
-
-			if ($this->setup['use_mode'] == 'TRUE') $data[$i]['category'] = $this->GetReleaseTitle($data[$i]['rid']);
 			
 			$version = $this->mDB->DBfetch($this->table['version'],'*',"where `repto`='{$data[$i]['idx']}'",'idx,desc','0,1');
 			$data[$i]['last_date'] = isset($version['reg_date']) == true ? strtotime(GetTime('c',$version['reg_date'])) : '';
+			$data[$i]['is_new'] = $data[$i]['last_date'] > GetGMT()-60*60*24;
 		}
 
 		$page = array();
@@ -673,14 +788,15 @@ class ModuleRelease extends Module {
 
 		$categoryName = '';
 		$categoryList = array();
-		if ($this->setup['use_category'] == 'TRUE') {
+		if ($this->setup['use_category'] != 'FALSE') {
 			$categoryList = $this->mDB->DBfetchs($this->table['category'],array('idx','category'),"where `rid`='{$this->rid}'",'sort,asc');
 			for ($i=0, $loop=sizeof($categoryList);$i<$loop;$i++) {
 				if ($categoryList[$i]['idx'] == $category) $categoryName = $categoryList[$i]['category'];
 			}
 		}
 		
-		$sort = $sort == 'loop' ? 'idx' : $sort;
+		$sort = Request('sort') ? Request('sort') : 'idx';
+		$dir = Request('dir') ? Request('dir') : 'desc';
 
 		$this->mTemplet = new Templet($this->skinPath.'/list.tpl');
 		$this->mTemplet->assign('data',$data);
@@ -695,7 +811,7 @@ class ModuleRelease extends Module {
 		$this->mTemplet->assign('searchFormStart',$searchFormStart);
 		$this->mTemplet->assign('searchFormEnd',$searchFormEnd);
 		$this->mTemplet->assign('key',$key);
-		$this->mTemplet->assign('keyword',$keyword);
+		$this->mTemplet->assign('keyword',GetString(urldecode($keyword),'inputbox'));
 		$this->mTemplet->assign('category',$category);
 		$this->mTemplet->assign('categoryName',$categoryName);
 		$this->mTemplet->assign('categoryList',$categoryList);
@@ -768,7 +884,7 @@ class ModuleRelease extends Module {
 		$data['reg_date'] = strtotime(GetTime('c',$data['reg_date']));
 		$data['payment'] = $this->CheckPayment($idx);
 
-		if ($this->setup['use_category'] == 'TRUE' && $data['category'] != '0') {
+		if ($this->setup['use_category'] != 'FALSE' && $data['category'] != '0') {
 			$data['category'] = $this->GetCategoryName($data['category']);
 		} else {
 			$data['category'] = '';
@@ -861,11 +977,11 @@ class ModuleRelease extends Module {
 			$data['last_modify'] = array('hit'=>0,'editor'=>'','date'=>'');
 		}
 
-		$data['title'] = $data['is_html_title'] == 'TRUE' ? $data['title'] : GetString($data['title'],'replace');
+		$data['title'] = GetString($data['title'],'replace');
 		$data['content'] = $this->GetContent($data['content']);
 		$data['reg_date'] = strtotime(GetTime('c',$data['reg_date']));
 		
-		if ($this->setup['use_category'] == 'TRUE' && $data['category'] != '0') {
+		if ($this->setup['use_category'] != 'FALSE' && $data['category'] != '0') {
 			$data['category'] = $this->GetCategoryName($data['category']);
 		} else {
 			$data['category'] = '';
@@ -903,32 +1019,18 @@ class ModuleRelease extends Module {
 
 	// 쓰기 출력
 	function PrintWrite() {
-		if ($this->setup['use_mode'] == 'TRUE') return $this->PrintError('현재 모드에서는 게시물을 작성하거나 수정할 수 없습니다.');
 		$idx = $this->idx;
 		$mode = Request('mode') == 'modify' && $idx != null ? 'modify' : 'post';
 
 		if ($mode == 'modify') {
 			$post = $this->mDB->DBfetch($this->table['post'],'*',"where `rid`='{$this->rid}' and `idx`='$idx'");
 
-			if ($this->GetPermission('modify') == false) {
-				if ($post['mno'] == '0') {
-					$password = Request('password');
-					if ($password == null) {
-						return $this->PrintInputPassword('게시물의 패스워드를 입력하여 주십시오.',$this->baseURL.$this->GetQueryString());
-					} else {
-						if (md5($password) != $post['password']) {
-							return $this->PrintInputPassword('패스워드가 일치하지 않습니다.<br />패스워드를 정확히 입력하여 주십시오.',$this->baseURL.$this->GetQueryString());
-						}
-					}
-				} elseif ($post['mno'] != $this->member['idx']) {
-					return $this->PrintError('글을 수정할 권한이 없습니다.');
-				}
+			if ($this->GetPermission('modify') == false && $post['mno'] != $this->member['idx']) {
+				return $this->PrintError('글을 수정할 권한이 없습니다.');
 			}
 			$post['title'] = GetString($post['title'],'inputbox');
 			$post['content'] = str_replace('{$moduleDir}',$this->moduleDir,$post['content']);
 			$post['content'] = str_replace('{$moduleHost}','http://'.$_SERVER['HTTP_HOST'],$post['content']);
-			$password = ArzzEncoder(Request('password'));
-			$image = $post['image'];
 
 			$extraValue = unserialize($post['extra_content']);
 			if (is_array($extraValue) == true) {
@@ -938,9 +1040,7 @@ class ModuleRelease extends Module {
 			}
 		} else {
 			if ($this->GetPermission('post') == false) return $this->PrintError('글을 작성할 수 있는 권한이 없습니다.');
-			$post = array('name'=>GetString(Request('iModuleReleaseName','cookie'),'ext'),'category'=>Request('category'),'title'=>'','content'=>'','email'=>GetString(Request('iModuleReleaseEmail','cookie'),'ext'),'homepage'=>GetString(Request('iModuleReleaseHomepage','cookie'),'ext'),'is_notice'=>'FALSE','is_html_title'=>'FALSE','is_secret'=>'FALSE','is_ment'=>'TRUE','is_msg'=>'TRUE');
-			$password = '';
-			$image = '';
+			$post = array('image'=>'','category'=>Request('category'),'title'=>'','content'=>'','homepage'=>GetString(Request('iModuleReleaseHomepage','cookie'),'ext'),'is_ment'=>'TRUE','is_msg'=>'TRUE');
 		}
 		$actionTarget = 'postFrame'.rand(100,999);
 		$formStart = '<form name="ModuleReleasePost" method="post" action="'.$this->moduleDir.'/exec/Release.do.php" target="'.$actionTarget.'" onsubmit="return CheckPost(this)" enctype="multipart/form-data">'."\n";
@@ -948,15 +1048,14 @@ class ModuleRelease extends Module {
 		$formStart.= '<input type="hidden" name="mode" value="'.$mode.'" />'."\n";
 		$formStart.= '<input type="hidden" name="rid" value="'.$this->rid.'" />'."\n";
 		$formStart.= '<input type="hidden" name="idx" value="'.$idx.'" />'."\n";
-		$formStart.= '<input type="hidden" name="image" value="'.$image.'" />'."\n";
-		$formStart.= '<script type="text/javascript">GetEmbed("ModuleReleaseAutoSaver","'.$this->moduleDir.'/flash/AutoSaver.swf?rnd='.time().'",1,1,"funcname=AutoSaveSendData&resultname=AutoSaveComplete");</script>'."\n";
+		$formStart.= '<input type="hidden" name="image" value="'.$post['image'].'" />'."\n";
 		$formEnd = '</form>'."\n".'<iframe name="'.$actionTarget.'" style="display:none;"></iframe>'."\n";
 
 		if ($mode == 'modify') $formEnd.= '<script type="text/javascript">AzUploaderComponent.load("repto='.$idx.'");</script>';
 
 		$categoryName = '';
 		$categoryList = array();
-		if ($this->setup['use_category'] == 'TRUE') {
+		if ($this->setup['use_category'] != 'FALSE') {
 			$cData = $this->mDB->DBfetchs($this->table['category'],array('idx','category','permission'),"where `rid`='{$this->rid}'",'sort,asc');
 			$categoryList = array();
 			for ($i=0, $loop=sizeof($cData);$i<$loop;$i++) {
@@ -986,6 +1085,7 @@ class ModuleRelease extends Module {
 		$post = $this->mDB->DBfetch($this->table['post'],'*',"where `rid`='{$this->rid}' and `idx`='$idx'");
 		
 		$mData = $this->GetMemberInfo($post['mno']);
+		$post['member'] = $this->mMember->GetMemberInfo($post['mno']);
 		$post['name'] = $mData['name'];
 		$post['nickname'] = $mData['nickname'];
 		$post['photo'] = $mData['photo'];
@@ -1209,7 +1309,7 @@ class ModuleRelease extends Module {
 			if ($data[$i]['is_secret'] == 'TRUE' && ($data[$i]['mno'] != 0 && $data[$i]['mno'] != $this->member['idx'] || $data[$i]['mno'] == '0') && $this->GetPermission('secret') == false) {
 				$data[$i]['content'] = $data[$i]['search'] = '이 글은 비밀글입니다. 권한이 없으므로 내용을 보실 수 없습니다.';
 			}
-			if ($this->setup['use_category'] == 'TRUE' && $data[$i]['category'] != '0') {
+			if ($this->setup['use_category'] != 'FALSE' && $data[$i]['category'] != '0') {
 				$data[$i]['category'] = $this->GetCategoryName($data[$i]['category']);
 			} else {
 				$data[$i]['category'] = '';
@@ -1287,7 +1387,7 @@ class ModuleRelease extends Module {
 				$data[$i]['image'] = $data[$i]['image'] != '0' ? $_ENV['userfileDir'].$this->thumbnail.'/'.$data[$i]['image'].'.thm' : '';
 				$data[$i]['reg_date'] = strtotime(GetTime('c',$data[$i]['reg_date']));
 
-				if ($this->setup['use_category'] == 'TRUE' && $data[$i]['category'] != '0') {
+				if ($this->setup['use_category'] != 'FALSE' && $data[$i]['category'] != '0') {
 					$data[$i]['category'] = $this->GetCategoryName($data[$i]['category']);
 				} else {
 					$data[$i]['category'] = '';
@@ -1388,15 +1488,12 @@ class ModuleRelease extends Module {
 	}
 
 	function GetPermission($geter) {
+		if ($this->mMember->IsLogged() == false && ($geter == 'post' || $geter == 'modify')) return false;
 		$permission = $this->setup['permission'] && is_array(unserialize($this->setup['permission'])) == true ? unserialize($this->setup['permission']) : array('list'=>true,'post'=>true,'ment'=>true,'select'=>false,'secret'=>false,'notice'=>false,'modify'=>false,'delete'=>false);
 		if ($this->member['type'] == 'ADMINISTRATOR') return true;
 		if (isset($permission[$geter]) == false || $permission[$geter] === '') return true;
 
 		return GetPermission($permission[$geter]);
-	}
-
-	function GetConfig($geter) {
-		return $this->setup[$geter];
 	}
 
 	function GetThumbnail($var) {
@@ -1443,111 +1540,6 @@ class ModuleRelease extends Module {
 
 	function GetTable() {
 		return $this->table;
-	}
-	
-	function InsertPostAPI($rid='',$post,$file,$isImage=true,$referer='') {
-		if (isset($post['title']) == true && isset($post['content']) == true && isset($post['name']) == true) {
-			$insert = array();
-			$insert['rid'] = $rid ? $rid : $this->rid;
-			$insert['category'] = isset($post['category']) == true ? $post['category'] : '0';
-			$insert['mno'] = isset($post['mno']) == true ? $post['mno'] : '0';
-			$insert['name'] = $post['name'];
-			$insert['email'] = isset($post['email']) == true ? $post['email'] : '';
-			$insert['homepage'] = isset($post['homepage']) == true ? $post['homepage'] : '0';
-			$insert['password'] = isset($post['password']) == true ? md5(strtolower($post['passord'])) : md5('0');
-			$insert['title'] = $post['title'];
-			$insert['email'] = isset($post['email']) == true ? $post['email'] : '';
-			if ($isImage == false) {
-				$insert['content'] = $this->SetContent($post['content']);
-				$insert['search'] = GetIndexingText($post['content']);
-			}
-			$insert['extra_content'] = isset($post['extra_content']) == true ? $post['extra_content'] : '';
-			$insert['field1'] = isset($post['field1']) == true ? $post['field1'] : '';
-			$insert['field2'] = isset($post['field2']) == true ? $post['field2'] : '';
-			$insert['field3'] = isset($post['field3']) == true ? $post['field3'] : '';
-			$insert['reg_date'] = isset($post['reg_date']) == true ? $post['reg_date'] : GetGMT();
-			$insert['ip'] = isset($post['ip']) == true ? $post['ip'] : $_SERVER['SERVER_ADDR'];
-			$insert['is_notice'] = isset($post['is_notice']) == true ? $post['is_notice'] : 'FALSE';
-			$insert['is_html_title'] = isset($post['is_html_title']) == true ? $post['is_html_title'] : 'FALSE';
-			$insert['is_secret'] = isset($post['is_secret']) == true ? $post['is_secret'] : 'FALSE';
-			$insert['is_ment'] = isset($post['is_ment']) == true ? $post['is_ment'] : 'TRUE';
-			$insert['is_trackback'] = isset($post['is_trackback']) == true ? $post['is_trackback'] : 'FALSE';
-			$insert['is_msg'] = isset($post['is_msg']) == true ? $post['is_msg'] : 'FALSE';
-			$insert['is_email'] = isset($post['is_email']) == true ? $post['is_email'] : 'FALSE';
-			$insert['is_hidename'] = isset($post['is_hidename']) == true ? $post['is_hidename'] : 'FALSE';
-			
-			$idx = $this->mDB->DBinsert($this->table['post'],$insert);
-			
-			$update = array();
-			$update['loop'] = $idx*-1;
-			
-			for ($i=0, $loop=sizeof($file);$i<$loop;$i++) {
-				if ($file[$i][0] == '') continue;
-				$type = 'POST';
-				$wysiwyg = 'content';
-				$filename = $file[$i][1];
-				$temppath = $file[$i][0];
-				$filesize = filesize($temppath);
-				$filetype = GetFileType($filename,$temppath);
-				$filepath = '/attach/'.date('Ym').'/'.md5_file($temppath).'.'.time().'.'.rand(1000,9999).'.'.GetFileExec($filename);
-	
-				if (CreateDirectory($_ENV['userfilePath'].$this->userfile.'/attach/'.date('Ym')) == true) {
-					if ($temppath) {
-						@copy($temppath,$_ENV['userfilePath'].$this->userfile.$filepath);
-						$fidx = $this->mDB->DBinsert($this->table['file'],array('type'=>$type,'repto'=>$idx,'filename'=>$filename,'filepath'=>$filepath,'filesize'=>$filesize,'filetype'=>$filetype,'wysiwyg'=>$wysiwyg,'reg_date'=>$insert['reg_date']));
-						
-						if ($filetype == 'IMG' && CreateDirectory($_ENV['userfilePath'].$this->thumbnail) == true) {
-							GetThumbnail($_ENV['userfilePath'].$this->userfile.$filepath,$_ENV['userfilePath'].$this->thumbnail.'/'.$fidx.'.thm',150,120,false);
-							$update['image'] = isset($update['image']) == false ? $fidx : $update['image'];
-						}
-						
-						@unlink($temppath);
-					}
-				}
-			}
-			
-			if ($isImage == true) {
-				$update['content'] = $post['content'];
-				$imageExec = array('','gif','jpg','png');
-				$mCrawler = new Crawler();
-				if (preg_match_all('/<img(.*?)src="(.*?)"(.*?)>/i',$update['content'],$match) == true) {
-					for ($i=0, $loop=sizeof($match[0]);$i<$loop;$i++) {
-						$temppath = $mCrawler->GetFile($match[2][$i],$referer);
-						if ($temppath) {
-							$check = getimagesize($temppath);
-							if (in_array($check[2],array('1','2','3')) == true) {
-								$type = 'POST';
-								$wysiwyg = 'content';
-								$filename = array_shift(explode('.',array_pop(explode('/',$match[2][$i])))).'.'.$imageExec[$check[2]];
-								$filesize = filesize($temppath);
-								$filetype = 'IMG';
-								$filepath = '/attach/'.date('Ym').'/'.md5_file($temppath).'.'.time().'.'.rand(1000,9999).'.'.GetFileExec($filename);
-								
-								if (CreateDirectory($_ENV['userfilePath'].$this->userfile.'/attach/'.date('Ym')) == true) {
-									@copy($temppath,$_ENV['userfilePath'].$this->userfile.$filepath);
-									$fidx = $this->mDB->DBinsert($this->table['file'],array('type'=>$type,'repto'=>$idx,'filename'=>$filename,'filepath'=>$filepath,'filesize'=>$filesize,'filetype'=>$filetype,'wysiwyg'=>$wysiwyg,'reg_date'=>$insert['reg_date']));
-									
-									if ($filetype == 'IMG' && CreateDirectory($_ENV['userfilePath'].$this->thumbnail) == true) {
-										GetThumbnail($_ENV['userfilePath'].$this->userfile.$filepath,$_ENV['userfilePath'].$this->thumbnail.'/'.$fidx.'.thm',150,120,false);
-										$update['image'] = isset($update['image']) == false ? $fidx : $update['image'];
-									}
-									
-									$update['content'] = str_replace($match[0][$i],'<img name="InsertFile" file="'.$fidx.'" src="/iModule/module/release/exec/ShowImage.do.php?idx='.$fidx.'">',$update['content']);
-								}
-							}
-							@unlink($temppath);
-						}
-					}
-				}
-				
-				$update['content'] = $this->SetContent($update['content']);
-				$update['search'] = GetIndexingText($update['content']);
-			}
-			
-			if (sizeof($update) > 0) {
-				$this->mDB->DBupdate($this->table['post'],$update,'',"where `idx`='$idx'");
-			}
-		}
 	}
 }
 ?>

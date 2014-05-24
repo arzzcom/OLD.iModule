@@ -1,169 +1,111 @@
 #AutoSaverAlertBox {position:absolute; font-family:NanumGothicWeb; font-size:12px; float:left; padding:8px; background:#C10000; color:#FFFF80; z-index:1000;}
 
-.ModuleRelease .keyword {background:#FFFFEA; color:#C60000;}
+.ModuleRelease .releaseTable {width:100%; table-layout:fixed; font-family:NanumGothicWeb; font-size:12px;}
+.ModuleRelease .releaseTable .sectionTitle {height:30px; font-family:NanumGothicWeb; font-size:16px; font-weight:bold;}
+.ModuleRelease .releaseTable .sectionBar {background:#a4b4cd; height:2px; overflow:hidden;}
+.ModuleRelease .releaseTable .sectionEnd {height:3px; background:#E5E5E5; overflow:hidden;}
+.ModuleRelease .releaseTable .sectionEnd DIV {height:1px; overflow:hidden; border-bottom:2px solid #f4f4f4;}
+.ModuleRelease .releaseTable .splitBar {background:#cfdbe7; height:1px; overflow:hidden;}
+.ModuleRelease .releaseTable .logoCell {font:0/0 arial; background:#f8f8f9;}
+.ModuleRelease .releaseTable .logoCell IMG {width:153px; height:153px; border:1px solid #cfdbe7; border-left:0px;}
+.ModuleRelease .releaseTable .headerCell {height:36px; padding:0px; font-weight:bold; background:#f8f8f9; color:#758191; text-align:center;}
+.ModuleRelease .releaseTable .headerCell A {color:#758191; text-decoration:none;}
+.ModuleRelease .releaseTable .headerCell A:HOVER {text-decoration:underline;}
+.ModuleRelease .releaseTable .noticeCell {background:#f4f4f4;}
+.ModuleRelease .releaseTable .numberCell {text-align:center; font-family:tahoma; font-size:10px;}
+.ModuleRelease .releaseTable .numberCell IMG {vertical-align:middle; margin-bottom:2px;}
+.ModuleRelease .releaseTable .titleCell {height:34px;}
+.ModuleRelease .releaseTable .titleCell DIV {padding:0px 8px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; height:14px;}
+.ModuleRelease .releaseTable .titleCell DIV A {text-decoration:none; color:#083772;}
+.ModuleRelease .releaseTable .titleCell DIV A:HOVER {text-decoration:underline;}
+.ModuleRelease .releaseTable .titleCell DIV IMG {vertical-align:middle;}
+.ModuleRelease .releaseTable .titleCell .ment {font-family:tahoma; font-size:10px; color:#FA6F46;}
+.ModuleRelease .releaseTable .nicknameCell {text-align:center;}
+.ModuleRelease .releaseTable .countCell {text-align:right; font-family:tahoma; font-size:10px; padding-right:5px;}
+.ModuleRelease .releaseTable .fileCell {height:16px; padding:8px;}
+.ModuleRelease .releaseTable .fileCell A {color:#083772; text-decoration:none;}
+.ModuleRelease .releaseTable .fileCell A:HOVER {font-weight:bold; color:#083772; text-decoration:underline;}
+.ModuleRelease .releaseTable .introCell {vertical-align:top;}
+.ModuleRelease .releaseTable .introCell DIV {padding:5px; font-size:11px; color:#666666; line-height:1.6; height:34px; overflow:hidden; text-overflow:ellipsis;}
+.ModuleRelease .releaseTable .bodyCell {padding:8px;}
+.ModuleRelease .releaseTable .bodyCell DIV {height:16px; line-height:16px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.ModuleRelease .releaseTable .bodyCell DIV IMG {vertical-align:middle;}
+.ModuleRelease .releaseTable .bodyCell DIV A {color:#083772; text-decoration:none;}
+.ModuleRelease .releaseTable .bodyCell DIV A:HOVER {font-weight:bold; color:#083772; text-decoration:underline;}
+.ModuleRelease .releaseTable .bodyCell INPUT {border:1px solid #CCCCCC; font-family:NanumGothicWeb; font-size:12px; padding:0px 2px 0px 2px; height:20px; line-height:18px;}
+.ModuleRelease .releaseTable .viewTitleCell {height:36px; padding:0px; font-weight:bold; background:#f8f8f9;}
+.ModuleRelease .releaseTable .viewTitleCell h4 {display:block; color:#222222; padding-left:8px; padding-right:8px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.ModuleRelease .releaseTable .mentCell {background:#f8f8f9; padding-left:5px; padding-right:5px;}
+.ModuleRelease .releaseTable .mentCell DIV {height:16px; line-height:16px;}
+.ModuleRelease .releaseTable .mentCell DIV A {color:#083772; text-decoration:none;}
+.ModuleRelease .releaseTable .mentCell DIV A:HOVER {font-weight:bold; color:#083772; text-decoration:underline;}
+.ModuleRelease .releaseTable .mentContentCell DIV.mentContent {padding:10px;}
+.ModuleRelease .releaseTable .sectionInfo {padding:10px; background:#f8f8f9; line-height:1.6; color:#758191;}
 
-.ModuleRelease .boxDefault {font-family:NanumGothicWeb; font-size:12px; border:1px solid #E1D0BB; background:#FFFFEA; padding:8px; line-height:1.6;}
-.ModuleRelease .boxGray {font-family:NanumGothicWeb; font-size:12px; border:1px solid #E5E5E5; background:#F4F4F4; padding:8px; margin:5px 0px 5px 0px; line-height:1.6;}
+.ModuleRelease .downloadButton {background:url(./images/btn_download.gif); padding:32px 0px 0px 52px; height:37px; font-family:tahoma; font-size:12px; line-height:1.6; cursor:pointer; margin:3px 0px 3px 0px;}
 
-/* List */
-.ModuleRelease .sortList {font-family:NanumGothicWeb; font-size:12px;}
-.ModuleRelease .sortList A {text-decoration:none; color:#000000;}
-.ModuleRelease .sortList A.on {text-decoration:underline; color:#82C118; font-weight:bold;}
-.ModuleRelease .listbox {margin:5px 0px 5px 0px; border:1px solid #e5e5e5; padding:10px; font-family:NanumGothicWeb; font-size:12px;}
-.ModuleRelease .listbox:hover {background:#F4F4F4;}
-.ModuleRelease .listbox .number {font-family:tahoma; font-size:11px;}
-.ModuleRelease .listbox A:link {color:#2F2F2F; text-decoration:none;}
-.ModuleRelease .listbox A:hover {color:#82C118; text-decoration:underline;}
-.ModuleRelease .listbox A:visited {color:#2F2F2F; text-decoration:none;}
-.ModuleRelease .listbox A:active {color:#2F2F2F; text-decoration:none;}
-.ModuleRelease .listbox .title {font-weight:bold; font-size:14px; height:28px;}
-.ModuleRelease .listbox .ment {font-family:tahoma; font-size:10px; color:#FA6F46;}
-.ModuleRelease .listbox .logo {width:120px; height:120px; border:1px solid #cccccc;}
-.ModuleRelease .listbox .detail {font-family:NanumGothicWeb; font-size:12px; color:#2F2F2F;}
-.ModuleRelease .listbox .detail DIV {margin:3px 0px 3px 0px;}
-.ModuleRelease .listbox .detail .dotted {height:1px; margin-top:2px; border-top:1px dashed #CCCCCC; overflow:hidden;}
-.ModuleRelease .listbox .detail .disable {color:#CCCCCC;}
-.ModuleRelease .listbox .intro DIV {padding-top:5px; font-size:11px; color:#666666; line-height:1.6; height:32px; overflow:hidden; text-overflow:ellipsis;}
-
-.ModuleRelease .pageinfo {text-align:center; font-family:verdana; color:#2F2F2F; font-size:10px;}
-.ModuleRelease .category {color:#666666;}
-
-.ModuleRelease .pagenav {width:100%; height:26px; text-align:center;}
-.ModuleRelease .pagenav STRONG {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb; color:#FA6F46; border:1px solid #E9E9E9;}
-.ModuleRelease .pagenav A:link {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
-.ModuleRelease .pagenav A:hover {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb; color:#6D6D6D; border:1px solid #E9E9E9; background:#F4F4F4; text-decoration:none;}
-.ModuleRelease .pagenav A:visited {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
-.ModuleRelease .pagenav A:active {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb; color:#6D6D6D; border:1px solid #E9E9E9; text-decoration:none;}
-.ModuleRelease .pagenav SPAN {display:inline-block; text-align:center; padding:3px 5px 3px 5px; margin:0px 0px 0px 3px; font-size:11px; font-family:NanumGothicWeb; color:#DDDDDD; border:1px solid #E9E9E9; text-decoration:none;}
-
-.ModuleRelease .searchbox {width:401px; padding:10px; margin:0 auto; border:1px dotted #CCCCCC;}
-.ModuleRelease .searchbox .checkboxon {font:0/0 arial; display:inline-block; width:15px; height:15px; background:url(./images/btn_checkbox.gif) no-repeat 0 -15px; cursor:pointer; overflow:hidden; margin-right:5px; vertical-align:middle;}
-.ModuleRelease .searchbox .checkboxoff {font:0/0 arial; display:inline-block; width:15px; height:15px; background:url(./images/btn_checkbox.gif) no-repeat 0 0; cursor:pointer; overflow:hidden; margin-right:5px; vertical-align:middle;}
-.ModuleRelease .searchbox .text {display:inline-block; height:15px; line-height:15px; font-family:NanumGothicWeb; font-size:12px; overflow:hidden; color:#4F4F4F; margin-right:10px;}
-.ModuleRelease .searchbox .searchinput {width:200px; height:22px; border:2px solid #51AF10; font:0/0 arial; position:relative; margin:0 auto;}
-.ModuleRelease .searchbox .searchinput .inputbox {width:170px; height:14px; border:1px solid #51AF10; padding:3px 0px 3px 3px; margin:0px;font-size:12px; font-weight:bold; font-family:NanumGothicWeb; float:left;}
-.ModuleRelease .searchbox .buttonbox {width:25px; height:22px; background-image:url(./images/btn_search.gif); background-repeat:repeat; float:right; border:0px; cursor:pointer; background-position:0px 0px;}
+.ModuleRelease .searchbox {width:300px; height:26px; border:2px solid #51AF10; font:0/0 arial; position:relative;}
+.ModuleRelease .searchbox DIV {display:inline-block; vertical-align:middle;}
+.ModuleRelease .searchbox DIV.key {font-size:12px; font-family:NanumGothicWeb; width:80px; height:24px; cursor:pointer; background:url(./images/search_arrow.png) no-repeat right top; line-height:24px; padding-left:8px; border:1px solid #51AF10; border-right:0px;}
+.ModuleRelease .searchbox .inputbox {width:182px; height:18px; border:1px solid #51AF10; border-left:0px; padding:3px 0px 3px 3px; margin:0px;font-size:12px; font-weight:bold; font-family:NanumGothicWeb;}
+.ModuleRelease .searchbox .buttonbox {width:25px; height:26px; background-image:url(./images/btn_search.gif); background-repeat:repeat; float:right; border:0px; cursor:pointer; background-position:0px 0px;}
 .ModuleRelease .searchbox .buttonbox:hover {background-position:0px 22px;}
-.ModuleRelease .searchbox .livelist {position:absolute; width:172px; top:22px; left:1px; z-index:100; border:1px solid #C8C8C8; border-top:0px; background:#FFFFFF; font-size:12px; font-family:NanumGothicWeb; color:#888888;}
-.ModuleRelease .searchbox .livelist DIV {padding:5px 3px 5px 3px; margin:2px; cursor:pointer;}
+.ModuleRelease .searchbox .keylist {position:absolute; top:25px; left:0px; z-index:10; width:87px; border:1px solid #c8c8c8; border-top:0px; background:#ffffff;}
+.ModuleRelease .searchbox .keylist DIV {font-family:NanumGothicWeb; margin:1px; display:block; font-size:12px; padding:5px 5px 5px 7px; cursor:pointer;}
+.ModuleRelease .searchbox .keylist DIV.hover {background:#e5e5e5;}
+
+.ModuleRelease .searchbox .livelist {position:absolute; width:185px; top:25px; left:88px; z-index:100; border:1px solid #C8C8C8; border-top:0px; background:#FFFFFF; font-size:12px; font-family:NanumGothicWeb; color:#888888;}
+.ModuleRelease .searchbox .livelist DIV {display:block; padding:5px 3px 5px 3px; margin:2px; cursor:pointer;}
 .ModuleRelease .searchbox .livelist DIV:hover {padding:5px 3px 5px 3px; margin:2px; background:#E5E5E5; cursor:pointer;}
 
-
-/* View */
-.ModuleRelease h4 {font-size:12px; padding-left:5px;}
-.ModuleRelease .viewbar {height:32px; background:url(./images/listbar_bg.gif); overflow:hidden;}
-.ModuleRelease .viewbar .left {background:url(./images/listbar_left.gif); overflow:hidden;}
-.ModuleRelease .viewbar .right {background:url(./images/listbar_right.gif); overflow:hidden;}
-.ModuleRelease .viewbar .title {font-family:NanumGothicWeb; font-size:12px; color:#2F2F2F; font-weight:bold; height:32px; overflow:hidden;}
-
-.ModuleRelease .postinfor {margin-top:10px; padding:10px; border:1px dotted #CCCCCC;}
-.ModuleRelease .postinfor .photo {width:60px; height:60px; border:2px solid #CCCCCC;}
-.ModuleRelease .postinfor .logo {width:100px; height:100px; border:1px solid #CCCCCC;}
-.ModuleRelease .postinfor .detail {font-family:NanumGothicWeb; font-size:12px; color:#2F2F2F;}
-.ModuleRelease .postinfor .detail DIV {margin:3px 0px 3px 0px;}
-.ModuleRelease .postinfor .detail .dotted {height:1px; margin-top:2px; border-top:1px dashed #CCCCCC; overflow:hidden;}
-.ModuleRelease .postinfor .detail .disable {color:#CCCCCC;}
+.ModuleRelease .deleteMent {border:1px solid #F4EE8A; background:#FDFBD0; color:#FB5312; font-family:NanumGothicWeb; font-size:12px; padding:5px; text-align:center; line-height:1.6;}
+.ModuleRelease .selectMent {background:#FFFFEC; border:1px solid #cccccc;}
+.ModuleRelease .mainMent {}
+.ModuleRelease .replyMent {border-left:1px dashed #cccccc;}
 
 .ModuleRelease UL.filelist {list-style-type:none; background:#F4F4F4; border:1px solid #E5E5E5; color:#4F4F4F;}
-.ModuleRelease UL.filelist LI {margin:5px; font-family:verdana, NanumGothicWeb; font-size:11px; background:url(./images/icon_file.gif) no-repeat 0 50%; padding-left:15px;}
+.ModuleRelease UL.filelist LI {margin:5px; font-family:verdana, NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; background:url(./images/icon_file.gif) no-repeat 0 50%; padding-left:15px; height:14px; line-height:14px;}
 .ModuleRelease .filelist A:link {text-decoration:none; color:#4F4F4F;}
 .ModuleRelease .filelist A:hover {text-decoration:underline; color:#2F2F2F;}
 .ModuleRelease .filelist A:visited {text-decoration:none; color:#4F4F4F;}
 .ModuleRelease .filelist A:active {text-decoration:none; color:#4F4F4F;}
 
-.ModuleRelease .download {width:100%; table-layout:fixed; font-family:NanumGothicWeb; font-size:12px;}
-.ModuleRelease .download .sectionTitle {height:30px; font-family:NanumGothicWeb; font-size:16px; font-weight:bold; letter-spacing:-1px;}
-.ModuleRelease .download .sectionBar {background:#a4b4cd; height:2px; overflow:hidden;}
-.ModuleRelease .download .sectionEnd {height:2px; background:#E5E5E5; overflow:hidden;}
-.ModuleRelease .download .header {height:36px; padding-left:10px; font-weight:bold; background:#f8f8f9; color:#758191;}
+.ModuleRelease .sPhoto {padding:3px; background:#f8f8f9; font:0/0 arial;}
+.ModuleRelease .sPhoto IMG {width:35px; height:35px; border:1px solid #a4b4cd;}
 
-.ModuleRelease .download .downloadButton {display:block; background:url(./images/btn_download.gif); padding:32px 0px 0px 52px; height:37px; font-family:tahoma; font-size:12px; line-height:1.6; cursor:pointer; color:black; text-decoration:none;}
+.ModuleRelease .photo {padding:8px; background:#f8f8f9; font:0/0 arial;}
+.ModuleRelease .photo IMG {width:90px; height:90px; border:2px solid #a4b4cd;}
 
-.ModuleRelease .downloadTitle {font-family:NanumGothicWeb; font-size:15px; margin:0px 0px 5px 0px;}
-.ModuleRelease .downloadHeader {border:1px solid #CCCCCC; height:30px; background:url(./images/download_bg.gif);}
-.ModuleRelease .downloadHeader TABLE {table-layout:fixed; width:100%;}
-.ModuleRelease .downloadHeader TABLE TR {height:30px;}
-.ModuleRelease .downloadHeader TABLE TR TD {font-family:NanumGothicWeb; font-size:12px; text-align:center; font-weight:bold; color:#777777;}
-.ModuleRelease .downloadList {border:1px solid #FFFFFF;}
-.ModuleRelease .downloadList TABLE {table-layout:fixed; width:100%;}
-.ModuleRelease .downloadList TABLE TR {height:28px; background:#FFFFFF;}
-.ModuleRelease .downloadList TABLE TR.on {height:28px; background:#EBEBEB;}
-.ModuleRelease .downloadList TD {font-family:verdana; font-size:11px; color:#777777;}
-.ModuleRelease .downloadList TD A {margin-left:5px; font-weight:bold; color:#083772; text-decoration:none;}
-.ModuleRelease .downloadList TD A:HOVER {font-weight:bold; color:#083772; text-decoration:underline;}
-.ModuleRelease .downloadList .title {font-family:tahoma, NanumGothicWeb; font-size:12px;}
-.ModuleRelease .downloadList .hash {font-family:tahoma; font-size:10px; text-align:center;}
-.ModuleRelease .downloadList .date {font-family:tahoma; font-size:11px; text-align:right;}
-.ModuleRelease .downloadList .bgGray {background:#F4F4F4;}
-.ModuleRelease .downloadList .historyBox {padding:8px; background:#f8f8f8; line-height:1.6; border:1px solid #e5e5e5;}
-.ModuleRelease .downloadList .historyBox IMG {vertical-align:middle;}
+.ModuleRelease .email {background:url(./images/icon_email.png) no-repeat 0 50%; font-family:tahoma; font-size:10px; padding-left:20px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; font-weight:bold;}
+.ModuleRelease .homepage {background:url(./images/icon_homepage.png) no-repeat 0 50%; font-family:tahoma; font-size:10px; padding-left:20px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; font-weight:bold;}
+.ModuleRelease .disabled {opacity:0.5;}
 
-.ModuleRelease .mentbar {height:38px; background:url(./images/mentbar_bg.gif);}
-.ModuleRelease .mentbar .reply {background:#FFFFFF url(./images/icon_ment_reply.gif) no-repeat 0px 5px;}
-.ModuleRelease .mentbar .left {background:url(./images/mentbar_left.gif) no-repeat;}
-.ModuleRelease .mentbar .photo {vertical-align:middle; font:0/0 arial;}
-.ModuleRelease .mentbar .photo IMG {width:30px; height:30px; border:1px solid #CCCCCC;}
-.ModuleRelease .mentbar .right {background:url(./images/mentbar_right.gif);}
-.ModuleRelease .mentbar .name {font-family:NanumGothicWeb; font-size:12px; color:#2F2F2F;}
-.ModuleRelease .mentbar .subname {padding-left:15px; background:url(./images/icon_ment_subname.gif) no-repeat 3px 2px; margin-top:2px; font-family:verdana; font-size:10px; color:#797979;}
-.ModuleRelease .mentbar .subname A {font-family:verdana; font-size:10px; text-decoration:none; color:#4280C3;}
-.ModuleRelease .mentbar .subname A:HOVER {text-decoration:underline;}
-.ModuleRelease .mentbar .disable {color:#CCCCCC; font-family:verdana; font-size:10px;}
-.ModuleRelease .mentbar .infor {font-family:verdana; font-size:10px; color:#797979; text-align:right;}
-.ModuleRelease .mentbar .infor .date {margin-bottom:3px; font-family:verdana; font-size:10px;}
-.ModuleRelease .mentbar .bar {color:#D9C6CF;}
-.ModuleRelease .mentbar .button {font-weight:bold; cursor:pointer; font-family:verdana; font-size:10px;}
-.ModuleRelease .mentbar .button A {color:#797979; text-decoration:none; font-weight:bold; cursor:pointer; font-family:verdana; font-size:10px;}
-.ModuleRelease .mentthin {height:5px; overflow:hidden; background:url(./images/mentthin_bg.gif);}
-.ModuleRelease .mentthin .left {background:url(./images/mentthin_left.gif);}
-.ModuleRelease .mentthin .right {background:url(./images/mentthin_right.gif);}
-.ModuleRelease .mentbody {margin:5px 0px 10px 0px;}
-.ModuleRelease .mentdelete {border:1px solid #F4EE8A; background:#FDFBD0; color:#FB5312; font-family:NanumGothicWeb; font-size:11px; padding:5px; text-align:center; line-height:1.6;}
+.ModuleRelease .iconIMG {background:url(./images/icon_image.png) no-repeat 5px 50%; padding-left:25px !important;}
+.ModuleRelease .iconSND {background:url(./images/icon_sound.png) no-repeat 5px 50%; padding-left:25px !important;}
+.ModuleRelease .iconMOV {background:url(./images/icon_movie.png) no-repeat 5px 50%; padding-left:25px !important;}
+.ModuleRelease .iconTXT {background:url(./images/icon_text.png) no-repeat 5px 50%; padding-left:25px !important;}
+.ModuleRelease .iconETC {background:url(./images/icon_text.png) no-repeat 5px 50%; padding-left:25px !important;}
 
-.ModuleRelease .selectbar {height:38px; overflow:hidden; background:url(./images/selectbar_bg.gif);}
-.ModuleRelease .selectbar .reply {background:#FFFFFF url(./images/icon_ment_reply.gif) no-repeat 0px 5px;}
-.ModuleRelease .selectbar .left {background:url(./images/selectbar_left.gif) no-repeat;}
-.ModuleRelease .selectbar .photo IMG {width:30px; height:30px; border:1px solid #CCCCCC;}
-.ModuleRelease .selectbar .right {background:url(./images/selectbar_right.gif);}
-.ModuleRelease .selectbar .name {font-family:NanumGothicWeb; font-size:12px; color:#2F2F2F;}
-.ModuleRelease .selectbar .subname {padding-left:15px; background:url(./images/icon_ment_subname.gif) no-repeat 3px 2px; margin-top:2px; font-family:verdana; font-size:10px; color:#797979;}
-.ModuleRelease .selectbar .subname A {font-family:verdana; font-size:10px; text-decoration:none; color:#4280C3;}
-.ModuleRelease .selectbar .subname A:HOVER {text-decoration:underline;}
-.ModuleRelease .selectbar .disable {color:#CCCCCC; font-family:verdana; font-size:10px;}
-.ModuleRelease .selectbar .infor {font-family:NanumGothicWeb; font-size:11px; color:#269134; text-align:right;}
-.ModuleRelease .selectbar .infor .date {margin-bottom:3px; font-family:verdana; font-size:10px; color:#797979;}
-.ModuleRelease .selectbar .bar {color:#D9C6CF;}
-.ModuleRelease .selectbar .button {font-weight:bold; cursor:pointer; font-family:verdana; font-size:10px;}
-.ModuleRelease .selectbar .button A {color:#797979; text-decoration:none; font-weight:bold; cursor:pointer; font-family:verdana; font-size:10px;}
-.ModuleRelease .selectthin {height:5px; overflow:hidden; background:url(./images/mentthin_bg.gif);}
-.ModuleRelease .selectbody {padding:5px 5px 10px 5px; background:#FFFFEC; border:1px solid #CCCCCC; border-top:0px;}
+.ModuleRelease .exp {table-layout:fixed; width:53px; height:11px;}
+.ModuleRelease .exp .start {background:url(./images/expbar_start.gif) repeat-x 50%;}
+.ModuleRelease .exp .on {background:url(./images/expbar_exp.gif) repeat-x 50%;}
+.ModuleRelease .exp .off {background:url(./images/expbar_remain.gif) repeat-x 50%;}
+.ModuleRelease .exp .end {background:url(./images/expbar_end.gif) repeat-x 50%;}
 
-.ModuleRelease .mentthin {height:5px; overflow:hidden; background:url(./images/mentthin_bg.gif);}
-.ModuleRelease .mentthin .left {background:url(./images/mentthin_left.gif);}
-.ModuleRelease .mentthin .right {background:url(./images/mentthin_right.gif);}
-.ModuleRelease .infor {color:#82C118; font-family:NanumGothicWeb; font-size:11px;}
-.ModuleRelease .pointText {color:#82C118; font-weight:bold;}
-.ModuleRelease .inputbox {border:1px solid #D6D6D6; height:14px; padding:3px; background:url(./images/inputbox_bg.gif) repeat-x top; font-family:NanumGothicWeb; font-size:12px; color:#4F4F4F; margin:5px 0px 5px 10px;}
-.ModuleRelease .inputbox-on {border:1px solid #A2BAEA;height:14px; padding:3px;  background:url(./images/inputbox_bg_on.gif) repeat-x top; font-family:NanumGothicWeb; font-size:12px; color:#4F4F4F; margin:5px 0px 5px 10px;}
 .ModuleRelease .optionarea {border:1px dotted #CCCCCC; background:#F4F4F4; padding:3px; margin:5px 0px 5px 0px;}
 .ModuleRelease .checkbox {clear:both; height:14px; padding:3px; margin:5px 0px 5px 0px;}
 .ModuleRelease .checkbox INPUT {width:13px; height:13px; margin:0px 8px 0px 0px; float:left;}
 .ModuleRelease .checkbox LABEL {float:left; height:13px; cursor:pointer; font-family:NanumGothicWeb; font-size:12px; display:block; padding:0px;}
-.ModuleRelease .selecttext {float:right; background:#FFFFEC url(./images/icon_tick.png) no-repeat 5px 2px; border:1px solid #CCCCCC; padding:5px 5px 5px 25px; cursor:pointer; font-family:NanumGothicWeb; font-size:12px;}
 
-
-.ModuleRelease .lastModify {margin:5px 0px 5px 0px; font-family:verdana; font-size:10px; text-align:right;}
-.ModuleRelease .dashed {height:1px; overflow:hidden; background:url(./images/dashed.gif);}
+.ModuleRelease .antispam {font-family:NanumGothicWeb; font-size:11px; line-height:1.6;}
+.ModuleRelease .antispam INPUT {border:1px solid #D6D6D6; height:14px; padding:3px; background:url(./images/inputbox_bg.gif) repeat-x top; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; color:#4F4F4F;}
 
 /* UserMenu */
-.ModuleRelease .UserMenu {background:#F0F0F0; border:1px solid #718BB7; width:120px; display:inline; margin:0px !important; padding:0px !important;}
-.ModuleRelease .UserMenuItem {background-position:2px 2px; background-repeat:no-repeat; padding:0px 0px 0px 24px !important; height:24px; text-align:left; margin:1px !important; border:1px solid transparent; font-family:NanumGothicWeb; font-size:12px; line-height:24px; font-weight:normal;}
+.ModuleRelease .UserMenu {background:#F0F0F0; border:1px solid #718BB7; width:120px; height:auto !important; display:inline; margin:0px !important; padding:0px !important;}
+.ModuleRelease .UserMenuItem {background-position:2px 2px; background-repeat:no-repeat; padding:0px 0px 0px 24px !important; height:24px !important; text-align:left; margin:1px !important; border:1px solid transparent; font-family:NanumGothicWeb; font-size:12px; line-height:24px !important; font-weight:normal;}
 .ModuleRelease .UserMenuItem:HOVER {border:1px solid #A3BAE9; background-color:#DFE8F6; color:#3A428B;}
 
 .ModuleRelease .PointGift {background-image:url(./images/icon_gift.png);}
 .ModuleRelease .SendMessage {background-image:url(./images/icon_note_edit.png);}
 .ModuleRelease .SendEmail {background-image:url(./images/icon_email_open.png);}
 .ModuleRelease .GoHomepage {background-image:url(./images/icon_homepage.png);}
-
-.ModuleRelease .antispam {font-family:NanumGothicWeb; font-size:11px; line-height:1.6;}
-.ModuleRelease .antispam INPUT {border:1px solid #D6D6D6; height:14px; padding:3px; background:url(./images/inputbox_bg.gif) repeat-x top; font-family:NanumGothicWeb; font-size:12px; color:#4F4F4F;}

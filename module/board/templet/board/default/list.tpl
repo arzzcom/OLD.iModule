@@ -156,7 +156,7 @@
 <div class="height10"></div>
 
 <table cellpadding="0" cellspacing="0" class="layoutfixed">
-<col width="100%" /><col width="100" />
+<col width="100%" /><col width="200" />
 <tr>
 	<td>
 		{$searchFormStart}
