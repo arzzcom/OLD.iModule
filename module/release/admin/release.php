@@ -14,7 +14,7 @@ var ContentArea = function(viewport) {
 		sorters:[{property:"rid",direction:"ASC"}],
 		autoLoad:true,
 		pageSize:50,
-		fields:["rid","title","width","skin","option",{name:"postnum",type:"int"},"tax_point","last_date"]
+		fields:["rid","title","width","skin","option",{name:"post",type:"int"},"tax_point","post_time"]
 	});
 
 	function ItemContextMenu(grid,record,row,index,e) {
@@ -1217,13 +1217,13 @@ var ContentArea = function(viewport) {
 						}
 					},{
 						header:"게시물수",
-						dataIndex:"postnum",
+						dataIndex:"post",
 						sortable:false,
 						width:80,
 						renderer:GridNumberFormat
 					},{
 						header:"최종등록일",
-						dataIndex:"last_date",
+						dataIndex:"post_time",
 						sortable:false,
 						width:120,
 						renderer:function(value) {

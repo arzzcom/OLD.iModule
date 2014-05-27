@@ -34,6 +34,8 @@
 			<field name="bid" type="varchar" length="20">게시판아이디</field>
 			<field name="category" type="varchar" length="100">카테고리명</field>
 			<field name="permission" type="varchar" length="255">글작성권한</field>
+			<field name="post" type="int" length="11">게시물수</field>
+			<field name="post_time" type="int" length="11">마지막 게시물 시각</field>
 			<field name="sort" type="int" length="11">정렬순서</field>
 			<index name="idx" type="auto_increment" />
 			<index name="bid" type="index" />
@@ -150,9 +152,13 @@
 			<index name="bid" type="index" />
 			<index name="category" type="index" />
 			<index name="mno" type="index" />
-			<index name="is_delete" type="index" />
+			<index name="name" type="index" />
+			<index name="field1" type="index" />
+			<index name="field2" type="index" />
+			<index name="field3" type="index" />
+			<index name="bid,is_notice" type="index" />
+			<index name="bid,is_select" type="index" />
 			<index name="title,search" type="fulltext" />
-			<index name="name" type="fulltext" />
 		</table>
 		
 		<table name="{code}_board_table">
@@ -180,6 +186,8 @@
 			<field name="post_point" type="int" length="11">글작성시포인트</field>
 			<field name="ment_point" type="int" length="11">댓글작성포인트</field>
 			<field name="select_point" type="int" length="11">댓글채택시포인트</field>
+			<field name="post" type="int" length="11">게시물수</field>
+			<field name="post_time" type="int" length="11">마지막 게시물 시각</field>
 			<field name="permission" type="text">권한설정</field>
 			<index name="bid" type="primary" />
 		</table>

@@ -313,6 +313,8 @@ if (isIncludeBoard === undefined) {
 					$(this).css("width",$(this).attr("maxWidth"));
 				}
 			});
+			
+			$($(contentSection[i]).find("a")).attr("target","_blank");
 		}
 		
 		for (var i=0, loop=contentSectionMobile.length;i<loop;i++) {
@@ -328,6 +330,8 @@ if (isIncludeBoard === undefined) {
 					});
 				}
 			});
+			
+			$($(contentSectionMobile[i]).find("a")).attr("target","_blank");
 		}
 	});
 }

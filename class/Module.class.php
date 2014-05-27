@@ -314,25 +314,40 @@ class Module {
 						}
 						
 						if ($this->mDB->DBcreate($tablename.'(NEW)',$fields,$indexes) == true) {
-							$data = $this->mDB->DBfetchs($tablename,'*');
-							for ($j=0, $loopj=sizeof($data);$j<$loopj;$j++) {
-								$insert = array();
-								for ($k=0, $loopk=sizeof($fields);$k<$loopk;$k++) {
-									if (isset($data[$j][$fields[$k]['name']]) == true) $insert[$fields[$k]['name']] = $data[$j][$fields[$k]['name']];
+							$sortField = '';
+							for ($j=0, $loopj=sizeof($indexes);$j<$loopj;$j++) {
+								if ($indexes[$j]['type'] == 'auto_increment' || $indexes[$j]['type'] == 'primary') {
+									$sortField = $indexes[$j]['name'];
+									break;
+								}
+							}
+							
+							$startPoint = 0;
+							while (true) {
+								$total = $this->mDB->DBcount($tablename);
+								$data = $this->mDB->DBfetchs($tablename,'*','',$sortField.',asc',$startPoint.',1000');
+								if (sizeof($data) == 0) break;
+								for ($j=0, $loopj=sizeof($data);$j<$loopj;$j++) {
+									$insert = array();
+									for ($k=0, $loopk=sizeof($fields);$k<$loopk;$k++) {
+										if (isset($data[$j][$fields[$k]['name']]) == true) $insert[$fields[$k]['name']] = $data[$j][$fields[$k]['name']];
+									}
+									
+									$this->mDB->DBinsert($tablename.'(NEW)',$insert);
+									
+									if ($j%100 == 0) {
+										if ($progress == true) echo '<script type="text/javascript"> try { top.ModuleProgressControl("'.$tablename.'",'.($i+1).','.$loop.','.($startPoint+$j).','.$total.'); } catch(e) {} </script>';
+										$mFlush->flush();
+									}
 								}
 								
-								$this->mDB->DBinsert($tablename.'(NEW)',$insert);
-								
-								if ($j%50 == 0) {
-									if ($progress == true) echo '<script type="text/javascript"> try { top.ModuleProgressControl("'.$tablename.'",'.($i+1).','.$loop.','.$j.','.$loopj.'); } catch(e) {} </script>';
-									$mFlush->flush();
-								}
+								$startPoint = $startPoint + 1000;
 							}
 							
 							$this->mDB->DBrename($tablename,$tablename.'(BK'.date('YmdHis').')');
 							$this->mDB->DBrename($tablename.'(NEW)',$tablename);
 							
-							if ($progress == true) echo '<script type="text/javascript"> try { top.ModuleProgressControl("'.$tablename.'",'.($i+1).','.$loop.','.$loopj.','.$loopj.'); } catch(e) {} </script>';
+							if ($progress == true) echo '<script type="text/javascript"> try { top.ModuleProgressControl("'.$tablename.'",'.($i+1).','.$loop.','.$total.','.$total.'); } catch(e) {} </script>';
 							$mFlush->flush();
 						}
 					} else {

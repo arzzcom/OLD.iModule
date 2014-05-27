@@ -1,13 +1,16 @@
 <?php
 $updateVersion = '2.0.0';
+$release = $this->mDB->DBfetchs($_ENV['code'].'_release_table','*');
+for ($i=0, $loop=sizeof($release);$i<$loop;$i++) {
+	$post = $this->mDB->DBcount($_ENV['code'].'_release_post_table',"where `rid`='{$release[$i]['rid']}' and `is_delete`='FALSE'");
+	$lastPost = $this->mDB->DBfetch($_ENV['code'].'_release_post_table',array('reg_date'),"where `rid`='{$release[$i]['rid']}' and `is_delete`='FALSE'",'loop,asc','0,1');
+	$this->mDB->DBupdate($_ENV['code'].'_release_table',array('post'=>$post,'post_time'=>$lastPost['reg_date']),'',"where `rid`='{$release[$i]['rid']}'");
+}
 
-if ($this->GetVersionToNumber($this->GetDBVersion()) <= $this->GetVersionToNumber('2.0.0')) {
-	while(true) {
-		$data = $this->mDB->DBfetchs($_ENV['code'].'_board_file_table',array('idx','filepath'),"where `filepath` like '/userfile/board%'",'','0,1000');
-		if (sizeof($data) == 0) break;
-		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
-			$this->mDB->DBupdate($_ENV['code'].'_board_file_table',array('filepath'=>preg_replace('/^\/userfile\/board/','/attach',$data[$i]['filepath'])),'',"where `idx`='{$data[$i]['idx']}'");
-		}
-	}
+$category = $this->mDB->DBfetchs($_ENV['code'].'_release_category_table','*');
+for ($i=0, $loop=sizeof($category);$i<$loop;$i++) {
+	$post = $this->mDB->DBcount($_ENV['code'].'_release_post_table',"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
+	$lastPost = $this->mDB->DBfetch($_ENV['code'].'_release_post_table',array('reg_date'),"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'",'loop,asc','0,1');
+	$this->mDB->DBupdate($_ENV['code'].'_release_category_table',array('post'=>$post,'post_time'=>$lastPost['reg_date']),'',"where `idx`='{$category[$i]['idx']}'");
 }
 ?>

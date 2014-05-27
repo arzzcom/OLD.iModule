@@ -92,20 +92,23 @@ class ModuleDatabase extends Module {
 	}
 	
 	function DBupdate($table,$insertValue,$functionValue='',$find='') {
-		return $this->mDB->DBupdate($table,$insertValue,$functionValue,$find);
+		$table = $this->GetTable(0,$table);
+		return $this->mDB->DBupdate($table,$insertValue,$functionValue,$find,$table['database']);
 	}
 
-	function DBcount($table,$find='') {
+	function DBcount($table,$find='',$field='') {
 		$table = $this->GetTable(0,$table);
-		return $this->mDB->DBcount($table['name'],$find,$table['database']);
+		return $this->mDB->DBcount($table['name'],$find,$field,$table['database']);
 	}
 	
 	function DBinsert($table,$insertValue,$functionValue='') {
-		return $this->mDB->DBinsert($table,$insertValue,$functionValue);
+		$table = $this->GetTable(0,$table);
+		return $this->mDB->DBinsert($table,$insertValue,$functionValue,$table['database']);
 	}
 	
 	function DBdelete($table,$find='') {
-		return $this->mDB->DBdelete($table,$find);
+		$table = $this->GetTable(0,$table);
+		return $this->mDB->DBdelete($table,$find,$table['database']);
 	}
 }
 ?>

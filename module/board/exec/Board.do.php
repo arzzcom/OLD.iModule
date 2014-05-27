@@ -8,7 +8,6 @@ $mMember = &Member::instance();
 $member = $mMember->GetMemberInfo();
 $mBoard = new ModuleBoard($bid);
 
-
 $checkIP = $mBoard->mIPBan->CheckIP();
 if ($checkIP['result'] == true) {
 	Alertbox('해당 아이피 '.$checkIP['ip'].'는 차단된 아이피입니다.\n\n차단일시 : '.GetTime('Y년 m월 d일').'\n차단사유 : '.$checkIP['memo']);
@@ -28,7 +27,7 @@ if ($action == 'post') {
 	$insert = array();
 	$insert['bid'] = Request('bid');
 	$insert['image'] = Request('image');
-	$insert['category'] = Request('category');
+	$insert['category'] = Request('category') ? Request('category') : 0;
 	$insert['title'] = Request('title') ? Request('title') : Alertbox('제목을 입력하여 주십시오.');
 	$insert['content'] = Request('content') ? $mBoard->SetContent(Request('content')) : Alertbox('내용을 입력하여 주십시오.');
 	$insert['search'] = GetIndexingText(Request('content'));
@@ -45,7 +44,7 @@ if ($action == 'post') {
 	
 	if (Request('is_mobile') == 'TRUE') $insert['is_mobile'] = 'TRUE';
 
-	if ($mBoard->setup['use_category'] == 'TRUE' && !Request('category')) Alertbox('이 게시판은 카테고리를 반드시 선택하도록 설정되어 있습니다.');
+	if ($mBoard->setup['use_category'] == 'TRUE' && $insert['category'] == 0) Alertbox('이 게시판은 카테고리를 반드시 선택하도록 설정되어 있습니다.');
 
 	$extraValue = array();
 	foreach ($_REQUEST as $extra=>$value) {
@@ -73,6 +72,10 @@ if ($action == 'post') {
 		$insert['reg_date'] = GetGMT();
 		$idx = $mDB->DBinsert($mBoard->table['post'],$insert);
 		$mDB->DBupdate($mBoard->table['post'],array('loop'=>$idx*-1),'',"where `idx`='$idx'");
+		$mDB->DBupdate($mBoard->table['setup'],array('post_time'=>GetGMT()),array('post'=>'`post`+1'),"where `bid`='{$insert['bid']}'");
+		if ($insert['category'] != 0) {
+			$mDB->DBupdate($mBoard->table['category'],array('post_time'=>GetGMT()),array('post'=>'`post`+1'),"where `idx`='{$insert['category']}'");
+		}
 
 		$resultMsg = '게시물을 성공적으로 등록하였습니다.';
 
@@ -80,7 +83,7 @@ if ($action == 'post') {
 		$autosaveFind.= " and `ip`='".$_SERVER['REMOTE_ADDR']."'";
 	} else {
 		$idx = Request('idx');
-		$post = $mDB->DBfetch($mBoard->table['post'],array('mno','password','last_modify_hit'),"where `idx`='$idx'");
+		$post = $mDB->DBfetch($mBoard->table['post'],array('mno','category','password','last_modify_hit'),"where `idx`='$idx'");
 
 		if ($mBoard->GetPermission('modify') == false) {
 			if ($post['mno'] == '0') {
@@ -113,6 +116,10 @@ if ($action == 'post') {
 		$insert['last_modify_hit'] = $post['last_modify_hit']+1;
 
 		$mDB->DBupdate($mBoard->table['post'],$insert,'',"where `idx`='$idx'");
+		if ($post['category'] != $insert['category']) {
+			if ($post['category'] != 0) $mDB->DBupdate($mBoard->table['category'],'',array('post'=>'`post`-1'),"where `idx`='{$post['category']}'");
+			if ($insert['category'] != 0) $mDB->DBupdate($mBoard->table['category'],array('post_time'=>GetGMT()),array('post'=>'`post`+1'),"where `idx`='{$insert['category']}'");
+		}
 
 		$resultMsg = '게시물을 성공적으로 수정하였습니다.';
 
@@ -305,7 +312,7 @@ if ($action == 'delete') {
 	$mode = Request('mode');
 
 	if ($mode == 'post') {
-		$data = $mDB->DBfetch($mBoard->table['post'],array('idx','bid','mno','password','title'),"where `idx`='$idx'");
+		$data = $mDB->DBfetch($mBoard->table['post'],array('idx','bid','category','mno','password','title'),"where `idx`='$idx'");
 		$mBoard = new ModuleBoard($data['bid']);
 
 		if ($mBoard->GetPermission('delete') == false) {
@@ -317,6 +324,8 @@ if ($action == 'delete') {
 		}
 
 		$mDB->DBupdate($mBoard->table['post'],array('is_delete'=>'TRUE'),'',"where `idx`='$idx'");
+		$mDB->DBupdate($mBoard->table['setup'],'',array('post'=>'`post`-1'),"where `bid`='{$data['bid']}'");
+		if ($data['category'] != 0) $mDB->DBupdate($mBoard->table['category'],'',array('post'=>'`post`-1'),"where `idx`='{$data['category']}'");
 		$path = explode('?',$_SERVER['HTTP_REFERER']);
 		$url = $path[0];
 		$query = $mBoard->GetQueryString(array('mode'=>'list','idx'=>''),$path[1],false);

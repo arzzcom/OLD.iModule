@@ -149,6 +149,7 @@ if ($action == 'board') {
 	}
 
 	if ($do == 'delete') {
+		$mFlush = new Flush();
 		$bid = explode(',',Request('bid'));
 
 		for ($i=0, $loop=sizeof($bid);$i<$loop;$i++) {
@@ -275,6 +276,12 @@ if ($action == 'category') {
 			$return['errors'] = $errors;
 		}
 		
+		$category = $this->mDB->DBfetchs($mBoard->table['category'],'*');
+		for ($i=0, $loop=sizeof($category);$i<$loop;$i++) {
+			$post = $this->mDB->DBcount($mBoard->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
+			$this->mDB->DBupdate($mBoard->table['post'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
+		}
+		
 		exit(json_encode($return));
 	}
 }
@@ -297,6 +304,18 @@ if ($action == 'post') {
 			SaveAdminLog('board','['.$data[$i]['title'].'] 게시물을 삭제하였습니다.','/module/board/board.php?bid='.$data[$i]['bid'].'&mode=view&idx='.$data[$i]['idx']);
 		}
 		
+		$board = $this->mDB->DBfetchs($mBoard->table['post'],'*');
+		for ($i=0, $loop=sizeof($board);$i<$loop;$i++) {
+			$post = $this->mDB->DBcount($mBoard->table['post'],"where `bid`='{$board[$i]['bid']}' and `is_delete`='FALSE'");
+			$this->mDB->DBupdate($mBoard->table['post'],array('post'=>$post),'',"where `bid`='{$board[$i]['bid']}'");
+		}
+		
+		$category = $this->mDB->DBfetchs($mBoard->table['category'],'*');
+		for ($i=0, $loop=sizeof($category);$i<$loop;$i++) {
+			$post = $this->mDB->DBcount($mBoard->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
+			$this->mDB->DBupdate($mBoard->table['post'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
+		}
+		
 		$return['success'] = true;
 		exit(json_encode($return));
 	}
@@ -313,6 +332,18 @@ if ($action == 'post') {
 		}
 
 		$mDB->DBupdate($mBoard->table['post'],array('is_delete'=>'TRUE'),'',"where `idx` IN ($idx)");
+		
+		$board = $this->mDB->DBfetchs($mBoard->table['post'],'*');
+		for ($i=0, $loop=sizeof($board);$i<$loop;$i++) {
+			$post = $this->mDB->DBcount($mBoard->table['post'],"where `bid`='{$board[$i]['bid']}' and `is_delete`='FALSE'");
+			$this->mDB->DBupdate($mBoard->table['post'],array('post'=>$post),'',"where `bid`='{$board[$i]['bid']}'");
+		}
+		
+		$category = $this->mDB->DBfetchs($mBoard->table['category'],'*');
+		for ($i=0, $loop=sizeof($category);$i<$loop;$i++) {
+			$post = $this->mDB->DBcount($mBoard->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
+			$this->mDB->DBupdate($mBoard->table['post'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
+		}
 		
 		$return['success'] = true;
 		exit(json_encode($return));
@@ -335,6 +366,18 @@ if ($action == 'post') {
 
 			$mDB->DBupdate($mBoard->table['post'],array('bid'=>$bid,'category'=>$category),'',"where `idx`={$data[$i]['idx']}");
 			$mDB->DBupdate($mBoard->table['ment'],array('bid'=>$bid),'',"where `repto`={$data[$i]['idx']}");
+		}
+		
+		$board = $this->mDB->DBfetchs($mBoard->table['post'],'*');
+		for ($i=0, $loop=sizeof($board);$i<$loop;$i++) {
+			$post = $this->mDB->DBcount($mBoard->table['post'],"where `bid`='{$board[$i]['bid']}' and `is_delete`='FALSE'");
+			$this->mDB->DBupdate($mBoard->table['post'],array('post'=>$post),'',"where `bid`='{$board[$i]['bid']}'");
+		}
+		
+		$category = $this->mDB->DBfetchs($mBoard->table['category'],'*');
+		for ($i=0, $loop=sizeof($category);$i<$loop;$i++) {
+			$post = $this->mDB->DBcount($mBoard->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
+			$this->mDB->DBupdate($mBoard->table['post'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
 		}
 		
 		$return['success'] = true;
@@ -580,6 +623,18 @@ if ($action == 'trash') {
 	if ($do == 'recover') {
 		$idx = Request('idx');
 		$mDB->DBupdate($mBoard->table['post'],array('is_delete'=>'FALSE'),'',"where `idx` IN ($idx)");
+		
+		$board = $this->mDB->DBfetchs($mBoard->table['post'],'*');
+		for ($i=0, $loop=sizeof($board);$i<$loop;$i++) {
+			$post = $this->mDB->DBcount($mBoard->table['post'],"where `bid`='{$board[$i]['bid']}' and `is_delete`='FALSE'");
+			$this->mDB->DBupdate($mBoard->table['post'],array('post'=>$post),'',"where `bid`='{$board[$i]['bid']}'");
+		}
+		
+		$category = $this->mDB->DBfetchs($mBoard->table['category'],'*');
+		for ($i=0, $loop=sizeof($category);$i<$loop;$i++) {
+			$post = $this->mDB->DBcount($mBoard->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
+			$this->mDB->DBupdate($mBoard->table['post'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
+		}
 		
 		$return['success'] = true;
 		exit(json_encode($return));

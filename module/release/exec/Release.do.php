@@ -24,7 +24,7 @@ if ($action == 'post') {
 	$insert['rid'] = Request('rid');
 	$insert['mno'] = $member['idx'];
 	$insert['image'] = Request('image');
-	$insert['category'] = Request('category');
+	$insert['category'] = Request('category') ? Request('category') : 0;
 	$insert['title'] = Request('title') ? Request('title') : Alertbox('제목을 입력하여 주십시오.');
 	$insert['content'] = Request('content') ? $mRelease->SetContent(Request('content')) : Alertbox('내용을 입력하여 주십시오.');
 	$insert['search'] = GetIndexingText(Request('content'));
@@ -61,13 +61,15 @@ if ($action == 'post') {
 
 		$idx = $mDB->DBinsert($mRelease->table['post'],$insert);
 
-		$resultMsg = '프로그램을 성공적으로 등록하였습니다.';
+		$mDB->DBupdate($mRelease->table['setup'],array('post_time'=>GetGMT()),array('post'=>'`post`+1'),"where `bid`='{$insert['bid']}'");
+		if ($insert['category'] != 0) {
+			$mDB->DBupdate($mRelease->table['category'],array('post_time'=>GetGMT()),array('post'=>'`post`+1'),"where `idx`='{$insert['category']}'");
+		}
 
-		$autosaveFind = "where `rid`='{$rid}'";
-		$autosaveFind.= " and `ip`='".$_SERVER['REMOTE_ADDR']."'";
+		$resultMsg = '프로그램을 성공적으로 등록하였습니다.';
 	} else {
 		$idx = Request('idx');
-		$post = $mDB->DBfetch($mRelease->table['post'],array('mno','last_modify_hit'),"where `idx`='$idx'");
+		$post = $mDB->DBfetch($mRelease->table['post'],array('category','mno','last_modify_hit'),"where `idx`='$idx'");
 
 		if ($mRelease->GetPermission('modify') == false) {
 			if ($post['mno'] != $member['idx']) {
@@ -80,7 +82,11 @@ if ($action == 'post') {
 		$insert['last_modify_hit'] = $post['last_modify_hit']+1;
 
 		$mDB->DBupdate($mRelease->table['post'],$insert,'',"where `idx`='$idx'");
-
+		if ($post['category'] != $insert['category']) {
+			if ($post['category'] != 0) $mDB->DBupdate($mRelease->table['category'],'',array('post'=>'`post`-1'),"where `idx`='{$post['category']}'");
+			if ($insert['category'] != 0) $mDB->DBupdate($mRelease->table['category'],array('post_time'=>GetGMT()),array('post'=>'`post`+1'),"where `idx`='{$insert['category']}'");
+		}
+		
 		$resultMsg = '프로그램을 성공적으로 수정하였습니다.';
 
 		$autosaveFind = "where `rid`='{$rid}'";
@@ -163,6 +169,7 @@ if ($action == 'version') {
 		$insert['file'] = '/'.date('Ym').'/'.$insert['hash'].'.'.time().'.'.GetFileExec($_FILES['file']['name']);
 
 		$vidx = $mDB->DBinsert($mRelease->table['version'],$insert);
+		$mDB->DBupdate($mRelease->table['setup'],array('post_time'=>GetGMT()),'',"where `bid`='{$post['bid']}'");
 		$resultMsg = '새로운버전을 성공적으로 등록하였습니다.';
 	} else {
 		$version = $mDB->DBfetch($mRelease->table['version'],'*',"where `idx`='$vidx'");
@@ -355,7 +362,7 @@ if ($action == 'delete') {
 	$mode = Request('mode');
 
 	if ($mode == 'post') {
-		$data = $mDB->DBfetch($mRelease->table['post'],array('idx','rid','mno','password','title'),"where `idx`='$idx'");
+		$data = $mDB->DBfetch($mRelease->table['post'],array('idx','rid','category','mno','password','title'),"where `idx`='$idx'");
 		$mRelease = new ModuleRelease($data['rid']);
 
 		if ($mRelease->GetPermission('delete') == false && $data['mno'] != $member['idx']) {
@@ -363,6 +370,8 @@ if ($action == 'delete') {
 		}
 
 		$mDB->DBupdate($mRelease->table['post'],array('is_delete'=>'TRUE'),'',"where `idx`='$idx'");
+		$mDB->DBupdate($mRelease->table['setup'],'',array('post'=>'`post`-1'),"where `bid`='{$data['bid']}'");
+		if ($data['category'] != 0) $mDB->DBupdate($mRelease->table['category'],'',array('post'=>'`post`-1'),"where `idx`='{$data['category']}'");
 		$path = explode('?',$_SERVER['HTTP_REFERER']);
 		$url = $path[0];
 		$query = $mRelease->GetQueryString(array('mode'=>'list','idx'=>''),$path[1],false);

@@ -205,6 +205,12 @@ if ($action == 'category') {
 			$return['errors'] = $errors;
 		}
 		
+		$category = $this->mDB->DBfetchs($mRelease->table['category'],'*');
+		for ($i=0, $loop=sizeof($category);$i<$loop;$i++) {
+			$post = $this->mDB->DBcount($mRelease->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
+			$this->mDB->DBupdate($mRelease->table['post'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
+		}
+		
 		exit(json_encode($return));
 	}
 }
@@ -225,6 +231,18 @@ if ($action == 'post') {
 			$mDB->DBupdate($mRelease->table['post'],array('is_delete'=>'TRUE'),'',"where `idx`={$data[$i]['idx']}");
 
 			SaveAdminLog('release','['.$data[$i]['title'].'] 프로그램을 삭제하였습니다.','/module/release/release.php?rid='.$data[$i]['rid'].'&mode=view&idx='.$data[$i]['idx']);
+		}
+		
+		$release = $this->mDB->DBfetchs($mRelease->table['post'],'*');
+		for ($i=0, $loop=sizeof($release);$i<$loop;$i++) {
+			$post = $this->mDB->DBcount($mRelease->table['post'],"where `rid`='{$release[$i]['rid']}' and `is_delete`='FALSE'");
+			$this->mDB->DBupdate($mRelease->table['post'],array('post'=>$post),'',"where `rid`='{$release[$i]['rid']}'");
+		}
+		
+		$category = $this->mDB->DBfetchs($mRelease->table['category'],'*');
+		for ($i=0, $loop=sizeof($category);$i<$loop;$i++) {
+			$post = $this->mDB->DBcount($mRelease->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
+			$this->mDB->DBupdate($mRelease->table['post'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
 		}
 		
 		$return['success'] = true;
@@ -248,6 +266,18 @@ if ($action == 'post') {
 
 			$mDB->DBupdate($mRelease->table['post'],array('rid'=>$rid,'category'=>$category),'',"where `idx`={$data[$i]['idx']}");
 			$mDB->DBupdate($mRelease->table['ment'],array('rid'=>$rid),'',"where `repto`={$data[$i]['idx']}");
+		}
+		
+		$release = $this->mDB->DBfetchs($mRelease->table['post'],'*');
+		for ($i=0, $loop=sizeof($release);$i<$loop;$i++) {
+			$post = $this->mDB->DBcount($mRelease->table['post'],"where `rid`='{$release[$i]['rid']}' and `is_delete`='FALSE'");
+			$this->mDB->DBupdate($mRelease->table['post'],array('post'=>$post),'',"where `rid`='{$release[$i]['rid']}'");
+		}
+		
+		$category = $this->mDB->DBfetchs($mRelease->table['category'],'*');
+		for ($i=0, $loop=sizeof($category);$i<$loop;$i++) {
+			$post = $this->mDB->DBcount($mRelease->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
+			$this->mDB->DBupdate($mRelease->table['post'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
 		}
 		
 		$return['success'] = true;
@@ -493,6 +523,18 @@ if ($action == 'trash') {
 	if ($do == 'recover') {
 		$idx = Request('idx');
 		$mDB->DBupdate($mRelease->table['post'],array('is_delete'=>'FALSE'),'',"where `idx` IN ($idx)");
+		
+		$release = $this->mDB->DBfetchs($mRelease->table['post'],'*');
+		for ($i=0, $loop=sizeof($release);$i<$loop;$i++) {
+			$post = $this->mDB->DBcount($mRelease->table['post'],"where `rid`='{$release[$i]['rid']}' and `is_delete`='FALSE'");
+			$this->mDB->DBupdate($mRelease->table['post'],array('post'=>$post),'',"where `rid`='{$release[$i]['rid']}'");
+		}
+		
+		$category = $this->mDB->DBfetchs($mRelease->table['category'],'*');
+		for ($i=0, $loop=sizeof($category);$i<$loop;$i++) {
+			$post = $this->mDB->DBcount($mRelease->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
+			$this->mDB->DBupdate($mRelease->table['post'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
+		}
 		
 		$return['success'] = true;
 		exit(json_encode($return));

@@ -38,12 +38,10 @@ if ($action == 'list') {
 
 	for ($i=0, $loop=sizeof($lists);$i<$loop;$i++) {
 		if ($is_all == null) {
-			$lists[$i]['postnum'] = $mDB->DBcount($mBoard->table['post'],"where `bid`='{$lists[$i]['bid']}' and `is_delete`='FALSE'");
-			$lastPost = $mDB->DBfetch($mBoard->table['post'],array('reg_date'),"where `bid`='{$lists[$i]['bid']}' and `is_delete`='FALSE'",'loop,asc','0,1');
-			if (isset($lastPost['reg_date']) == true) {
-				$lists[$i]['last_date'] = GetTime('Y.m.d H:i:s',$lastPost['reg_date']);
+			if ($lists[$i]['post_time'] > 0) {
+				$lists[$i]['post_time'] = GetTime('Y.m.d H:i:s',$lists[$i]['post_time']);
 			} else {
-				$lists[$i]['last_date'] = '';
+				$lists[$i]['post_time'] = '';
 			}
 		}
 		$lists[$i]['option'] = ($lists[$i]['use_category'] == 'FALSE' ? 'FALSE' : 'TRUE').','.$lists[$i]['use_uploader'].','.$lists[$i]['use_ment'].','.$lists[$i]['use_trackback'].','.$lists[$i]['use_charge'].','.$lists[$i]['use_select'].','.$lists[$i]['use_rss'];

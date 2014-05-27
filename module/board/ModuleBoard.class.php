@@ -746,7 +746,7 @@ class ModuleBoard extends Module {
 				for ($i=0, $loop=sizeof($searchMember);$i<$loop;$i++) {
 					$mno[] = $searchMember[$i]['idx'];
 				}
-				$keyQuery = $mKeyword->GetFullTextKeyword(array('name'));
+				$keyQuery = "`name`='$keyword'";
 				if (sizeof($mno) > 0) {
 					$find.= ' and ('.$keyQuery.' or `mno` IN ('.implode(',',$mno).'))';
 				} else {
@@ -820,7 +820,15 @@ class ModuleBoard extends Module {
 
 		if ($this->setup['view_notice_page'] != 'NONE' && $this->setup['view_notice_list'] == 'FALSE') $find.= " and `is_notice`='FALSE'";
 
-		$totalpost = $this->mDB->DBcount($this->table['post'],$find);
+		if ($select != null || $keyword != null) {
+			$totalpost = $this->mDB->DBcount($this->table['post'],$find,'idx');
+		} elseif ($category != null) {
+			$temp = $this->mDB->DBfetch($this->table['category'],array('post'),"where `idx`='$category'");
+			$totalpost = $temp['post'];
+		} else {
+			$temp = $this->mDB->DBfetch($this->table['setup'],array('post'),"where `bid`='{$this->bid}'");
+			$totalpost = $temp['post'];
+		}
 		$totalpage = ceil($totalpost/$listnum) == 0 ? 1 : ceil($totalpost/$listnum);
 		$p = $p > $totalpage ? $totalpage : $p;
 
@@ -849,7 +857,6 @@ class ModuleBoard extends Module {
 		$dir = Request('dir') ? Request('dir') : 'desc';
 
 		$data = $this->mDB->DBfetchs($this->table['post'],'*',$find,$orderer,$limiter);
-
 		$loopnum = $totalpost-($p-1)*$listnum;
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			$data[$i]['title'] = $data[$i]['is_html_title'] == 'TRUE' ? $data[$i]['title'] : GetString($data[$i]['title'],'replace');
@@ -898,7 +905,7 @@ class ModuleBoard extends Module {
 				}
 			}
 		}
-
+		
 		$page = array();
 		$startpage = floor(($p-1)/$pagenum)*$pagenum+1;
 		$endpage = $startpage+$pagenum-1 > $totalpage ? $totalpage : $startpage+$pagenum-1;

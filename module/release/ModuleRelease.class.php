@@ -358,8 +358,10 @@ class ModuleRelease extends Module {
 			if ($data[$i]['mno'] == '0') {
 				$data[$i]['photo'] = $_ENV['dir'].'/images/common/nomempic60.gif';
 				$data[$i]['nickname'] = $data[$i]['name'];
+				$data[$i]['member'] = $this->mMember->GetMemberInfo(0);
 			} else {
 				$mData = $this->GetMemberInfo($data[$i]['mno']);
+				$data[$i]['member'] = $this->mMember->GetMemberInfo($data[$i]['mno']);
 				$data[$i]['name'] = $mData['name'];
 				$data[$i]['nickname'] = $mData['nickname'];
 				$data[$i]['photo'] = $mData['photo'];

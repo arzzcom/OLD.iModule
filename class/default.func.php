@@ -1029,13 +1029,8 @@ function PrintLoadingTime($msg) {
 	$mMember = &Member::instance();
 	$member = $mMember->GetMemberInfo();
 	
-	if ($member['type'] == 'ADMINISTRATOR') {
-		if ($msg) echo $msg.'<br />';
-		echo 'Loaded Time : '.(GetMicrotime()-$_ENV['starttime']).'<br /><br />';
-		
-		//$mFlush = new Flush();
-		//$mFlush->flush();
-	}
+	if ($msg) echo $msg.'<br />';
+	echo 'Loaded Time : '.(GetMicrotime()-$_ENV['starttime']).'<br /><br />';
 }
 
 function ExcelProgress($percent,$text) {

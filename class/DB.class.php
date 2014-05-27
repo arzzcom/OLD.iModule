@@ -317,7 +317,7 @@ class DB {
 					$i++;
 				}
 				
-
+				$auto_increment = '';
 				for ($i=0, $loop=sizeof($index);$i<$loop;$i++) {
 					$index[$i]['name'] = implode('`,`',explode(',',$index[$i]['name']));
 					if ($index[$i]['type'] == 'auto_increment') {
@@ -603,18 +603,19 @@ class DB {
 		return $size;
 	}
 
-	function DBcount($table,$find='',$db='') {
+	function DBcount($table,$find='',$field='',$db='') {
 		if (!$db) $db = 'default';
 		if (isset($this->infor[$db]) == false) $this->DBinfor($db);
 
+		$field = $field ? '`'.$field.'`' : '*';
 		switch ($this->infor[$db]['type']) {
 			case 'mysql' :
 				if (preg_match('/GROUP BY/i',$find) == true) {
-					$query = 'SELECT * FROM `'.$this->infor[$db]['dbname'].'`.`'.$table.'` '.$find;
+					$query = 'SELECT '.$field.' FROM `'.$this->infor[$db]['dbname'].'`.`'.$table.'` '.$find;
 					$checkCount = mysql_query($query,$this->connector[$db]) or $this->DBerror($query,mysql_error());
 					$count = @mysql_num_rows($checkCount);
 				} else {
-					$query = 'SELECT COUNT(*) FROM `'.$this->infor[$db]['dbname'].'`.`'.$table.'` '.$find;
+					$query = 'SELECT COUNT('.$field.') FROM `'.$this->infor[$db]['dbname'].'`.`'.$table.'` '.$find;
 					$checkCount = @mysql_query($query,$this->connector[$db]) or $this->DBerror($query,mysql_error());
 					$check = @mysql_fetch_array($checkCount);
 					$count = $check[0];
