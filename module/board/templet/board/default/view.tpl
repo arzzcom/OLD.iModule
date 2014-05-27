@@ -19,7 +19,7 @@
 				<h4>{$data.title}</h4>
 			</td>
 			<td class="splitBar"></td>
-			<td class="photo" rowspan="5"><img src="{$data.photo}" /></td>
+			<td class="photo" rowspan="5"><img src="{$data.author.photo}" /></td>
 		</tr>
 		<tr class="splitBar">
 			<td colspan="8"></td>
@@ -40,15 +40,15 @@
 		<tr>
 			<td class="headerCell left">작성자</td>
 			<td class="splitBar"></td>
-			<td class="bodyCell">{$data.nickname}</td>
+			<td class="bodyCell">{$data.author.nickname}</td>
 			<td colspan="4" class="bodyCell" style="padding-left:0px;">
 				<table cellpadding="0" cellspacing="0" class="layoutfixed">
 				<col width="30" /><col width="60" /><col width="50%" /><col width="50%" />
 				<tr>
-					<td class="tahoma f10 bold">LV.<span class="orange">{if $data.member.level.lv < 10}0{/if}{$data.member.level.lv}</span></td>
+					<td class="tahoma f10 bold">LV.<span class="orange">{if $data.author.level.lv < 10}0{/if}{$data.author.level.lv}</span></td>
 					<td>
 						<table cellpadding="0" cellspacing="0" class="exp">
-						<col width="1" /><col width="{$data.member.level.exp/$data.member.level.next*50|string_format:"%d"}" /><col width="100%" /><col width="2" />
+						<col width="1" /><col width="{$data.author.level.exp/$data.author.level.next*50|string_format:"%d"}" /><col width="100%" /><col width="2" />
 						<tr>
 							<td class="start"></td>
 							<td class="on"></td>
@@ -58,10 +58,10 @@
 						</table>
 					</td>
 					<td>
-						<div class="email">{if $data.email}<a href="mailto:{$data.email}">{$data.email}</a>{else}<span class="disabled">NONE</span>{/if}</div>
+						<div class="email">{if $data.author.email}<a href="mailto:{$data.author.email}">{$data.author.email}</a>{else}<span class="disabled">NONE</span>{/if}</div>
 					</td>
 					<td>
-						<div class="homepage">{if $data.homepage}<a href="{$data.homepage}" target="_blank">{$data.homepage}</a>{else}<span class="disabled">NONE</span>{/if}</div>
+						<div class="homepage">{if $data.author.homepage}<a href="{$data.author.homepage}" target="_blank">{$data.author.homepage}</a>{else}<span class="disabled">NONE</span>{/if}</div>
 					</td>
 				</tr>
 				</table>

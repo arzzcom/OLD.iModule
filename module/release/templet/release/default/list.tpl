@@ -68,7 +68,7 @@
 		<tr>
 			<td class="headerCell">제작자</td>
 			<td class="splitBar"></td>
-			<td class="bodyCell">{$data.nickname}</td>
+			<td class="bodyCell">{$data.author.nickname}</td>
 			<td class="splitBar"></td>
 			<td class="headerCell">다운로드/추천</td>
 			<td class="splitBar"></td>

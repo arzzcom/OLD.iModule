@@ -1,5 +1,7 @@
 <?php
 class Member {
+	private $buffer;
+	
 	function &instance() {
 		if(isset($GLOBALS['_MEMBER_']) == false || !$GLOBALS['_MEMBER_']) $GLOBALS['_MEMBER_'] = new Member();
 		return $GLOBALS['_MEMBER_'];
@@ -7,6 +9,7 @@ class Member {
 
 	function __construct() {
 		$this->mDB = &DB::instance();
+		$this->buffer = array();
 		
 		if (Request('loginAuth') != null) {
 			if ($loginAuth == 'LOGOUT') {
@@ -91,6 +94,8 @@ class Member {
 
 	function GetMemberInfo($mno='') {
 		$mno = $mno == '' ? (isset($_SESSION['logged']) == true ? $_SESSION['logged'] : 0) : $mno;
+		
+		if (isset($this->buffer[$mno]) == true) return $this->buffer[$mno];
 
 		if ($this->mDB->DBfind($_ENV['table']['member']) == true) {
 			$data = $this->mDB->DBfetch($_ENV['table']['member'],'*',"where `idx`='$mno'");
@@ -146,18 +151,29 @@ class Member {
 			$data['cellphone'] = array('provider'=>'','cellphone'=>'','cellphone1'=>'','cellphone2'=>'','cellphone3'=>'');
 			$data['extra'] = array();
 		}
+		
+		$this->buffer[$mno] = $data;
 		return $data;
 	}
 
-	function GetMemberName($mno='',$type='nickname',$use_nickcon=true,$use_menu=false) {
+	function GetMemberName($mno='',$type='nickname',$use_nickcon=true,$use_menu=true) {
 		$mno = $mno == '' ? (isset($_SESSION['logged']) == true ? $_SESSION['logged'] : 0) : $mno;
-		$data = $this->mDB->DBfetch($_ENV['table']['member'],array($type),"where `idx`=$mno");
+		$data = $this->GetMemberInfo($mno);
 
-		if ($use_nickcon == true && file_exists($_ENV['userfilePath'].'/member/nickcon/'.$mno.'.gif') == true) {
-			return '<img src="'.$_ENV['userfileDir'].'/member/nickcon/'.$mno.'.gif" alt="'.$data[$type].'" />';
-		} else {
-			return $data[$type];
+		$sHTML = '';
+		if ($use_menu == true) {
+			$sHTML.= '<span class="iModuleMemberMenu" idx="'.$data['idx'].'" email="'.$data['email'].'" homepage="'.$data['homepage'].'" isMemberMenu="TRUE">';
 		}
+		if ($use_nickcon == true && file_exists($_ENV['userfilePath'].'/member/nickcon/'.$mno.'.gif') == true) {
+			$sHTML.= '<img src="'.$_ENV['userfileDir'].'/member/nickcon/'.$mno.'.gif" alt="'.$data[$type].'" isMemberMenu="TRUE" />';
+		} else {
+			$sHTML.= $data[$type];
+		}
+		if ($use_menu == true) {
+			$sHTML.= '</span>';
+		}
+		
+		return $sHTML;
 	}
 
 	function GetLevel($exp) {

@@ -123,6 +123,17 @@ IMG {border:0px;}
 .layerLeft {float:left;}
 .layerClear {clear:both;}
 
+/* UserMenu */
+.iModuleMemberMenu {cursor:pointer; font-weight:bold; font-family:NanumGothicWeb;}
+.iModuleMemberMenuList {background:#F0F0F0; border:1px solid #718BB7; width:120px; height:auto !important; display:inline; margin:0px !important; padding:0px !important; position:absolute; z-index:10001;}
+.iModuleMemberMenuList DIV {cursor:pointer; background-position:2px 2px; background-repeat:no-repeat; padding:0px 0px 0px 24px !important; height:24px !important; text-align:left; margin:1px !important; border:1px solid transparent; font-family:NanumGothicWeb; font-size:12px; line-height:24px !important; font-weight:normal;}
+.iModuleMemberMenuList DIV:HOVER {border:1px solid #A3BAE9; background-color:#DFE8F6; color:#3A428B;}
+
+.iModuleMemberMenuList DIV.PointGift {background-image:url(../images/common/icon_gift.png);}
+.iModuleMemberMenuList DIV.SendMessage {background-image:url(../images/common/icon_note_edit.png);}
+.iModuleMemberMenuList DIV.SendEmail {background-image:url(../images/common/icon_email_open.png);}
+.iModuleMemberMenuList DIV.VisitHomepage {background-image:url(../images/common/icon_homepage.png);}
+
 /* Bootstrap */
 .pull-right {float:right !important;}
 .pull-left {float:left !important;}

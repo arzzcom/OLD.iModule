@@ -111,25 +111,22 @@ class ModuleRelease extends Module {
 		return GetQueryString($var,$queryString,$encode);
 	}
 
-	// 회원정보
-	function GetMemberInfo($mno) {
-		$mData = $this->mMember->GetMemberInfo($mno);
-		$uniqueID = 'Release'.$mno.'-'.GetMicrotime();
-		$info['name'] = $info['nickname'] = '<span id="'.$uniqueID.'" class="pointer bold" style="position:relative;" onclick="ToggleUserMenu(\''.$uniqueID.'\',{idx:'.$mno.',email:\''.$mData['email'].'\',homepage:\''.$mData['homepage'].'\'},event)" clicker="'.$uniqueID.'"><div style="position:absolute; display:none; z-index:1001; top:0px; left:0px;" class="UserMenu" clicker="'.$uniqueID.'">ssss</div>';
-		if ($mData['nickcon']) {
-			$info['name'].= '<img src="'.$mData['nickcon'].'" title="'.GetString($mData['name'],'inputbox').'" style="vertical-align:middle;" clicker="'.$uniqueID.'" />';
-			$info['nickname'].= '<img src="'.$mData['nickcon'].'" title="'.GetString($mData['nickname'],'inputbox').'" style="vertical-align:middle;" clicker="'.$uniqueID.'" />';
+	// 작성자 정보
+	function GetAuthorInfo($info) {
+		$author = array();
+		$author = $this->mMember->GetMemberInfo($info['mno']);
+		if ($info['mno'] == '0') {
+			$author['name'] = $author['nickname'] = $info['name'];
+			if (isset($info['email']) == true) $author['email'] = $info['email'];
+			if (isset($info['homepage']) == true) $author['homepage'] = $info['homepage'];
 		} else {
-			$info['name'].= $mData['name'];
-			$info['nickname'].= $mData['nickname'];
+			$author['name'] = $this->mMember->GetMemberName($info['mno'],'name',true,true);
+			$author['nickname'] = $this->mMember->GetMemberName($info['mno'],'nickname',true,true);
+			if (isset($info['email']) == true) $author['email'] = $info['email'] ? $info['email'] : $author['email'];
+			if (isset($info['homepage']) == true) $author['homepage'] = $info['homepage'] ? $info['homepage'] : $author['homepage'];
 		}
-		$info['name'].= '</span>';
-		$info['nickname'].= '</span>';
-		$info['photo'] = $mData['photo'];
-		$info['email'] = $mData['email'];
-		$info['homepage'] = $mData['homepage'];
-
-		return $info;
+		
+		return $author;
 	}
 
 	function GetCategoryName($category) {
@@ -355,19 +352,7 @@ class ModuleRelease extends Module {
 			$data[$i]['content'] = $this->GetContent($data[$i]['content']);
 			$data[$i]['reply'] = '<table cellpadding="0" cellspacing="0" class="layoutfixed"><col width="20" /><col width="100%" /><tr><td></td><td id="MentReplyForm'.$data[$i]['idx'].'"></td></tr><tr><td></td><td id="MentReplyList'.$data[$i]['idx'].'"></td></tr></table>';
 
-			if ($data[$i]['mno'] == '0') {
-				$data[$i]['photo'] = $_ENV['dir'].'/images/common/nomempic60.gif';
-				$data[$i]['nickname'] = $data[$i]['name'];
-				$data[$i]['member'] = $this->mMember->GetMemberInfo(0);
-			} else {
-				$mData = $this->GetMemberInfo($data[$i]['mno']);
-				$data[$i]['member'] = $this->mMember->GetMemberInfo($data[$i]['mno']);
-				$data[$i]['name'] = $mData['name'];
-				$data[$i]['nickname'] = $mData['nickname'];
-				$data[$i]['photo'] = $mData['photo'];
-				$data[$i]['email'] = $data[$i]['email'] ? $data[$i]['email'] : $mData['email'];
-				$data[$i]['homepage'] = $data[$i]['homepage'] ? $data[$i]['homepage'] : $mData['homepage'];
-			}
+			$data[$i]['author'] = $this->GetAuthorInfo($data[$i]);
 
 			if ($data[$i]['parent']) {
 				$data[$i]['replyStart'] = '<div id="ReplyMent'.$data[$i]['idx'].'">'."\n";
@@ -739,10 +724,7 @@ class ModuleRelease extends Module {
 			$data[$i]['avgvote'] = $data[$i]['voter'] > 0 ? sprintf('%0.2f',$data[$i]['vote']/$data[$i]['voter']) : '0.00';
 			$data[$i]['logo'] = file_exists($_ENV['userfilePath'].$this->logo.'/'.$data[$i]['idx'].'.thm') == true ? $_ENV['userfileDir'].$this->logo.'/'.$data[$i]['idx'].'.thm' : '';
 
-			$mData = $this->GetMemberInfo($data[$i]['mno']);
-			$data[$i]['name'] = $mData['name'];
-			$data[$i]['nickname'] = $mData['nickname'];
-			$data[$i]['member'] = $this->mMember->GetMemberInfo($data[$i]['mno']);
+			$data[$i]['author'] = $this->GetAuthorInfo($data[$i]);
 
 			$data[$i]['is_newment'] = $data[$i]['last_ment'] > GetGMT()-60*60*24;
 
@@ -860,12 +842,7 @@ class ModuleRelease extends Module {
 			if ($this->mMember->IsLogged() == true) $this->mMember->SendExp($this->member['idx'],2);
 		}
 
-		$mData = $this->GetMemberInfo($data['mno']);
-		$data['name'] = $mData['name'];
-		$data['nickname'] = $mData['nickname'];
-		$data['photo'] = $mData['photo'];
-		$data['email'] = $mData['email'];
-		$data['homepage'] = $data['homepage'] ? $data['homepage'] : $mData['homepage'];
+		$data['author'] = $this->GetAuthorInfo($data);
 
 		if ($data['last_modify_hit'] > 0) {
 			$data['last_modify'] = array();
@@ -958,12 +935,7 @@ class ModuleRelease extends Module {
 
 		echo "\n".'<script type="text/javascript">document.title = document.title+" » '.strip_tags($data['title']).'";</script>'."\n";
 
-		$mData = $this->GetMemberInfo($data['mno']);
-		$data['name'] = $mData['name'];
-		$data['nickname'] = $mData['nickname'];
-		$data['photo'] = $mData['photo'];
-		$data['email'] = $mData['email'];
-		$data['homepage'] = $data['homepage'] ? $data['homepage'] : $mData['homepage'];
+		$data['author'] = $this->GetAuthorInfo($data);
 
 		if ($data['last_modify_hit'] > 0) {
 			$data['last_modify'] = array();
@@ -1086,12 +1058,7 @@ class ModuleRelease extends Module {
 		$vidx = Request('vidx');
 		$post = $this->mDB->DBfetch($this->table['post'],'*',"where `rid`='{$this->rid}' and `idx`='$idx'");
 		
-		$mData = $this->GetMemberInfo($post['mno']);
-		$post['member'] = $this->mMember->GetMemberInfo($post['mno']);
-		$post['name'] = $mData['name'];
-		$post['nickname'] = $mData['nickname'];
-		$post['photo'] = $mData['photo'];
-		$post['homepage'] = $post['homepage'] ? $post['homepage'] : $mData['homepage'];
+		$post['author'] = $this->GetAuthorInfo($data[$i]);
 		$post['reg_date'] = strtotime(GetTime('c',$post['reg_date']));
 		$post['logo'] = file_exists($_ENV['userfilePath'].$this->logo.'/'.$post['idx'].'.thm') == true ? $_ENV['userfileDir'].$this->logo.'/'.$post['idx'].'.thm' : '';
 		
@@ -1297,15 +1264,7 @@ class ModuleRelease extends Module {
 			$data[$i]['image'] = $data[$i]['image'] != '0' ? $_ENV['userfileDir'].$this->thumbnail.'/'.$data[$i]['image'].'.thm' : '';
 			$data[$i]['reg_date'] = strtotime(GetTime('c',$data[$i]['reg_date']));
 
-			if ($data[$i]['mno'] == '0') {
-				$data[$i]['photo'] = $_ENV['dir'].'/images/common/nomempic60.gif';
-				$data[$i]['nickname'] = $data[$i]['name'];
-			} else {
-				$mData = $this->GetMemberInfo($data[$i]['mno']);
-				$data[$i]['name'] = $mData['name'];
-				$data[$i]['nickname'] = $mData['nickname'];
-				$data[$i]['photo'] = $mData['photo'];
-			}
+			$data[$i]['author'] = $this->GetAuthorInfo($data[$i]);
 
 			if ($this->setup['use_category'] != 'FALSE' && $data[$i]['category'] != '0') {
 				$data[$i]['category'] = $this->GetCategoryName($data[$i]['category']);

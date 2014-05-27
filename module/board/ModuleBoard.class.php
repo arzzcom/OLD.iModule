@@ -99,6 +99,24 @@ class ModuleBoard extends Module {
 	function GetSetup($key) {
 		return isset($this->setup[$key]) == true ? $this->setup[$key] : '';
 	}
+	
+	// 작성자정보
+	function GetAuthorInfo($info) {
+		$author = array();
+		$author = $this->mMember->GetMemberInfo($info['mno']);
+		if ($info['mno'] == '0') {
+			$author['name'] = $author['nickname'] = $info['name'];
+			if (isset($info['email']) == true) $author['email'] = $info['email'];
+			if (isset($info['homepage']) == true) $author['homepage'] = $info['homepage'];
+		} else {
+			$author['name'] = $this->mMember->GetMemberName($info['mno'],'name',true,true);
+			$author['nickname'] = $this->mMember->GetMemberName($info['mno'],'nickname',true,true);
+			if (isset($info['email']) == true) $author['email'] = $info['email'] ? $info['email'] : $author['email'];
+			if (isset($info['homepage']) == true) $author['homepage'] = $info['homepage'] ? $info['homepage'] : $author['homepage'];
+		}
+		
+		return $author;
+	}
 
 	// GET 변수 정리
 	function GetQueryString($var=array(),$queryString='',$encode=true) {
@@ -110,27 +128,6 @@ class ModuleBoard extends Module {
 		}
 
 		return GetQueryString($var,$queryString,$encode);
-	}
-
-	// 회원정보
-	function GetMemberInfo($mno) {
-		$mData = $this->mMember->GetMemberInfo($mno);
-		$uniqueID = 'Board'.$mno.'-'.GetMicrotime();
-		$info['name'] = $info['nickname'] = '<span id="'.$uniqueID.'" class="pointer bold" style="position:relative;" onclick="ToggleUserMenu(\''.$uniqueID.'\',{idx:'.$mno.',email:\''.$mData['email'].'\',homepage:\''.$mData['homepage'].'\'},event)" clicker="'.$uniqueID.'"><div style="position:absolute; display:none; z-index:1001; top:0px; left:0px;" class="UserMenu" clicker="'.$uniqueID.'">ssss</div>';
-		if ($mData['nickcon']) {
-			$info['name'].= '<img src="'.$mData['nickcon'].'" title="'.GetString($mData['name'],'inputbox').'" style="vertical-align:middle;" clicker="'.$uniqueID.'" />';
-			$info['nickname'].= '<img src="'.$mData['nickcon'].'" title="'.GetString($mData['nickname'],'inputbox').'" style="vertical-align:middle;" clicker="'.$uniqueID.'" />';
-		} else {
-			$info['name'].= $mData['name'];
-			$info['nickname'].= $mData['nickname'];
-		}
-		$info['name'].= '</span>';
-		$info['nickname'].= '</span>';
-		$info['photo'] = $mData['photo'];
-		$info['email'] = $mData['email'];
-		$info['homepage'] = $mData['homepage'];
-
-		return $info;
 	}
 
 	function GetCategoryName($category) {
@@ -388,19 +385,7 @@ class ModuleBoard extends Module {
 				if ($select['is_mobile'] == 'TRUE') $select['content'] = nl2br($select['content']);
 				$select['content'] = $this->GetContent($select['content']);
 
-				if ($select['mno'] == '0') {
-					$select['photo'] = $_ENV['dir'].'/images/common/nomempic60.gif';
-					$select['nickname'] = $select['name'];
-					$select['member'] = $this->mMember->GetMemberInfo(0);
-				} else {
-					$mData = $this->GetMemberInfo($select['mno']);
-					$select['member'] = $this->mMember->GetMemberInfo($select['mno']);
-					$select['name'] = $mData['name'];
-					$select['nickname'] = $mData['nickname'];
-					$select['photo'] = $mData['photo'];
-					$select['email'] = $select['email'] ? $select['email'] : $mData['email'];
-					$select['homepage'] = $select['homepage'] ? $select['homepage'] : $mData['homepage'];
-				}
+				$select['author'] = $this->GetAuthorInfo($select);
 
 				$file = $this->mDB->DBfetchs($this->table['file'],'*',"where `type`='ment' and `repto`={$select['idx']}");
 
@@ -423,19 +408,7 @@ class ModuleBoard extends Module {
 			$data[$i]['content'] = $this->GetContent($data[$i]['content']);
 			$data[$i]['reply'] = '<table cellpadding="0" cellspacing="0" class="layoutfixed"><col width="20" /><col width="100%" /><tr><td></td><td id="MentReplyForm'.$data[$i]['idx'].'"></td></tr><tr><td></td><td id="MentReplyList'.$data[$i]['idx'].'"></td></tr></table>';
 
-			if ($data[$i]['mno'] == '0') {
-				$data[$i]['photo'] = $_ENV['dir'].'/images/common/nomempic60.gif';
-				$data[$i]['nickname'] = $data[$i]['name'];
-				$data[$i]['member'] = $this->mMember->GetMemberInfo(0);
-			} else {
-				$mData = $this->GetMemberInfo($data[$i]['mno']);
-				$data[$i]['member'] = $this->mMember->GetMemberInfo($data[$i]['mno']);
-				$data[$i]['name'] = $mData['name'];
-				$data[$i]['nickname'] = $mData['nickname'];
-				$data[$i]['photo'] = $mData['photo'];
-				$data[$i]['email'] = $data[$i]['email'] ? $data[$i]['email'] : $mData['email'];
-				$data[$i]['homepage'] = $data[$i]['homepage'] ? $data[$i]['homepage'] : $mData['homepage'];
-			}
+			$data[$i]['author'] = $this->GetAuthorInfo($data[$i]);
 
 			if ($data[$i]['parent']) {
 				$data[$i]['replyStart'] = '<div id="ReplyMent'.$data[$i]['idx'].'">'."\n";
@@ -783,13 +756,7 @@ class ModuleBoard extends Module {
 				$notice[$i]['vote'] = number_format($notice[$i]['vote']);
 				$notice[$i]['avgvote'] = $notice[$i]['voter'] > 0 ? sprintf('%0.2f',$notice[$i]['vote']/$notice[$i]['voter']) : '0.00';
 
-				if ($notice[$i]['mno'] != '0') {
-					$mData = $this->GetMemberInfo($notice[$i]['mno']);
-					$notice[$i]['name'] = $mData['name'];
-					$notice[$i]['nickname'] = $mData['nickname'];
-				} else {
-					$notice[$i]['nickname'] = $notice[$i]['name'];
-				}
+				$notice[$i]['author'] = $this->GetAuthorInfo($notice[$i]);
 
 				$notice[$i]['is_secret'] = $notice[$i]['is_secret'] == 'TRUE';
 				$notice[$i]['is_mobile'] = $notice[$i]['is_mobile'] == 'TRUE';
@@ -871,13 +838,7 @@ class ModuleBoard extends Module {
 			$data[$i]['vote'] = number_format($data[$i]['vote']);
 			$data[$i]['avgvote'] = $data[$i]['voter'] > 0 ? sprintf('%0.2f',$data[$i]['vote']/$data[$i]['voter']) : '0.00';
 
-			if ($data[$i]['mno'] != '0') {
-				$mData = $this->GetMemberInfo($data[$i]['mno']);
-				$data[$i]['name'] = $mData['name'];
-				$data[$i]['nickname'] = $mData['nickname'];
-			} else {
-				$data[$i]['nickname'] = $data[$i]['name'];
-			}
+			$data[$i]['author'] = $this->GetAuthorInfo($data[$i]);
 
 			$data[$i]['is_secret'] = $data[$i]['is_secret'] == 'TRUE';
 			$data[$i]['is_mobile'] = $data[$i]['is_mobile'] == 'TRUE';
@@ -1029,19 +990,7 @@ class ModuleBoard extends Module {
 			if ($this->mMember->IsLogged() == true) $this->mMember->SendExp($this->member['idx'],2);
 		}
 
-		if ($data['mno'] == '0') {
-			$data['photo'] = $_ENV['dir'].'/images/common/nomempic60.gif';
-			$data['nickname'] = $data['name'];
-			$data['member'] = $this->mMember->GetMemberInfo(0);
-		} else {
-			$mData = $this->GetMemberInfo($data['mno']);
-			$data['member'] = $this->mMember->GetMemberInfo($data['mno']);
-			$data['name'] = $mData['name'];
-			$data['nickname'] = $mData['nickname'];
-			$data['photo'] = $mData['photo'];
-			$data['email'] = $data['email'] ? $data['email'] : $mData['email'];
-			$data['homepage'] = $data['homepage'] ? $data['homepage'] : $mData['homepage'];
-		}
+		$data['author'] = $this->GetAuthorInfo($data);
 
 		if ($data['last_modify_hit'] > 0) {
 			$data['last_modify'] = array();
@@ -1122,17 +1071,7 @@ class ModuleBoard extends Module {
 
 		echo "\n".'<script type="text/javascript">document.title = document.title+" » '.strip_tags($data['title']).'";</script>'."\n";
 
-		if ($data['mno'] == '0') {
-			$data['photo'] = $_ENV['dir'].'/images/common/nomempic60.gif';
-			$data['nickname'] = $data['name'];
-		} else {
-			$mData = $this->GetMemberInfo($data['mno']);
-			$data['name'] = $mData['name'];
-			$data['nickname'] = $mData['nickname'];
-			$data['photo'] = $mData['photo'];
-			$data['email'] = $data['email'] ? $data['email'] : $mData['email'];
-			$data['homepage'] = $data['homepage'] ? $data['homepage'] : $mData['homepage'];
-		}
+		$data['author'] = $this->GetAuthorInfo($data);
 
 		if ($data['last_modify_hit'] > 0) {
 			$data['last_modify'] = array();
@@ -1449,15 +1388,7 @@ class ModuleBoard extends Module {
 			$data[$i]['image'] = $data[$i]['image'] != '0' ? $_ENV['userfileDir'].$this->thumbnail.'/'.$data[$i]['image'].'.thm' : '';
 			$data[$i]['reg_date'] = strtotime(GetTime('c',$data[$i]['reg_date']));
 
-			if ($data[$i]['mno'] == '0') {
-				$data[$i]['photo'] = $_ENV['dir'].'/images/common/nomempic60.gif';
-				$data[$i]['nickname'] = $data[$i]['name'];
-			} else {
-				$mData = $this->GetMemberInfo($data[$i]['mno']);
-				$data[$i]['name'] = $mData['name'];
-				$data[$i]['nickname'] = $mData['nickname'];
-				$data[$i]['photo'] = $mData['photo'];
-			}
+			$data[$i]['author'] = $this->GetAuthorInfo($data[$i]);
 
 			if ($data[$i]['is_secret'] == 'TRUE' && ($data[$i]['mno'] != 0 && $data[$i]['mno'] != $this->member['idx'] || $data[$i]['mno'] == '0') && $this->GetPermission('secret') == false) {
 				$data[$i]['content'] = $data[$i]['search'] = '이 글은 비밀글입니다. 권한이 없으므로 내용을 보실 수 없습니다.';

@@ -967,6 +967,132 @@ function InputSelectBoxSelect(id,text,value,callback) {
 	}
 }
 
+
+/*****************************************************************************************
+ * Events
+ *****************************************************************************************/
+
+$(document).ready(function() {
+	$(".iModuleMemberMenu").on("click",function(event) {
+		var object = $(this);
+		
+		if ($(".iModuleMemberMenuList").length == 0) {
+			var memberMenu = $("<div>").attr("isMemberMenu","TRUE").addClass("iModuleMemberMenuList");
+			$("body").append(memberMenu);
+		} else {
+			var memberMenu = $(".iModuleMemberMenuList");
+		}
+		
+		memberMenu.html("");
+
+		if (object.attr("idx")) {
+			var sendMessage = $("<div>").attr("isMemberMenu","TRUE").addClass("SendMessage").text("쪽지보내기").attr("idx",object.attr("idx"));
+			sendMessage.on("click",function() {
+				OpenMessage($(this).attr("idx"));
+			});
+			memberMenu.append(sendMessage);
+			
+			var giftPoint = $("<div>").attr("isMemberMenu","TRUE").addClass("PointGift").text("포인트선물하기").attr("idx",object.attr("idx"));
+			giftPoint.on("click",function() {
+				OpenPointGift($(this).attr("idx"));
+			});
+			memberMenu.append(giftPoint);
+		}
+		
+		if (object.attr("email")) {
+			var sendEmail = $("<div>").attr("isMemberMenu","TRUE").addClass("SendEmail").text("이메일보내기").attr("idx",object.attr("idx"));
+			sendEmail.on("click",function() {
+				location.href = "mailto:"+$(this).attr("email");
+			});
+			memberMenu.append(sendEmail);
+		}
+
+		if (object.attr("homepage")) {
+			var visitHomepage = $("<div>").attr("isMemberMenu","TRUE").addClass("VisitHomepage").text("홈페이지가기").attr("idx",object.attr("idx"));
+			visitHomepage.on("click",function() {
+				window.open($(this).attr("homepage"));
+			});
+			memberMenu.append(visitHomepage);
+		}
+		
+		memberMenu.css("top",object.offset().top+object.outerHeight(true));
+		memberMenu.css("left",object.offset().left);
+		memberMenu.show();
+	});
+});
+
+$("body").on("click",function(event) {
+	if ($(event.target).attr("isMemberMenu") != "TRUE") {
+		$(".iModuleMemberMenuList").hide();
+	}
+});
+
+
+/*
+	function ToggleUserMenu(id,object,event) {
+		var e = event ? event : window.event;
+		var userMenu = document.getElementById(id).getElementsByTagName("div")[0];
+		userMenu.innerHTML = "";
+
+		if (object.idx) {
+			var menu = document.createElement("div");
+			menu.className = "UserMenuItem SendMessage";
+			menu.innerHTML = "쪽지보내기";
+			menu.setAttribute("mno",object.idx);
+			menu.onclick = function() { OpenMessage(this.getAttribute("mno")); }
+
+			userMenu.appendChild(menu);
+
+			var menu = document.createElement("div");
+			menu.className = "UserMenuItem PointGift";
+			menu.innerHTML = "포인트선물하기";
+			menu.setAttribute("mno",object.idx);
+			menu.onclick = function() { OpenPointGift(this.getAttribute("mno")); }
+
+			userMenu.appendChild(menu);
+		}
+
+		if (object.email) {
+			var menu = document.createElement("div");
+			menu.className = "UserMenuItem SendEmail";
+			menu.innerHTML = "이메일보내기";
+			menu.setAttribute("email",object.email);
+			menu.onclick = function() { location.href = "mailto:"+this.getAttribute("email"); }
+
+			userMenu.appendChild(menu);
+		}
+
+		if (object.homepage) {
+			var menu = document.createElement("div");
+			menu.className = "UserMenuItem GoHomepage";
+			menu.innerHTML = "홈페이지가기";
+			menu.setAttribute("homepage",object.homepage);
+			menu.onclick = function() { window.open(this.getAttribute("homepage")); }
+
+			userMenu.appendChild(menu);
+		}
+
+		var scrollTop = Math.max(document.documentElement.scrollTop,document.body.scrollTop);
+		var scrollLeft = Math.max(document.documentElement.scrollLeft,document.body.scrollLeft);
+
+		while (true) {
+			$(userMenu)
+		}
+
+		var offsetTop = GetRealOffsetTop($(userMenu.parentNode).css("position") == "relative" ? userMenu.parentNode : userMenu.parentNode.parentNode);
+		console.log($(userMenu.parentNode.parentNode.parentNode).css("position") == "relative");
+		console.log(offsetTop);
+		var offsetLeft = GetRealOffsetLeft($(userMenu.parentNode).css("position") == "relative" ? userMenu.parentNode : userMenu.parentNode.parentNode);
+		var top = e.clientY+scrollTop-offsetTop;
+		var left = e.clientX+scrollLeft-offsetLeft;
+
+		userMenu.style.display = "";
+		userMenu.style.top = top+"px";
+		userMenu.style.left = left+"px";
+
+		GlobalToggleList[id] = userMenu;
+	}
+*/
 // Event Listener
 function addEvent(object,type,fn) {
 	if (object.addEventListener) {

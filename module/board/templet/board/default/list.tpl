@@ -73,7 +73,7 @@
 			{if $notice.is_image == true}<img src="{$skinDir}/images/icon_image.gif" />{/if}
 		</div>
 	</td>
-	{if $is_view_name == true}<td class="splitBar"></td><td class="nicknameCell">{$notice.nickname}</td>{/if}
+	{if $is_view_name == true}<td class="splitBar"></td><td class="nicknameCell">{$notice.author.nickname}</td>{/if}
 	{if $is_view_reg_date == true}<td class="splitBar"></td><td class="numberCell">{if $time.server|date_format:"%Y%m%d" == $notice.reg_date|date_format:"%Y%m%d"}{$notice.reg_date|date_format:"%H:%M:%S"}{else}{$notice.reg_date|date_format:"%Y.%m.%d"}{/if}{if $notice.is_new == true}<img src="{$skinDir}/images/icon_new.png" />{/if}</td>{/if}
 	{if $is_view_hit == true}<td class="splitBar"></td><td class="countCell">{$notice.hit}</td>{/if}
 	{if $is_view_vote == true}<td class="splitBar"></td><td class="countCell">{$notice.vote}</td>{/if}
@@ -103,7 +103,7 @@
 			{if $data.is_image == true}<img src="{$skinDir}/images/icon_image.gif" />{/if}
 		</div>
 	</td>
-	{if $is_view_name == true}<td class="splitBar"></td><td class="nicknameCell">{$data.nickname}</td>{/if}
+	{if $is_view_name == true}<td class="splitBar"></td><td class="nicknameCell">{$data.author.nickname}</td>{/if}
 	{if $is_view_reg_date == true}<td class="splitBar"></td><td class="numberCell">{if $time.server|date_format:"%Y%m%d" == $data.reg_date|date_format:"%Y%m%d"}{$data.reg_date|date_format:"%H:%M:%S"}{else}{$data.reg_date|date_format:"%Y.%m.%d"}{/if}{if $data.is_new == true}<img src="{$skinDir}/images/icon_new.png" />{/if}</td>{/if}
 	{if $is_view_hit == true}<td class="splitBar"></td><td class="countCell">{$data.hit}</td>{/if}
 	{if $is_view_vote == true}<td class="splitBar"></td><td class="countCell">{$data.vote}</td>{/if}

@@ -241,64 +241,6 @@ if (isIncludeBoard === undefined) {
 		document.forms["ModuleBoardPost"]["category"].value = value;
 	}
 
-	function ToggleUserMenu(id,object,event) {
-		var e = event ? event : window.event;
-		var userMenu = document.getElementById(id).getElementsByTagName("div")[0];
-		userMenu.innerHTML = "";
-
-		if (object.idx) {
-			var menu = document.createElement("div");
-			menu.className = "UserMenuItem SendMessage";
-			menu.innerHTML = "쪽지보내기";
-			menu.setAttribute("mno",object.idx);
-			menu.onclick = function() { OpenMessage(this.getAttribute("mno")); }
-
-			userMenu.appendChild(menu);
-
-			var menu = document.createElement("div");
-			menu.className = "UserMenuItem PointGift";
-			menu.innerHTML = "포인트선물하기";
-			menu.setAttribute("mno",object.idx);
-			menu.onclick = function() { OpenPointGift(this.getAttribute("mno")); }
-
-			userMenu.appendChild(menu);
-		}
-
-		if (object.email) {
-			var menu = document.createElement("div");
-			menu.className = "UserMenuItem SendEmail";
-			menu.innerHTML = "이메일보내기";
-			menu.setAttribute("email",object.email);
-			menu.onclick = function() { location.href = "mailto:"+this.getAttribute("email"); }
-
-			userMenu.appendChild(menu);
-		}
-
-		if (object.homepage) {
-			var menu = document.createElement("div");
-			menu.className = "UserMenuItem GoHomepage";
-			menu.innerHTML = "홈페이지가기";
-			menu.setAttribute("homepage",object.homepage);
-			menu.onclick = function() { window.open(this.getAttribute("homepage")); }
-
-			userMenu.appendChild(menu);
-		}
-
-		var scrollTop = Math.max(document.documentElement.scrollTop,document.body.scrollTop);
-		var scrollLeft = Math.max(document.documentElement.scrollLeft,document.body.scrollLeft);
-
-		var offsetTop = GetRealOffsetTop(userMenu.parentNode);
-		var offsetLeft = GetRealOffsetLeft(userMenu.parentNode);
-		var top = e.clientY+scrollTop-offsetTop;
-		var left = e.clientX+scrollLeft-offsetLeft;
-
-		userMenu.style.display = "";
-		userMenu.style.top = top+"px";
-		userMenu.style.left = left+"px";
-
-		GlobalToggleList[id] = userMenu;
-	}
-
 	/***********************************************************************************
 	 * Event Listeners
 	 ***********************************************************************************/
