@@ -13,7 +13,6 @@ class ModuleRelease extends Module {
 	public $thumbnail;
 	public $skinThumbnail;
 
-	public $totalpost;
 	public $skinPath;
 	public $skinDir;
 	public $mode;
@@ -59,7 +58,6 @@ class ModuleRelease extends Module {
 		$this->idx = $this->mDB->AntiInjection(Request('idx'));
 		$this->mode = Request('mode') ? Request('mode') : ($this->idx == null ? 'list' : 'view');
 
-		$this->totalpost = $this->mDB->DBcount($this->table['post'],$this->find);
 		$this->isHeaderIncluded = false;
 		$this->isFooterIncluded = false;
 		$this->mUploader = null;
@@ -480,18 +478,7 @@ class ModuleRelease extends Module {
 			$sort = 'loop';
 			$dir = 'asc';
 		}
-
-		if ($this->idx != null) {
-			$idx = $this->idx;
-			$post = $this->mDB->DBfetch($this->table['post'],array($sort,'is_notice'),"where `idx`='$idx'");
-			if ($post['is_notice'] == 'TRUE' && Request('p') != null) {
-				$p = Request('p');
-			} else {
-				$prevFind = $find.' and (`'.$sort.'`'.($dir == 'desc' ? '>=' : '<=')."'".$post[$sort]."')";
-				$prevNum = $this->mDB->DBcount($this->table['post'],$prevFind);
-				$p = ceil($prevNum/$listnum);
-			}
-		}
+		
 		$orderer = $sort.','.$dir;
 		$sort = Request('sort') ? Request('sort') : 'idx';
 		$limiter = ($p-1)*$listnum.','.$listnum;
@@ -688,7 +675,15 @@ class ModuleRelease extends Module {
 		$pagenum = $this->setup['pagenum'];
 		$p = is_numeric(Request('p')) == true && Request('p') > 0 ? Request('p') : 1;
 
-		$totalpost = $this->mDB->DBcount($this->table['post'],$find);
+		if ($select != null || $keyword != null) {
+			$totalpost = $this->mDB->DBcount($this->table['post'],$find,'idx');
+		} elseif ($category != null) {
+			$temp = $this->mDB->DBfetch($this->table['category'],array('post'),"where `idx`='$category'");
+			$totalpost = $temp['post'];
+		} else {
+			$temp = $this->mDB->DBfetch($this->table['setup'],array('post'),"where `rid`='{$this->rid}'");
+			$totalpost = $temp['post'];
+		}
 		$totalpage = ceil($totalpost/$listnum) == 0 ? 1 : ceil($totalpost/$listnum);
 		$p = $p > $totalpage ? $totalpage : $p;
 
@@ -703,7 +698,7 @@ class ModuleRelease extends Module {
 			$idx = $this->idx;
 			$post = $this->mDB->DBfetch($this->table['post'],array($sort),"where `idx`='$idx'");
 			$prevFind = $find.' and (`'.$sort.'`'.($dir == 'desc' ? '>=' : '<=')."'".$post[$sort]."')";
-			$prevNum = $this->mDB->DBcount($this->table['post'],$prevFind);
+			$prevNum = $this->mDB->DBcount($this->table['post'],$prevFind,'idx');
 			$p = ceil($prevNum/$listnum);
 		}
 		$orderer = $sort.','.$dir;

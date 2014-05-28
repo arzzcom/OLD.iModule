@@ -531,7 +531,7 @@ class ModuleBoard extends Module {
 		}
 		
 		$p = is_numeric(Request('p')) == true && Request('p') > 0 ? Request('p') : 1;
-		$totalpost = $this->mDB->DBcount($this->table['post'],$find);
+		$totalpost = $this->mDB->DBcount($this->table['post'],$find,'idx');
 		$totalpage = ceil($totalpost/$listnum) == 0 ? 1 : ceil($totalpost/$listnum);
 		$p = $p > $totalpage ? $totalpage : $p;
 
@@ -542,17 +542,6 @@ class ModuleBoard extends Module {
 			$dir = 'asc';
 		}
 
-		if ($this->idx != null) {
-			$idx = $this->idx;
-			$post = $this->mDB->DBfetch($this->table['post'],array($sort,'is_notice'),"where `idx`='$idx'");
-			if ($post['is_notice'] == 'TRUE' && Request('p') != null) {
-				$p = Request('p');
-			} else {
-				$prevFind = $find.' and (`'.$sort.'`'.($dir == 'desc' ? '>=' : '<=')."'".$post[$sort]."')";
-				$prevNum = $this->mDB->DBcount($this->table['post'],$prevFind);
-				$p = ceil($prevNum/$listnum);
-			}
-		}
 		$orderer = $sort.','.$dir;
 		$sort = Request('sort') ? Request('sort') : 'idx';
 		$limiter = ($p-1)*$listnum.','.$listnum;
@@ -806,14 +795,14 @@ class ModuleBoard extends Module {
 			$dir = 'asc';
 		}
 
-		if ($this->idx != null) {
+		if ($this->idx != null && $p == null && preg_match('/'.array_shift(explode('?',$_SERVER['REQUEST_URI'])).'/',$_SERVER['HTTP_REFERER']) == false) {
 			$idx = $this->idx;
 			$post = $this->mDB->DBfetch($this->table['post'],array($sort,'is_notice'),"where `idx`='$idx'");
 			if ($post['is_notice'] == 'TRUE' && Request('p') != null) {
 				$p = Request('p');
 			} else {
 				$prevFind = $find.' and (`'.$sort.'`'.($dir == 'desc' ? '>=' : '<=')."'".$post[$sort]."')";
-				$prevNum = $this->mDB->DBcount($this->table['post'],$prevFind);
+				$prevNum = $this->mDB->DBcount($this->table['post'],$prevFind,'idx');
 				$p = ceil($prevNum/$listnum);
 			}
 		}
@@ -1175,7 +1164,7 @@ class ModuleBoard extends Module {
 			}
 		} else {
 			if ($this->GetPermission('post') == false) return $this->PrintError('글을 작성할 수 있는 권한이 없습니다.');
-			if ($this->setup['use_select'] == 'TRUE' && $this->mMember->IsLogged() == true && $this->mDB->DBcount($this->table['post'],$this->find." and `mno`='{$this->member['idx']}' and `is_select`='FALSE' and `is_notice`='FALSE' and `reg_date`<".(GetGMT()-60*60*24*14)) > 0) return $this->PrintError('답변을 채택하지 않거나, 완료처리를 하지 않은 2주일 이전질문이 있습니다.<br />이전 질문을 완료하신 후 새 질문을 등록하여 주십시오.<br /><br /><a href="'.$this->baseURL.$this->GetQueryString(array('mode'=>'list','select'=>'my','p'=>'1','key'=>'','keyword'=>'')).'">나의 질문목록보기</a>');
+			if ($this->setup['use_select'] == 'TRUE' && $this->mMember->IsLogged() == true && $this->mDB->DBcount($this->table['post'],$this->find." and `mno`='{$this->member['idx']}' and `is_select`='FALSE' and `is_notice`='FALSE' and `reg_date`<".(GetGMT()-60*60*24*14),'idx') > 0) return $this->PrintError('답변을 채택하지 않거나, 완료처리를 하지 않은 2주일 이전질문이 있습니다.<br />이전 질문을 완료하신 후 새 질문을 등록하여 주십시오.<br /><br /><a href="'.$this->baseURL.$this->GetQueryString(array('mode'=>'list','select'=>'my','p'=>'1','key'=>'','keyword'=>'')).'">나의 질문목록보기</a>');
 			$post = array('name'=>GetString(Request('iModuleBoardName','cookie'),'ext'),'category'=>Request('category'),'title'=>'','content'=>'','email'=>GetString(Request('iModuleBoardEmail','cookie'),'ext'),'homepage'=>GetString(Request('iModuleBoardHomepage','cookie'),'ext'),'is_notice'=>'FALSE','is_html_title'=>'FALSE','is_secret'=>'FALSE','is_ment'=>'TRUE','is_msg'=>'TRUE');
 			$password = '';
 			$image = '';
