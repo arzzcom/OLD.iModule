@@ -158,7 +158,7 @@ class ModuleRelease extends Module {
 		$content = str_replace('{$moduleHost}','http://'.$_SERVER['HTTP_HOST'],$content);
 		$content = strip_tags($content,'<p>,<a>,<embed>,<blockquote>,<table>,<tr>,<td>,<b>,<i>,<u>,<div>,<font>,<span>,<img>,<br>');
 		$content = str_replace(array('onclick','onload','onerror'),'event',$content);
-		$content = '<section class="smartOutput">'.$content.'</section>';
+		$content = '<section><div class="smartOutput">'.$content.'</div></section>';
 
 		if (preg_match_all('/<img[^>]+file="([^"]+)"[^>]+movie="([^\"]+)"[^>]+(style="[^"]+")[^>]*>/',$content,$match) == true) {
 			for ($i=0, $loop=sizeof($match[0]);$i<$loop;$i++) {

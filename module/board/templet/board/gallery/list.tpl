@@ -118,7 +118,7 @@
 				<td class="splitBar"></td>
 				<td class="thumbnailCell" onclick="location.href='{$data.postlink}';">
 					<div class="listLoading">
-						<img src="{mBoard->GetThumbnail post=$data width=176 height=0 min_height=110 error=$skinDir|cat:'/images/noimage.gif'}" style="display:none;" />
+						<img isThumbnail="TRUE" src="{mBoard->GetThumbnail post=$data width=176 height=0 min_height=110 error=$skinDir|cat:'/images/noimage.gif'}" style="display:none;" />
 					</div>
 					
 					<div class="countBg"></div>
@@ -148,7 +148,7 @@
 			<tr>
 				<td class="splitBar"></td>
 				<td class="bodyCell">
-					<div class="nickname right">{$data.author.nickname}</div>
+					<div class="right">{$data.author.nickname}</div>
 					<div class="reg_date">{$data.reg_date|date_format:"%B %d, %Y"}</div>
 				</td>
 				<td class="splitBar"></td>

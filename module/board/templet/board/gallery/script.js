@@ -5,14 +5,16 @@ $(document).ready(function() {
 	$("#iBoardGalleryContainer").imagesLoaded(function() {
 		$("#iBoardGalleryContainer").masonry();
 	}).progress(function(imgLoad,image) {
-		var item = $(image.img).parent();
-		item.removeClass("listLoading");
-		if (image.isLoaded == false) {
-			item.addClass("listBroken");
-		} else {
-			item.addClass("listLoaded");
-			$(image.img).show();
-			$("#iBoardGalleryContainer").masonry();
+		if ($(image.img).attr("isThumbnail") == "TRUE") {
+			var item = $(image.img).parent();
+			item.removeClass("listLoading");
+			if (image.isLoaded == false) {
+				item.addClass("listBroken");
+			} else {
+				item.addClass("listLoaded");
+				$(image.img).show();
+				$("#iBoardGalleryContainer").masonry();
+			}
 		}
 	});
 });

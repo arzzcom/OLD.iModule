@@ -1,9 +1,10 @@
 <?php $_ENV['isHeaderIncluded'] = true; if (isset($_ENV['dir']) == false) REQUIRE_ONCE '../config/default.conf.php'; ?>
-<!doctype html>
+<!DOCTYPE HTML>
 <html lang="ko">
 <head>
 <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
 <title><?php echo isset($title) == true ? $title : ''; ?></title>
+<link rel="stylesheet" href="<?php echo $_ENV['dir']; ?>/css/NanumGothicWeb.css" type="text/css" title="style" />
 <link rel="stylesheet" href="<?php echo $_ENV['dir']; ?>/css/default.css" type="text/css" title="style" />
 <script type="text/javascript" src="<?php echo $_ENV['dir']; ?>/script/jquery.1.9.0.min.js"></script>
 <script type="text/javascript" src="<?php echo $_ENV['dir']; ?>/script/default.js"></script>

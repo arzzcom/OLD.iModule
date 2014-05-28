@@ -1,8 +1,8 @@
-@import url('./NanumGothicWeb.css');
-
 * {margin:0px; padding:0px; line-height:100%;}
 BODY {overflow:auto;}
 INPUT {outline:none;}
+
+header, nav, section, article, aside, footer {display:block;}
 
 /* Default */
 FORM {margin:0px;}
@@ -18,20 +18,20 @@ IMG {border:0px;}
 .vBottom {vertical-align:bottom;}
 
 /* font */
-.bold {font-weight:bold;}
-.normal {font-weight:normal;}
-.underline {text-decoration:underline;}
-.f10 {font-size:10px;}
-.f11 {font-size:11px;}
-.f12 {font-size:12px;}
-.f14 {font-size:14px;}
-.dotum {font-family:dotum;}
-.tahoma {font-family:tahoma;}
-.verdana {font-family:verdana;}
+.bold {font-weight:bold !important;}
+.normal {font-weight:normal !important;}
+.underline {text-decoration:underline !important;}
+.f10 {font-size:10px !important;}
+.f11 {font-size:11px !important;}
+.f12 {font-size:12px !important;}
+.f14 {font-size:14px !important;}
+.dotum {font-family:dotum !important;}
+.tahoma {font-family:tahoma !important;}
+.verdana {font-family:verdana !important;}
 .white {color:#FFFFFF !important;}
 .gray {color:#666666 !important;}
 .red {color:#FF0000 !important;}
-.smallEng {font-family:tahoma; font-size:10px;}
+.smallEng {font-family:tahoma !important; font-size:10px !important;}
 
 /* cursor */
 .pointer {cursor:pointer;}

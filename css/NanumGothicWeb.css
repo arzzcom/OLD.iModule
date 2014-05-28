@@ -1,1 +1,35 @@
-@font-face {font-family:'NanumGothicWeb';font-style:normal;font-weight:400;src:url(../font/NanumGothic-Regular.eot);src:local("NanumGothic"),url(../font/NanumGothic-Regular2.eot) format('embedded-opentype'),url(../font/NanumGothic-Regular.woff2) format('x-woff2'),url(../font/NanumGothic-Regular.woff) format('woff'),url(../font/NanumGothic-Regular.ttf) format('truetype');}
+/*@font-face {font-family:'NanumGothicWeb';font-style:normal;font-weight:400;src:url(../font/NanumGothic-Regular.eot),url(../font/NanumGothic-Regular2.eot) format('embedded-opentype'),url(../font/NanumGothic-Regular.woff2) format('x-woff2'),url(../font/NanumGothic-Regular.woff) format('woff'),url(../font/NanumGothic-Regular.ttf) format('truetype');}
+*/
+/* 
+ * NanumGothicWeb (Korean) http://www.google.com/webfonts/earlyaccess
+ */
+@font-face {
+  font-family: 'NanumGothicWeb';
+  font-style: normal;
+  font-weight: 700;
+  src: url(//themes.googleusercontent.com/static/fonts/earlyaccess/nanumgothic/v3/NanumGothic-Bold.eot);
+  src: url(//themes.googleusercontent.com/static/fonts/earlyaccess/nanumgothic/v3/NanumGothic-Bold.eot?#iefix) format('embedded-opentype'),
+       url(//themes.googleusercontent.com/static/fonts/earlyaccess/nanumgothic/v3/NanumGothic-Bold.woff2) format('woff2'),
+       url(//themes.googleusercontent.com/static/fonts/earlyaccess/nanumgothic/v3/NanumGothic-Bold.woff) format('woff'),
+       url(//themes.googleusercontent.com/static/fonts/earlyaccess/nanumgothic/v3/NanumGothic-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'NanumGothicWeb';
+  font-style: normal;
+  font-weight: 400;
+  src: url(//themes.googleusercontent.com/static/fonts/earlyaccess/nanumgothic/v3/NanumGothic-Regular.eot);
+  src: url(//themes.googleusercontent.com/static/fonts/earlyaccess/nanumgothic/v3/NanumGothic-Regular.eot?#iefix) format('embedded-opentype'),
+       url(//themes.googleusercontent.com/static/fonts/earlyaccess/nanumgothic/v3/NanumGothic-Regular.woff2) format('woff2'),
+       url(//themes.googleusercontent.com/static/fonts/earlyaccess/nanumgothic/v3/NanumGothic-Regular.woff) format('woff'),
+       url(//themes.googleusercontent.com/static/fonts/earlyaccess/nanumgothic/v3/NanumGothic-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'NanumGothicWeb';
+  font-style: normal;
+  font-weight: 800;
+  src: url(//themes.googleusercontent.com/static/fonts/earlyaccess/nanumgothic/v3/NanumGothic-ExtraBold.eot);
+  src: url(//themes.googleusercontent.com/static/fonts/earlyaccess/nanumgothic/v3/NanumGothic-ExtraBold.eot?#iefix) format('embedded-opentype'),
+       url(//themes.googleusercontent.com/static/fonts/earlyaccess/nanumgothic/v3/NanumGothic-ExtraBold.woff2) format('woff2'),
+       url(//themes.googleusercontent.com/static/fonts/earlyaccess/nanumgothic/v3/NanumGothic-ExtraBold.woff) format('woff'),
+       url(//themes.googleusercontent.com/static/fonts/earlyaccess/nanumgothic/v3/NanumGothic-ExtraBold.ttf) format('truetype');
+}
