@@ -139,6 +139,7 @@
 						<span class="label label-sm label-danger normal tahoma f10">REPLY <b>{$data.ment}{if $data.is_newment == true}+{/if}</b></span>
 						<span class="label label-sm label-warning normal tahoma f10">VOTE <b>{$data.vote}</b></span>
 					</div>
+					<div class="reg_date">{$data.reg_date|date_format:"%B %d, %Y"}</div>
 				</td>
 				<td class="splitBar"></td>
 			</tr>
@@ -147,9 +148,8 @@
 			</tr>
 			<tr>
 				<td class="splitBar"></td>
-				<td class="bodyCell">
-					<div class="right">{$data.author.nickname}</div>
-					<div class="reg_date">{$data.reg_date|date_format:"%B %d, %Y"}</div>
+				<td class="thumbnailNicknameCell">
+					{$data.author.nickname}
 				</td>
 				<td class="splitBar"></td>
 			</tr>

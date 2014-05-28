@@ -78,6 +78,7 @@
 	<script type="text/javascript" src="{$skinDir}/galleria/galleria-1.3.5.min.js"></script>
 	<script type="text/javascript" src="{$skinDir}/galleria/themes/azur/galleria.azur.min.js"></script>
 	
+	{if $data.image != '0'}
 	<div style="height:10px; overflow:hidden; background:#000000;"></div>
 	<div id="galleria" style="width:100%; height:500px;">
 		{foreach name=image from=$file item=image}
@@ -92,6 +93,9 @@
 	</script>
 	
 	<div class="height20"></div>
+	{else}
+	<div class="height10"></div>
+	{/if}
 	
 	{$data.content}
 	
