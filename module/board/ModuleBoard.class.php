@@ -161,8 +161,8 @@ class ModuleBoard extends Module {
 		$content = str_replace('{$moduleHost}','http://'.$_SERVER['HTTP_HOST'],$content);
 		$content = strip_tags($content,'<p>,<a>,<embed>,<blockquote>,<table>,<tr>,<td>,<b>,<i>,<u>,<div>,<font>,<span>,<img>,<br>');
 		$content = str_replace(array('onclick','onload','onerror'),'event',$content);
-		if ($this->setup['mobile'] == true) $content = '<section class="smartOutputMobile">'.$content.'</section>';
-		else $content = '<section class="smartOutput">'.$content.'</section>';
+		if ($this->setup['mobile'] == true) $content = '<section><div class="smartOutputMobile">'.$content.'</div></section>';
+		else $content = '<section><div class="smartOutput">'.$content.'</div></section>';
 
 		if (preg_match_all('/<img[^>]+file="([^"]+)"[^>]+movie="([^\"]+)"[^>]+(style="[^"]+")[^>]*>/',$content,$match) == true) {
 			for ($i=0, $loop=sizeof($match[0]);$i<$loop;$i++) {
@@ -512,6 +512,13 @@ class ModuleBoard extends Module {
 		$this->mTemplet->assign('permission',$permission);
 
 		return $this->GetTemplet();
+	}
+	
+	function GetFileCount($val) {
+		$find = 'where 1';
+		if (isset($val['idx']) == true && $val['idx']) $find.= " and `repto`='{$val['idx']}'";
+		if (isset($val['type']) == true && $val['idx']) $find.= " and `filetype`='{$val['type']}'"; 
+		return $this->mDB->DBcount($this->table['file'],$find,'idx');
 	}
 	
 	// 나의 게시물 출력
@@ -923,8 +930,7 @@ class ModuleBoard extends Module {
 		$this->mTemplet->assign('categoryName',$categoryName);
 		$this->mTemplet->assign('categoryList',$categoryList);
 		$this->mTemplet->assign('p',$p);
-
-		$this->mTemplet->register_object('mBoard',$this,array('GetSortLink','GetThumbnail'));
+		$this->mTemplet->register_object('mBoard',$this,array('GetSortLink','GetThumbnail','GetFileCount'));
 		$this->PrintTemplet();
 	}
 

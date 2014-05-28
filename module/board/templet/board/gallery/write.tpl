@@ -1,77 +1,79 @@
 {$formStart}
-<table cellpadding="0" cellspacing="0" class="layoutfixed">
-<col width="5" /><col width="100%" /><col width="5" />
-<tr class="viewbar">
-	<td class="left"></td>
-	<td class="title">글 작성하기</td>
-	<td class="right"></td>
+<table cellpadding="0" cellspacing="0" class="boardTable">
+<col width="100" /><col width="1" /><col width="100%" /><col width="300" />
+<tr>
+	<td colspan="4" class="sectionTitle">{if $mode == 'modify'}이미지 수정하기{else}이미지 등록하기{/if}</td>
 </tr>
-</table>
-
-<table cellpadding="0" cellspacing="0" class="layoutfixed">
-<col width="100" /><col width="100%" />
+<tr class="sectionBar">
+	<td colspan="4"></td>
+</tr>
 {if $member.idx == 0}
 <tr>
-	<td><img src="{$skinDir}/images/text_write_name.gif" /></td>
-	<td>
-		<input type="text" name="name" value="{$post.name}" onfocus="this.className='inputbox-on';" onblur="this.className='inputbox';" style="width:100px;" class="inputbox" blank="이름을 입력하여 주십시오." autosave="true" />
-		<span class="infor">*</span>
+	<td class="headerCell">작성자</td>
+	<td class="splitBar"></td>
+	<td colspan="2" class="bodyCell">
+		<input type="text" name="name" value="{$post.name}" style="width:100px;" blank="이름을 입력하여 주십시오." autosave="true" />
 	</td>
 </tr>
-<tr class="dashed">
-	<td colspan="2"></td>
+<tr class="splitBar">
+	<td colspan="4"></td>
 </tr>
 <tr>
-	<td><img src="{$skinDir}/images/text_write_password.gif" /></td>
-	<td>
-		<input type="password" name="password" value="{$title}" onfocus="this.className='inputbox-on';" onblur="this.className='inputbox';" style="width:100px;" class="inputbox" {if !$post.password}blank="패스워드를 입력하여 주십시오."{/if} />
-		<span class="infor">* ({if $post.password}패스워드를 변경하시려면, 입력하세요.{else}글을 수정/삭제하거나, 비밀글 열람시 사용됩니다.{/if})</span>
+	<td class="headerCell">패스워드</td>
+	<td class="splitBar"></td>
+	<td class="bodyCell">
+		<input type="password" name="password" value="" style="width:100px;" {if !$post.password}blank="패스워드를 입력하여 주십시오."{/if} />
 	</td>
+	<td class="gray right">{if $post.password}패스워드를 변경하시려면, 입력하세요.{else}글을 수정/삭제하거나, 비밀글 열람시 사용됩니다.{/if}</td>
 </tr>
-<tr class="dashed">
-	<td colspan="2"></td>
+<tr class="splitBar">
+	<td colspan="4"></td>
 </tr>
 <tr>
-	<td><img src="{$skinDir}/images/text_write_email.gif" /></td>
-	<td>
-		<input type="text" name="email" value="{$post.email}" onfocus="this.className='inputbox-on';" onblur="this.className='inputbox';" style="width:200px;" class="inputbox" autosave="true" />
-		<span class="infor"> (댓글을 해당메일로 받아 볼 수 있습니다.)</span>
+	<td class="headerCell">이메일</td>
+	<td class="splitBar"></td>
+	<td class="bodyCell">
+		<input type="text" name="email" value="{$post.email}" style="width:200px;" autosave="true" />
 	</td>
+	<td class="gray right">(댓글을 해당메일로 받아 볼 수 있습니다.)</td>
 </tr>
-<tr class="dashed">
-	<td colspan="2"></td>
+<tr class="splitBar">
+	<td colspan="4"></td>
 </tr>
 <tr>
-	<td><img src="{$skinDir}/images/text_write_homepage.gif" /></td>
-	<td><input type="text" name="homepage" value="{$post.homepage}" onfocus="this.className='inputbox-on';" onblur="this.className='inputbox';" style="width:300px;" class="inputbox" autosave="true" /></td>
+	<td class="headerCell">홈페이지</td>
+	<td class="splitBar"></td>
+	<td colspan="2" class="bodyCell"><input type="text" name="homepage" value="{$post.homepage}" style="width:300px;" autosave="true" /></td>
 </tr>
-<tr class="dashed">
-	<td colspan="2"></td>
+<tr class="splitBar">
+	<td colspan="4"></td>
 </tr>
 {/if}
 <tr>
-	<td><img src="{$skinDir}/images/text_write_title.gif" /></td>
-	<td>
-		<input type="text" name="title" value="{$post.title}" onfocus="this.className='inputbox-on';" onblur="this.className='inputbox';" style="width:90%;" class="inputbox" blank="제목을 입력하여 주십시오." autosave="true" />
-		<span class="infor">*</span>
+	<td class="headerCell">제목</td>
+	<td class="splitBar"></td>
+	<td colspan="2" class="bodyCell">
+		<input type="text" name="title" value="{$post.title}" style="width:90%;" blank="제목을 입력하여 주십시오." autosave="true" />
 	</td>
 </tr>
-{if $categoryList}
-<tr class="dashed">
-	<td colspan="2"></td>
+{if $setup.use_category != 'FALSE'}
+<tr class="splitBar">
+	<td colspan="4"></td>
 </tr>
 <tr>
-	<td><img src="{$skinDir}/images/text_write_category.gif" /></td>
+	<td class="headerCell">분류</td>
+	<td class="splitBar"></td>
 	<td>
+		
 		<input type="hidden" name="category" value="{$post.category}" />
 		<div style="margin:5px 0px 5px 10px;">
 		<div id="iBoardCategory" class="selectbox" style="width:150px;">
 			<div onclick="InputSelectBox('iBoardCategory')" clicker="iBoardCategory">{if $categoryName}{$categoryName}{else}카테고리{/if}</div>
 
 			<ul style="display:none;" clicker="iBoardCategory">
-				<li onclick="InputSelectBoxSelect('iBoardCategory','분류없음','',WriteSelectCategory)">분류없음</li>
+				{if $setup.use_category == 'OPTION'}<li onclick="InputSelectBoxSelect('iBoardCategory','분류없음','',WriteSelectCategory)">분류없음</li>{/if}
 				{foreach from=$categoryList item=categoryList}
-				<li onclick="InputSelectBoxSelect('iBoardCategory','{$categoryList.category|replace:"'":"\'"}','{$categoryList.idx}',WriteSelectCategory)">{$categoryList.category}</li>
+				<li onclick="InputSelectBoxSelect('iBoardCategory','{$categoryList.category}','{$categoryList.idx}',WriteSelectCategory)">{$categoryList.category}</li>
 				{/foreach}
 			</ul>
 		</div>
@@ -79,20 +81,26 @@
 	</td>
 </tr>
 {/if}
-<tr class="dashed">
-	<td colspan="2"></td>
+<tr class="splitBar">
+	<td colspan="4"></td>
 </tr>
 <tr>
-	<td colspan="2">
+	<td colspan="4">
 		<div class="height5"></div>
 		<textarea name="content" id="content" style="width:100%; height:400px;" blank="내용을 입력하여 주십시오." autosave="true" opserve="true">{$post.content}</textarea>
 		<div class="height5"></div>
 		{mBoard->PrintWysiwyg id="content"}
 		{mBoard->PrintUploader type="post" form=$formName id="uploader" skin="default" wysiwyg="content"}
+		
+		<div class="height5"></div>
+		<div class="boxAlert">
+			여러장의 이미지를 한번에 업로드할 수 있으며, 이미지파일의 경우 본문에 삽입하지 않더라도 갤러리형식으로 자동으로 보이게 됩니다.<br />
+			가급적 이미지 첨부 후 해당 이미지를 본문에 삽입하지 않는 것을 권장합니다.
+		</div>
 	</td>
 </tr>
 <tr>
-	<td colspan="2">
+	<td colspan="4">
 		<div class="optionarea">
 			<div class="checkbox"><input type="checkbox" id="is_notice" name="is_notice" value="1"{if $post.is_notice == 'TRUE'} checked="checked"{/if} /><label for="is_notice">해당글을 <span class="pointText">공지사항으로 설정</span>합니다.</label></div>
 			<div class="checkbox"><input type="checkbox" id="is_html_title" name="is_html_title" value="1"{if $post.is_html_title == 'TRUE'} checked="checked"{/if} /><label for="is_html_title">해당글의 제목에 <span class="pointText">HTML태그를 사용</span>합니다.</label></div>
@@ -106,7 +114,7 @@
 </tr>
 {if $antispam}
 <tr>
-	<td colspan="2">
+	<td colspan="4">
 		<table cellpadding="0" cellspacing="0" class="layoutfixed">
 		<col width="180" /><col width="100%" />
 		<tr>
@@ -121,29 +129,34 @@
 	</td>
 </tr>
 {/if}
-</table>
-
-<div class="height5"></div>
-
-<table cellpadding="0" cellspacing="0" class="layoutfixed">
-<col width="10" /><col width="100%" /><col width="10" />
-<tr class="mentthin">
-	<td class="left"></td>
-	<td></td>
-	<td class="right"></td>
+<tr class="height5">
+	<td colspan="4"></td>
+</tr>
+<tr>
+	<td colspan="4">
+		<input type="submit" class="btn btn-sm btn-primary btn-block" value="{if $mode == 'modify'}이미지 수정하기{else}이미지 등록하기{/if}" />
+	</td>
+</tr>
+<tr class="height5">
+	<td colspan="4"></td>
+</tr>
+<tr class="splitBar">
+	<td colspan="4"></td>
+</tr>
+<tr class="sectionEnd">
+	<td colspan="4"><div></div></td>
 </tr>
 </table>
 
-<div class="height5"></div>
+<div class="height10"></div>
 
 <table cellpadding="0" cellspacing="0" class="layoutfixed">
 <col width="50%" /><col width="50%" />
 <tr>
-	<td class="innerimg">
-		<a href="{$link.list}"><img src="{$skinDir}/images/btn_list.gif" style="margin-right:3px;" /></a>
+	<td>
+		<a href="{$link.list}" class="btn btn-sm btn-default">목록보기</a>
 	</td>
-	<td class="innerimg right">
-		<input type="image" src="{$skinDir}/images/btn_{$mode}.gif" />
-	</td>
+	<td></td>
 </tr>
-</table>{$formEnd}
+</table>
+{$formEnd}
