@@ -2278,9 +2278,7 @@ function ModuleUploaderEventProgressTotal(e,data) {
 }
 
 function ModuleUploaderAdd(id,fileLength) {
-	WindowDisabled(true);
-	$("#"+id+"Progress").center(true);
-	$($("#"+id+"Progress").find(".totalCount")).text(fileLength);
+	ModuleUploaderAddBySkin(id,fileLength);
 }
 
 function ModuleUploaderErrorSize(id,file,maxSize) {
@@ -2289,7 +2287,6 @@ function ModuleUploaderErrorSize(id,file,maxSize) {
 }
 
 function ModuleUploaderStart(id) {
-	console.log("start");
 	$("#"+id+"Error").hide();
 	ModuleUploaderStartedIndex = 0;
 	ModuleUploaderStartedTime = new Date().getTime();
@@ -2303,8 +2300,7 @@ function ModuleUploaderDone(id,result) {
 }
 
 function ModuleUploaderComplete(id) {
-	WindowDisabled(false);
-	$("#"+id+"Progress").center(false);
+	ModuleUploaderCompleteBySkin(id);
 }
 
 function ModuleUploaderFail(id,file) {

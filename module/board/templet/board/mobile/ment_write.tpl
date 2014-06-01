@@ -15,7 +15,7 @@
 	<textarea name="content" id="{$wysiwygName}" style="width:100%; height:150px;" blank="내용을 입력하여 주십시오.">{$data.content}</textarea>
 </div>
 <div class="height5"></div>
-{mBoard->PrintUploader type="ment" form=$formName id=$uploaderName skin="default" wysiwyg=$wysiwygName}
+{mBoard->PrintUploader type="ment" form=$formName id=$uploaderName skin="mobile" wysiwyg=$wysiwygName}
 <div class="height5"></div>
 
 {if $antispam}

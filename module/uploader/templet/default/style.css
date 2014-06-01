@@ -13,6 +13,8 @@
 .ModuleUploaderDefault .previewImage .text .deleteButton {float:right; cursor:pointer; width:10px; height:9px; background:url(./images/btn_delete.gif);}
 .ModuleUploaderDefault .previewImage .insertButton {margin-top:3px; background:url(./images/btn_insert.gif); width:75px; height:20px; cursor:pointer;}
 
+.ModuleUploaderDefault .errorLayer {font-size:12px; font-family:NanumGothicWeb; color:red; line-height:1.6;}
+
 .ModuleUploaderDefault .previewFile DIV.item {display:block; height:20px; margin:5px 0px 5px 0px; background:url(./images/icon_file.gif) no-repeat 0px center; padding-left:20px;}
 .ModuleUploaderDefault .previewFile SPAN {height:20px; line-height:20px; vertical-align:middle; font-family:NanumGothicWeb; font-weight:bold;}
 .ModuleUploaderDefault .previewFile SPAN.insertButton {display:inline-block; margin-left:10px; background:url(./images/btn_insert.gif); width:75px; height:20px; cursor:pointer;}

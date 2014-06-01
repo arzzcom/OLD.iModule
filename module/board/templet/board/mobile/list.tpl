@@ -40,7 +40,7 @@
 			{if $is_view_loopnum == true}<th style="width:80px;" class="hidden-xs">#</th>{/if}
 			<th style="width:100%;">제목</th>
 			{if $is_view_name == true}<th style="width:120px;" class="hidden-xs">작성자</th>{/if}
-			{if $is_view_reg_date == true}<th style="width:100px;" class="hidden-xs">작성일</th>{/if}
+			{if $is_view_reg_date == true}<th style="width:110px;" class="hidden-xs">작성일</th>{/if}
 		</tr>
 	</thead>
 	<tbody>

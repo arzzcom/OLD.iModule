@@ -1,0 +1,15 @@
+.ModuleUploaderMobile .errorLayer {font-size:14px; font-family:NanumGothicWeb; color:red; line-height:1.6;}
+
+.ModuleUploaderMobile .previewImage DIV.item {display:inline-block; margin:5px 5px 5px 0px; width:100px;}
+.ModuleUploaderMobile .previewImage .imageon IMG {border:2px solid #4C6B9A; cursor:pointer; width:100px; height:80px;}
+.ModuleUploaderMobile .previewImage .imageoff IMG {border:2px solid #E5E5E5; cursor:pointer; width:100px; height:80px;}
+.ModuleUploaderMobile .previewImage .text {margin-top:5px;}
+.ModuleUploaderMobile .previewImage .text .size {float:left; font-weight:bold; font-family:verdana; font-size:10px;}
+.ModuleUploaderMobile .previewImage .button {height:25px;}
+.ModuleUploaderMobile .previewImage .insertButton {float:left; margin-top:5px; background:url(./images/btn_insert.gif); width:75px; height:20px; cursor:pointer;}
+.ModuleUploaderMobile .previewImage .deleteButton {float:right; cursor:pointer; width:20px; height:20px; background:url(./images/btn_block_delete.gif); margin-top:5px;}
+
+.ModuleUploaderMobile .previewFile DIV.item {display:block;margin:5px 0px 5px 0px; background:url(./images/icon_file.gif) no-repeat 0px 5px; padding-left:20px;}
+.ModuleUploaderMobile .previewFile SPAN.text {display:block; height:20px; line-height:20px; vertical-align:middle; font-family:NanumGothicWeb; font-weight:bold;}
+.ModuleUploaderMobile .previewFile SPAN.insertButton {display:inline-block; background:url(./images/btn_insert.gif); width:75px; height:20px; cursor:pointer; margin-top:5px;}
+.ModuleUploaderMobile .previewFile SPAN.deleteButton {display:inline-block; margin-left:2px; margin-top:5px; background:url(./images/btn_block_delete.gif); width:20px; height:20px; cursor:pointer;}

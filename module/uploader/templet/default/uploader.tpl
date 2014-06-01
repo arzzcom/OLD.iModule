@@ -3,7 +3,7 @@
 	<div id="{$id}ImageList" class="previewImage"></div>
 	<div id="{$id}FileList" class="previewFile"></div>
 	
-	<div id="{$id}Error"></div>
+	<div id="{$id}Error" class="errorLayer"></div>
 	
 	<div id="{$id}Progress" class="progressbox" style="display:none;">
 		파일을 업로드중입니다... (<span class="currentCount">0</span>/<span class="totalCount">0</span>)

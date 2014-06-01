@@ -1,12 +1,10 @@
 function ModuleUploaderAddBySkin(id,fileLength) {
 	WindowDisabled(true);
-	$("#"+id+"Progress").center(true);
 	$($("#"+id+"Progress").find(".totalCount")).text(fileLength);
 }
 
 function ModuleUploaderCompleteBySkin(id) {
 	WindowDisabled(false);
-	$("#"+id+"Progress").center(false);
 }
 
 function ModuleUploaderDoneBySkin(id,o,f) {
@@ -32,18 +30,20 @@ function ModuleUploaderDoneBySkin(id,o,f) {
 			var file = $("<div>").append($("<img>").attr("src",f.thumbnail));
 		}
 		
+		var button = $("<div>").addClass("button");
 		if (o.wysiwygObject) {
-			file.append($("<div>").addClass("insertButton").data("file",objectData).on("click",ModuleUploaderInsertWysiwyg));
+			button.append($("<div>").addClass("insertButton").data("file",objectData).on("click",ModuleUploaderInsertWysiwyg));
 		}
+		button.append($("<div>").addClass("deleteButton").data("file",objectData).on("click",ModuleUploaderFileDelete));
+		file.append(button);
 		
 		var info = $("<div>").addClass("text");
 		info.append($("<div>").addClass("size").text(ModuleUploaderFileSize(f.size)));
-		info.append($("<div>").addClass("deleteButton").data("file",objectData).on("click",ModuleUploaderFileDelete));
 		
 		file.append(info);
 	} else {
 		var target = $("#"+id+"FileList");
-		file.append($("<span>").html(f.name+" ("+ModuleUploaderFileSize(f.size)+")"));
+		file.append($("<span>").addClass("text").html(f.name+" ("+ModuleUploaderFileSize(f.size)+")"));
 		if (o.wysiwygObject) {
 			file.append($("<span>").addClass("insertButton").data("file",objectData).on("click",ModuleUploaderInsertWysiwyg));
 		}
