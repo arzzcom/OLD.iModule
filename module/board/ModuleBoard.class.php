@@ -1174,11 +1174,7 @@ class ModuleBoard extends Module {
 		$formEnd = '</form>'."\n".'<iframe name="'.$actionTarget.'" style="display:none;"></iframe>'."\n";
 		$formEnd.= '<div id="AutoSaverAlertBox" style="display:none;"></div>'."\n";
 
-		if ($this->member['idx'] == '1') {
-			if ($mode == 'modify' && $this->setup['use_uploader'] == 'TRUE') $formEnd.= '<script type="text/javascript">ModuleUploaderLoad("repto='.$idx.'");</script>';
-		} else {
-			if ($mode == 'modify' && $this->setup['use_uploader'] == 'TRUE') $formEnd.= '<script type="text/javascript">AzUploaderComponent.load("repto='.$idx.'");</script>';
-		}
+		if ($mode == 'modify' && $this->setup['use_uploader'] == 'TRUE') $formEnd.= '<script type="text/javascript">ModuleUploaderLoad("repto='.$idx.'");</script>';
 
 		$autosaveFind = "where `bid`='{$this->bid}'";
 		$autosaveFind.= $idx != null ? " and `repto`=$idx" : '';
@@ -1304,7 +1300,7 @@ class ModuleBoard extends Module {
 			$formEnd.= '<script type="text/javascript">nhn.husky.EZCreator.createInIFrame({oAppRef:oEditors,elPlaceHolder:"MentWrite'.$repto.'",sSkinURI:"'.$_ENV['dir'].'/module/wysiwyg/wysiwyg.php",fCreator:"createSEditorInIFrame"}); UsedWysiwyg.push("MentWrite'.$repto.'");</script>';
 		}
 
-		if ($mode == 'ment_modify' && $this->setup['use_uploader'] == 'TRUE') $formEnd.= '<script type="text/javascript">AzUploaderComponent.load("repto='.$idx.'");</script>';
+		if ($mode == 'ment_modify' && $this->setup['use_uploader'] == 'TRUE') $formEnd.= '<script type="text/javascript">ModuleUploaderLoad("repto='.$idx.'");</script>';
 
 		$permission = array();
 		$permission['ment'] = $this->GetPermission('ment') == true && $post['is_ment'] == 'TRUE';
@@ -1542,11 +1538,8 @@ class ModuleBoard extends Module {
 			$this->mUploader->SetUploadPath($this->moduleDir.'/exec/FileUpload.do.php?type='.strtoupper($var['type']).'&wysiwyg='.$var['wysiwyg']);
 			$this->mUploader->SetLoadPath($this->moduleDir.'/exec/FileLoad.do.php?type='.strtoupper($var['type']).'&wysiwyg='.$var['wysiwyg']);
 			
-			if ($this->member['idx'] == 1) $uploader = $this->mUploader->PrintUploader($var['skin'],$var['id'],$var['form'],$var['wysiwyg']);
-			else $uploader = $this->mUploader->GetUploader($var['skin'],$var['id'],$var['form'],$var['wysiwyg']);
+			$this->mUploader->PrintUploader($var['skin'],$var['id'],$var['form'],$var['wysiwyg']);
 		}
-
-		return $uploader;
 	}
 
 	function PrintWysiwyg($var) {

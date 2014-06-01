@@ -26,7 +26,7 @@
 	</tr>
 	{foreach name=list from=$data item=data}
 	<tr>
-		<td class="bodyCell center f11"><div>{$data.board}</div></td>
+		<td class="bodyCell center f11"><div>{$data.release}</div></td>
 		<td class="splitBar"></td>
 		<td class="bodyCell">
 			<div>

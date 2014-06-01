@@ -366,7 +366,6 @@ class ModuleRelease extends Module {
 
 			$data[$i]['action'] = array();
 			$data[$i]['action']['reply'] = 'ReplyMent('.$idx.','.$data[$i]['idx'].');';
-			$data[$i]['action']['select'] = 'SelectMent('.$data[$i]['idx'].');';
 
 			if ($data[$i]['last_modify_hit'] > 0) {
 				$data[$i]['last_modify'] = array();
@@ -505,9 +504,7 @@ class ModuleRelease extends Module {
 				$data[$i]['category'] = '';
 			}
 
-			$data[$i]['board'] = $this->GetReleaseTitle($data[$i]['rid']);
-
-			$data[$i]['is_select'] = false;
+			$data[$i]['release'] = $this->GetReleaseTitle($data[$i]['rid']);
 		}
 
 		$page = array();
@@ -675,7 +672,7 @@ class ModuleRelease extends Module {
 		$pagenum = $this->setup['pagenum'];
 		$p = is_numeric(Request('p')) == true && Request('p') > 0 ? Request('p') : 1;
 
-		if ($select != null || $keyword != null) {
+		if ($keyword != null) {
 			$totalpost = $this->mDB->DBcount($this->table['post'],$find,'idx');
 		} elseif ($category != null) {
 			$temp = $this->mDB->DBfetch($this->table['category'],array('post'),"where `idx`='$category'");
@@ -1020,7 +1017,7 @@ class ModuleRelease extends Module {
 		$formStart.= '<input type="hidden" name="image" value="'.$post['image'].'" />'."\n";
 		$formEnd = '</form>'."\n".'<iframe name="'.$actionTarget.'" style="display:none;"></iframe>'."\n";
 
-		if ($mode == 'modify') $formEnd.= '<script type="text/javascript">AzUploaderComponent.load("repto='.$idx.'");</script>';
+		if ($mode == 'modify') $formEnd.= '<script type="text/javascript">ModuleUploaderLoad("repto='.$idx.'");</script>';
 
 		$categoryName = '';
 		$categoryList = array();
@@ -1186,7 +1183,7 @@ class ModuleRelease extends Module {
 		$formEnd = '</form>'."\n".'<iframe name="'.$actionTarget.'" style="display:none;"></iframe>'."\n";
 		$formEnd.= '<script type="text/javascript">nhn.husky.EZCreator.createInIFrame({oAppRef:oEditors,elPlaceHolder:"MentWrite'.$repto.'",sSkinURI:"'.$_ENV['dir'].'/module/wysiwyg/wysiwyg.php",fCreator:"createSEditorInIFrame"}); UsedWysiwyg.push("MentWrite'.$repto.'");</script>';
 
-		if ($mode == 'ment_modify') $formEnd.= '<script type="text/javascript">AzUploaderComponent.load("repto='.$idx.'");</script>';
+		if ($mode == 'ment_modify') $formEnd.= '<script type="text/javascript">ModuleUploaderLoad("repto='.$idx.'");</script>';
 
 		$permission = array();
 		$permission['ment'] = $this->GetPermission('ment') == true && $post['is_ment'] == 'TRUE';
@@ -1403,18 +1400,12 @@ class ModuleRelease extends Module {
 	}
 
 	function PrintUploader($var) {
-		$mModule = new Module('uploader');
-		if ($mModule->IsSetup() == true) {
-			$use_uploader = true;
-			$this->mUploader = new ModuleUploader();
-		}
+		$this->mUploader = new ModuleUploader();
 
-		$this->mUploader->SetCaller('board',$this);
+		$this->mUploader->SetCaller('release',$this);
 		$this->mUploader->SetUploadPath($this->moduleDir.'/exec/FileUpload.do.php?type='.strtoupper($var['type']).'&wysiwyg='.$var['wysiwyg']);
 		$this->mUploader->SetLoadPath($this->moduleDir.'/exec/FileLoad.do.php?type='.strtoupper($var['type']).'&wysiwyg='.$var['wysiwyg']);
-		$uploader = $this->mUploader->GetUploader($var['skin'],$var['id'],$var['form'],$var['wysiwyg']);
-
-		return $uploader;
+		$uploader = $this->mUploader->PrintUploader($var['skin'],$var['id'],$var['form'],$var['wysiwyg']);
 	}
 
 	function PrintWysiwyg($var) {
@@ -1441,7 +1432,7 @@ class ModuleRelease extends Module {
 
 	function GetPermission($geter) {
 		if ($this->mMember->IsLogged() == false && ($geter == 'post' || $geter == 'modify')) return false;
-		$permission = $this->setup['permission'] && is_array(unserialize($this->setup['permission'])) == true ? unserialize($this->setup['permission']) : array('list'=>true,'post'=>true,'ment'=>true,'select'=>false,'secret'=>false,'notice'=>false,'modify'=>false,'delete'=>false);
+		$permission = $this->setup['permission'] && is_array(unserialize($this->setup['permission'])) == true ? unserialize($this->setup['permission']) : array('list'=>true,'post'=>true,'ment'=>true,'modify'=>false,'delete'=>false);
 		if ($this->member['type'] == 'ADMINISTRATOR') return true;
 		if (isset($permission[$geter]) == false || $permission[$geter] === '') return true;
 

@@ -1,14 +1,4 @@
-/*
-'idx'=>500691,
-'type'=>'IMG',
-'name'=>'kor.jpg',
-'size'=>1731,
-'thumbnail'=>$_ENV['userfileDir'].$mBoard->thumbnail.'/500691.thm'
-*/
-
 function ModuleUploaderDoneBySkin(id,o,f) {
-	//var sHTML = '<input type="hidden" name="file[]" value="'+file+'" />';
-	
 	var objectData = {id:id,o:o,f:f};
 
 	var file = $("<div>").attr("id",id+"File"+f.idx).addClass("item");

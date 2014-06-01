@@ -67,7 +67,6 @@ class ModuleUploader extends Module {
 	}
 	
 	function PrintUploader($skin,$id='uploader',$form='',$wysiwyg='') {
-		$skin = 'mobile';
 		echo "\n".'<!-- Module Uploader Start -->'."\n";
 		echo '<script type="text/javascript" src="'.$this->moduleDir.'/script/script.js"></script>'."\n";
 		
@@ -83,10 +82,7 @@ class ModuleUploader extends Module {
 		$this->mTemplet->assign('skinDir',$this->skinDir);
 		$this->mTemplet->assign('moduleDir',$this->caller->moduleDir);
 		$this->mTemplet->PrintTemplet();
-		//'.$this->uploadPath.'",
-		
-		$this->uploadPath = $this->moduleDir.'/exec/upload.php';
-		$this->loadPath = $this->moduleDir.'/exec/load.php?type=POST&wysiwyg=content';
+
 		$params = array();
 		$params['flashURL'] = $this->moduleDir.'/flash/uploader.swf?rnd='.time();
 		$params['uploadURL'] = $this->uploadPath;

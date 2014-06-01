@@ -102,15 +102,14 @@ if ($action == 'post') {
 	$file = Request('file');
 	if ($file != null) {
 		for ($i=0, $loop=sizeof($file);$i<$loop;$i++) {
-			$temp = explode('|',$file[$i]);
-			$fidx = $temp[0];
-
-			if (sizeof($temp) == 1) {
+			if (preg_match('/^@/',$file[$i]) == true) {
+				$fidx = str_replace('@','',$file[$i]);
 				$fileData = $mDB->DBfetch($mRelease->table['file'],array('filepath','filetype'),"where `idx`='$fidx'");
 				@unlink($_ENV['userfilePath'].$mRelease->userfile.$fileData['filepath']);
 				if ($fileData['filetype'] == 'IMG') @unlink($_ENV['userfilePath'].$mRelease->thumbnail.'/'.$fidx.'.thm');
 				$mDB->DBdelete($mRelease->table['file'],"where `idx`='$fidx'");
 			} else {
+				$fidx = $file[$i];
 				$mDB->DBupdate($mRelease->table['file'],array('repto'=>$idx),'',"where `idx`='$fidx'");
 			}
 		}
@@ -328,15 +327,14 @@ if ($action == 'ment') {
 
 	if ($file != null) {
 		for ($i=0, $loop=sizeof($file);$i<$loop;$i++) {
-			$temp = explode('|',$file[$i]);
-			$fidx = $temp[0];
-
-			if (sizeof($temp) == 1) {
+			if (preg_match('/^@/',$file[$i]) == true) {
+				$fidx = str_replace('@','',$file[$i]);
 				$fileData = $mDB->DBfetch($mRelease->table['file'],array('filepath','filetype'),"where `idx`='$fidx'");
 				@unlink($_ENV['userfilePath'].$mRelease->userfile.$fileData['filepath']);
 				if ($fileData['filetype'] == 'IMG') @unlink($_ENV['userfilePath'].$mRelease->thumbnail.'/'.$fidx.'.thm');
 				$mDB->DBdelete($mRelease->table['file'],"where `idx`='$fidx'");
 			} else {
+				$fidx = $file[$i];
 				$mDB->DBupdate($mRelease->table['file'],array('repto'=>$idx),'',"where `idx`='$fidx'");
 			}
 		}

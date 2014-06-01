@@ -1,10 +1,6 @@
 <?php
 REQUIRE_ONCE '../../../config/default.conf.php';
 
-header('Content-type: text/xml; charset="UTF-8"', true);
-header("Cache-Control: no-cache, must-revalidate");
-header("Pragma: no-cache");
-
 $mDB = &DB::instance();
 $mBoard = new ModuleBoard();
 
@@ -13,18 +9,27 @@ $wysiwyg = Request('wysiwyg');
 $repto = Request('repto');
 $autosave = Request('autosave');
 
-echo '<?xml version="1.0" encoding="UTF-8"?><list>';
+$result = array();
+$result['success'] = false;
+
+$files = array();
 if ($repto != null && $autosave == null) {
+	$result['success'] = true;
 	$data = $mDB->DBfetchs($mBoard->table['file'],'*',"where `type`='$type' and `repto`=$repto and `wysiwyg`='$wysiwyg'",'idx,asc');
 	for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
-		echo '<file>';
-		echo '<name>'.GetString($data[$i]['filename'],'xml').'</name>';
-		echo '<size>'.$data[$i]['filesize'].'</size>';
-		echo '<server>'.GetString($data[$i]['idx'].'|'.$data[$i]['filetype'].'|'.$data[$i]['filename'].'|'.$data[$i]['filesize'].($data[$i]['filetype'] == 'IMG' ? '|'.$_ENV['userfileDir'].$mBoard->thumbnail.'/'.$data[$i]['idx'].'.thm' : ''),'xml').'</server>';
-		echo '</file>';
+		$files[$i] = array();
+		$files[$i]['idx'] = $data[$i]['idx'];
+		$files[$i]['type'] = $data[$i]['filetype'];
+		$files[$i]['name'] = $data[$i]['filename'];
+		$files[$i]['size'] = $data[$i]['filesize'];
+		
+		if ($data[$i]['filetype'] == 'IMG') {
+			$files[$i]['thumbnail'] = $_ENV['userfileDir'].$mBoard->thumbnail.'/'.$data[$i]['idx'].'.thm';
+		}
 	}
 } elseif ($autosave != null) {
-	$data = $mDB->DBfetch($mBoard->table['autosave'],array('data','ip'),"where `tid`='$autosave'");
+	$result['success'] = true;
+	/*$data = $mDB->DBfetch($mBoard->table['autosave'],array('data','ip'),"where `tid`='$autosave'");
 	if (isset($data['data']) == true && $data['ip'] == $_SERVER['REMOTE_ADDR']) {
 		$data = unserialize(base64_decode($data['data']));
 		$file = split(',',$data['file']);
@@ -40,7 +45,9 @@ if ($repto != null && $autosave == null) {
 			echo '</file>';
 		}
 	}
+	*/
 }
 
-echo '</list>';
+$result['files'] = $files;
+exit(json_encode($result));
 ?>

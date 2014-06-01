@@ -37,7 +37,7 @@ if ($action == 'post') {
 	$insert['is_ment'] = Request('is_ment') ? 'TRUE' : 'FALSE';
 	$insert['is_trackback'] = Request('is_trackback') ? 'TRUE' : 'FALSE';
 	$insert['is_msg'] = $mMember->IsLogged() == true && Request('is_msg') ? 'TRUE' : 'FALSE';
-	$insert['is_email'] = $insert['email'] && Request('is_email') ? 'TRUE' : 'FALSE';
+	$insert['is_email'] = Request('email') && Request('is_email') ? 'TRUE' : 'FALSE';
 	$insert['field1'] = Request('field1');
 	$insert['field2'] = Request('field2');
 	$insert['field3'] = Request('field3');
@@ -129,17 +129,18 @@ if ($action == 'post') {
 	}
 
 	$file = Request('file');
+	
 	if ($file != null) {
 		for ($i=0, $loop=sizeof($file);$i<$loop;$i++) {
-			$temp = explode('|',$file[$i]);
-			$fidx = $temp[0];
-
-			if (sizeof($temp) == 1) {
+			if (preg_match('/^@/',$file[$i]) == true) {
+				echo 'DELETE!';
+				$fidx = str_replace('@','',$file[$i]);
 				$fileData = $mDB->DBfetch($mBoard->table['file'],array('filepath','filetype'),"where `idx`='$fidx'");
 				@unlink($_ENV['userfilePath'].$mBoard->userfile.$fileData['filepath']);
 				if ($fileData['filetype'] == 'IMG') @unlink($_ENV['userfilePath'].$mBoard->thumbnail.'/'.$fidx.'.thm');
 				$mDB->DBdelete($mBoard->table['file'],"where `idx`='$fidx'");
 			} else {
+				$fidx = $file[$i];
 				$mDB->DBupdate($mBoard->table['file'],array('repto'=>$idx),'',"where `idx`='$fidx'");
 			}
 		}
@@ -275,18 +276,16 @@ if ($action == 'ment') {
 	}
 
 	$file = Request('file');
-
 	if ($file != null) {
 		for ($i=0, $loop=sizeof($file);$i<$loop;$i++) {
-			$temp = explode('|',$file[$i]);
-			$fidx = $temp[0];
-
-			if (sizeof($temp) == 1) {
+			if (preg_match('/^@/',$file[$i]) == true) {
+				$fidx = str_replace('@','',$file[$i]);
 				$fileData = $mDB->DBfetch($mBoard->table['file'],array('filepath','filetype'),"where `idx`='$fidx'");
 				@unlink($_ENV['userfilePath'].$mBoard->userfile.$fileData['filepath']);
 				if ($fileData['filetype'] == 'IMG') @unlink($_ENV['userfilePath'].$mBoard->thumbnail.'/'.$fidx.'.thm');
 				$mDB->DBdelete($mBoard->table['file'],"where `idx`='$fidx'");
 			} else {
+				$fidx = $file[$i];
 				$mDB->DBupdate($mBoard->table['file'],array('repto'=>$idx),'',"where `idx`='$fidx'");
 			}
 		}

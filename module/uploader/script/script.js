@@ -2211,7 +2211,7 @@ function ModuleUploaderLoad(params) {
 function ModuleUploaderButton(id,options) {
 	ModuleUploaderLoads[id] = options.loadURL;
 	
-	if (false && FlashDetect.installed){
+	if (FlashDetect.installed){
 		var flashVars = "uploaderID="+id+"&buttonURL="+options.buttonURL+"&uploadURL="+encodeURIComponent(options.uploadURL)+"&maxSize="+options.maxSize;
 		$("#"+id+"Button").html('<embed src="'+options.flashURL+'" quality="high" wmode="transparent" style="width:'+options.buttonWidth+'px; height:'+options.buttonHeight+'px;" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" base="." flashvars="'+flashVars+'"></embed>');
 	} else {
