@@ -7,6 +7,10 @@ function GetDefaultFooter() {
 	REQUIRE $_ENV['path'].'/inc/footer.inc.php';
 }
 
+function GetMobileHeader($title='',$body='',$resource=array()) {
+	REQUIRE $_ENV['path'].'/inc/header.mobile.inc.php';
+}
+
 function CheckIncluded($code) {
 	if (isset($_ENV['isIncluded'][$code]) == false || $_ENV['isIncluded'][$code] == false) {
 		$_ENV['isIncluded'][$code] = true;

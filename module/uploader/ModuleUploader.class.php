@@ -8,6 +8,9 @@ class ModuleUploader extends Module {
 	protected $callback;
 	protected $callerType;
 	protected $caller;
+	
+	protected $maxSize;
+	protected $isMultiple;
 	protected $isHeaderIncluded;
 
 	function __construct() {
@@ -19,6 +22,9 @@ class ModuleUploader extends Module {
 		$this->skinDir = null;
 		$this->type = null;
 		$this->callback = 'null';
+		
+		$this->maxSize = 20;
+		$this->isMultiple = true;
 		$this->isHeaderIncluded = false;
 	}
 
@@ -38,6 +44,14 @@ class ModuleUploader extends Module {
 	function SetCallback($callback) {
 		$this->callback = $callback;
 	}
+	
+	function SetIsMultiple($isMultiple) {
+		$this->isMultiple = $isMultiple;
+	}
+	
+	function SetMaxSize($maxSize) {
+		$this->maxSize = $maxSize;
+	}
 
 	function PrintScript() {
 		if ($this->isHeaderIncluded == false) {
@@ -50,6 +64,46 @@ class ModuleUploader extends Module {
 	
 	function SetType($type) {
 		$this->type = $type;
+	}
+	
+	function PrintUploader($skin,$id='uploader',$form='',$wysiwyg='') {
+		$skin = 'mobile';
+		echo "\n".'<!-- Module Uploader Start -->'."\n";
+		echo '<script type="text/javascript" src="'.$this->moduleDir.'/script/script.js"></script>'."\n";
+		
+		$this->skinPath = $this->modulePath.'/templet/'.$skin;
+		$this->skinDir = $this->moduleDir.'/templet/'.$skin;
+		
+		if (file_exists($this->skinPath.'/style.css') == true) echo '<link rel="stylesheet" href="'.$this->skinDir.'/style.css" type="text/css" />'."\n";
+		if (file_exists($this->skinPath.'/script.js') == true) echo '<script type="text/javascript" src="'.$this->skinDir.'/script.js"></script>'."\n";
+
+		$this->mTemplet = new Templet($this->skinPath.'/uploader.tpl');
+		$this->mTemplet->assign('id',$id);
+		$this->mTemplet->assign('wysiwyg',$wysiwyg);
+		$this->mTemplet->assign('skinDir',$this->skinDir);
+		$this->mTemplet->assign('moduleDir',$this->caller->moduleDir);
+		$this->mTemplet->PrintTemplet();
+		//'.$this->uploadPath.'",
+		
+		$this->uploadPath = $this->moduleDir.'/exec/upload.php';
+		$this->loadPath = $this->moduleDir.'/exec/load.php?type=POST&wysiwyg=content';
+		$params = array();
+		$params['flashURL'] = $this->moduleDir.'/flash/uploader.swf?rnd='.time();
+		$params['uploadURL'] = $this->uploadPath;
+		$params['loadURL'] = $this->loadPath;
+		$params['buttonURL'] = $this->skinDir.'/images/button.gif';
+		$buttonSize = getimagesize($this->skinPath.'/images/button.gif');
+		$params['buttonWidth'] = $buttonSize[0];
+		$params['buttonHeight'] = $buttonSize[1];
+		$params['maxSize'] = $this->maxSize;
+		$params['skinDir'] = $this->skinDir;
+		$params['moduleDir'] = $this->caller->moduleDir;
+		$params['formObject'] = $form;
+		$params['wysiwygObject'] = $wysiwyg;
+		
+		echo '<script type="text/javascript">ModuleUploaderButton("'.$id.'",'.json_encode($params).');</script>';
+		
+		echo "\n".'<!-- Module Uploader End -->'."\n";
 	}
 
 	function GetUploader($skin,$id='uploader',$form='',$wysiwyg='') {

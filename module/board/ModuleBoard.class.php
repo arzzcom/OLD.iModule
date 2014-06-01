@@ -69,14 +69,13 @@ class ModuleBoard extends Module {
 			if (isset($this->setup['skin']) == true) {
 				$this->skinPath = $this->modulePath.'/templet/board/'.$this->setup['skin'];
 				$this->skinDir = $this->moduleDir.'/templet/board/'.$this->setup['skin'];
-				$this->setup['mobile'] = isset($this->setup['mobile']) == true ? $this->setup['mobile'] : false;
 				$this->setup['width'] = preg_match('/%/',$this->setup['width']) ? $this->setup['width'] : $this->setup['width'].'px';
 			
 				if (is_array($setup) == true) {
 					foreach ($setup as $key=>$value) $this->setup[$key] = $value;
 				}
 			
-				if ($this->setup['mobile'] == true) {
+				if ($_ENV['isMobile'] == true) {
 					$this->setup['pagenum'] = 3;
 				}
 		
@@ -161,7 +160,7 @@ class ModuleBoard extends Module {
 		$content = str_replace('{$moduleHost}','http://'.$_SERVER['HTTP_HOST'],$content);
 		$content = strip_tags($content,'<p>,<a>,<embed>,<blockquote>,<table>,<tr>,<td>,<b>,<i>,<u>,<div>,<font>,<span>,<img>,<br>');
 		$content = str_replace(array('onclick','onload','onerror'),'event',$content);
-		if ($this->setup['mobile'] == true) $content = '<section><div class="smartOutputMobile">'.$content.'</div></section>';
+		if ($_ENV['isMobile'] == true) $content = '<section><div class="smartOutputMobile">'.$content.'</div></section>';
 		else $content = '<section><div class="smartOutput">'.$content.'</div></section>';
 
 		if (preg_match_all('/<img[^>]+file="([^"]+)"[^>]+movie="([^\"]+)"[^>]+(style="[^"]+")[^>]*>/',$content,$match) == true) {
@@ -252,53 +251,36 @@ class ModuleBoard extends Module {
 	function PrintHeader() {
 		if ($this->isHeaderIncluded == true) return;
 
-		if (isset($this->setup['mobile']) == true && $this->setup['mobile'] == true) {
+		if ($_ENV['isMobile'] == true) {
 			if ($_ENV['isHeaderIncluded'] == false) {
-				GetDefaultHeader($this->setup['title'],'',array(
-					array('type'=>'meta','content'=>array('name'=>'viewport','content'=>'initial-scale=1.0; maximum-scale=1.0; user-scalable=1;')),
-					array('type'=>'meta','content'=>array('name'=>'apple-mobile-web-app-capable','content'=>'yes')),
-					array('type'=>'meta','content'=>array('name'=>'format-detection','content'=>'telephone=no'))
-				));
+				GetMobileHeader($this->setup['title'],'');
 			}
 
 			echo "\n".'<script type="text/javascript">var isMobile = true;</script>'."\n";
-
-			echo "\n".'<!-- Module Board Start -->'."\n";
-
-			if ($this->isHeaderIncluded == false) {
-				echo '<link rel="stylesheet" href="'.$this->moduleDir.'/css/default.css" type="text/css" />'."\n";
-				echo '<script type="text/javascript" src="'.$this->moduleDir.'/script/default.js"></script>'."\n";
-			}
-			$this->isHeaderIncluded = true;
-
-			if ($this->bid) {
-				echo '<link rel="stylesheet" href="'.$this->skinDir.'/style.css" type="text/css" title="style" />'."\n";
-				echo '<script type="text/javascript" src="'.$this->skinDir.'/script.js"></script>'."\n";
-				echo '<div class="ModuleBoard" style="width:'.$this->setup['width'].'">'."\n";
-			}
 		} else {
 			if ($_ENV['isHeaderIncluded'] == false) {
 				GetDefaultHeader($this->setup['title']);
 			}
 
 			echo "\n".'<script type="text/javascript">var isMobile = false;</script>'."\n";
+		}
+		
+		echo "\n".'<!-- Module Board Start -->'."\n";
 
-			echo "\n".'<!-- Module Board Start -->'."\n";
-			if ($this->isHeaderIncluded == false) {
-				echo '<link rel="stylesheet" href="'.$this->moduleDir.'/css/default.css" type="text/css" />'."\n";
-				echo '<script type="text/javascript" src="'.$this->moduleDir.'/script/default.js"></script>'."\n";
-			}
-			$this->isHeaderIncluded = true;
+		if ($this->isHeaderIncluded == false) {
+			echo '<link rel="stylesheet" href="'.$this->moduleDir.'/css/default.css" type="text/css" />'."\n";
+			echo '<script type="text/javascript" src="'.$this->moduleDir.'/script/default.js"></script>'."\n";
+		}
+		$this->isHeaderIncluded = true;
 
-			if ($this->mode != 'list' && CheckIncluded('wysiwyg') == false) {
-				echo '<script type="text/javascript" src="'.$_ENV['dir'].'/module/wysiwyg/script/wysiwyg.js"></script>'."\n";
-			}
+		if ($this->mode != 'list') {
+			echo '<script type="text/javascript" src="'.$_ENV['dir'].'/module/wysiwyg/script/wysiwyg.js"></script>'."\n";
+		}
 
-			if ($this->bid) {
-				echo '<link rel="stylesheet" href="'.$this->skinDir.'/style.css" type="text/css" title="style" />'."\n";
-				echo '<script type="text/javascript" src="'.$this->skinDir.'/script.js"></script>'."\n";
-				echo '<div class="ModuleBoard" style="width:'.$this->setup['width'].'">'."\n";
-			}
+		if ($this->bid) {
+			echo '<link rel="stylesheet" href="'.$this->skinDir.'/style.css" type="text/css" title="style" />'."\n";
+			echo '<script type="text/javascript" src="'.$this->skinDir.'/script.js"></script>'."\n";
+			echo '<div class="ModuleBoard" style="width:'.$this->setup['width'].'">'."\n";
 		}
 	}
 
@@ -459,14 +441,18 @@ class ModuleBoard extends Module {
 		$actionTarget = 'mentFrame'.rand(100,999);
 		$mentStart = $mentEnd = '';
 		$mentStart = '<form name="ModuleBoardMent'.$idx.'" method="post" action="'.$this->moduleDir.'/exec/Board.do.php" target="'.$actionTarget.'" onsubmit="return CheckMent(this)" enctype="multipart/form-data">'."\n";
-		if ($this->setup['mobile'] == true) $mentStart.= '<input type="hidden" name="is_mobile" value="TRUE" />';
+		if ($_ENV['isMobile'] == true) $mentStart.= '<input type="hidden" name="is_mobile" value="TRUE" />';
 		$mentStart.= '<input type="hidden" name="action" value="ment" />'."\n";
 		$mentStart.= '<input type="hidden" name="bid" value="'.$this->bid.'" />'."\n";
 		$mentStart.= '<input type="hidden" name="mode" value="post" />'."\n";
 		$mentStart.= '<input type="hidden" name="repto" value="'.$idx.'" />'."\n";
 		$mentStart.= '<input type="hidden" name="parent" value="" />'."\n";
 		$mentEnd = '</form>'."\n".'<iframe name="'.$actionTarget.'" style="display:none;"></iframe>'."\n";
-		$mentEnd.= '<script type="text/javascript">nhn.husky.EZCreator.createInIFrame({oAppRef:oEditors,elPlaceHolder:"MentWrite'.$idx.'",sSkinURI:"'.$_ENV['dir'].'/module/wysiwyg/wysiwyg.php",fCreator:"createSEditorInIFrame"}); UsedWysiwyg.push("MentWrite'.$idx.'");</script>';
+		if ($_ENV['isMobile'] == true) {
+			$mentEnd.= '<script type="text/javascript">nhn.husky.EZCreator.createInIFrame({oAppRef:oEditors,elPlaceHolder:"MentWrite'.$idx.'",sSkinURI:"'.$_ENV['dir'].'/module/wysiwyg/mobile.php",fCreator:"createSEditorInIFrame"}); UsedWysiwyg.push("MentWrite'.$idx.'");</script>';
+		} else {
+			$mentEnd.= '<script type="text/javascript">nhn.husky.EZCreator.createInIFrame({oAppRef:oEditors,elPlaceHolder:"MentWrite'.$idx.'",sSkinURI:"'.$_ENV['dir'].'/module/wysiwyg/wysiwyg.php",fCreator:"createSEditorInIFrame"}); UsedWysiwyg.push("MentWrite'.$idx.'");</script>';
+		}
 
 		$permission = array();
 		$permission['ment'] = ($this->GetPermission('ment') == true && $post['is_ment'] == 'TRUE') || $this->CheckAdmin();
@@ -1043,7 +1029,7 @@ class ModuleBoard extends Module {
 		$this->PrintTemplet();
 
 		echo "\n".'<iframe name="downloadFrame" style="display:none;"></iframe><iframe name="execFrame" style="display:none;"></iframe>'."\n";
-		if ($this->setup['view_alllist'] == 'TRUE' && $this->setup['mobile'] == false) {
+		if ($this->setup['view_alllist'] == 'TRUE') {
 			echo '<div class="height30"></div>'."\n";
 			$this->PrintList();
 		}
@@ -1118,7 +1104,7 @@ class ModuleBoard extends Module {
 		$this->PrintTemplet();
 
 		echo "\n".'<iframe name="downloadFrame" style="display:none;"></iframe><iframe name="execFrame" style="display:none;"></iframe>'."\n";
-		if ($this->setup['view_alllist'] == 'TRUE' && $this->setup['mobile'] == false) {
+		if ($this->setup['view_alllist'] == 'TRUE' && $_ENV['isMobile'] == false) {
 			echo '<div class="height30"></div>'."\n";
 			$this->PrintList();
 		}
@@ -1177,7 +1163,7 @@ class ModuleBoard extends Module {
 		}
 		$actionTarget = 'postFrame'.rand(100,999);
 		$formStart = '<form name="ModuleBoardPost" method="post" action="'.$this->moduleDir.'/exec/Board.do.php" target="'.$actionTarget.'" onsubmit="return CheckPost(this)" enctype="multipart/form-data">'."\n";
-		if ($this->setup['mobile'] == true) $formStart.= '<input type="hidden" name="is_mobile" value="TRUE" />';
+		if ($_ENV['isMobile'] == true) $formStart.= '<input type="hidden" name="is_mobile" value="TRUE" />';
 		$formStart.= '<input type="hidden" name="action" value="post" />'."\n";
 		$formStart.= '<input type="hidden" name="mode" value="'.$mode.'" />'."\n";
 		$formStart.= '<input type="hidden" name="bid" value="'.$this->bid.'" />'."\n";
@@ -1188,7 +1174,11 @@ class ModuleBoard extends Module {
 		$formEnd = '</form>'."\n".'<iframe name="'.$actionTarget.'" style="display:none;"></iframe>'."\n";
 		$formEnd.= '<div id="AutoSaverAlertBox" style="display:none;"></div>'."\n";
 
-		if ($mode == 'modify' && $this->setup['use_uploader'] == 'TRUE') $formEnd.= '<script type="text/javascript">AzUploaderComponent.load("repto='.$idx.'");</script>';
+		if ($this->member['idx'] == '1') {
+			if ($mode == 'modify' && $this->setup['use_uploader'] == 'TRUE') $formEnd.= '<script type="text/javascript">ModuleUploaderLoad("repto='.$idx.'");</script>';
+		} else {
+			if ($mode == 'modify' && $this->setup['use_uploader'] == 'TRUE') $formEnd.= '<script type="text/javascript">AzUploaderComponent.load("repto='.$idx.'");</script>';
+		}
 
 		$autosaveFind = "where `bid`='{$this->bid}'";
 		$autosaveFind.= $idx != null ? " and `repto`=$idx" : '';
@@ -1299,7 +1289,7 @@ class ModuleBoard extends Module {
 		$actionTarget = 'mentFrame'.rand(100,999);
 		$formStart = $formEnd = '';
 		$formStart = '<form name="ModuleBoardMent'.$repto.'" method="post" action="'.$this->moduleDir.'/exec/Board.do.php" target="'.$actionTarget.'" onsubmit="return CheckMent(this)" enctype="multipart/form-data">'."\n";
-		if ($this->setup['mobile'] == true) $formStart.= '<input type="hidden" name="is_mobile" value="TRUE" />';
+		if ($_ENV['isMobile'] == true) $formStart.= '<input type="hidden" name="is_mobile" value="TRUE" />';
 		$formStart.= '<input type="hidden" name="action" value="ment" />'."\n";
 		$formStart.= '<input type="hidden" name="mode" value="'.($mode == 'ment_modify' ? 'modify' : 'post').'" />'."\n";
 		$formStart.= '<input type="hidden" name="bid" value="'.$this->bid.'" />'."\n";
@@ -1308,7 +1298,11 @@ class ModuleBoard extends Module {
 		$formStart.= '<input type="hidden" name="parent" value="'.$data['parent'].'" />'."\n";
 		$formStart.= '<input type="hidden" name="check_password" value="'.$password.'" />'."\n";
 		$formEnd = '</form>'."\n".'<iframe name="'.$actionTarget.'" style="display:none;"></iframe>'."\n";
-		$formEnd.= '<script type="text/javascript">nhn.husky.EZCreator.createInIFrame({oAppRef:oEditors,elPlaceHolder:"MentWrite'.$repto.'",sSkinURI:"'.$_ENV['dir'].'/module/wysiwyg/wysiwyg.php",fCreator:"createSEditorInIFrame"}); UsedWysiwyg.push("MentWrite'.$repto.'");</script>';
+		if ($_ENV['isMobile'] == true) {
+			$formEnd.= '<script type="text/javascript">nhn.husky.EZCreator.createInIFrame({oAppRef:oEditors,elPlaceHolder:"MentWrite'.$repto.'",sSkinURI:"'.$_ENV['dir'].'/module/wysiwyg/mobile.php",fCreator:"createSEditorInIFrame"}); UsedWysiwyg.push("MentWrite'.$repto.'");</script>';
+		} else {
+			$formEnd.= '<script type="text/javascript">nhn.husky.EZCreator.createInIFrame({oAppRef:oEditors,elPlaceHolder:"MentWrite'.$repto.'",sSkinURI:"'.$_ENV['dir'].'/module/wysiwyg/wysiwyg.php",fCreator:"createSEditorInIFrame"}); UsedWysiwyg.push("MentWrite'.$repto.'");</script>';
+		}
 
 		if ($mode == 'ment_modify' && $this->setup['use_uploader'] == 'TRUE') $formEnd.= '<script type="text/javascript">AzUploaderComponent.load("repto='.$idx.'");</script>';
 
@@ -1536,11 +1530,8 @@ class ModuleBoard extends Module {
 		$use_uploader = false;
 		if ($this->setup['use_uploader'] == 'TRUE') {
 			if ($this->mUploader == null) {
-				$mModule = new Module('uploader');
-				if ($mModule->IsSetup() == true) {
-					$use_uploader = true;
-					$this->mUploader = new ModuleUploader();
-				}
+				$use_uploader = true;
+				$this->mUploader = new ModuleUploader();
 			} else {
 				$use_uploader = true;
 			}
@@ -1550,14 +1541,17 @@ class ModuleBoard extends Module {
 			$this->mUploader->SetCaller('board',$this);
 			$this->mUploader->SetUploadPath($this->moduleDir.'/exec/FileUpload.do.php?type='.strtoupper($var['type']).'&wysiwyg='.$var['wysiwyg']);
 			$this->mUploader->SetLoadPath($this->moduleDir.'/exec/FileLoad.do.php?type='.strtoupper($var['type']).'&wysiwyg='.$var['wysiwyg']);
-			$uploader = $this->mUploader->GetUploader($var['skin'],$var['id'],$var['form'],$var['wysiwyg']);
+			
+			if ($this->member['idx'] == 1) $uploader = $this->mUploader->PrintUploader($var['skin'],$var['id'],$var['form'],$var['wysiwyg']);
+			else $uploader = $this->mUploader->GetUploader($var['skin'],$var['id'],$var['form'],$var['wysiwyg']);
 		}
 
 		return $uploader;
 	}
 
 	function PrintWysiwyg($var) {
-		return '<script type="text/javascript">nhn.husky.EZCreator.createInIFrame({oAppRef:oEditors,elPlaceHolder:"'.$var['id'].'",sSkinURI:"'.$_ENV['dir'].'/module/wysiwyg/wysiwyg.php",fCreator:"createSEditorInIFrame"}); UsedWysiwyg.push("'.$var['id'].'");</script>';
+		if ($_ENV['isMobile'] == true) return '<script type="text/javascript">nhn.husky.EZCreator.createInIFrame({oAppRef:oEditors,elPlaceHolder:"'.$var['id'].'",sSkinURI:"'.$_ENV['dir'].'/module/wysiwyg/mobile.php",fCreator:"createSEditorInIFrame"}); UsedWysiwyg.push("'.$var['id'].'");</script>';
+		else return '<script type="text/javascript">nhn.husky.EZCreator.createInIFrame({oAppRef:oEditors,elPlaceHolder:"'.$var['id'].'",sSkinURI:"'.$_ENV['dir'].'/module/wysiwyg/wysiwyg.php",fCreator:"createSEditorInIFrame"}); UsedWysiwyg.push("'.$var['id'].'");</script>';
 	}
 
 	function GetChildMent($idx) {

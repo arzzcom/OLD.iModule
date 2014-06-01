@@ -14,6 +14,7 @@ class Module {
 	public $baseURL;
 
 	function __construct($module) {
+		$_ENV['isMobile'] = isset($_ENV['isMobile']) == true ? $_ENV['isMobile'] : false;
 		$this->moduleName = $module;
 		$this->mDB = &DB::instance();
 		

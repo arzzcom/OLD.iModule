@@ -1,8 +1,6 @@
 * {margin:0px; padding:0px; line-height:100%;}
-BODY {overflow:auto;}
-INPUT {outline:none;}
-
-header, nav, section, article, aside, footer {display:block;}
+BODY {overflow:auto; -webkit-text-size-adjust:100%;}
+INPUT[type=input] {outline:none; -webkit-appearance:none; border-radius:0;}
 
 /* Default */
 FORM {margin:0px;}
@@ -31,6 +29,7 @@ IMG {border:0px;}
 .white {color:#FFFFFF !important;}
 .gray {color:#666666 !important;}
 .red {color:#FF0000 !important;}
+.textwrap {overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
 .smallEng {font-family:tahoma !important; font-size:10px !important;}
 
 /* cursor */
@@ -101,7 +100,7 @@ IMG {border:0px;}
 .selectbox UL LI:HOVER {background:#EEEEEE;}
 
 /* Layers */
-#WindowDisabledLayer {position:absolute; z-index:1000; background:#000000; top:0px; left:0px; filter:alpha(opacity=20); -moz-opacity:0.2; opacity:0.2;}
+#WindowDisabledLayer {position:absolute; z-index:1000; background:#000000; top:0px; left:0px;}
 #TipLayer {position:absolute; z-index:1001; background:#FFFFFF; border:2px solid #CCCCCC; padding:5px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; color:#666666;}
 #ShowImageLayer {position:absolute; z-index:1002;}
 #ShowImageLayer .LayerTopLeft {height:51px; background:url(../images/common/showimagelayer_topleft.gif);}

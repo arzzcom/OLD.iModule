@@ -2,6 +2,7 @@ document.writeln('<div id="WindowDisabledLayer" style="display:none;"></div>');
 document.writeln('<div id="TipLayer" style="display:none;"></div>');
 document.writeln('<div id="ShowImageLayer" style="display:none;"></div>');
 var GlobalToggleList = new Array();
+var GlobalPopupLayer = new Array();
 var ShowImageOriginalSize = new Array();
 
 var isIE = '\v'=='v';
@@ -97,16 +98,15 @@ function Tip(mode,text,event) {
 }
 
 function WindowDisabled(mode) {
-	var object = document.getElementById("WindowDisabledLayer");
+	var object = $("#WindowDisabledLayer");
 
 	if (mode == true) {
-		var width = Math.max(Math.max(document.body.scrollWidth, document.documentElement.scrollWidth),Math.max(document.body.offsetWidth,document.documentElement.offsetWidth),Math.max(document.body.clientWidth, document.documentElement.clientWidth));
-		var height = Math.max(Math.max(document.body.scrollHeight, document.documentElement.scrollHeight),Math.max(document.body.offsetHeight,document.documentElement.offsetHeight),Math.max(document.body.clientHeight, document.documentElement.clientHeight));
-		object.style.width = width+"px";
-		object.style.height = height+"px";
-		object.style.display = "";
+		object.css("width",Math.min($(window).width(),$(document).width()));
+		object.css("height",Math.max($(window).height(),$(document).height()));
+		$("#WindowDisabledLayer").fadeTo(400,0.5);
+		object.show();
 	} else {
-		object.style.display = "none";
+		object.hide();
 	}
 }
 
@@ -1136,3 +1136,23 @@ addEvent(window,"resize",function(event) {
 		document.getElementById("WindowDisabledLayer").style.height = height+"px";
 	}
 });
+
+/*****************************************************************************************
+ * jQuery Addons
+ *****************************************************************************************/
+
+var GlobalCenterLayer = null;
+jQuery.fn.center = function(mode) {
+	if (GlobalCenterLayer != null) $(GlobalCenterLayer).hide();
+	if (mode == true) {
+		this.show();
+		this.css("position","absolute");
+		this.css("top",($(window).height() - $(this).outerHeight())/2 + $(window).scrollTop());
+		this.css("left",($(window).width() - $(this).outerWidth())/2);
+		GlobalCenterLayer = this;
+		return this;
+	} else {
+		GlobalCenterLayer = null;
+		this.hide();
+	}
+}

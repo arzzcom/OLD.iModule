@@ -2,7 +2,7 @@
 <module>
 	<title>멀티업로더</title>
 	<path>/module/uploader</path>
-	<setup>TRUE</setup>
-	<manager>TRUE</manager>
-	<version>1.0.0</version>
+	<setup>FALSE</setup>
+	<manager>FALSE</manager>
+	<version>2.0.0</version>
 </module>

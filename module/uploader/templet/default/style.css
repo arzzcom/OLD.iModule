@@ -1,26 +1,19 @@
-.progressbox {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; border:1px solid #6C6C6C; background:#FFFFFF; width:400px; padding:10px; position:fixed; z-index:1001;}
-.progressbox .outer {position:relative; margin-top:5px; width:398px; height:15px; border:1px solid #9C9C9C;}
-.progressbox .inner {height:15px; background:url(./images/progress.gif);}
-.progressbox .text {position:absolute; top:0px; left:0px; width:388px; padding:2px 5px 1px 5px; height:12px; font-family:tahoma, NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-weight:bold; font-size:11px; overflow:hidden; white-space:nowrap;}
-.progressbox .time {margin-top:5px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; text-align:right;}
+.ModuleUploaderDefault .progressbox {font-family:NanumGothicWeb; font-size:12px; border:1px solid #6C6C6C; background:#FFFFFF; width:400px; padding:10px; position:fixed; z-index:1001;}
+.ModuleUploaderDefault .progressbox .progress {position:relative; margin-top:5px; width:398px; height:15px; border:1px solid #9C9C9C;}
+.ModuleUploaderDefault .progressbox .progressBar {width:1px; height:15px; background:url(./images/progress.gif);}
+.ModuleUploaderDefault .progressbox .progressText {position:absolute; top:0px; left:0px; width:388px; padding:2px 5px 1px 5px; height:12px; font-family:tahoma, NanumGothicWeb; font-weight:bold; font-size:11px; overflow:hidden; white-space:nowrap;}
+.ModuleUploaderDefault .progressbox .time {margin-top:5px; font-family:NanumGothicWeb; font-size:11px; text-align:right;}
+.ModuleUploaderDefault .progressbox .totalCount {font-weight:bold;}
 
-.previewImage {float:left; margin:5px 5px 5px 0px; width:75px;}
-.previewImage .imageon IMG {border:2px solid #4C6B9A; cursor:pointer; width:71px; height:57px;}
-.previewImage .imageoff IMG {border:2px solid #E5E5E5; cursor:pointer; width:71px; height:57px;}
-.previewImage .text {margin-top:3px;}
-.previewImage .text .size {float:left; font-weight:bold; font-family:verdana; font-size:10px;}
-.previewImage .text IMG {float:right; cursor:pointer;}
-.previewImage .button {clear:both; margin-top:3px;}
+.ModuleUploaderDefault .previewImage DIV.item {display:inline-block; margin:5px 5px 5px 0px; width:75px;}
+.ModuleUploaderDefault .previewImage .imageon IMG {border:2px solid #4C6B9A; cursor:pointer; width:71px; height:57px;}
+.ModuleUploaderDefault .previewImage .imageoff IMG {border:2px solid #E5E5E5; cursor:pointer; width:71px; height:57px;}
+.ModuleUploaderDefault .previewImage .text {margin-top:3px;}
+.ModuleUploaderDefault .previewImage .text .size {float:left; font-weight:bold; font-family:verdana; font-size:10px;}
+.ModuleUploaderDefault .previewImage .text .deleteButton {float:right; cursor:pointer; width:10px; height:9px; background:url(./images/btn_delete.gif);}
+.ModuleUploaderDefault .previewImage .insertButton {margin-top:3px; background:url(./images/btn_insert.gif); width:75px; height:20px; cursor:pointer;}
 
-.previewMovie {float:left; margin:5px 5px 5px 0px; width:75px;}
-.previewMovie IMG {cursor:pointer;}
-.previewMovie .text {margin-top:3px;}
-.previewMovie .text .size {float:left; font-weight:bold; font-family:verdana; font-size:10px;}
-.previewMovie .text IMG {float:right; cursor:pointer;}
-.previewMovie .button {clear:both; margin-top:3px;}
-
-
-.previewFile {background:url(./images/icon_file.gif) no-repeat 0px center; padding-left:12px; margin:3px 3px 3px 0px; clear:both;}
-.previewFile .text {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px;}
-.previewFile .size {font-weight:bold; font-family:verdana; font-size:10px;}
-.previewFile .button IMG {vertical-align:middle; margin:2px 0px 0px 2px;}
+.ModuleUploaderDefault .previewFile DIV.item {display:block; height:20px; margin:5px 0px 5px 0px; background:url(./images/icon_file.gif) no-repeat 0px center; padding-left:20px;}
+.ModuleUploaderDefault .previewFile SPAN {height:20px; line-height:20px; vertical-align:middle; font-family:NanumGothicWeb; font-weight:bold;}
+.ModuleUploaderDefault .previewFile SPAN.insertButton {display:inline-block; margin-left:10px; background:url(./images/btn_insert.gif); width:75px; height:20px; cursor:pointer;}
+.ModuleUploaderDefault .previewFile SPAN.deleteButton {display:inline-block; margin-left:2px; background:url(./images/btn_block_delete.gif); width:20px; height:20px; cursor:pointer;}

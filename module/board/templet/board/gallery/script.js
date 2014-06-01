@@ -1,22 +1,22 @@
-
-
 $(document).ready(function() {
-	$("#iBoardGalleryContainer").masonry({itemSelector:".listItem"});
-	$("#iBoardGalleryContainer").imagesLoaded(function() {
-		$("#iBoardGalleryContainer").masonry();
-	}).progress(function(imgLoad,image) {
-		if ($(image.img).attr("isThumbnail") == "TRUE") {
-			var item = $(image.img).parent();
-			item.removeClass("listLoading");
-			if (image.isLoaded == false) {
-				item.addClass("listBroken");
-			} else {
-				item.addClass("listLoaded");
-				$(image.img).show();
-				$("#iBoardGalleryContainer").masonry();
+	if ($("#iBoardGalleryContainer").length > 0) {
+		$("#iBoardGalleryContainer").masonry({itemSelector:".listItem"});
+		$("#iBoardGalleryContainer").imagesLoaded(function() {
+			$("#iBoardGalleryContainer").masonry();
+		}).progress(function(imgLoad,image) {
+			if ($(image.img).attr("isThumbnail") == "TRUE") {
+				var item = $(image.img).parent();
+				item.removeClass("listLoading");
+				if (image.isLoaded == false) {
+					item.addClass("listBroken");
+				} else {
+					item.addClass("listLoaded");
+					$(image.img).show();
+					$("#iBoardGalleryContainer").masonry();
+				}
 			}
-		}
-	});
+		});
+	}
 });
 /*
 var item = document.createElement('li');
