@@ -1170,7 +1170,6 @@ class ModuleBoard extends Module {
 		$formStart.= '<input type="hidden" name="idx" value="'.$idx.'" />'."\n";
 		$formStart.= '<input type="hidden" name="check_password" value="'.$password.'" />'."\n";
 		$formStart.= '<input type="hidden" name="image" value="'.$image.'" />'."\n";
-		$formStart.= '<script type="text/javascript">GetEmbed("ModuleBoardAutoSaver","'.$this->moduleDir.'/flash/AutoSaver.swf?rnd='.time().'",1,1,"funcname=AutoSaveSendData&resultname=AutoSaveComplete");</script>'."\n";
 		$formEnd = '</form>'."\n".'<iframe name="'.$actionTarget.'" style="display:none;"></iframe>'."\n";
 		$formEnd.= '<div id="AutoSaverAlertBox" style="display:none;"></div>'."\n";
 
