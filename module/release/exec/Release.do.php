@@ -61,7 +61,7 @@ if ($action == 'post') {
 
 		$idx = $mDB->DBinsert($mRelease->table['post'],$insert);
 
-		$mDB->DBupdate($mRelease->table['setup'],array('post_time'=>GetGMT()),array('post'=>'`post`+1'),"where `bid`='{$insert['bid']}'");
+		$mDB->DBupdate($mRelease->table['setup'],array('post_time'=>GetGMT()),array('post'=>'`post`+1'),"where `rid`='{$insert['rid']}'");
 		if ($insert['category'] != 0) {
 			$mDB->DBupdate($mRelease->table['category'],array('post_time'=>GetGMT()),array('post'=>'`post`+1'),"where `idx`='{$insert['category']}'");
 		}
@@ -168,7 +168,7 @@ if ($action == 'version') {
 		$insert['file'] = '/'.date('Ym').'/'.$insert['hash'].'.'.time().'.'.GetFileExec($_FILES['file']['name']);
 
 		$vidx = $mDB->DBinsert($mRelease->table['version'],$insert);
-		$mDB->DBupdate($mRelease->table['setup'],array('post_time'=>GetGMT()),'',"where `bid`='{$post['bid']}'");
+		$mDB->DBupdate($mRelease->table['setup'],array('post_time'=>GetGMT()),'',"where `rid`='{$post['rid']}'");
 		$resultMsg = '새로운버전을 성공적으로 등록하였습니다.';
 	} else {
 		$version = $mDB->DBfetch($mRelease->table['version'],'*',"where `idx`='$vidx'");
@@ -368,7 +368,7 @@ if ($action == 'delete') {
 		}
 
 		$mDB->DBupdate($mRelease->table['post'],array('is_delete'=>'TRUE'),'',"where `idx`='$idx'");
-		$mDB->DBupdate($mRelease->table['setup'],'',array('post'=>'`post`-1'),"where `bid`='{$data['bid']}'");
+		$mDB->DBupdate($mRelease->table['setup'],'',array('post'=>'`post`-1'),"where `rid`='{$data['rid']}'");
 		if ($data['category'] != 0) $mDB->DBupdate($mRelease->table['category'],'',array('post'=>'`post`-1'),"where `idx`='{$data['category']}'");
 		$path = explode('?',$_SERVER['HTTP_REFERER']);
 		$url = $path[0];

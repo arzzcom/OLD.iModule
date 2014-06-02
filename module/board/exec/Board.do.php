@@ -71,7 +71,12 @@ if ($action == 'post') {
 		}
 		$insert['reg_date'] = GetGMT();
 		$idx = $mDB->DBinsert($mBoard->table['post'],$insert);
-		$mDB->DBupdate($mBoard->table['post'],array('loop'=>$idx*-1),'',"where `idx`='$idx'");
+		
+		if ($mBoard->GetSetup('timesort') == 'TRUE') {
+			$mDB->DBupdate($mBoard->table['post'],array('loop'=>$insert['reg_date']*-1),'',"where `idx`='$idx'");
+		} else {
+			$mDB->DBupdate($mBoard->table['post'],array('loop'=>$idx*-1),'',"where `idx`='$idx'");
+		}
 		$mDB->DBupdate($mBoard->table['setup'],array('post_time'=>GetGMT()),array('post'=>'`post`+1'),"where `bid`='{$insert['bid']}'");
 		if ($insert['category'] != 0) {
 			$mDB->DBupdate($mBoard->table['category'],array('post_time'=>GetGMT()),array('post'=>'`post`+1'),"where `idx`='{$insert['category']}'");

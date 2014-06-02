@@ -1,4 +1,15 @@
 <script type="text/javascript">
+function RecountProgressControl(boardname,loop,total) {
+	Ext.getCmp("ProgressBar").updateProgress(loop/total,boardname+"게시판의 게시물수를 업데이트하고 있습니다. ("+loop+"/"+total+")",true);
+
+	if (loop == total) {
+		Ext.Msg.show({title:"안내",msg:"성공적으로 처리하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
+			Ext.getCmp("ProgressWindow").close();
+			Ext.getCmp("ListPanel").getStore().loadPage(1);
+		}});
+	}
+}
+
 var ContentArea = function(viewport) {
 	this.viewport = viewport;
 
@@ -205,6 +216,10 @@ var ContentArea = function(viewport) {
 								new Ext.form.Checkbox({
 									boxLabel:"답변자에게 포인트를 지급할 수 있는 지식인기능을 활성화 합니다.",
 									name:"use_select"
+								}),
+								new Ext.form.Checkbox({
+									boxLabel:"작성시간을 변경할 수 있는 게시판으로 기본정렬을 입력된 작성시간기준으로 합니다.",
+									name:"timesort"
 								})
 							]
 						}),
@@ -1603,6 +1618,23 @@ var ContentArea = function(viewport) {
 																listeners:{change:{fn:isModifyFunction}}
 															})
 														]
+													}),
+													new Ext.form.FieldContainer({
+														layout:"hbox",
+														items:[
+															new Ext.form.Checkbox({
+																boxLabel:"작성시간을 변경할 수 있는 게시판으로 기본정렬을 입력된 작성시간기준으로 합니다.",
+																disabled:true,
+																flex:1,
+																name:"timesort"
+															}),
+															new Ext.form.Checkbox({
+																name:"is_timesort",
+																boxLabel:"일괄수정",
+																style:{marginLeft:"5px"},
+																listeners:{change:{fn:isModifyFunction}}
+															})
+														]
 													})
 												]
 											}),
@@ -2419,6 +2451,32 @@ var ContentArea = function(viewport) {
 						}
 					}]
 				})
+			}),
+			'-',
+			new Ext.Button({
+				icon:"<?php echo $_ENV['dir']; ?>/module/board/images/admin/icon_calculator.png",
+				text:"게시물 갯수 재계산",
+				handler:function() {
+					new Ext.Window({
+						id:"ProgressWindow",
+						width:500,
+						title:"게시물 갯수 재계산",
+						modal:true,
+						closable:false,
+						resizable:false,
+						draggable:false,
+						bodyPadding:"5 5 5 5",
+						items:[
+							new Ext.ProgressBar({
+								id:"ProgressBar",
+								text:"전체 게시판을 로딩하고 있습니다."
+							})
+						],
+						listeners:{show:{fn:function() {
+							execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/board/exec/Admin.do.php?action=board&do=recount";
+						}}}
+					}).show();
+				}
 			})
 		],
 		items:[

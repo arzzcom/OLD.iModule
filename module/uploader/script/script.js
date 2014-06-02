@@ -2304,7 +2304,7 @@ function ModuleUploaderComplete(id) {
 }
 
 function ModuleUploaderFail(id,file) {
-	console.log("Fail",id,file);
+	ModuleUploaderFailBySkin(id,file);
 }
 
 function ModuleUploaderProgress(id,data) {

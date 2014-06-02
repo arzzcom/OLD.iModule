@@ -64,7 +64,7 @@ class ModuleBoard extends Module {
 		$this->baseQueryString = sizeof(explode('?',$_SERVER['REQUEST_URI'])) > 1 ? array_pop(explode('?',$_SERVER['REQUEST_URI'])) : '';
 
 		if ($bid) {
-			$this->setup = $this->mDB->DBfetch($this->table['setup'],array('bid','skin','title','width','use_uploader','use_category','use_charge','use_select','use_rss','listnum','pagenum','view_alllist','view_list','view_notice_page','view_notice_count','view_notice_list','post_point','ment_point','select_point','permission'),"where `bid`='{$bid}'");
+			$this->setup = $this->mDB->DBfetch($this->table['setup'],'*',"where `bid`='{$bid}'");
 			
 			if (isset($this->setup['skin']) == true) {
 				$this->skinPath = $this->modulePath.'/templet/board/'.$this->setup['skin'];
@@ -248,7 +248,7 @@ class ModuleBoard extends Module {
 	}
 
 	// 헤더출력
-	function PrintHeader() {
+	function PrintHeader($isBoard=true) {
 		if ($this->isHeaderIncluded == true) return;
 
 		if ($_ENV['isMobile'] == true) {
@@ -267,29 +267,31 @@ class ModuleBoard extends Module {
 		
 		echo "\n".'<!-- Module Board Start -->'."\n";
 
-		if ($this->isHeaderIncluded == false) {
-			echo '<link rel="stylesheet" href="'.$this->moduleDir.'/css/default.css" type="text/css" />'."\n";
-			echo '<script type="text/javascript" src="'.$this->moduleDir.'/script/default.js"></script>'."\n";
-		}
-		$this->isHeaderIncluded = true;
-
-		if ($this->mode != 'list') {
-			echo '<script type="text/javascript" src="'.$_ENV['dir'].'/module/wysiwyg/script/wysiwyg.js"></script>'."\n";
-		}
-
-		if ($this->bid) {
-			echo '<link rel="stylesheet" href="'.$this->skinDir.'/style.css" type="text/css" title="style" />'."\n";
-			echo '<script type="text/javascript" src="'.$this->skinDir.'/script.js"></script>'."\n";
-			echo '<div class="ModuleBoard" style="width:'.$this->setup['width'].'">'."\n";
+		if ($isBoard == true) {
+			if ($this->isHeaderIncluded == false) {
+				echo '<link rel="stylesheet" href="'.$this->moduleDir.'/css/default.css" type="text/css" />'."\n";
+				echo '<script type="text/javascript" src="'.$this->moduleDir.'/script/default.js"></script>'."\n";
+			}
+			$this->isHeaderIncluded = true;
+	
+			if ($this->mode != 'list') {
+				echo '<script type="text/javascript" src="'.$_ENV['dir'].'/module/wysiwyg/script/wysiwyg.js"></script>'."\n";
+			}
+	
+			if ($this->bid) {
+				echo '<link rel="stylesheet" href="'.$this->skinDir.'/style.css" type="text/css" title="style" />'."\n";
+				echo '<script type="text/javascript" src="'.$this->skinDir.'/script.js"></script>'."\n";
+				echo '<div class="ModuleBoard" style="width:'.$this->setup['width'].'">'."\n";
+			}
 		}
 	}
 
 	// 푸터출력
-	function PrintFooter() {
+	function PrintFooter($isBoard=true) {
 		if ($this->isFooterIncluded == true) return;
 		$this->isFooterIncluded = true;
 
-		if ($this->bid) echo "\n".'</div>'."\n";
+		if ($isBoard == true && $this->bid) echo "\n".'</div>'."\n";
 		echo "\n".'<!-- Module Board End -->'."\n";
 	}
 
@@ -509,7 +511,7 @@ class ModuleBoard extends Module {
 	
 	// 나의 게시물 출력
 	function PrintMyList($skin,$listnum,$mno='') {
-		$this->PrintHeader();
+		$this->PrintHeader(false);
 		
 		$mno = $mno ? $mno : $this->member['idx'];
 		
@@ -1351,7 +1353,7 @@ class ModuleBoard extends Module {
 
 	// 최근게시물 출력
 	function PrintRecently($skin,$page,$row,$limit='',$title='',$finder='',$orderer='') {
-		$this->PrintHeader();
+		$this->PrintHeader(false);
 		
 		if (preg_match('/\$/',$this->bid) == false && isset($this->setup['bid']) == false) {
 			return $this->PrintError($this->bid.' 게시판을 찾을 수 없습니다.');
@@ -1395,12 +1397,12 @@ class ModuleBoard extends Module {
 		$this->mTemplet->assign('data',$data);
 		$this->mTemplet->PrintTemplet();
 
-		$this->PrintFooter();
+		$this->PrintFooter(false);
 	}
 
 	// 인기게시물 출력
 	function PrintRecentlyHot($skin,$page,$row,$hotPosition=100,$limit='',$title='',$finder='') {
-		$this->PrintHeader();
+		$this->PrintHeader(false);
 
 		$title = $title ? $title : $this->setup['title'];
 		$find = $this->find;
@@ -1437,11 +1439,11 @@ class ModuleBoard extends Module {
 		$this->mTemplet->assign('mode','board');
 		$this->mTemplet->PrintTemplet();
 
-		$this->PrintFooter();
+		$this->PrintFooter(false);
 	}
 
 	function PrintMyPost($skin,$row,$limit='',$page='',$title='나의 최근 글 목록',$finder='') {
-		$this->PrintHeader();
+		$this->PrintHeader(false);
 		$title = $title ? $title : $this->setup['title'];
 
 		if ($this->mMember->IsLogged() == true) {
@@ -1480,11 +1482,11 @@ class ModuleBoard extends Module {
 		$this->mTemplet->assign('mode','mypost');
 		$this->mTemplet->PrintTemplet();
 
-		$this->PrintFooter();
+		$this->PrintFooter(false);
 	}
 
 	function PrintMyPostMent($skin,$row,$limit='',$page='',$title='나의 글의 최근 댓글 목록',$finder='') {
-		$this->PrintHeader();
+		$this->PrintHeader(false);
 		$title = $title ? $title : $this->setup['title'];
 
 		if ($this->mMember->IsLogged() == true) {
@@ -1518,7 +1520,7 @@ class ModuleBoard extends Module {
 		$this->mTemplet->assign('mode','myment');
 		$this->mTemplet->PrintTemplet();
 
-		$this->PrintFooter();
+		$this->PrintFooter(false);
 	}
 
 	function PrintUploader($var) {

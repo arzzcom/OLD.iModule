@@ -188,6 +188,7 @@
 			<field name="select_point" type="int" length="11">댓글채택시포인트</field>
 			<field name="post" type="int" length="11">게시물수</field>
 			<field name="post_time" type="int" length="11">마지막 게시물 시각</field>
+			<field name="timesort" type="enum" length="TRUE,FALSE">시간정렬</field>
 			<field name="permission" type="text">권한설정</field>
 			<index name="bid" type="primary" />
 		</table>

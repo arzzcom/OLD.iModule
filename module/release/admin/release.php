@@ -1,4 +1,15 @@
 <script type="text/javascript">
+function RecountProgressControl(releasename,loop,total) {
+	Ext.getCmp("ProgressBar").updateProgress(loop/total,releasename+"릴리즈게시판의 게시물수를 업데이트하고 있습니다. ("+loop+"/"+total+")",true);
+
+	if (loop == total) {
+		Ext.Msg.show({title:"안내",msg:"성공적으로 처리하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
+			Ext.getCmp("ProgressWindow").close();
+			Ext.getCmp("ListPanel").getStore().loadPage(1);
+		}});
+	}
+}
+
 var ContentArea = function(viewport) {
 	this.viewport = viewport;
 
@@ -1154,6 +1165,32 @@ var ContentArea = function(viewport) {
 						}
 					}]
 				})
+			}),
+			'-',
+			new Ext.Button({
+				icon:"<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_calculator.png",
+				text:"게시물 갯수 재계산",
+				handler:function() {
+					new Ext.Window({
+						id:"ProgressWindow",
+						width:500,
+						title:"게시물 갯수 재계산",
+						modal:true,
+						closable:false,
+						resizable:false,
+						draggable:false,
+						bodyPadding:"5 5 5 5",
+						items:[
+							new Ext.ProgressBar({
+								id:"ProgressBar",
+								text:"전체 게시판을 로딩하고 있습니다."
+							})
+						],
+						listeners:{show:{fn:function() {
+							execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.do.php?action=release&do=recount";
+						}}}
+					}).show();
+				}
 			})
 		],
 		items:[

@@ -120,6 +120,29 @@ if ($action == 'release') {
 		$return['success'] = true;
 		exit(json_encode($return));
 	}
+	
+	if ($do == 'recount') {
+		$mFlush = new Flush();
+		
+		$release = $mDB->DBfetchs($mRelease->table['setup'],array('rid','title'));
+		for ($i=0, $loop=sizeof($release);$i<$loop;$i++) {
+			$releasename = $release[$i]['title'].'('.$release[$i]['rid'].')';
+
+			$post = $mDB->DBcount($mRelease->table['post'],"where `rid`='{$release[$i]['rid']}' and `is_delete`='FALSE'",'idx');
+			$lastPost = $mDB->DBfetch($mRelease->table['post'],array('reg_date'),"where `rid`='{$release[$i]['rid']}' and `is_delete`='FALSE'",'reg_date,desc','0,1');
+			$mDB->DBupdate($mRelease->table['setup'],array('post'=>$post,'post_time'=>$lastPost['reg_date']),'',"where `rid`='{$release[$i]['rid']}'");
+			
+			$category = $mDB->DBfetchs($mRelease->table['category'],array('idx'),"where `rid`='{$release[$i]['rid']}'");
+			for ($j=0, $loopj=sizeof($category);$j<$loopj;$j++) {
+				$post = $mDB->DBcount($mRelease->table['post'],"where `category`='{$category[$j]['idx']}' and `is_delete`='FALSE'",'idx');
+				$lastPost = $mDB->DBfetch($mRelease->table['post'],array('reg_date'),"where `category`='{$category[$j]['idx']}' and `is_delete`='FALSE'",'reg_date,desc','0,1');
+				$mDB->DBupdate($mRelease->table['category'],array('post'=>$post,'post_time'=>$lastPost['reg_date']),'',"where `idx`='{$category[$j]['idx']}'");
+			}
+			
+			echo '<script type="text/javascript">top.RecountProgressControl("'.$releasename.'",'.($i+1).','.$loop.');</script>';
+			$mFlush->flush();
+		}
+	}
 }
 
 if ($action == 'category') {
@@ -205,10 +228,16 @@ if ($action == 'category') {
 			$return['errors'] = $errors;
 		}
 		
-		$category = $this->mDB->DBfetchs($mRelease->table['category'],'*');
+		$release = $mDB->DBfetchs($mRelease->table['setup'],array('rid'));
+		for ($i=0, $loop=sizeof($release);$i<$loop;$i++) {
+			$post = $mDB->DBcount($mRelease->table['post'],"where `rid`='{$release[$i]['rid']}' and `is_delete`='FALSE'",'idx');
+			$mDB->DBupdate($mRelease->table['setup'],array('post'=>$post),'',"where `rid`='{$release[$i]['rid']}'");
+		}
+		
+		$category = $mDB->DBfetchs($mRelease->table['category'],array('idx'));
 		for ($i=0, $loop=sizeof($category);$i<$loop;$i++) {
-			$post = $this->mDB->DBcount($mRelease->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
-			$this->mDB->DBupdate($mRelease->table['post'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
+			$post = $mDB->DBcount($mRelease->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'",'idx');
+			$mDB->DBupdate($mRelease->table['category'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
 		}
 		
 		exit(json_encode($return));
@@ -233,16 +262,16 @@ if ($action == 'post') {
 			SaveAdminLog('release','['.$data[$i]['title'].'] 프로그램을 삭제하였습니다.','/module/release/release.php?rid='.$data[$i]['rid'].'&mode=view&idx='.$data[$i]['idx']);
 		}
 		
-		$release = $this->mDB->DBfetchs($mRelease->table['post'],'*');
+		$release = $mDB->DBfetchs($mRelease->table['setup'],array('rid'));
 		for ($i=0, $loop=sizeof($release);$i<$loop;$i++) {
-			$post = $this->mDB->DBcount($mRelease->table['post'],"where `rid`='{$release[$i]['rid']}' and `is_delete`='FALSE'");
-			$this->mDB->DBupdate($mRelease->table['post'],array('post'=>$post),'',"where `rid`='{$release[$i]['rid']}'");
+			$post = $mDB->DBcount($mRelease->table['post'],"where `rid`='{$release[$i]['rid']}' and `is_delete`='FALSE'",'idx');
+			$mDB->DBupdate($mRelease->table['setup'],array('post'=>$post),'',"where `rid`='{$release[$i]['rid']}'");
 		}
 		
-		$category = $this->mDB->DBfetchs($mRelease->table['category'],'*');
+		$category = $mDB->DBfetchs($mRelease->table['category'],array('idx'));
 		for ($i=0, $loop=sizeof($category);$i<$loop;$i++) {
-			$post = $this->mDB->DBcount($mRelease->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
-			$this->mDB->DBupdate($mRelease->table['post'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
+			$post = $mDB->DBcount($mRelease->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'",'idx');
+			$mDB->DBupdate($mRelease->table['category'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
 		}
 		
 		$return['success'] = true;
@@ -268,16 +297,16 @@ if ($action == 'post') {
 			$mDB->DBupdate($mRelease->table['ment'],array('rid'=>$rid),'',"where `repto`={$data[$i]['idx']}");
 		}
 		
-		$release = $this->mDB->DBfetchs($mRelease->table['post'],'*');
+		$release = $mDB->DBfetchs($mRelease->table['setup'],array('rid'));
 		for ($i=0, $loop=sizeof($release);$i<$loop;$i++) {
-			$post = $this->mDB->DBcount($mRelease->table['post'],"where `rid`='{$release[$i]['rid']}' and `is_delete`='FALSE'");
-			$this->mDB->DBupdate($mRelease->table['post'],array('post'=>$post),'',"where `rid`='{$release[$i]['rid']}'");
+			$post = $mDB->DBcount($mRelease->table['post'],"where `rid`='{$release[$i]['rid']}' and `is_delete`='FALSE'",'idx');
+			$mDB->DBupdate($mRelease->table['setup'],array('post'=>$post),'',"where `rid`='{$release[$i]['rid']}'");
 		}
 		
-		$category = $this->mDB->DBfetchs($mRelease->table['category'],'*');
+		$category = $mDB->DBfetchs($mRelease->table['category'],array('idx'));
 		for ($i=0, $loop=sizeof($category);$i<$loop;$i++) {
-			$post = $this->mDB->DBcount($mRelease->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
-			$this->mDB->DBupdate($mRelease->table['post'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
+			$post = $mDB->DBcount($mRelease->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'",'idx');
+			$mDB->DBupdate($mRelease->table['category'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
 		}
 		
 		$return['success'] = true;
@@ -524,16 +553,16 @@ if ($action == 'trash') {
 		$idx = Request('idx');
 		$mDB->DBupdate($mRelease->table['post'],array('is_delete'=>'FALSE'),'',"where `idx` IN ($idx)");
 		
-		$release = $this->mDB->DBfetchs($mRelease->table['post'],'*');
+		$release = $mDB->DBfetchs($mRelease->table['post'],'*');
 		for ($i=0, $loop=sizeof($release);$i<$loop;$i++) {
-			$post = $this->mDB->DBcount($mRelease->table['post'],"where `rid`='{$release[$i]['rid']}' and `is_delete`='FALSE'");
-			$this->mDB->DBupdate($mRelease->table['post'],array('post'=>$post),'',"where `rid`='{$release[$i]['rid']}'");
+			$post = $mDB->DBcount($mRelease->table['post'],"where `rid`='{$release[$i]['rid']}' and `is_delete`='FALSE'");
+			$mDB->DBupdate($mRelease->table['post'],array('post'=>$post),'',"where `rid`='{$release[$i]['rid']}'");
 		}
 		
-		$category = $this->mDB->DBfetchs($mRelease->table['category'],'*');
+		$category = $mDB->DBfetchs($mRelease->table['category'],'*');
 		for ($i=0, $loop=sizeof($category);$i<$loop;$i++) {
-			$post = $this->mDB->DBcount($mRelease->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
-			$this->mDB->DBupdate($mRelease->table['post'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
+			$post = $mDB->DBcount($mRelease->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
+			$mDB->DBupdate($mRelease->table['post'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
 		}
 		
 		$return['success'] = true;

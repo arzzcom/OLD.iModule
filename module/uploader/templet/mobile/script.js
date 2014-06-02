@@ -7,6 +7,10 @@ function ModuleUploaderCompleteBySkin(id) {
 	WindowDisabled(false);
 }
 
+function ModuleUploaderFailBySkin(id,file) {
+	
+}
+
 function ModuleUploaderDoneBySkin(id,o,f) {
 	var objectData = {id:id,o:o,f:f};
 

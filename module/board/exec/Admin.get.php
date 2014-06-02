@@ -106,6 +106,8 @@ if ($action == 'board') {
 		$data['view_prevnext'] = $data['view_prevnext'] == 'TRUE' ? 'on' : 'off';
 		$data['view_notice'] = $data['view_notice_page'].','.$data['view_notice_count'];
 		
+		$data['timesort'] = $data['timesort'] == 'TRUE' ? 'on' : 'off';
+		
 		$data['use_rss'] = $data['use_rss'] == 'TRUE' ? 'on' : 'off';
 		if ($data['rss_config'] && is_array(unserialize($data['rss_config'])) == true) {
 			$data = array_merge($data,unserialize($data['rss_config']));
@@ -278,6 +280,14 @@ if ($action == 'board_all') {
 			$data['view_list'] = $board['view_list'];
 		} elseif ($data['view_list'] != $board['view_list']) {
 			$data['view_list'] = '';
+		}
+		
+		if (isset($data['timesort']) == false) {
+			$data['is_timesort'] = 'on';
+			$data['timesort'] = $board['timesort'] == 'TRUE' ? 'on' : 'off';
+		} elseif ($data['timesort'] != ($board['timesort'] == 'TRUE' ? 'on' : 'off')) {
+			$data['is_timesort'] = 'off';
+			$data['timesort'] = 'off';
 		}
 		
 		if ($board['permission'] && is_array(unserialize($board['permission'])) == true) {

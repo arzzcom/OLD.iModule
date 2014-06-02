@@ -12,6 +12,12 @@ $do = Request('do');
 $return = array();
 $errors = array();
 
+if ($mMember->IsAdmin() == false) {
+	$return['success'] = false;
+	$return['message'] = '권한이 없습니다.';
+	exit(json_encode($return));
+}
+
 if ($action == 'board') {
 	if ($do == 'add' || $do == 'modify') {
 		if ($do == 'add') {
@@ -20,8 +26,6 @@ if ($action == 'board') {
 			$bid = Request('bid');
 			$mBoard = new ModuleBoard($bid);
 		}
-
-		if ($mBoard->GetPermission('setup') == false) $errors['message'] = '관리권한이 없습니다.';
 
 		$insert = array();
 		$insert['title'] = Request('title');
@@ -54,6 +58,7 @@ if ($action == 'board') {
 		$insert['post_point'] = Request('post_point');
 		$insert['ment_point'] = Request('ment_point');
 		$insert['select_point'] = Request('select_point');
+		$insert['timesort'] = Request('timesort') == 'on' ? 'TRUE' : 'FALSE';
 		$insert['permission'] = serialize(array('list'=>Request('permission_list'),'view'=>Request('permission_view'),'post'=>Request('permission_post'),'ment'=>Request('permission_ment'),'modify'=>Request('permission_modify'),'delete'=>Request('permission_delete'),'select'=>Request('permission_select'),'secret'=>Request('permission_secret'),'notice'=>Request('permission_notice')));
 
 		if ($do == 'add') {
@@ -116,6 +121,7 @@ if ($action == 'board') {
 		if (Request('is_use_uploader') == 'on') $insert['use_uploader'] = Request('use_uploader') == 'on' ? 'TRUE' : 'FALSE';
 		if (Request('is_use_charge') == 'on') $insert['use_charge'] = Request('use_charge') == 'on' ? 'TRUE' : 'FALSE';
 		if (Request('is_use_select') == 'on') $insert['use_select'] = Request('use_select') == 'on' ? 'TRUE' : 'FALSE';
+		if (Request('is_timesort') == 'on') $insert['timesort'] = Request('timesort') == 'on' ? 'TRUE' : 'FALSE';
 		
 		if (Request('is_post_point') == 'on') $insert['post_point'] = Request('post_point');
 		if (Request('is_ment_point') == 'on') $insert['ment_point'] = Request('ment_point');
@@ -190,6 +196,29 @@ if ($action == 'board') {
 
 		$return['success'] = true;
 		exit(json_encode($return));
+	}
+	
+	if ($do == 'recount') {
+		$mFlush = new Flush();
+		
+		$board = $mDB->DBfetchs($mBoard->table['setup'],array('bid','title'));
+		for ($i=0, $loop=sizeof($board);$i<$loop;$i++) {
+			$boardname = $board[$i]['title'].'('.$board[$i]['bid'].')';
+			
+			$post = $mDB->DBcount($mBoard->table['post'],"where `bid`='{$board[$i]['bid']}' and `is_delete`='FALSE'",'idx');
+			$lastPost = $mDB->DBfetch($mBoard->table['post'],array('reg_date'),"where `bid`='{$board[$i]['bid']}' and `is_delete`='FALSE'",'reg_date,desc','0,1');
+			$mDB->DBupdate($mBoard->table['setup'],array('post'=>$post,'post_time'=>$lastPost['reg_date']),'',"where `bid`='{$board[$i]['bid']}'");
+			
+			$category = $mDB->DBfetchs($mBoard->table['category'],array('idx'),"where `bid`='{$board[$i]['bid']}'");
+			for ($j=0, $loopj=sizeof($category);$j<$loopj;$j++) {
+				$post = $mDB->DBcount($mBoard->table['post'],"where `category`='{$category[$j]['idx']}' and `is_delete`='FALSE'",'idx');
+				$lastPost = $mDB->DBfetch($mBoard->table['post'],array('reg_date'),"where `category`='{$category[$j]['idx']}' and `is_delete`='FALSE'",'reg_date,desc','0,1');
+				$mDB->DBupdate($mBoard->table['category'],array('post'=>$post,'post_time'=>$lastPost['reg_date']),'',"where `idx`='{$category[$j]['idx']}'");
+			}
+			
+			echo '<script type="text/javascript">top.RecountProgressControl("'.$boardname.'",'.($i+1).','.$loop.');</script>';
+			$mFlush->flush();
+		}
 	}
 }
 
@@ -276,10 +305,16 @@ if ($action == 'category') {
 			$return['errors'] = $errors;
 		}
 		
-		$category = $this->mDB->DBfetchs($mBoard->table['category'],'*');
+		$board = $mDB->DBfetchs($mBoard->table['setup'],array('bid'));
+		for ($i=0, $loop=sizeof($board);$i<$loop;$i++) {
+			$post = $mDB->DBcount($mBoard->table['post'],"where `bid`='{$board[$i]['bid']}' and `is_delete`='FALSE'",'idx');
+			$mDB->DBupdate($mBoard->table['setup'],array('post'=>$post),'',"where `bid`='{$board[$i]['bid']}'");
+		}
+		
+		$category = $mDB->DBfetchs($mBoard->table['category'],array('idx'));
 		for ($i=0, $loop=sizeof($category);$i<$loop;$i++) {
-			$post = $this->mDB->DBcount($mBoard->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
-			$this->mDB->DBupdate($mBoard->table['post'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
+			$post = $mDB->DBcount($mBoard->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'",'idx');
+			$mDB->DBupdate($mBoard->table['category'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
 		}
 		
 		exit(json_encode($return));
@@ -289,7 +324,7 @@ if ($action == 'category') {
 if ($action == 'post') {
 	if ($do == 'delete') {
 		$idx = Request('idx');
-		$data = $mDB->DBfetchs($mBoard->table['post'],array('idx','bid','is_delete','mno','title'),"where `idx` IN ($idx)");
+		$data = $mDB->DBfetchs($mBoard->table['post'],array('idx','bid','category','is_delete','mno','title'),"where `idx` IN ($idx)");
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			if ($data[$i]['is_delete'] == 'FALSE' && $data[$i]['mno'] != '0') {
 				$check = $mDB->DBfetch($mBoard->table['setup'],array('post_point'),"where `bid`='{$data[$i]['bid']}'");
@@ -298,22 +333,13 @@ if ($action == 'post') {
 				$message = array('module'=>'board','mno'=>$member['idx'],'type'=>'delete','parent'=>$data[$i]['title'],'message'=>'관리자에 의해 게시물이 삭제됨에 따라  '.number_format($check['post_point']).'포인트가 차감되었습니다.');
 				$mMember->SendMessage($data[$i]['mno'],$message,'/module/board/board.php?bid='.$data[$i]['bid'].'&mode=view&idx='.$data[$i]['idx'],-1);
 			}
+			
+			$mDB->DBupdate($mBoard->table['setup'],'',array('post'=>'`post`-1'),"where `bid`='{$data[$i]['bid']}'");
+			if ($data[$i]['category'] != '0') $mDB->DBupdate($mBoard->table['category'],'',array('post'=>'`post`-1'),"where `idx`='{$data[$i]['category']}'");
 
 			$mDB->DBupdate($mBoard->table['post'],array('is_delete'=>'TRUE'),'',"where `idx`={$data[$i]['idx']}");
 
 			SaveAdminLog('board','['.$data[$i]['title'].'] 게시물을 삭제하였습니다.','/module/board/board.php?bid='.$data[$i]['bid'].'&mode=view&idx='.$data[$i]['idx']);
-		}
-		
-		$board = $this->mDB->DBfetchs($mBoard->table['post'],'*');
-		for ($i=0, $loop=sizeof($board);$i<$loop;$i++) {
-			$post = $this->mDB->DBcount($mBoard->table['post'],"where `bid`='{$board[$i]['bid']}' and `is_delete`='FALSE'");
-			$this->mDB->DBupdate($mBoard->table['post'],array('post'=>$post),'',"where `bid`='{$board[$i]['bid']}'");
-		}
-		
-		$category = $this->mDB->DBfetchs($mBoard->table['category'],'*');
-		for ($i=0, $loop=sizeof($category);$i<$loop;$i++) {
-			$post = $this->mDB->DBcount($mBoard->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
-			$this->mDB->DBupdate($mBoard->table['post'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
 		}
 		
 		$return['success'] = true;
@@ -322,27 +348,17 @@ if ($action == 'post') {
 
 	if ($do == 'spam') {
 		$idx = Request('idx');
-		$data = $mDB->DBfetchs($mBoard->table['post'],array('idx','bid','title','ip'),"where `idx` IN ($idx)");
+		$data = $mDB->DBfetchs($mBoard->table['post'],array('idx','category','bid','title','ip'),"where `idx` IN ($idx)");
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			if ($mDB->DBcount($_ENV['table']['ipban'],"where `ip`='{$data[$i]['ip']}'") == 0) {
 				$mDB->DBinsert($_ENV['table']['ipban'],array('ip'=>$data[$i]['ip'],'memo'=>'스팸게시물 등록으로 인한 아이피차단','reg_date'=>GetGMT()));
 			}
+			
+			$mDB->DBupdate($mBoard->table['setup'],'',array('post'=>'`post`-1'),"where `bid`='{$data[$i]['bid']}'");
+			if ($data[$i]['category'] != '0') $mDB->DBupdate($mBoard->table['category'],'',array('post'=>'`post`-1'),"where `idx`='{$data[$i]['category']}'");
 
+			$mDB->DBupdate($mBoard->table['post'],array('is_delete'=>'TRUE'),'',"where `idx`='{$data[$i]['idx']}'");
 			SaveAdminLog('board','['.$data[$i]['title'].'] 게시물을 스팸차단하였습니다.','/module/board/board.php?bid='.$data[$i]['bid'].'&mode=view&idx='.$data[$i]['idx']);
-		}
-
-		$mDB->DBupdate($mBoard->table['post'],array('is_delete'=>'TRUE'),'',"where `idx` IN ($idx)");
-		
-		$board = $this->mDB->DBfetchs($mBoard->table['post'],'*');
-		for ($i=0, $loop=sizeof($board);$i<$loop;$i++) {
-			$post = $this->mDB->DBcount($mBoard->table['post'],"where `bid`='{$board[$i]['bid']}' and `is_delete`='FALSE'");
-			$this->mDB->DBupdate($mBoard->table['post'],array('post'=>$post),'',"where `bid`='{$board[$i]['bid']}'");
-		}
-		
-		$category = $this->mDB->DBfetchs($mBoard->table['category'],'*');
-		for ($i=0, $loop=sizeof($category);$i<$loop;$i++) {
-			$post = $this->mDB->DBcount($mBoard->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
-			$this->mDB->DBupdate($mBoard->table['post'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
 		}
 		
 		$return['success'] = true;
@@ -363,21 +379,15 @@ if ($action == 'post') {
 
 				SaveAdminLog('board','['.$data[$i]['title'].'] 게시물을 '.$bid.'게시판으로 이동하였습니다.','/module/board/board.php?bid='.$bid.'&mode=view&idx='.$data[$i]['idx']);
 			}
+			
+			$mDB->DBupdate($mBoard->table['setup'],'',array('post'=>'`post`-1'),"where `bid`='{$data[$i]['bid']}'");
+			if ($data[$i]['category'] != '0') $mDB->DBupdate($mBoard->table['category'],'',array('post'=>'`post`-1'),"where `idx`='{$data[$i]['category']}'");
 
 			$mDB->DBupdate($mBoard->table['post'],array('bid'=>$bid,'category'=>$category),'',"where `idx`={$data[$i]['idx']}");
 			$mDB->DBupdate($mBoard->table['ment'],array('bid'=>$bid),'',"where `repto`={$data[$i]['idx']}");
-		}
-		
-		$board = $this->mDB->DBfetchs($mBoard->table['post'],'*');
-		for ($i=0, $loop=sizeof($board);$i<$loop;$i++) {
-			$post = $this->mDB->DBcount($mBoard->table['post'],"where `bid`='{$board[$i]['bid']}' and `is_delete`='FALSE'");
-			$this->mDB->DBupdate($mBoard->table['post'],array('post'=>$post),'',"where `bid`='{$board[$i]['bid']}'");
-		}
-		
-		$category = $this->mDB->DBfetchs($mBoard->table['category'],'*');
-		for ($i=0, $loop=sizeof($category);$i<$loop;$i++) {
-			$post = $this->mDB->DBcount($mBoard->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
-			$this->mDB->DBupdate($mBoard->table['post'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
+			
+			$mDB->DBupdate($mBoard->table['setup'],'',array('post'=>'`post`+1'),"where `bid`='$bid'");
+			if ($category != '0') $mDB->DBupdate($mBoard->table['category'],'',array('post'=>'`post`+1'),"where `idx`='$category'");
 		}
 		
 		$return['success'] = true;
@@ -624,16 +634,16 @@ if ($action == 'trash') {
 		$idx = Request('idx');
 		$mDB->DBupdate($mBoard->table['post'],array('is_delete'=>'FALSE'),'',"where `idx` IN ($idx)");
 		
-		$board = $this->mDB->DBfetchs($mBoard->table['post'],'*');
+		$board = $mDB->DBfetchs($mBoard->table['post'],'*');
 		for ($i=0, $loop=sizeof($board);$i<$loop;$i++) {
-			$post = $this->mDB->DBcount($mBoard->table['post'],"where `bid`='{$board[$i]['bid']}' and `is_delete`='FALSE'");
-			$this->mDB->DBupdate($mBoard->table['post'],array('post'=>$post),'',"where `bid`='{$board[$i]['bid']}'");
+			$post = $mDB->DBcount($mBoard->table['post'],"where `bid`='{$board[$i]['bid']}' and `is_delete`='FALSE'");
+			$mDB->DBupdate($mBoard->table['setup'],array('post'=>$post),'',"where `bid`='{$board[$i]['bid']}'");
 		}
 		
-		$category = $this->mDB->DBfetchs($mBoard->table['category'],'*');
+		$category = $mDB->DBfetchs($mBoard->table['category'],'*');
 		for ($i=0, $loop=sizeof($category);$i<$loop;$i++) {
-			$post = $this->mDB->DBcount($mBoard->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
-			$this->mDB->DBupdate($mBoard->table['post'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
+			$post = $mDB->DBcount($mBoard->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
+			$mDB->DBupdate($mBoard->table['setup'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
 		}
 		
 		$return['success'] = true;
