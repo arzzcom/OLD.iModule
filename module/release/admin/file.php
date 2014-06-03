@@ -20,7 +20,7 @@ function RetrenchProgressControl(dirName,dirCode,dirTotal,fileLimit,fileTotal,fi
 		Ext.getCmp("ProgressFile").hide();
 	}
 	
-	if (dirName == dirCode && fileLimit == fileTotal) {
+	if (dirCode == dirTotal && fileLimit == fileTotal) {
 		Ext.Msg.show({title:"안내",msg:"성공적으로 처리하였습니다.",buttons:Ext.Msg.OK,icon:Ext.Msg.INFO,fn:function() {
 			Ext.getCmp("ProgressWindow").close();
 			Ext.getCmp("ListPanel1").getStore().loadPage(1);
@@ -293,35 +293,146 @@ var ContentArea = function(viewport) {
 						text:"미기록파일정리",
 						icon:"<?php echo $_ENV['dir']; ?>/module/release/images/admin/icon_link_error.png",
 						handler:function() {
-							Ext.Msg.show({title:"안내",msg:"DB에서 관리되고 있지 않은 첨부파일을 찾아 전부 삭제합니다.<br />이 작업은 첨부파일폴더전체를 검색하기때문에 시간이 많이 소요될 수 있습니다.<br />기록되지 않은 파일은 찾아 삭제하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
-								if (button == "yes") {
-									new Ext.Window({
-										id:"ProgressWindow",
-										width:500,
-										title:"미기록파일정리",
-										modal:true,
-										closable:false,
-										resizable:false,
-										draggable:false,
-										bodyPadding:"5 5 5 5",
+							new Ext.Window({
+								id:"RetrenchWindow",
+								title:"미기록파일정리",
+								width:450,
+								modal:true,
+								resizable:false,
+								items:[
+									new Ext.form.FormPanel({
+										id:"RetrenchForm",
+										border:false,
+										bodyPadding:"10 10 5 10",
+										fieldDefaults:{labelAlign:"right",labelWidth:100,anchor:"100%",allowBlank:false},
 										items:[
-											new Ext.ProgressBar({
-												id:"ProgressDir",
-												text:"첨부파일 폴더구조를 파악중입니다."
-											}),
-											new Ext.ProgressBar({
-												hidden:true,
-												id:"ProgressFile",
-												text:"폴더내의 파일삭제를 준비중입니다.",
-												style:{marginTop:"5px"}
+											new Ext.form.FieldContainer({
+												fieldLabel:"기준연월",
+												layout:"hbox",
+												items:[
+													new Ext.form.ComboBox({
+														name:"year",
+														typeAhead:true,
+														lazyRender:false,
+														width:80,
+														store:new Ext.data.ArrayStore({
+															fields:["value","display"],
+															data:[
+																<?php for ($i=date('Y');$i>1970;$i--) { ?>
+																["<?php echo $i; ?>","<?php echo $i; ?>년"],
+																<?php } ?>
+																["1970","1970년"]
+															]
+														}),
+														editable:false,
+														mode:"local",
+														displayField:"display",
+														valueField:"value",
+														triggerAction:"all",
+														value:"<?php echo date('Y'); ?>"
+													}),
+													new Ext.form.ComboBox({
+														name:"month",
+														typeAhead:true,
+														lazyRender:false,
+														width:60,
+														style:{marginLeft:"5px"},
+														store:new Ext.data.ArrayStore({
+															fields:["value","display"],
+															data:[
+																["01","1월"],
+																["02","2월"],
+																["03","3월"],
+																["04","4월"],
+																["05","5월"],
+																["06","6월"],
+																["07","7월"],
+																["08","8월"],
+																["09","9월"],
+																["10","10월"],
+																["11","11월"],
+																["12","12월"]
+															]
+														}),
+														editable:false,
+														mode:"local",
+														displayField:"display",
+														valueField:"value",
+														triggerAction:"all",
+														value:"<?php echo date('m'); ?>"
+													}),
+													new Ext.form.DisplayField({
+														value:"&nbsp;이후 정리",
+														flex:1
+													}),
+													new Ext.form.Checkbox({
+														name:"all",
+														boxLabel:"전체기간",
+														style:{marginLeft:"5px"},
+														listeners:{change:{fn:function(form) {
+															if (form.checked == true) {
+																Ext.getCmp("RetrenchForm").getForm().findField("year").disable();
+																Ext.getCmp("RetrenchForm").getForm().findField("month").disable();
+															} else {
+																Ext.getCmp("RetrenchForm").getForm().findField("year").enable();
+																Ext.getCmp("RetrenchForm").getForm().findField("month").enable();
+															}
+														}}}
+													})
+												]
 											})
-										],
-										listeners:{show:{fn:function() {
-											execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.do.php?action=file&do=retrench";
-										}}}
-									}).show();
-								}
-							}});
+										]
+									})
+								],
+								buttons:[
+									new Ext.Button({
+										text:"확인",
+										handler:function() {
+											Ext.Msg.show({title:"안내",msg:"선택한 기간 이후 첨부된 파일 중 DB에서 관리되고 있지 않은 첨부파일을 찾아 전부 삭제합니다.<br />이 작업은 첨부파일폴더전체를 검색하기때문에 시간이 많이 소요될 수 있습니다.<br />기록되지 않은 파일은 찾아 삭제하시겠습니까?",buttons:Ext.Msg.YESNO,icon:Ext.Msg.QUESTION,fn:function(button) {
+												if (button == "yes") {
+													new Ext.Window({
+														id:"ProgressWindow",
+														width:500,
+														title:"미기록파일정리",
+														modal:true,
+														closable:false,
+														resizable:false,
+														draggable:false,
+														bodyPadding:"5 5 5 5",
+														items:[
+															new Ext.ProgressBar({
+																id:"ProgressDir",
+																text:"첨부파일 폴더구조를 파악중입니다."
+															}),
+															new Ext.ProgressBar({
+																hidden:true,
+																id:"ProgressFile",
+																text:"폴더내의 파일삭제를 준비중입니다.",
+																style:{marginTop:"5px"}
+															})
+														],
+														listeners:{show:{fn:function() {
+															if (Ext.getCmp("RetrenchForm").getForm().findField("all").checked == true) {
+																execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.do.php?action=file&do=retrench";
+															} else {
+																execFrame.location.href = "<?php echo $_ENV['dir']; ?>/module/release/exec/Admin.do.php?action=file&do=retrench&date="+Ext.getCmp("RetrenchForm").getForm().findField("year").getValue()+""+Ext.getCmp("RetrenchForm").getForm().findField("month").getValue();
+															}
+															
+															Ext.getCmp("RetrenchWindow").close();
+														}}}
+													}).show();
+												}
+											}});
+										}
+									}),
+									new Ext.Button({
+										text:"취소",
+										handler:function() {
+											Ext.getCmp("RetrenchWindow").close();
+										}
+									})
+								]
+							}).show();
 						}
 					}),
 					new Ext.Button({

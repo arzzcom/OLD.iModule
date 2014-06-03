@@ -22,7 +22,6 @@ if ($action == 'post') {
 
 	$insert = array();
 	$insert['rid'] = Request('rid');
-	$insert['mno'] = $member['idx'];
 	$insert['image'] = Request('image');
 	$insert['category'] = Request('category') ? Request('category') : 0;
 	$insert['title'] = Request('title') ? Request('title') : Alertbox('제목을 입력하여 주십시오.');
@@ -56,6 +55,7 @@ if ($action == 'post') {
 	}
 
 	if ($mode == 'post') {
+		$insert['mno'] = $member['idx'];
 		$insert['ip'] = $_SERVER['REMOTE_ADDR'];
 		$insert['reg_date'] = GetGMT();
 
@@ -88,10 +88,6 @@ if ($action == 'post') {
 		}
 		
 		$resultMsg = '프로그램을 성공적으로 수정하였습니다.';
-
-		$autosaveFind = "where `rid`='{$rid}'";
-		$autosaveFind.= " and `repto`=$idx";
-		$autosaveFind.= " and `ip`='".$_SERVER['REMOTE_ADDR']."'";
 	}
 	
 	if (isset($_FILES['logo']['tmp_name']) == true && $_FILES['logo']['tmp_name']) {
@@ -147,7 +143,7 @@ if ($action == 'version') {
 	$post = $mDB->DBfetch($mRelease->table['post'],'*',"where `idx`='$idx'");
 	
 	if (isset($post['idx']) == false) Alertbox('프로그램 게시글을 찾을 수 없습니다.');
-	if ($post['mno'] != $member['idx']) Alertbox('새버전을 등록할 권한이 없습니다.');
+	if ($post['mno'] != $member['idx'] && $mRelease->GetPermission('modify') == false) Alertbox('새버전을 등록할 권한이 없습니다.');
 	
 	$insert = array();
 	$insert['repto'] = $idx;

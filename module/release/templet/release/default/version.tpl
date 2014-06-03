@@ -37,15 +37,15 @@
 <tr>
 	<td class="headerCell">제작자</td>
 	<td class="splitBar"></td>
-	<td class="bodyCell">{$post.nickname}</td>
+	<td class="bodyCell">{$post.author.nickname}</td>
 	<td colspan="4" class="bodyCell" style="padding-left:0px;">
 		<table cellpadding="0" cellspacing="0" class="layoutfixed">
 		<col width="30" /><col width="60" /><col width="50%" /><col width="50%" />
 		<tr>
-			<td class="tahoma f10 bold">LV.<span class="orange">{if $post.member.level.lv < 10}0{/if}{$post.member.level.lv}</span></td>
+			<td class="tahoma f10 bold">LV.<span class="orange">{if $post.author.level.lv < 10}0{/if}{$post.author.level.lv}</span></td>
 			<td>
 				<table cellpadding="0" cellspacing="0" class="exp">
-				<col width="1" /><col width="{$post.member.level.exp/$post.member.level.next*50|string_format:"%d"}" /><col width="100%" /><col width="2" />
+				<col width="1" /><col width="{$post.author.level.exp/$post.author.level.next*50|string_format:"%d"}" /><col width="100%" /><col width="2" />
 				<tr>
 					<td class="start"></td>
 					<td class="on"></td>
@@ -55,10 +55,10 @@
 				</table>
 			</td>
 			<td>
-				<div class="email">{if $post.email}<a href="mailto:{$post.email}">{$post.email}</a>{else}<span class="disabled">NONE</span>{/if}</div>
+				<div class="email">{if $post.author.email}<a href="mailto:{$post.author.email}">{$post.author.email}</a>{else}<span class="disabled">NONE</span>{/if}</div>
 			</td>
 			<td>
-				<div class="homepage">{if $post.homepage}<a href="{$post.homepage}" target="_blank">{$post.homepage}</a>{else}<span class="disabled">NONE</span>{/if}</div>
+				<div class="homepage">{if $post.author.homepage}<a href="{$post.author.homepage}" target="_blank">{$post.author.homepage}</a>{else}<span class="disabled">NONE</span>{/if}</div>
 			</td>
 		</tr>
 		</table>

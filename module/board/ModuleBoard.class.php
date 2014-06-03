@@ -553,7 +553,7 @@ class ModuleBoard extends Module {
 			$data[$i]['avgvote'] = $data[$i]['voter'] > 0 ? sprintf('%0.2f',$data[$i]['vote']/$data[$i]['voter']) : '0.00';
 
 			$data[$i]['is_secret'] = $data[$i]['is_secret'] == 'TRUE';
-			$data[$i]['is_file'] = $this->mDB->DBcount($this->table['file'],"where `repto`={$data[$i]['idx']} and `filetype`!='IMG'") > 0;
+			$data[$i]['is_file'] = $this->mDB->DBcount($this->table['file'],"where `type`='POST' and `repto`={$data[$i]['idx']} and `filetype`!='IMG'") > 0;
 			$data[$i]['is_image'] = $data[$i]['image'] != '0';
 			$data[$i]['is_newment'] = $data[$i]['last_ment'] > GetGMT()-60*60*24;
 
@@ -745,7 +745,7 @@ class ModuleBoard extends Module {
 				$notice[$i]['is_secret'] = $notice[$i]['is_secret'] == 'TRUE';
 				$notice[$i]['is_mobile'] = $notice[$i]['is_mobile'] == 'TRUE';
 				$notice[$i]['is_new'] = $notice[$i]['reg_date'] > GetGMT()-60*60*24;
-				$notice[$i]['is_file'] = $this->mDB->DBcount($this->table['file'],"where `repto`={$notice[$i]['idx']} and `filetype`!='IMG'") > 0;
+				$notice[$i]['is_file'] = $this->mDB->DBcount($this->table['file'],"where `type`='POST' and `repto`={$notice[$i]['idx']} and `filetype`!='IMG'") > 0;
 				$notice[$i]['is_image'] = $notice[$i]['image'] != '0';
 				$notice[$i]['is_newment'] = $notice[$i]['last_ment'] > GetGMT()-60*60*24;
 
@@ -827,7 +827,7 @@ class ModuleBoard extends Module {
 			$data[$i]['is_secret'] = $data[$i]['is_secret'] == 'TRUE';
 			$data[$i]['is_mobile'] = $data[$i]['is_mobile'] == 'TRUE';
 			$data[$i]['is_new'] = $data[$i]['reg_date'] > GetGMT()-60*60*24;
-			$data[$i]['is_file'] = $this->mDB->DBcount($this->table['file'],"where `repto`={$data[$i]['idx']} and `filetype`!='IMG'") > 0;
+			$data[$i]['is_file'] = $this->mDB->DBcount($this->table['file'],"where `type`='POST' and `repto`={$data[$i]['idx']} and `filetype`!='IMG'") > 0;
 			$data[$i]['is_image'] = $data[$i]['image'] != '0';
 			$data[$i]['is_newment'] = $data[$i]['last_ment'] > GetGMT()-60*60*24;
 
@@ -1611,7 +1611,7 @@ class ModuleBoard extends Module {
 		$file = $this->mDB->DBfetch($this->table['file'],array('filepath'),"where `idx`='$idx'");
 		$this->mDB->DBdelete($this->table['file'],"where `idx`='$idx'");
 
-		if ($this->mDB->DBcount($this->table['file'],"where `filepath`='{$file['filepath']}'") == 0) {
+		if ($this->mDB->DBcount($this->table['file'],"where `filepath`='{$file['filepath']}'",'idx') == 0) {
 			@unlink($_ENV['userfilePath'].$this->userfile.$file['filepath']);
 		}
 	}

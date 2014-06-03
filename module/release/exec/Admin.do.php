@@ -394,16 +394,26 @@ if ($action == 'ment') {
 if ($action == 'file') {
 	if ($do == 'retrench') {
 		$mFlush = new Flush();
+		$date = Request('date') != null ? Request('date') : true;
 		$dirs = scandir($_ENV['userfilePath'].$mRelease->userfile.'/attach',0);
 		
+		$deleteFile = 0;
 		for ($i=0, $loop=sizeof($dirs);$i<$loop;$i++) {
 			$dirname = $dirs[$i];
+			if ($date !== true) {
+				if ($date == $dirname) {
+					$date = true;
+				} else {
+					continue;
+				}
+			}
+			
+			$totalFile = 0;
 
 			if ($dirname != '.' && $dirname != '..' && is_dir($_ENV['userfilePath'].$mRelease->userfile.'/attach/'.$dirname) == true) {
 				$files = scandir($_ENV['userfilePath'].$mRelease->userfile.'/attach/'.$dirname,0);
 			
 				$totalFile = sizeof($files);
-				$deleteFile = 0;
 			
 				for ($j=0;$j<$totalFile;$j++) {
 					if (is_dir($_ENV['userfilePath'].$mRelease->userfile.'/attach/'.$dirname.'/'.$files[$j]) == false) {
@@ -416,14 +426,14 @@ if ($action == 'file') {
 						}
 					}
 					
-					if ($j%10 == 0) {
+					if ($j%50 == 0) {
 						echo '<script type="text/javascript">top.RetrenchProgressControl("'.$dirname.'",'.($i+1).','.$loop.','.$j.','.$totalFile.','.$deleteFile.');</script>';
 						$mFlush->flush();
 					}
 				}
 			}
 			
-			echo '<script type="text/javascript">top.RetrenchProgressControl("'.$dirname.'",'.($i+1).','.$loop.','.$loop.','.$totalFile.','.$deleteFile.');</script>';
+			echo '<script type="text/javascript">top.RetrenchProgressControl("'.$dirname.'",'.($i+1).','.$loop.','.$totalFile.','.$totalFile.','.$deleteFile.');</script>';
 			$mFlush->flush();
 			sleep(1);
 		}
@@ -434,49 +444,52 @@ if ($action == 'file') {
 	
 	if ($do == 'norepto') {
 		$mFlush = new Flush();
-		
-		$totalFile = $mDB->DBcount($mRelease->table['file'],"where `repto`!=0");
+
 		$data = $mDB->DBfetchs($mRelease->table['file'],array('idx','type','repto'),"where `repto`>0");
-		
+		echo '<script type="text/javascript">top.NoReptoProgressControl(0,'.sizeof($data).',0);</script>';
+		$mFlush->flush();
+		$deleteFile = 0;
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			if ($data[$i]['type'] == 'POST') {
-				if ($mDB->DBcount($mRelease->table['post'],"where `idx`={$data[$i]['repto']}") == 0) {
+				if ($mDB->DBcount($mRelease->table['post'],"where `idx`={$data[$i]['repto']}",'idx') == 0) {
 					$mRelease->FileDelete($data[$i]['idx']);
 					$deleteFile++;
 				}
 			} else {
-				if ($mDB->DBcount($mRelease->table['ment'],"where `idx`={$data[$i]['repto']}") == 0) {
+				if ($mDB->DBcount($mRelease->table['ment'],"where `idx`={$data[$i]['repto']}",'idx') == 0) {
 					$mRelease->FileDelete($data[$i]['idx']);
 					$deleteFile++;
 				}
 			}
 			
 			if ($i%50 == 0) {
-				echo '<script type="text/javascript">top.NoReptoProgressControl('.$i.','.$totalFile.','.$deleteFile.');</script>';
+				echo '<script type="text/javascript">top.NoReptoProgressControl('.$i.','.$loop.','.$deleteFile.');</script>';
 				$mFlush->flush();
 			}
 		}
 		
-		echo '<script type="text/javascript">top.NoReptoProgressControl('.$totalFile.','.$totalFile.','.$deleteFile.');</script>';
+		echo '<script type="text/javascript">top.NoReptoProgressControl('.$totalFile.','.$loop.','.$deleteFile.');</script>';
 		$mFlush->flush();
 	}
 
 	if ($do == 'removetemp') {
 		$mFlush = new Flush();
-		
-		$totalFile = $mDB->DBcount($mRelease->table['file'],"where `repto`=0");
+
 		$data = $mDB->DBfetchs($mRelease->table['file'],array('idx'),"where `repto`=0");
+		echo '<script type="text/javascript">top.NoReptoProgressControl(0,'.sizeof($data).',0);</script>';
+		$mFlush->flush();
+		$deleteFile = 0;
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			$deleteFile++;
 			$mRelease->FileDelete($data[$i]['idx']);
 			
 			if ($i%50 == 0) {
-				echo '<script type="text/javascript">top.TempProgressControl('.$i.','.$totalFile.','.$deleteFile.');</script>';
+				echo '<script type="text/javascript">top.TempProgressControl('.$i.','.$loop.','.$deleteFile.');</script>';
 				$mFlush->flush();
 			}
 		}
 
-		echo '<script type="text/javascript">top.TempProgressControl('.$totalFile.','.$totalFile.','.$deleteFile.');</script>';
+		echo '<script type="text/javascript">top.TempProgressControl('.$totalFile.','.$loop.','.$deleteFile.');</script>';
 		$mFlush->flush();
 	}
 

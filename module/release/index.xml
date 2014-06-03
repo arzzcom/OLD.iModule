@@ -43,8 +43,8 @@
 			<field name="reg_date" type="int" length="11">첨부시각</field>
 			<field name="hit" type="int" length="11">다운로드수</field>
 			<index name="idx" type="auto_increment" />
-			<index name="type" type="index" />
-			<index name="repto" type="index" />
+			<index name="type,repto" type="index" />
+			<index name="filepath" type="index" />
 		</table>
 		
 		<table name="{code}_release_log_table">

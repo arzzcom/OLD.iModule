@@ -493,7 +493,7 @@ class ModuleRelease extends Module {
 			$data[$i]['vote'] = number_format($data[$i]['vote']);
 			$data[$i]['avgvote'] = $data[$i]['voter'] > 0 ? sprintf('%0.2f',$data[$i]['vote']/$data[$i]['voter']) : '0.00';
 
-			$data[$i]['is_file'] = $this->mDB->DBcount($this->table['file'],"where `repto`={$data[$i]['idx']} and `filetype`!='IMG'") > 0;
+			$data[$i]['is_file'] = $this->mDB->DBcount($this->table['file'],"where `type`='POST and `repto`={$data[$i]['idx']} and `filetype`!='IMG'") > 0;
 			$data[$i]['is_image'] = $data[$i]['image'] != '0';
 			$data[$i]['is_newment'] = $data[$i]['last_ment'] > GetGMT()-60*60*24;
 
@@ -864,7 +864,7 @@ class ModuleRelease extends Module {
 		$data['logo'] = file_exists($_ENV['userfilePath'].$this->logo.'/'.$data['idx'].'.thm') == true ? $_ENV['userfileDir'].$this->logo.'/'.$data['idx'].'.thm' : '';
 
 		$permission = array();
-		$permission['addversion'] = $data['mno'] == $this->member['idx'];
+		$permission['addversion'] = $data['mno'] == $this->member['idx'] || $this->GetPermission('modify');
 		$permission['ment'] = $this->GetPermission('ment') == true && $data['is_ment'] == 'TRUE';
 		$permission['modify'] = $data['mno'] == $this->member['idx'] || $this->GetPermission('modify');
 		$permission['delete'] = $data['mno'] == $this->member['idx'] || $this->GetPermission('delete');
@@ -1048,9 +1048,9 @@ class ModuleRelease extends Module {
 	function PrintVersionWrite() {
 		$idx = $this->idx;
 		$vidx = Request('vidx');
-		$post = $this->mDB->DBfetch($this->table['post'],'*',"where `rid`='{$this->rid}' and `idx`='$idx'");
+		$post = $this->mDB->DBfetch($this->table['post'],'*',"where `idx`='$idx'");
 		
-		$post['author'] = $this->GetAuthorInfo($data[$i]);
+		$post['author'] = $this->GetAuthorInfo($post);
 		$post['reg_date'] = strtotime(GetTime('c',$post['reg_date']));
 		$post['logo'] = file_exists($_ENV['userfilePath'].$this->logo.'/'.$post['idx'].'.thm') == true ? $_ENV['userfileDir'].$this->logo.'/'.$post['idx'].'.thm' : '';
 		
@@ -1068,7 +1068,7 @@ class ModuleRelease extends Module {
 			}
 		} else {
 			$version = array();
-			if ($post['mno'] != $this->member['idx']) return $this->PrintError('글을 작성할 수 있는 권한이 없습니다.');
+			if ($post['mno'] != $this->member['idx'] && $this->GetPermission('modify') == false) return $this->PrintError('글을 작성할 수 있는 권한이 없습니다.');
 		}
 		
 		$actionTarget = 'postFrame'.rand(100,999);
