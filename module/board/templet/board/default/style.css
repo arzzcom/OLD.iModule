@@ -16,7 +16,7 @@
 .ModuleBoard .boardTable .numberCell {text-align:center; font-family:tahoma; font-size:10px;}
 .ModuleBoard .boardTable .numberCell IMG {vertical-align:middle; margin-bottom:2px;}
 .ModuleBoard .boardTable .titleCell {height:34px;}
-.ModuleBoard .boardTable .titleCell DIV {padding:0px 8px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; height:14px;}
+.ModuleBoard .boardTable .titleCell DIV {padding:0px 6px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; height:18px; line-height:18px;}
 .ModuleBoard .boardTable .titleCell DIV A {text-decoration:none; color:#083772;}
 .ModuleBoard .boardTable .titleCell DIV A:HOVER {text-decoration:underline;}
 .ModuleBoard .boardTable .titleCell DIV IMG {vertical-align:middle;}
@@ -32,7 +32,6 @@
 .ModuleBoard .boardTable .bodyCell DIV IMG {vertical-align:middle;}
 .ModuleBoard .boardTable .bodyCell DIV A {color:#083772; text-decoration:none;}
 .ModuleBoard .boardTable .bodyCell DIV A:HOVER {font-weight:bold; color:#083772; text-decoration:underline;}
-.ModuleBoard .boardTable .bodyCell INPUT {border:1px solid #CCCCCC; font-family:NanumGothicWeb; font-size:12px; padding:0px 2px 0px 2px; height:20px; line-height:18px;}
 .ModuleBoard .boardTable .viewTitleCell {height:36px; padding:0px; font-weight:bold; background:#f8f8f9;}
 .ModuleBoard .boardTable .viewTitleCell h4 {display:block; color:#222222; padding-left:8px; padding-right:8px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .ModuleBoard .boardTable .mentCell {background:#f8f8f9; padding-left:5px; padding-right:5px;}
@@ -46,7 +45,7 @@
 .ModuleBoard .searchbox DIV.key {font-size:12px; font-family:NanumGothicWeb; width:80px; height:24px; cursor:pointer; background:url(./images/search_arrow.png) no-repeat right top; line-height:24px; padding-left:8px; border:1px solid #51AF10; border-right:0px;}
 .ModuleBoard .searchbox .inputbox {width:182px; height:18px; border:1px solid #51AF10; border-left:0px; padding:3px 0px 3px 3px; margin:0px;font-size:12px; font-weight:bold; font-family:NanumGothicWeb;}
 .ModuleBoard .searchbox .buttonbox {width:25px; height:26px; background-image:url(./images/btn_search.gif); background-repeat:repeat; float:right; border:0px; cursor:pointer; background-position:0px 0px;}
-.ModuleBoard .searchbox .buttonbox:hover {background-position:0px 22px;}
+.ModuleBoard .searchbox .buttonbox:hover {background-position:0px 26px;}
 .ModuleBoard .searchbox .keylist {position:absolute; top:25px; left:0px; z-index:10; width:87px; border:1px solid #c8c8c8; border-top:0px; background:#ffffff;}
 .ModuleBoard .searchbox .keylist DIV {font-family:NanumGothicWeb; margin:1px; display:block; font-size:12px; padding:5px 5px 5px 7px; cursor:pointer;}
 .ModuleBoard .searchbox .keylist DIV.hover {background:#e5e5e5;}

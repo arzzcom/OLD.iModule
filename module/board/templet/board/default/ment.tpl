@@ -8,18 +8,18 @@
 	<td colspan="3"></td>
 </tr>
 <tr>
-	<td class="sPhoto"><img src="{$select.photo}" /></td>
+	<td class="sPhoto"><img src="{$select.author.photo}" /></td>
 	<td class="splitBar"></td>
 	<td class="mentCell">
 		<div>
 			<table cellpadding="0" cellspacing="0" class="layoutfixed">
 			<col width="100%" /><col width="30" /><col width="60" /><col width="150" /><col width="150" />
 			<tr class="mentCell">
-				<td>{$select.nickname}</td>
-				<td class="tahoma f10 bold">LV.<span class="orange">{if $select.member.level.lv < 10}0{/if}{$select.member.level.lv}</span></td>
+				<td>{$select.author.nickname}</td>
+				<td class="tahoma f10 bold">LV.<span class="orange">{if $select.author.level.lv < 10}0{/if}{$select.author.level.lv}</span></td>
 				<td>
 					<table cellpadding="0" cellspacing="0" class="exp">
-					<col width="1" /><col width="{$select.member.level.exp/$select.member.level.next*50|string_format:"%d"}" /><col width="100%" /><col width="2" />
+					<col width="1" /><col width="{$select.author.level.exp/$select.author.level.next*50|string_format:"%d"}" /><col width="100%" /><col width="2" />
 					<tr>
 						<td class="start"></td>
 						<td class="on"></td>
@@ -29,10 +29,10 @@
 					</table>
 				</td>
 				<td>
-					<div class="email">{if $select.email}<a href="mailto:{$select.email}">{$select.email}</a>{else}<span class="disabled">NONE</span>{/if}</div>
+					<div class="email">{if $select.author.email}<a href="mailto:{$select.author.email}">{$select.author.email}</a>{else}<span class="disabled">NONE</span>{/if}</div>
 				</td>
 				<td>
-					<div class="homepage">{if $select.homepage}<a href="{$select.homepage}" target="_blank">{$select.homepage}</a>{else}<span class="disabled">NONE</span>{/if}</div>
+					<div class="homepage">{if $select.author.homepage}<a href="{$select.author.homepage}" target="_blank">{$select.author.homepage}</a>{else}<span class="disabled">NONE</span>{/if}</div>
 				</td>
 			</tr>
 			</table>

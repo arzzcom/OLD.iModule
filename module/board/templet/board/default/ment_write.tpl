@@ -13,7 +13,7 @@
 <tr>
 	<td class="headerCell">작성자</td>
 	<td class="splitBar"></td>
-	<td class="bodyCell" colspan="2"><input type="text" name="name" style="width:120px;" value="{$data.name}" blank="이름을 입력하여 주십시오." /></td>
+	<td class="bodyCell" colspan="2"><input type="text" name="name" style="width:120px;" value="{$data.name}" blank="이름을 입력하여 주십시오." class="input" /></td>
 </tr>
 <tr class="splitBar">
 	<td colspan="4"></td>
@@ -21,7 +21,7 @@
 <tr>
 	<td class="headerCell">패스워드</td>
 	<td class="splitBar"></td>
-	<td class="bodyCell"><input type="password" name="password" style="width:120px;" value=""{if !$data.password} blank="패스워드를 입력하여 주십시오."{/if} /></td>
+	<td class="bodyCell"><input type="password" name="password" style="width:120px;" value=""{if !$data.password} blank="패스워드를 입력하여 주십시오."{/if} class="input" /></td>
 	<td class="right gray">{if $mode == 'post'}댓글을 수정/삭제할 때 사용됩니다.{else}패스워드를 변경하려면, 입력하세요.{/if}</td>
 </tr>
 <tr class="splitBar">
@@ -30,7 +30,7 @@
 <tr>
 	<td class="headerCell">이메일</td>
 	<td class="splitBar"></td>
-	<td class="bodyCell"><input type="text" name="email" style="width:95%;" value="{$data.email}" /></td>
+	<td class="bodyCell"><input type="text" name="email" value="{$data.email}" class="input" /></td>
 	<td class="right gray">댓글을 해당메일로 받아 볼 수 있습니다.</td>
 </tr>
 <tr class="splitBar">
@@ -39,7 +39,7 @@
 <tr>
 	<td class="headerCell">홈페이지</td>
 	<td class="splitBar"></td>
-	<td class="bodyCell"><input type="text" name="homepage" style="width:95%;" value="{$data.homepage}" /></td>
+	<td class="bodyCell"><input type="text" name="homepage" value="{$data.homepage}" class="input" /></td>
 	<td class="right gray">http:// 를 포함하여 입력하여 주세요.</td>
 </tr>
 <tr class="splitBar">

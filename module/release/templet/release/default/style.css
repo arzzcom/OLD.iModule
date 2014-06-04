@@ -15,7 +15,7 @@
 .ModuleRelease .releaseTable .numberCell {text-align:center; font-family:tahoma; font-size:10px;}
 .ModuleRelease .releaseTable .numberCell IMG {vertical-align:middle; margin-bottom:2px;}
 .ModuleRelease .releaseTable .titleCell {height:34px;}
-.ModuleRelease .releaseTable .titleCell DIV {padding:0px 8px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; height:14px;}
+.ModuleRelease .releaseTable .titleCell DIV {padding:0px 6px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; height:18px; line-height:18px;}
 .ModuleRelease .releaseTable .titleCell DIV A {text-decoration:none; color:#083772;}
 .ModuleRelease .releaseTable .titleCell DIV A:HOVER {text-decoration:underline;}
 .ModuleRelease .releaseTable .titleCell DIV IMG {vertical-align:middle;}
@@ -32,7 +32,6 @@
 .ModuleRelease .releaseTable .bodyCell DIV IMG {vertical-align:middle;}
 .ModuleRelease .releaseTable .bodyCell DIV A {color:#083772; text-decoration:none;}
 .ModuleRelease .releaseTable .bodyCell DIV A:HOVER {font-weight:bold; color:#083772; text-decoration:underline;}
-.ModuleRelease .releaseTable .bodyCell INPUT {border:1px solid #CCCCCC; font-family:NanumGothicWeb; font-size:12px; padding:0px 2px 0px 2px; height:20px; line-height:18px;}
 .ModuleRelease .releaseTable .viewTitleCell {height:36px; padding:0px; font-weight:bold; background:#f8f8f9;}
 .ModuleRelease .releaseTable .viewTitleCell h4 {display:block; color:#222222; padding-left:8px; padding-right:8px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .ModuleRelease .releaseTable .mentCell {background:#f8f8f9; padding-left:5px; padding-right:5px;}
@@ -49,7 +48,7 @@
 .ModuleRelease .searchbox DIV.key {font-size:12px; font-family:NanumGothicWeb; width:80px; height:24px; cursor:pointer; background:url(./images/search_arrow.png) no-repeat right top; line-height:24px; padding-left:8px; border:1px solid #51AF10; border-right:0px;}
 .ModuleRelease .searchbox .inputbox {width:182px; height:18px; border:1px solid #51AF10; border-left:0px; padding:3px 0px 3px 3px; margin:0px;font-size:12px; font-weight:bold; font-family:NanumGothicWeb;}
 .ModuleRelease .searchbox .buttonbox {width:25px; height:26px; background-image:url(./images/btn_search.gif); background-repeat:repeat; float:right; border:0px; cursor:pointer; background-position:0px 0px;}
-.ModuleRelease .searchbox .buttonbox:hover {background-position:0px 22px;}
+.ModuleRelease .searchbox .buttonbox:hover {background-position:0px 26px;}
 .ModuleRelease .searchbox .keylist {position:absolute; top:25px; left:0px; z-index:10; width:87px; border:1px solid #c8c8c8; border-top:0px; background:#ffffff;}
 .ModuleRelease .searchbox .keylist DIV {font-family:NanumGothicWeb; margin:1px; display:block; font-size:12px; padding:5px 5px 5px 7px; cursor:pointer;}
 .ModuleRelease .searchbox .keylist DIV.hover {background:#e5e5e5;}

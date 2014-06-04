@@ -20,7 +20,7 @@
 	<td class="headerCell">프로그램명</td>
 	<td class="splitBar"></td>
 	<td colspan="2" class="bodyCell">
-		<input type="text" name="title" value="{$post.title}" style="width:90%;" blank="제목을 입력하여 주십시오." />
+		<input type="text" name="title" value="{$post.title}" blank="제목을 입력하여 주십시오." class="input" />
 	</td>
 </tr>
 {if $setup.use_category != 'FALSE'}
@@ -54,7 +54,7 @@
 	<td class="headerCell">홈페이지</td>
 	<td class="splitBar"></td>
 	<td colspan="2" class="bodyCell">
-		<input type="text" name="homepage" value="{$post.homepage}" style="width:90%;" />
+		<input type="text" name="homepage" value="{$post.homepage}" class="input" />
 	</td>
 </tr>
 <tr class="splitBar">
@@ -81,7 +81,7 @@
 			</div>
 		</div>
 	</td>
-	<td class="right gray">기타 라이센스일 경우 프로그램소개에 라이센스를 명시</td>
+	<td class="bodyCell right gray">기타 라이센스일 경우 프로그램소개에 라이센스를 명시</td>
 </tr>
 <tr class="splitBar">
 	<td colspan="4"></td>
@@ -90,9 +90,9 @@
 	<td class="headerCell">프로그램가격</td>
 	<td class="splitBar"></td>
 	<td class="bodyCell">
-		<input type="text" name="price" value="{$post.price}" style="width:100px;" /> P(포인트)
+		<input type="text" name="price" value="{$post.price}" style="width:100px;" class="input" /> P(포인트)
 	</td>
-	<td class="gray right">유료판매를 원할경우 가격을 입력 (판매수수료 : {$setup.tax_point}%)</td>
+	<td class="bodyCell gray right">유료판매를 원할경우 가격을 입력 (판매수수료 : {$setup.tax_point}%)</td>
 </tr>
 <tr class="splitBar">
 	<td colspan="4"></td>
@@ -101,7 +101,7 @@
 	<td class="headerCell">프로그램로고</td>
 	<td class="splitBar"></td>
 	<td colspan="2" class="bodyCell">
-		<input type="file" name="logo" style="width:90%;" />
+		<input type="file" name="logo" class="input" />
 	</td>
 </tr>
 <tr class="sectionEnd">

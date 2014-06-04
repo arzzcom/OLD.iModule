@@ -107,9 +107,9 @@
 	<td class="headerCell">버전</td>
 	<td class="splitBar"></td>
 	<td class="bodyCell">
-		<input type="text" name="version" value="{$version.version}" style="width:100px;" blank="버전을 입력하여 주십시오." />
+		<input type="text" name="version" value="{$version.version}" style="width:100px;" blank="버전을 입력하여 주십시오." class="input" />
 	</td>
-	<td class="gray right">버전정보는 1.0 또는 1.0.0 형태로 입력</td>
+	<td class="bodyCell gray right">버전정보는 1.0 또는 1.0.0 형태로 입력</td>
 </tr>
 <tr class="splitBar">
 	<td colspan="4"></td>
@@ -118,7 +118,7 @@
 	<td class="headerCell">프로그램파일</td>
 	<td class="splitBar"></td>
 	<td class="bodyCell" colspan="2">
-		<input type="file" name="file" style="width:90%;" />
+		<input type="file" name="file" class="input" />
 		
 		{if $mode == 'modify'}<div class="gray" style="padding:2px 0px 4px 0px;">기존에 등록한 파일을 변경하고자 할 경우에만 새로운 파일을 선택하여 주십시오.</div>{/if}
 	</td>

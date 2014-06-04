@@ -12,7 +12,7 @@
 	<td class="headerCell">작성자</td>
 	<td class="splitBar"></td>
 	<td colspan="2" class="bodyCell">
-		<input type="text" name="name" value="{$post.name}" style="width:100px;" blank="이름을 입력하여 주십시오." autosave="true" />
+		<input type="text" name="name" value="{$post.name}" style="width:120px;" blank="이름을 입력하여 주십시오." autosave="true" class="input" />
 	</td>
 </tr>
 <tr class="splitBar">
@@ -22,7 +22,7 @@
 	<td class="headerCell">패스워드</td>
 	<td class="splitBar"></td>
 	<td class="bodyCell">
-		<input type="password" name="password" value="" style="width:100px;" {if !$post.password}blank="패스워드를 입력하여 주십시오."{/if} />
+		<input type="password" name="password" value="" style="width:120px;" {if !$post.password}blank="패스워드를 입력하여 주십시오."{/if} class="input" />
 	</td>
 	<td class="gray right">{if $post.password}패스워드를 변경하시려면, 입력하세요.{else}글을 수정/삭제하거나, 비밀글 열람시 사용됩니다.{/if}</td>
 </tr>
@@ -33,7 +33,7 @@
 	<td class="headerCell">이메일</td>
 	<td class="splitBar"></td>
 	<td class="bodyCell">
-		<input type="text" name="email" value="{$post.email}" style="width:200px;" autosave="true" />
+		<input type="text" name="email" value="{$post.email}" autosave="true" class="input" />
 	</td>
 	<td class="gray right">(댓글을 해당메일로 받아 볼 수 있습니다.)</td>
 </tr>
@@ -43,7 +43,7 @@
 <tr>
 	<td class="headerCell">홈페이지</td>
 	<td class="splitBar"></td>
-	<td colspan="2" class="bodyCell"><input type="text" name="homepage" value="{$post.homepage}" style="width:300px;" autosave="true" /></td>
+	<td colspan="2" class="bodyCell"><input type="text" name="homepage" value="{$post.homepage}" autosave="true" class="input" /></td>
 </tr>
 <tr class="splitBar">
 	<td colspan="4"></td>
@@ -53,7 +53,7 @@
 	<td class="headerCell">제목</td>
 	<td class="splitBar"></td>
 	<td colspan="2" class="bodyCell">
-		<input type="text" name="title" value="{$post.title}" style="width:90%;" blank="제목을 입력하여 주십시오." autosave="true" />
+		<input type="text" name="title" value="{$post.title}" blank="제목을 입력하여 주십시오." autosave="true" class="input" />
 	</td>
 </tr>
 {if $setup.use_category != 'FALSE'}
