@@ -1,0 +1,11 @@
+.ModuleBoardRecentlyDaumMobile {border-top:1px solid #d2d2d2; border-left:1px solid #d2d2d2; border-right:1px solid #c5c5c5; border-bottom:1px solid #c5c5c5; background:#ffffff; font-size:14px;}
+.ModuleBoardRecentlyDaumMobile .boardTitle {background:#395085; color:#ffffff; text-shadow:1px 1px 1px #000000; height:40px; line-height:40px; font-weight:bold; padding-left:10px;}
+.ModuleBoardRecentlyDaumMobile .boardTitle A {margin:10px 10px 0px 0px; font-size:12px; text-shadow:none;}
+.ModuleBoardRecentlyDaumMobile TD.item {width:100%; height:35px;}
+.ModuleBoardRecentlyDaumMobile TD.item DIV {text-overflow:ellipsis; white-space:nowrap; overflow:hidden; padding-left:10px; height:35px; line-height:35px; font-size:14px;}
+.ModuleBoardRecentlyDaumMobile TD.item DIV A {color:#666666; text-decoration:none;}
+.ModuleBoardRecentlyDaumMobile TD.item DIV .comment {font-size:10px; font-family:tahoma; color:#ef5600;}
+.ModuleBoardRecentlyDaumMobile TD.item DIV .category {color:#315b9d;}
+.ModuleBoardRecentlyDaumMobile TD.date {width:80px; font-size:12px; font-family:tahoma; text-align:right; padding-right:10px;}
+
+.ModuleBoardRecentlyDaumMobile TR.split {height:1px; background:#efefef;}
