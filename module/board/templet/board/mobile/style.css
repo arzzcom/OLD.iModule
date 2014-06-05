@@ -1,0 +1,100 @@
+#AutoSaverAlertBox {position:absolute; font-size:14px; float:left; padding:8px; background:#C10000; color:#FFFF80; z-index:1000;}
+
+.ModuleBoard .categoryBox {border-top:1px solid #cccccc; border-left:1px solid #cccccc; font:0/0 arial; margin:0px 5px; word-break:break-all; white-space:normal;}
+.ModuleBoard .categoryBox .categoryItem {-webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box; width:25%; height:30px; border-right:1px solid #cccccc; border-bottom:1px solid #cccccc; display:inline-block; font-size:12px; padding:0px 5px; height:35px; line-height:35px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; background:#f4f4f4; cursor:pointer; vertical-align:top;}
+.ModuleBoard .categoryBox .categoryItem.select {background:#395085; color:#ffffff; text-shadow:1px 1px 1px #000000;}
+
+.ModuleBoard .boardTable {width:100%; table-layout:fixed; font-size:14px;}
+.ModuleBoard .boardTable .sectionTitle {height:30px; font-size:16px; font-weight:bold;}
+.ModuleBoard .boardTable .sectionBar {background:#a4b4cd; height:2px; overflow:hidden;}
+.ModuleBoard .boardTable .sectionEnd {height:3px; background:#E5E5E5; overflow:hidden;}
+.ModuleBoard .boardTable .sectionEnd DIV {height:1px; overflow:hidden; border-bottom:2px solid #f4f4f4;}
+.ModuleBoard .boardTable .splitBar {background:#cfdbe7; height:1px; overflow:hidden;}
+.ModuleBoard .boardTable .headerCell {height:36px; padding:0px; font-weight:bold; background:#f8f8f9; color:#758191; text-align:center;}
+.ModuleBoard .boardTable .headerCell SPAN {display:inline-block; width:10px; height:5px; background:url(./images/sort.png) no-repeat 0 0; vertical-align:middle; margin:0px 0px 3px 3px;}
+.ModuleBoard .boardTable .headerCell SPAN.asc {background-position-y:0px;}
+.ModuleBoard .boardTable .headerCell SPAN.desc {background-position-y:-5px;}
+.ModuleBoard .boardTable .headerCell A {color:#758191; text-decoration:none;}
+.ModuleBoard .boardTable .headerCell A:HOVER {text-decoration:underline;}
+.ModuleBoard .boardTable .noticeCell {background:#f4f4f4;}
+.ModuleBoard .boardTable .numberCell {text-align:center; font-family:tahoma; font-size:12px;}
+.ModuleBoard .boardTable .numberCell IMG {vertical-align:middle; margin-bottom:2px;}
+.ModuleBoard .boardTable .titleCell {padding:8px 0px;}
+.ModuleBoard .boardTable .titleCell DIV {padding:0px 6px; line-height:1.6;}
+.ModuleBoard .boardTable .titleCell DIV A {text-decoration:none; color:#083772;}
+.ModuleBoard .boardTable .titleCell DIV A:HOVER {text-decoration:underline;}
+.ModuleBoard .boardTable .titleCell DIV IMG {vertical-align:middle;}
+.ModuleBoard .boardTable .titleCell .category {color:#666666;}
+.ModuleBoard .boardTable .titleCell .ment {font-family:tahoma; font-size:10px; color:#FA6F46;}
+.ModuleBoard .boardTable .nicknameCell {padding:0px 5px 0px 5px; text-align:center; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;}
+.ModuleBoard .boardTable .countCell {text-align:right; font-family:tahoma; font-size:10px; padding-right:5px;}
+.ModuleBoard .boardTable .fileCell {height:16px; padding:8px;}
+.ModuleBoard .boardTable .fileCell A {color:#083772; text-decoration:none;}
+.ModuleBoard .boardTable .fileCell A:HOVER {font-weight:bold; color:#083772; text-decoration:underline;}
+.ModuleBoard .boardTable .bodyCell {padding:8px;}
+.ModuleBoard .boardTable .bodyCell DIV {height:16px; line-height:16px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.ModuleBoard .boardTable .bodyCell DIV IMG {vertical-align:middle;}
+.ModuleBoard .boardTable .bodyCell DIV A {color:#083772; text-decoration:none;}
+.ModuleBoard .boardTable .bodyCell DIV A:HOVER {font-weight:bold; color:#083772; text-decoration:underline;}
+.ModuleBoard .boardTable .viewTitleCell {height:36px; padding:0px; font-weight:bold; background:#f8f8f9;}
+.ModuleBoard .boardTable .viewTitleCell h4 {display:block; color:#222222; padding-left:8px; padding-right:8px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.ModuleBoard .boardTable .mentCell {background:#f8f8f9; padding-left:5px; padding-right:5px;}
+.ModuleBoard .boardTable .mentCell DIV {height:16px; line-height:16px;}
+.ModuleBoard .boardTable .mentCell DIV A {color:#083772; text-decoration:none;}
+.ModuleBoard .boardTable .mentCell DIV A:HOVER {font-weight:bold; color:#083772; text-decoration:underline;}
+.ModuleBoard .boardTable .mentContentCell DIV.mentContent {padding:10px;}
+
+.ModuleBoard .searchbox {width:290px; height:26px; border:2px solid #51AF10; font:0/0 arial; position:relative;}
+.ModuleBoard .searchbox DIV {display:inline-block; vertical-align:middle;}
+.ModuleBoard .searchbox DIV.key {font-size:14px; width:80px; height:24px; cursor:pointer; background:url(./images/search_arrow.png) no-repeat right top; line-height:24px; padding-left:8px; border:1px solid #51AF10; border-right:0px;}
+.ModuleBoard .searchbox .inputbox {width:172px; height:18px; border:1px solid #51AF10; border-left:0px; padding:3px 0px 3px 3px; margin:0px;font-size:14px; font-weight:bold; }
+.ModuleBoard .searchbox .buttonbox {width:25px; height:26px; background-image:url(./images/btn_search.gif); background-repeat:repeat; float:right; border:0px; cursor:pointer; background-position:0px 0px;}
+.ModuleBoard .searchbox .buttonbox:hover {background-position:0px 26px;}
+.ModuleBoard .searchbox .keylist {position:absolute; top:25px; left:0px; z-index:10; width:87px; border:1px solid #c8c8c8; border-top:0px; background:#ffffff;}
+.ModuleBoard .searchbox .keylist DIV {margin:1px; display:block; font-size:14px; padding:5px 5px 5px 7px; cursor:pointer;}
+.ModuleBoard .searchbox .keylist DIV.hover {background:#e5e5e5;}
+
+.ModuleBoard .searchbox .livelist {position:absolute; width:185px; top:25px; left:88px; z-index:100; border:1px solid #C8C8C8; border-top:0px; background:#FFFFFF; font-size:14px; color:#888888;}
+.ModuleBoard .searchbox .livelist DIV {display:block; padding:5px 3px 5px 3px; margin:2px; cursor:pointer;}
+.ModuleBoard .searchbox .livelist DIV:hover {padding:5px 3px 5px 3px; margin:2px; background:#E5E5E5; cursor:pointer;}
+
+.ModuleBoard .deleteMent {border:1px solid #F4EE8A; background:#FDFBD0; color:#FB5312; font-size:14px; padding:5px; text-align:center; line-height:1.6;}
+.ModuleBoard .selectMent {background:#FFFFEC; border:1px solid #cccccc;}
+.ModuleBoard .mainMent {}
+.ModuleBoard .replyMent {border-left:1px dashed #cccccc;}
+
+.ModuleBoard UL.filelist {list-style-type:none; background:#F4F4F4; border:1px solid #E5E5E5; color:#4F4F4F;}
+.ModuleBoard UL.filelist LI {margin:5px; font-size:11px; background:url(./images/icon_file.gif) no-repeat 0 50%; padding-left:15px; height:14px; line-height:14px;}
+.ModuleBoard .filelist A:link {text-decoration:none; color:#4F4F4F;}
+.ModuleBoard .filelist A:hover {text-decoration:underline; color:#2F2F2F;}
+.ModuleBoard .filelist A:visited {text-decoration:none; color:#4F4F4F;}
+.ModuleBoard .filelist A:active {text-decoration:none; color:#4F4F4F;}
+
+.ModuleBoard .sPhoto {padding:3px; background:#f8f8f9; font:0/0 arial;}
+.ModuleBoard .sPhoto IMG {width:35px; height:35px; border:1px solid #a4b4cd;}
+
+.ModuleBoard .photo {padding:8px; background:#f8f8f9; font:0/0 arial;}
+.ModuleBoard .photo IMG {width:90px; height:90px; border:2px solid #a4b4cd;}
+
+.ModuleBoard .email {background:url(./images/icon_email.png) no-repeat 0 50%; font-family:tahoma; font-size:10px; padding-left:20px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; font-weight:bold;}
+.ModuleBoard .homepage {background:url(./images/icon_homepage.png) no-repeat 0 50%; font-family:tahoma; font-size:10px; padding-left:20px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; font-weight:bold;}
+.ModuleBoard .disabled {opacity:0.5;}
+
+.ModuleBoard .iconIMG {background:url(./images/icon_image.png) no-repeat 5px 50%; padding-left:25px !important;}
+.ModuleBoard .iconSND {background:url(./images/icon_sound.png) no-repeat 5px 50%; padding-left:25px !important;}
+.ModuleBoard .iconMOV {background:url(./images/icon_movie.png) no-repeat 5px 50%; padding-left:25px !important;}
+.ModuleBoard .iconTXT {background:url(./images/icon_text.png) no-repeat 5px 50%; padding-left:25px !important;}
+.ModuleBoard .iconETC {background:url(./images/icon_text.png) no-repeat 5px 50%; padding-left:25px !important;}
+
+.ModuleBoard .exp {table-layout:fixed; width:53px; height:11px;}
+.ModuleBoard .exp .start {background:url(./images/expbar_start.gif) repeat-x 50%;}
+.ModuleBoard .exp .on {background:url(./images/expbar_exp.gif) repeat-x 50%;}
+.ModuleBoard .exp .off {background:url(./images/expbar_remain.gif) repeat-x 50%;}
+.ModuleBoard .exp .end {background:url(./images/expbar_end.gif) repeat-x 50%;}
+
+.ModuleBoard .optionarea {font-size:14px; border:1px dotted #CCCCCC; background:#F4F4F4; padding:3px; margin:5px 0px 5px 0px;}
+.ModuleBoard .checkbox {clear:both; height:14px; padding:3px; margin:5px 0px 5px 0px;}
+.ModuleBoard .checkbox INPUT {width:13px; height:13px; margin:0px 8px 0px 0px; float:left;}
+.ModuleBoard .checkbox LABEL {float:left; height:13px; cursor:pointer; font-size:12px; display:block; padding:0px;}
+
+.ModuleBoard .antispam {font-size:11px; line-height:1.6;}
