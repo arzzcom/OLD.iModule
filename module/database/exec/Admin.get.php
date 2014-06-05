@@ -37,7 +37,7 @@ if ($action == 'user') {
 			if ($mDB->DBfind($lists[$i]['name'],$lists[$i]['database']) == true) {
 				$lists[$i]['dbsize'] = $mDB->DBsize($lists[$i]['name'],$lists[$i]['database']);
 				$lists[$i]['filesize'] = array_pop($mDB->DBfetch($mDatabase->table['file'],array('SUM(filesize)'),"where `tno`={$lists[$i]['idx']}"));
-				$lists[$i]['record'] = $mDB->DBcount($lists[$i]['name'],'',$lists[$i]['database']);
+				$lists[$i]['record'] = $mDatabase->DBcount($lists[$i]['name'],'');
 			}
 		}
 	}
@@ -100,7 +100,7 @@ if ($action == 'user') {
 			} else {
 				$find = '';
 			}
-			$total = $mDB->DBcount($table['name'],$find,$table['database']);
+			$total = $mDatabase->DBcount($table['name'],$find);
 			$lists = $mDB->DBfetchs($table['name'],'*',$find,$orderer,$limiter,$table['database']);
 			for ($i=0, $loop=sizeof($lists);$i<$loop;$i++) {
 				foreach ($fileField as $value) {
