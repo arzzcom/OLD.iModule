@@ -386,7 +386,7 @@
 			
 			<div class="height10"></div>
 			
-			<input type="text" name="{$data.name}_juso_keyword" class="input" style="width:300px;" placeholder="번지 또는 건물번호(건물이름)" disabled="disabled" />
+			<input type="text" name="{$data.name}_juso_keyword" class="input" style="width:429px;" placeholder="번지 또는 건물번호(건물이름) / 도로명 + 건물번호" disabled="disabled" />
 			
 			<div class="btn btn-sm btn-default" onclick="MemberSearchAddressSearch('{$data.name}');">주소검색</div>
 			
@@ -620,7 +620,7 @@
 			
 			<div class="height10"></div>
 			
-			<input type="text" name="{$data.name}_juso_keyword" class="input" style="width:300px;" placeholder="번지 또는 건물번호(건물이름)" disabled="disabled" />
+			<input type="text" name="{$data.name}_juso_keyword" class="input" style="width:429px;" placeholder="번지 또는 건물번호(건물이름) / 도로명 + 건물번호" disabled="disabled" />
 			
 			<div class="btn btn-sm btn-default" onclick="MemberSearchAddressSearch('{$data.name}');">주소검색</div>
 			
