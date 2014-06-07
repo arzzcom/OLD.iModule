@@ -1,14 +1,10 @@
 <?php
 REQUIRE_ONCE '../config/default.conf.php';
 
-header('Content-type: text/xml; charset="UTF-8"', true);
-header("Cache-Control: no-cache, must-revalidate");
-header("Pragma: no-cache");
-
 $mDB = &DB::instance();
 
 $action = Request('action');
-$returnXML = '<?xml version="1.0" encoding="UTF-8" ?><Ajax>';
+$return = array();
 
 if ($action == 'address') {
 	$keyword = Request('keyword');
@@ -49,29 +45,10 @@ if ($action == 'liveKeyword') {
 
 if ($action == 'membercheck') {
 	$name = Request('name');
-	$jumin = Request('jumin');
 	$email = Request('email');
 	$companyno = Request('companyno');
 
-	if ($jumin != null) {
-		if (CheckJumin($jumin) == true) {
-			$check = $mDB->DBfetch($_ENV['table']['member'],array('user_id','reg_date'),"where `jumin`='$jumin' and `is_leave`='FALSE'");
-
-			if (isset($check['user_id']) == true) {
-				$user_id = '';
-				for ($i=0, $loop=strlen($check['user_id'])-3;$i<$loop;$i++) {
-					$user_id.= substr($check['user_id'],$i,1);
-				}
-				$user_id.= '***';
-				$reg_date = GetTime('Y년 m월 d일 H시 i분',$check['reg_date']);
-				$returnXML.= '<item result="true" field="jumin" find="true" user_id="'.$user_id.'" reg_date="'.$reg_date.'" />';
-			} else {
-				$returnXML.= '<item result="true" field="jumin" find="false" />';
-			}
-		} else {
-			$returnXML.= '<item result="false" field="jumin" msg="주민등록번호가 잘못입력되었습니다." />';
-		}
-	} elseif ($companyno != null) {
+	if ($companyno != null) {
 		$check = $mDB->DBfetch($_ENV['table']['member'],array('user_id','reg_date'),"where `companyno`='$companyno' and `is_leave`='FALSE'");
 		
 		if (isset($check['user_id']) == true) {
@@ -80,10 +57,13 @@ if ($action == 'membercheck') {
 				$user_id.= substr($check['user_id'],$i,1);
 			}
 			$user_id.= '***';
-			$reg_date = GetTime('Y년 m월 d일 H시 i분',$check['reg_date']);
-			$returnXML.= '<item result="true" field="companyno" find="true" user_id="'.$user_id.'" reg_date="'.$reg_date.'" />';
+			
+			$return['success'] = false;
+			$return['find'] = true;
+			$return['reg_date'] = GetTime('Y년 m월 d일 H시 i분',$check['reg_date']);
+			$return['user_id'] = $user_id;
 		} else {
-			$returnXML.= '<item result="true" field="companyno" find="false" />';
+			$return['success'] = true;
 		}
 	} else {
 		if (CheckEmail($email) == true) {
@@ -95,13 +75,17 @@ if ($action == 'membercheck') {
 					$user_id.= substr($check['user_id'],$i,1);
 				}
 				$user_id.= '***';
-				$reg_date = GetTime('Y년 m월 d일 H시 i분',$check['reg_date']);
-				$returnXML.= '<item result="true" field="email" find="true" user_id="'.$user_id.'" reg_date="'.$reg_date.'" />';
+				
+				$return['success'] = false;
+				$return['find'] = true;
+				$return['reg_date'] = GetTime('Y년 m월 d일 H시 i분',$check['reg_date']);
+				$return['user_id'] = $user_id;
 			} else {
-				$returnXML.= '<item result="true" field="email" find="false" />';
+				$return['success'] = true;
 			}
 		} else {
-			$returnXML.= '<item result="false" field="email" msg="이메일주소가 잘못입력되었습니다." />';
+			$return['success'] = false;
+			$return['find'] = false;
 		}
 	}
 }
@@ -114,47 +98,56 @@ if ($action == 'duplication') {
 	$member = $mMember->GetMemberInfo();
 	$loggedFind = $mMember->IsLogged() == true ? " and `idx`!={$member['idx']}" : '';
 
+	$return['success'] = true;
+	$return['check'] = $check;
 	if ($check == 'user_id') {
 		if (CheckUserID($value) == true) {
 			if ($mDB->DBcount($_ENV['table']['member'],"where `user_id`='$value' and ((`is_leave`='TRUE' and `leave_date`>".(GetGMT()-60*60*24*180).") or `is_leave`='FALSE')") == 0) {
-				$returnXML.= '<item result="true" msg="'.$value.'는 사용가능한 아이디입니다." />';
+				$return['message'] = $value.'는 사용가능한 아이디입니다.';
 			} else {
-				$returnXML.= '<item result="false" msg="아이디가 중복됩니다. 다른아이디를 입력하여 주십시오." />';
+				$return['success'] = false;
+				$return['message'] = '아이디가 중복됩니다. 다른아이디를 입력하여 주십시오.';
 			}
 		} else {
-			$returnXML.= '<item result="false" msg="아이디는 영문자로 시작하여 영문,숫자,_(언더바)조합의 6자~20자 이내만 가능합니다." />';
+			$return['success'] = false;
+			$return['message'] = '아이디는 영문자로 시작하여 영문,숫자,_(언더바)조합의 6자~20자 이내만 가능합니다.';
 		}
 	}
 
 	if ($check == 'email') {
 		if (CheckEmail($value) == true) {
 			if ($mDB->DBcount($_ENV['table']['member'],"where `email`='$value' and `is_leave`='FALSE'".$loggedFind) == 0) {
-				$returnXML.= '<item result="true" msg="'.$value.'는 사용가능한 이메일주소입니다." />';
+				$return['message'] = $value.'는 사용가능한 이메일주소입니다.';
 			} else {
-				$returnXML.= '<item result="false" msg="이메일주소가 중복됩니다. 이메일주소를 확인하여 주십시오." />';
+				$return['success'] = false;
+				$return['message'] = '이메일주소가 중복됩니다. 이메일주소를 확인하여 주십시오.';
 			}
 		} else {
-			$returnXML.= '<item result="false" msg="올바른 이메일주소가 아닙니다. 이메일주소를 확인하여 주십시오." />';
+			$return['success'] = false;
+			$return['message'] = '올바른 이메일주소가 아닙니다. 이메일주소를 확인하여 주십시오.';
 		}
 	}
 
 	if ($check == 'nickname') {
 		if (CheckNickname($value) == true) {
 			if ($mDB->DBcount($_ENV['table']['member'],"where `nickname`='$value' and ((`is_leave`='TRUE' and `leave_date`>".(GetGMT()-60*60*24*180).") or `is_leave`='FALSE')".$loggedFind) == 0) {
-				$returnXML.= '<item result="true" msg="'.$value.'는 사용가능한 닉네임입니다." />';
+				$return['message'] = $value.'는 사용가능한 닉네임입니다.';
 			} else {
-				$returnXML.= '<item result="false" msg="닉네임이 중복됩니다. 다른닉네임을 입력하여 주십시오." />';
+				$return['success'] = false;
+				$return['message'] = '닉네임이 중복됩니다. 다른닉네임을 입력하여 주십시오.';
 			}
 		} else {
-			$returnXML.= '<item result="false" msg="닉네임은 1자이상 20자 이하만 가능합니다." />';
+			$return['success'] = false;
+			$return['message'] = '닉네임은 1자이상 20자 이하만 가능합니다.';
 		}
 	}
 
 	if ($check == 'voter') {
 		if ($mDB->DBcount($_ENV['table']['member'],"where `user_id`='$value' and `is_leave`='FALSE'") == 1) {
-			$returnXML.= '<item result="true" msg="추천인을 찾았습니다." />';
+			$return['message'] = '추천인 아이디를 찾았습니다.';
 		} else {
-			$returnXML.= '<item result="false" msg="추천인 아이디를 찾지 못하였습니다." />';
+			$return['success'] = false;
+			$return['message'] = '추천인 아이디를 찾지 못하였습니다.';
 		}
 	}
 }
@@ -164,16 +157,18 @@ if ($action == 'phonecheck') {
 	$pcode = rand(10000,99999);
 
 	$check = $mDB->DBfetch($_ENV['table']['phone'],array('reg_date'),"where `phone`='$phone'");
-
+	$return['success'] = true;
 	if (isset($check['reg_date']) == true && $check['reg_date'] > GetGMT()-60*3) {
-		$returnXML.= '<item result="wait" />';
+		$return['success'] = false;
+		$return['message'] = '인증번호를 발송한지 3분이 경과되지 않았습니다. 3분 후에도 인증번호가 도착하지 않는다면, 그 때 시도하여 주십시오.';
 	} else {
 		$isCheck = true;
 		$mMember = &Member::instance();
 		if ($mMember->IsLogged() == true) {
 			$member = $mMember->GetMemberInfo();
 			if ($phone == $member['cellphone']['cellphone']) {
-				$returnXML.= '<item result="notmodify" />';
+				$return['success'] = false;
+				$return['message'] = '이미 인증을 받은 휴대전화번호입니다. 재인증을 받지 않아도 됩니다.';
 				$isCheck = false;
 			}
 		}
@@ -184,9 +179,10 @@ if ($action == 'phonecheck') {
 				$mDB->DBdelete($_ENV['table']['phone'],"where `phone`='$phone'");
 				$mDB->DBinsert($_ENV['table']['phone'],array('phone'=>$phone,'pcode'=>$pcode,'reg_date'=>GetGMT()));
 
-				$returnXML.= '<item result="true" />';
+				$return['message'] = '인증번호가 성공적으로 발송되었습니다. 인증코드 입력란에 인증코드를 입력하여 주십시오.';
 			} else {
-				$returnXML.= '<item result="false" />';
+				$return['success'] = false;
+				$return['message'] = '인증번호발송이 실패하였습니다. 휴대전화번호를 정확하게 확인하신 후 다시 시도하시거나, 관리자에게 문의바랍니다.';
 			}
 		}
 	}
@@ -335,6 +331,5 @@ if ($action == 'find') {
 	}
 }
 
-$returnXML.= '</Ajax>';
-echo $returnXML;
+exit(json_encode($return));
 ?>

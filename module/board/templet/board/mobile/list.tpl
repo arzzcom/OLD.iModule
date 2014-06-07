@@ -1,5 +1,5 @@
 {if $categoryList}
-<div style="background:#e5e5e5; padding:5px 0px 5px 0px; border-top:1px solid #cccccc;">
+<div class="categoryFrame">
 	<div class="categoryBox">
 	<div class="categoryItem{if $category == ''} select{/if}" onclick="ListSelectCategory('','');">전체보기</div>
 	{foreach from=$categoryList item=printCategory}
@@ -22,7 +22,7 @@
 {/if}
 
 {if $setup.use_select == 'TRUE'}
-<div style="background:#e5e5e5; padding:5px 0px 5px 0px; border-top:1px solid #cccccc;">
+<div class="categoryFrame">
 	<div class="categoryBox">
 	<div class="categoryItem{if $select == ''} select{/if}" onclick="ListSelectSelectAnswer('','');">전체질문</div>
 	<div class="categoryItem{if $select == 'true'} select{/if}" onclick="ListSelectSelectAnswer('','true');">해결된질문</div>

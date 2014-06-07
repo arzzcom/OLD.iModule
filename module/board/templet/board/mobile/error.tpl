@@ -3,7 +3,6 @@
 		<h3 class="panel-title">에러가 발생하였습니다.</h3>
 	</div>
 
-	
 	<div class="panel-body">
 		{$msg}
 		<hr />

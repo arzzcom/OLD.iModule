@@ -647,16 +647,16 @@ if ($action == 'trash') {
 		$idx = Request('idx');
 		$mDB->DBupdate($mBoard->table['post'],array('is_delete'=>'FALSE'),'',"where `idx` IN ($idx)");
 		
-		$board = $mDB->DBfetchs($mBoard->table['post'],'*');
+		$board = $mDB->DBfetchs($mBoard->table['setup'],'*');
 		for ($i=0, $loop=sizeof($board);$i<$loop;$i++) {
-			$post = $mDB->DBcount($mBoard->table['post'],"where `bid`='{$board[$i]['bid']}' and `is_delete`='FALSE'");
+			$post = $mDB->DBcount($mBoard->table['post'],"where `bid`='{$board[$i]['bid']}' and `is_delete`='FALSE'",'idx');
 			$mDB->DBupdate($mBoard->table['setup'],array('post'=>$post),'',"where `bid`='{$board[$i]['bid']}'");
 		}
 		
 		$category = $mDB->DBfetchs($mBoard->table['category'],'*');
 		for ($i=0, $loop=sizeof($category);$i<$loop;$i++) {
-			$post = $mDB->DBcount($mBoard->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'");
-			$mDB->DBupdate($mBoard->table['setup'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
+			$post = $mDB->DBcount($mBoard->table['post'],"where `category`='{$category[$i]['idx']}' and `is_delete`='FALSE'",'idx');
+			$mDB->DBupdate($mBoard->table['category'],array('post'=>$post),'',"where `idx`='{$category[$i]['idx']}'");
 		}
 		
 		$return['success'] = true;

@@ -1,5 +1,6 @@
 #AutoSaverAlertBox {position:absolute; font-size:14px; float:left; padding:8px; background:#C10000; color:#FFFF80; z-index:1000;}
 
+.ModuleBoard .categoryFrame {background:#e5e5e5; padding:5px 0px 5px 0px; border-top:1px solid #cccccc;}
 .ModuleBoard .categoryBox {border-top:1px solid #cccccc; border-left:1px solid #cccccc; font:0/0 arial; margin:0px 5px; word-break:break-all; white-space:normal;}
 .ModuleBoard .categoryBox .categoryItem {-webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box; width:25%; height:30px; border-right:1px solid #cccccc; border-bottom:1px solid #cccccc; display:inline-block; font-size:12px; padding:0px 5px; height:35px; line-height:35px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; background:#f4f4f4; cursor:pointer; vertical-align:top;}
 .ModuleBoard .categoryBox .categoryItem.select {background:#395085; color:#ffffff; text-shadow:1px 1px 1px #000000;}

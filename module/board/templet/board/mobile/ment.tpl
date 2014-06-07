@@ -89,7 +89,7 @@
 		{if $data.is_delete == true}
 		<tr>
 			<td colspan="3">
-				<div class="deleteMent">아래의 답변댓글에 대한 원래의 댓글이 작성자 또는 관리자에 의해 삭제되었습니다.</div>
+				<div class="deleteMent">아래의 답변댓글에 대한 원래의 댓글이 삭제되었습니다.</div>
 			</td>
 		</tr>
 		{else}
@@ -166,7 +166,7 @@
 					{if $data.select == true}
 					<div class="right">
 						<div class="height10"></div>
-						<span class="btn btn-sm btn-warning" onclick="{$data.action.select}">답변이 도움되셨다면, 이곳을 눌러 답변채택을 하여주시기 바랍니다.</span>
+						<span class="btn btn-sm btn-warning" onclick="{$data.action.select}">이 답변 채택</span>
 					</div>
 					{/if}
 				</div>

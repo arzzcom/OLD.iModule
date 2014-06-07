@@ -133,6 +133,7 @@ class ModuleMember extends member {
 		if (is_dir($this->modulePath.'/templet/signin/'.$skin) == false) {
 			$this->PrintError('회원정보수정 스킨이 잘못 지정되었습니다.');
 		} else {
+			echo '<script type="text/javascript" src="'.$this->moduleDir.'/script/script.js"></script>'."\n";
 			if (file_exists($this->modulePath.'/templet/signin/'.$skin.'/style.css') == true) {
 				echo '<link rel="stylesheet" href="'.$this->moduleDir.'/templet/signin/'.$skin.'/style.css" type="text/css" title="style" />'."\n";
 			}
@@ -198,6 +199,7 @@ class ModuleMember extends member {
 		if (is_dir($this->modulePath.'/templet/signin/'.$skin) == false) {
 			$this->PrintError('회원탈퇴 스킨이 잘못 지정되었습니다.');
 		} else {
+			echo '<script type="text/javascript" src="'.$this->moduleDir.'/script/script.js"></script>'."\n";
 			if (file_exists($this->modulePath.'/templet/signin/'.$skin.'/style.css') == true) {
 				echo '<link rel="stylesheet" href="'.$this->moduleDir.'/templet/signin/'.$skin.'/style.css" type="text/css" title="style" />'."\n";
 			}
@@ -228,6 +230,7 @@ class ModuleMember extends member {
 		} elseif ($this->mDB->DBcount($_ENV['table']['group'],"where `group`='$group'") == 0) {
 			$this->PrintError('['.$group.']그룹은 생성되지 않은 그룹입니다.');
 		} else {
+			echo '<script type="text/javascript" src="'.$this->moduleDir.'/script/script.js"></script>'."\n";
 			if (file_exists($this->modulePath.'/templet/signin/'.$skin.'/style.css') == true) {
 				echo '<link rel="stylesheet" href="'.$this->moduleDir.'/templet/signin/'.$skin.'/style.css" type="text/css" title="style" />'."\n";
 			}
@@ -441,9 +444,9 @@ class ModuleMember extends member {
 					break;
 
 					case 'address' :
-						if (Request('zipcode') != null && Request('address1') != null && Request('address2') != null) {
-							$insert['zipcode'] = Request('zipcode');
-							$insert['address'] = Request('address1').'||'.Request('address2');
+						if (Request('address_zipcode') != null && Request('address_address1') != null) {
+							$insert['zipcode'] = Request('address_zipcode');
+							$insert['address'] = Request('address_address1').'||'.Request('address_address2');
 						} else {
 							if ($form[$i]['allowblank'] == 'FALSE') Alertbox('주소를 정확하게 입력하여 주십시오.');
 						}
@@ -536,8 +539,8 @@ class ModuleMember extends member {
 					case 'search_address' :
 						$field = preg_replace('/^extra_/','',$form[$i]['name']);
 						
-						if (Request($form[$i]['name'].'-zipcode') != null && Request($form[$i]['name'].'-address1') != null && Request($form[$i]['name'].'-address2') != null) {
-							$insert['extra_data'][$field] = array('zipcode'=>Request($form[$i]['name'].'-zipcode'),'address1'=>Request($form[$i]['name'].'-address1'),'address2'=>Request($form[$i]['name'].'-address2'));
+						if (Request($form[$i]['name'].'_zipcode') != null && Request($form[$i]['name'].'_address1') != null) {
+							$insert['extra_data'][$field] = array('zipcode'=>Request($form[$i]['name'].'_zipcode'),'address1'=>Request($form[$i]['name'].'_address1'),'address2'=>Request($form[$i]['name'].'_address2'));
 						} else {
 							if ($form[$i]['allowblank'] == 'FALSE') Alertbox($form[$i]['title'].'은(는) 필수항목입니다.');
 						}
@@ -723,9 +726,9 @@ class ModuleMember extends member {
 					break;
 
 					case 'address' :
-						if (Request('zipcode') != null && Request('address1') != null && Request('address2') != null) {
-							$insert['zipcode'] = Request('zipcode');
-							$insert['address'] = Request('address1').'||'.Request('address2');
+						if (Request('address_zipcode') != null && Request('address_address1') != null) {
+							$insert['zipcode'] = Request('address_zipcode');
+							$insert['address'] = Request('address_address1').'||'.Request('address_address2');
 						} else {
 							if ($form[$i]['allowblank'] == 'FALSE') Alertbox('주소를 정확하게 입력하여 주십시오.');
 						}
@@ -798,8 +801,8 @@ class ModuleMember extends member {
 					case 'search_address' :
 						$field = preg_replace('/^extra_/','',$form[$i]['name']);
 						
-						if (Request($form[$i]['name'].'-zipcode') != null && Request($form[$i]['name'].'-address1') != null && Request($form[$i]['name'].'-address2') != null) {
-							$insert['extra_data'][$field] = array('zipcode'=>Request($form[$i]['name'].'-zipcode'),'address1'=>Request($form[$i]['name'].'-address1'),'address2'=>Request($form[$i]['name'].'-address2'));
+						if (Request($form[$i]['name'].'_zipcode') != null && Request($form[$i]['name'].'_address1') != null) {
+							$insert['extra_data'][$field] = array('zipcode'=>Request($form[$i]['name'].'_zipcode'),'address1'=>Request($form[$i]['name'].'_address1'),'address2'=>Request($form[$i]['name'].'_address2'));
 						} else {
 							if ($form[$i]['allowblank'] == 'FALSE') Alertbox($form[$i]['title'].'은(는) 필수항목입니다.');
 						}

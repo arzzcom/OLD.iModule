@@ -390,248 +390,14 @@ function MemberLoginCheck(name) {
 	}
 }
 
-function MemberSignInCheck(step) {
-	var object = document.forms["MemberSignIn"];
-
-	if (step == 1) {
-		if (object.agreement && object.agreement.checked == false) {
-			alert("이용약관에 동의하여 주십시오.");
-			return false;
-		}
-
-		if (object.privacy && object.privacy.checked == false) {
-			alert("개인정보 보호정책에 동의하여 주십시오.");
-			return false;
-		}
-
-		if (object.youngpolicy && object.youngpolicy.checked == false) {
-			alert("청소년 보호정책에 동의하여 주십시오.");
-			return false;
-		}
+function FindHelpBlock(object) {
+	object = object.parent();
+	while (object.length == 1) {
+		object = object.parent();
+		if (object.find(".help-block").length == 1) break;
 	}
-
-	if (step == 2) {
-		if (!object.realname.value) {
-			alert("실명을 입력하여 주십시오.");
-			object.realname.focus();
-			return false;
-		}
-
-		if (object.jumin1.value.length != 6 || object.jumin2.value.length != 7) {
-			alert("주민등록번호를 정확하게 입력하여 주십시오.");
-			object.jumin1.value = object.jumin2.value = "";
-			object.jumin1.focus();
-			return false;
-		}
-	}
-
-	if (step == 3) {
-		if (object.checkname) {
-			if (!object.checkname.value) {
-				alert("실명을 입력하여 주십시오.");
-				object.checkname.focus();
-				return false;
-			}
-
-			if (object.jumin1) {
-				if (object.jumin1.value.length != 6 || object.jumin2.value.length != 7) {
-					alert("주민등록번호를 정확하게 입력하여 주십시오.");
-					object.jumin1.value = object.jumin2.value = "";
-					object.jumin1.focus();
-					return false;
-				} else {
-					var QueryString = "jumin="+object.jumin1.value+"-"+object.jumin2.value;
-					object.jumin1.readOnly = true;
-					object.jumin2.readOnly = true;
-				}
-			} else if (object.companyno1) {
-				if (object.companyno1.value.length != 3 || object.companyno2.value.length != 2 || object.companyno3.value.length != 5) {
-					alert("사업자등록번호 정확하게 입력하여 주십시오.");
-					object.companyno1.value = object.companyno2.value = object.companyno3.value = "";
-					object.companyno1.focus();
-					return false;
-				} else {
-					var QueryString = "companyno="+object.companyno1.value+"-"+object.companyno2.value+"-"+object.companyno3.value;
-					object.companyno1.readOnly = true;
-					object.companyno2.readOnly = true;
-					object.companyno3.readOnly = true;
-				}
-			} else {
-				if (!object.email.value) {
-					alert("이메일 주소를 정확하게 입력하여 주십시오.");
-					object.email.focus();
-					return false;
-				} else {
-					var QueryString = "email="+object.email.value;
-					object.email.readOnly = true;
-				}
-			}
-
-			object.checkname.readOnly = true;
-
-			var InnerFunctionValue = new Array();
-			InnerFunctionValue.push(step);
-			GetHttpRequestXML(ENV.dir+"/exec/Ajax.get.php","action=membercheck&"+QueryString+"&name="+object.checkname.value,"MemberSignInCheckInner",InnerFunctionValue);
-
-			return false;
-		}
-	}
-
-	return true;
-}
-
-function MemberSignInCheckInner(XML,step) {
-	var object = document.forms["MemberSignIn"];
-	var result = XML.documentElement.childNodes.item(0);
-
-	if (result.getAttribute("result") == "false") {
-		alert(result.getAttribute("msg"));
-		object.checkname.readOnly = false;
-		if (result.getAttribute("field") == "jumin") {
-			object.jumin1.value = object.jumin2.value = "";
-			object.jumin1.readOnly = false;
-			object.jumin2.readOnly = false;
-			object.jumin1.focus();
-		} else {
-			object.email.value = "";
-			object.email.readOnly = false;
-			object.email.focus();
-		}
-	} else {
-		if (result.getAttribute("find") == "true") {
-			alert("회원님께서는 "+result.getAttribute("reg_date")+"에 "+result.getAttribute("user_id")+" 아이디로 가입하신 이력이 있습니다.\n해당 아이디로 로그인하시거나, 아이디 또는 비밀번호가 기억나지 않으신다면, 아래의 아이디/비밀번호 찾기를 이용하여 주십시오.");
-			object.checkname.readOnly = false;
-			if (result.getAttribute("field") == "jumin") {
-				object.jumin1.readOnly = false;
-				object.jumin2.readOnly = false;
-				object.jumin1.focus();
-			} else {
-				object.email.readOnly = false;
-				object.email.focus();
-			}
-		} else {
-			alert("회원님께서는 가입하신 이력이 없습니다.\n가입절차를 계속 진행합니다.");
-			object.submit();
-		}
-	}
-}
-
-function MemberDuplicationCheck(field) {
-	var object = document.forms["MemberSignIn"];
-
-	if (field != "password") {
-		if (field == "user_id") {
-			if (!object.user_id.value) {
-				document.getElementById("DuplicationCheck_user_id").innerHTML = "아이디를 입력하세요.";
-				document.getElementById("DuplicationCheck_user_id").className = "msgerror";
-				return false;
-			}
-			var QueryString = "check=user_id&value="+object.user_id.value;
-		}
-
-		if (field == "email") {
-			if (!object.email.value) {
-				document.getElementById("DuplicationCheck_email").innerHTML = "이메일주소를 입력하세요.";
-				document.getElementById("DuplicationCheck_email").className = "msgerror";
-				return false;
-			}
-			var QueryString = "check=email&value="+object.email.value;
-		}
-
-		if (field == "nickname") {
-			if (!object.nickname.value) {
-				document.getElementById("DuplicationCheck_nickname").innerHTML = "닉네임을 입력하세요.";
-				document.getElementById("DuplicationCheck_nickname").className = "msgerror";
-				return false;
-			}
-			var QueryString = "check=nickname&value="+object.nickname.value;
-		}
-
-		if (field == "voter") {
-			if (object.voter.value) {
-				var QueryString = "check=voter&value="+object.voter.value;
-			} else {
-				return false;
-			}
-		}
-
-		var InnerFunctionValue = new Array();
-		InnerFunctionValue.push(field);
-
-		GetHttpRequestXML(ENV.dir+"/exec/Ajax.get.php","action=duplication&"+QueryString,"MemberDuplicationCheckInner",InnerFunctionValue);
-	} else {
-		if (object.password1.value && object.password2.value) {
-			if (object.password1.value != object.password2.value) {
-				document.getElementById("DuplicationCheck_password").innerHTML = "패스워드가 서로 일치하지 않습니다.";
-				document.getElementById("DuplicationCheck_password").className = "msgerror";
-				return false;
-			} else {
-				document.getElementById("DuplicationCheck_password").innerHTML = "패스워드가 확인되었습니다.";
-				document.getElementById("DuplicationCheck_password").className = "msgtrue";
-				return false;
-			}
-		}
-	}
-}
-
-function MemberDuplicationCheckInner(XML,field) {
-	var result = XML.documentElement.childNodes.item(0);
-
-	if (result.getAttribute("result") == "true") {
-		document.getElementById("DuplicationCheck_"+field).className = "msgtrue";
-	} else {
-		document.getElementById("DuplicationCheck_"+field).className = "msgerror";
-	}
-
-	document.getElementById("DuplicationCheck_"+field).innerHTML = result.getAttribute("msg");
-}
-
-function MemberCellPhoneCheck() {
-	var object = document.forms["MemberSignIn"];
-
-	if (object.cellphone1) {
-		if (object.provider && !object.provider.value) {
-			alert("통신사를 선택하여 주십시오.");
-			return false;
-		}
-		if (!object.cellphone1.value || !object.cellphone2.value || !object.cellphone3.value) {
-			alert("휴대전화번호를 정확하게 입력하여 주십시오.");
-		} else {
-			var phone = object.cellphone1.value+"-"+object.cellphone2.value+"-"+object.cellphone3.value;
-			var InnerFunctionValue = new Array();
-			InnerFunctionValue.push(phone);
-			GetHttpRequestXML(ENV.dir+"/exec/Ajax.get.php","action=phonecheck&phone="+phone,"MemberCellPhoneCheckInner",InnerFunctionValue);
-		}
-	}
-}
-
-function MemberCellPhoneCheckInner(XML,phone) {
-	var object = document.forms["MemberSignIn"];
-	var result = XML.documentElement.childNodes.item(0).getAttribute("result");
-
-	if (result == "true") {
-		alert("인증번호가 성공적으로 발송되었습니다.\n인증코드 입력란에 인증코드를 입력하여 주십시오.");
-		document.getElementById("MemberPhoneInsert").style.display = "";
-		object.pcode.value = "";
-		object.pcode.focus();
-	} else if (result == "false") {
-		alert("인증번호발송이 실패하였습니다.\n휴대전화번호를 정확하게 확인하신 후 다시 시도하시거나, 관리자에게 연락주십시오.");
-		document.getElementById("MemberPhoneInsert").style.display = "none";
-		object.pcode.value = "";
-	} else if (result == "notmodify") {
-		alert("이미 인증을 받은 휴대전화번호입니다.\n재인증을 받지 않아도 됩니다.");
-	} else {
-		alert("인증번호를 발송한지 3분이 경과되지 않았습니다.\n3분 후에도 인증번호가 도착하지 않는다면, 그 때 시도하여 주십시오.");
-		document.getElementById("MemberPhoneInsert").style.display = "";
-		object.pcode.value = "";
-		object.pcode.focus();
-	}
-}
-
-function MemberPasswordModify() {
-	var object = document.getElementById("MemberPasswordModifyCheck");
-	document.getElementById("MemberPasswordInsert").style.display = object.checked == true ? "" : "none";
-	if (object.checked == true) document.forms["MemberSignIn"].password.focus();
+	
+	return object;
 }
 
 /*****************************************************************************************
@@ -973,6 +739,33 @@ function InputSelectBoxSelect(id,text,value,callback) {
  *****************************************************************************************/
 
 $(document).ready(function() {
+	$(".drop > button").on("click",function(event) {
+		if ($(this).parent().hasClass("open") == true) {
+			
+		} else {
+			$(this).parent().addClass("open");
+		}
+		event.preventDefault();
+	});
+	
+	$(".drop > ul > li").on("click",function(event) {
+		if ($(this).hasClass("divider") == true) return;
+		
+		if ($(this).parent().parent().attr("form")) {
+			$($("form[name="+$(this).parent().parent().attr("form")+"]").find("input[name="+$(this).parent().parent().attr("field")+"]")).val($(this).attr("value"));
+		}
+		
+		if ($(this).parent().parent().attr("callback")) {
+			eval($(this).parent().parent().attr("callback").replace('?',$(this).attr("value")));
+		}
+		
+		$($(this).parent().parent().find("button")).html($(this).html()+' <div class="arrow"></div>');
+		
+		if ($(this).parent().parent().attr("submit") == "true") {
+			$("form[name="+$(this).parent().parent().attr("form")+"]").submit();
+		}
+	});
+	
 	$(".iModuleMemberMenu").on("click",function(event) {
 		var object = $(this);
 		
@@ -1019,80 +812,18 @@ $(document).ready(function() {
 		memberMenu.css("left",object.offset().left);
 		memberMenu.show();
 	});
+	
+	$("body").on("click",function(event) {
+		if ($(event.target).attr("isMemberMenu") != "TRUE") {
+			$(".iModuleMemberMenuList").hide();
+		}
+		
+		if ($(event.target).parent().hasClass("drop") == false) {
+			$(".drop").removeClass("open");
+		}
+	});
 });
 
-$("body").on("click",function(event) {
-	if ($(event.target).attr("isMemberMenu") != "TRUE") {
-		$(".iModuleMemberMenuList").hide();
-	}
-});
-
-
-/*
-	function ToggleUserMenu(id,object,event) {
-		var e = event ? event : window.event;
-		var userMenu = document.getElementById(id).getElementsByTagName("div")[0];
-		userMenu.innerHTML = "";
-
-		if (object.idx) {
-			var menu = document.createElement("div");
-			menu.className = "UserMenuItem SendMessage";
-			menu.innerHTML = "쪽지보내기";
-			menu.setAttribute("mno",object.idx);
-			menu.onclick = function() { OpenMessage(this.getAttribute("mno")); }
-
-			userMenu.appendChild(menu);
-
-			var menu = document.createElement("div");
-			menu.className = "UserMenuItem PointGift";
-			menu.innerHTML = "포인트선물하기";
-			menu.setAttribute("mno",object.idx);
-			menu.onclick = function() { OpenPointGift(this.getAttribute("mno")); }
-
-			userMenu.appendChild(menu);
-		}
-
-		if (object.email) {
-			var menu = document.createElement("div");
-			menu.className = "UserMenuItem SendEmail";
-			menu.innerHTML = "이메일보내기";
-			menu.setAttribute("email",object.email);
-			menu.onclick = function() { location.href = "mailto:"+this.getAttribute("email"); }
-
-			userMenu.appendChild(menu);
-		}
-
-		if (object.homepage) {
-			var menu = document.createElement("div");
-			menu.className = "UserMenuItem GoHomepage";
-			menu.innerHTML = "홈페이지가기";
-			menu.setAttribute("homepage",object.homepage);
-			menu.onclick = function() { window.open(this.getAttribute("homepage")); }
-
-			userMenu.appendChild(menu);
-		}
-
-		var scrollTop = Math.max(document.documentElement.scrollTop,document.body.scrollTop);
-		var scrollLeft = Math.max(document.documentElement.scrollLeft,document.body.scrollLeft);
-
-		while (true) {
-			$(userMenu)
-		}
-
-		var offsetTop = GetRealOffsetTop($(userMenu.parentNode).css("position") == "relative" ? userMenu.parentNode : userMenu.parentNode.parentNode);
-		console.log($(userMenu.parentNode.parentNode.parentNode).css("position") == "relative");
-		console.log(offsetTop);
-		var offsetLeft = GetRealOffsetLeft($(userMenu.parentNode).css("position") == "relative" ? userMenu.parentNode : userMenu.parentNode.parentNode);
-		var top = e.clientY+scrollTop-offsetTop;
-		var left = e.clientX+scrollLeft-offsetLeft;
-
-		userMenu.style.display = "";
-		userMenu.style.top = top+"px";
-		userMenu.style.left = left+"px";
-
-		GlobalToggleList[id] = userMenu;
-	}
-*/
 // Event Listener
 function addEvent(object,type,fn) {
 	if (object.addEventListener) {

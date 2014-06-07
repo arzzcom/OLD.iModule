@@ -136,7 +136,8 @@
 		<div class="height10"></div>
 	
 		{if $data.select == true}
-			<div class="btn btn-warning btn-sm pull-left" onclick="{$action.complete}">채택할 답변이 없다면, 이곳을 눌러 이 질문의 상태를 미해결완료로 처리할 수 있습니다.</div>
+			<div class="btn btn-warning btn-sm pull-right" onclick="{$action.complete}">답변 채택없이 질문완료</div>
+			<div class="height10"></div>
 		{/if}
 	
 		<div class="addthis_toolbox addthis_default_style addthis_32x32_style pull-right">
