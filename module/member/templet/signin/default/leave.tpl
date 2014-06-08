@@ -1,82 +1,67 @@
-<script type="text/javascript" src="{$skinDir}/script.js"></script>
 {$formStart}
-<div id="sForm">
-	<div class="steptitlebar"><img src="{$skinDir}/images/title_leave.gif" /></div>
-	<div class="innerimg"><img src="{$skinDir}/images/info_leave.gif" /></div>
+<div class="ModuleMemberSignInDefault">
+	<table cellpadding="0" cellspacing="0" class="memberTable">
+	<col width="100%" /><col width="200" />
+	<tr>
+		<td class="sectionTitle">회원탈퇴</td>
+		<td class="right"><div class="essential">필수입력항목</div></td>
+	</tr>
+	<tr class="sectionBar">
+		<td colspan="2"></td>
+	</tr>
+	<tr>
+		<td colspan="2" class="sectionInfo">
+			회원탈퇴시 본인확인을 위하여 가입당시의 회원님의 정보가 필요합니다.<br />
+			아래의 양식에 맞게 정보를 입력하신 후 탈퇴하기 버튼을 클릭하여 주시기 바랍니다.
+		</td>
+	</tr>
+	</table>
 
+	<table cellpadding="0" cellspacing="0" class="memberTable">
+	<col width="120" /><col width="1" /><col width="100%" />
+	<tr class="splitBar">
+		<td colspan="3"></td>
+	</tr>
+	<tr>
+		<td class="headerCell"><div class="essential">회원아이디</div></td>
+		<td class="splitBar"></td>
+		<td class="bodyCell">
+			<input type="text" name="user_id" class="input" style="width:200px;" value="{$member.user_id}" disabled="disabled" />
+		</td>
+	</tr>
+	<tr class="splitBar">
+		<td colspan="3"></td>
+	</tr>
+	<tr>
+		<td class="headerCell"><div class="essential">패스워드</div></td>
+		<td class="splitBar"></td>
+		<td class="bodyCell">
+			<input type="password" name="password" class="input" style="width:200px;" />
+		</td>
+	</tr>
+	<tr class="splitBar">
+		<td colspan="3"></td>
+	</tr>
+	<tr>
+		<td class="headerCell"><div class="essential">탈퇴사유</div></td>
+		<td class="splitBar"></td>
+		<td class="bodyCell">
+			<textarea name="msg" class="textarea" style="height:100px;"></textarea>
+			<div class="help-block">사이트의 발전을 위해 탈퇴사유를 간단하게나마 입력하여 주십시오.</div>
+		</td>
+	</tr>
+	<tr class="splitBar">
+		<td colspan="3"></td>
+	</tr>
+	<tr class="sectionEnd">
+		<td colspan="3"><div></div></td>
+	</tr>
+	</table>
+	
 	<div class="height10"></div>
 
-	<table cellpadding="0" cellspacing="0" class="layoutfixed">
-	<col width="100%" /><col width="145" />
-	<tr>
-		<td class="right"><img src="{$skinDir}/images/icon_essential.gif" /></td>
-		<td class="right dotum f11">항목은 필수입력항목입니다.</td>
-	</tr>
-	</table>
-	<div class="height5"></div>
-	<table cellpadding="0" cellspacing="0" class="layoutfixed">
-	<col width="20" /><col width="120" /><col width="1" /><col width="100%" />
-	<tr class="boldline">
-		<td colspan="4"></td>
-	</tr>
-	<tr>
-		<td class="inputicon"><img src="{$skinDir}/images/icon_essential.gif" /></td>
-		<td class="inputtext">회원아이디</td>
-		<td class="inputline"></td>
-		<td class="inputform">
-			<input type="text" name="user_id" class="inputbox" onfocus="this.className='inputboxon';" onblur="this.className='inputbox';" style="width:100px;" value="{$member.user_id}" disabled="disabled" />
-		</td>
-	</tr>
-	<tr class="inputrow">
-		<td colspan="4"></td>
-	</tr>
-	<tr>
-		<td class="inputicon"><img src="{$skinDir}/images/icon_essential.gif" /></td>
-		<td class="inputtext">패스워드</td>
-		<td class="inputline"></td>
-		<td class="inputform">
-			<input type="password" name="password" class="inputbox" onfocus="this.className='inputboxon';" onblur="this.className='inputbox';" style="width:100px;" />
-		</td>
-	</tr>
-	<tr class="inputrow">
-		<td colspan="4"></td>
-	</tr>
-	{if $member.jumin}
-	<tr>
-		<td class="inputicon"><img src="{$skinDir}/images/icon_essential.gif" /></td>
-		<td class="inputtext">주민등록번호</td>
-		<td class="inputline"></td>
-		<td class="inputform">
-			<table cellpadding="0" cellspacing="0" class="layoutfixed">
-			<col width="60" /><col width="10" /><col width="100%" />
-			<tr>
-				<td><input type="text" name="jumin1" class="inputbox" onfocus="this.className='inputboxon';" maxlength="6" onblur="this.className='inputbox';" onkeyup="if (this.value.length == 6) document.forms['MemberSignIn'].jumin2.focus();" style="width:50px;" /></td>
-				<td class="dotum f11 center">-</td>
-				<td><input type="password" name="jumin2" class="inputbox" onfocus="this.className='inputboxon';" maxlength="7" onblur="this.className='inputbox';" style="width:85px;" /></td>
-			</tr>
-			</table>
-		</td>
-	</tr>
-	<tr class="inputrow">
-		<td colspan="4"></td>
-	</tr>
-	{/if}
-	<tr>
-		<td class="inputicon"></td>
-		<td class="inputtext">탈퇴사유</td>
-		<td class="inputline"></td>
-		<td class="inputform">
-			<textarea name="msg" class="textbox" onfocus="this.className='textboxon';" onblur="this.className='textbox';"></textarea>
-			<div class="msg">사이트의 발전을 위해 탈퇴사유를 간단하게나마 입력하여 주십시오.</div>
-		</td>
-	</tr>
-	<tr class="inputrow">
-		<td colspan="4"></td>
-	</tr>
-	</table>
-
-	<div class="buttonbox">
-		<input type="image" src="{$skinDir}/images/btn_confirm.gif" />
+	<div class="center">
+		<input type="submit" value="회원탈퇴하기" class="btn btn-sm btn-danger" />
 	</div>
 </div>
 {$formEnd}

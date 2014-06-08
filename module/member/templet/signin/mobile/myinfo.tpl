@@ -1,73 +1,67 @@
 {$formStart}
 <div class="ModuleMemberSignInDefault">
 	<table cellpadding="0" cellspacing="0" class="memberTable">
-	<col width="100%" /><col width="200" />
-	<tr>
-		<td class="sectionTitle">회원정보수정</td>
-		<td class="right"><div class="essential">필수입력항목</div></td>
-	</tr>
-	<tr class="sectionBar">
-		<td colspan="2"></td>
-	</tr>
-	<tr>
-		<td colspan="2" class="sectionInfo">
-			입력하신 회원정보는 개인정보보호정책에 따라 철저하게 보호되며 회원동의 없이 공개되지 않습니다.<br />
-			자세한 내용은 개인정보보호정책을 참고하시기 바랍니다.
-		</td>
-	</tr>
-	</table>
-	
-	<table cellpadding="0" cellspacing="0" class="memberTable">
-	<col width="120" /><col width="1" /><col width="100%" />
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td style="width:120px;" class="hidden-xs"></td>
+		<td style="width:1px;" class="hidden-xs"></td>
+		<td style="width:100%;"></td>
 	</tr>
 	{foreach name=form from=$form item=data}
 	{if $data.type == 'user_id'}
 	<tr>
-		<td class="headerCell"><div class="essential">{$data.title}</div></td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs"><div class="essential">{$data.title}</div></td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
-			<input type="text" name="{$data.type}" class="input" style="width:200px;" value="{$member.user_id}" disabled="disabled" />
+			<div class="visible-xs headerLayer"><div class="essential">{$data.title}</div></div>
+			<input type="text" name="{$data.type}" class="input" style="width:100%;" value="{$member.user_id}" disabled="disabled" />
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 
 	{if $data.type == 'name'}
 	<tr>
-		<td class="headerCell"><div class="essential">{$data.title}</div></td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs"><div class="essential">{$data.title}</div></td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
-			<input type="text" name="{$data.type}" class="input" value="{$member.name}" style="width:200px;" value="{$member.name}"{if $member.jumin} disabled="disabled"{/if} />
+			<div class="visible-xs headerLayer"><div class="essential">{$data.title}</div></div>
+			<input type="text" name="{$data.type}" class="input" value="{$member.name}" style="width:100%;" value="{$member.name}"{if $member.jumin} disabled="disabled"{/if} />
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 
 	{if $data.type == 'nickname'}
 	<tr>
-		<td class="headerCell"><div class="essential">{$data.title}</div></td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs"><div class="essential">{$data.title}</div></td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
-			<input type="text" name="{$data.type}" class="input" onblur="MemberSignInFormCheck('nickname');" style="width:200px;" value="{$member.nickname}" />
+			<div class="visible-xs headerLayer"><div class="essential">{$data.title}</div></div>
+			<input type="text" name="{$data.type}" class="input" onblur="MemberSignInFormCheck('nickname');" style="width:100%;" value="{$member.nickname}" />
 			<div class="help-block">{$data.msg}</div>
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 
 	{if $data.type == 'password'}
 	<tr>
-		<td class="headerCell">{$data.title}</td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs">{$data.title}</td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
+			<div class="visible-xs headerLayer"><div class="essential">{$data.title}</div></div>
 			<table cellpadding="0" cellspacing="0" class="layoutfixed">
 			<col width="20" /><col width="100%" />
 			<tr class="height25">
@@ -78,37 +72,44 @@
 
 			<div id="MemberPasswordInsert" style="display:none;">
 				<table cellpadding="0" cellspacing="0" class="memberTable">
-				<col width="120" /><col width="1" /><col width="100%" />
 				<tr class="sectionBar">
-					<td colspan="3"></td>
+					<td style="width:120px;" class="hidden-xs"></td>
+					<td style="width:1px;" class="hidden-xs"></td>
+					<td style="width:100%;"></td>
 				</tr>
 				<tr>
-					<td class="headerCell">기존{$data.title}</td>
-					<td class="splitBar"></td>
-					<td class="bodyCell"><input type="password" name="password" class="input" style="width:150px;" /></td>
+					<td class="headerCell hidden-xs">기존{$data.title}</td>
+					<td class="splitBar hidden-xs"></td>
+					<td class="bodyCell"><input type="password" name="password" class="input" style="width:100%;" placeholder="기존패스워드" /></td>
 				</tr>
 				<tr class="splitBar">
-					<td colspan="3"></td>
+					<td class="hidden-xs"></td>
+					<td class="hidden-xs"></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td class="headerCell">변경할{$data.title}</td>
-					<td class="splitBar"></td>
+					<td class="headerCell hidden-xs">변경할{$data.title}</td>
+					<td class="splitBar hidden-xs"></td>
 					<td class="bodyCell">
-						<input type="password" name="password1" class="input" onblur="MemberSignInFormCheck('password');" style="width:150px;" />
+						<input type="password" name="password1" class="input" onblur="MemberSignInFormCheck('password');" style="width:100%;" placeholder="변경할 패스워드" />
 					</td>
 				</tr>
 				<tr class="splitBar">
-					<td colspan="3"></td>
+					<td class="hidden-xs"></td>
+					<td class="hidden-xs"></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td class="headerCell">{$data.title}확인</td>
-					<td class="splitBar"></td>
+					<td class="headerCell hidden-xs">{$data.title}확인</td>
+					<td class="splitBar hidden-xs"></td>
 					<td class="bodyCell">
-						<input type="password" name="password2" class="input" onblur="MemberSignInFormCheck('password');" style="width:150px;" />
+						<input type="password" name="password2" class="input" onblur="MemberSignInFormCheck('password');" style="width:100%;" placeholder="기존패스워드 확인" />
 					</td>
 				</tr>
 				<tr class="sectionLineEnd">
-					<td colspan="3"><div></div></td>
+					<td class="hidden-xs"><div></div></td>
+					<td class="hidden-xs"><div></div></td>
+					<td><div></div></td>
 				</tr>
 				</table>
 				<div class="help-block">기존 패스워드를 입력하신 뒤 변경할 패스워드를 입력하여 주십시오.</div>
@@ -116,17 +117,24 @@
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	<tr>
-		<td class="headerCell"><div class="essential">{$data.title}재발급</div></td>
-		<td class="splitBar"></td>
-		<td>
+		<td class="headerCell hidden-xs"><div class="essential">{$data.title}재발급</div></td>
+		<td class="splitBar hidden-xs"></td>
+		<td class="bodyCell">
+			<div class="visible-xs headerLayer"><div class="essential">{$data.title}재발급 질문</div></div>
 			<table cellpadding="0" cellspacing="0" class="memberTable">
-			<col width="160" /><col width="1" /><col width="100%" />
+			<tr class="sectionBar">
+				<td style="width:60px;" class="hidden-xs"></td>
+				<td style="width:1px;" class="hidden-xs"></td>
+				<td style="width:100%;"></td>
+			</tr>
 			<tr>
-				<td class="headerCell">패스워드 재발급 질문</td>
-				<td class="splitBar"></td>
+				<td class="headerCell hidden-xs">질문</td>
+				<td class="splitBar hidden-xs"></td>
 				<td class="bodyCell">
 					<input type="hidden" name="password_question" value="{$password.idx}" />
 					<div class="drop" style="width:100%;" form="MemberSignIn" field="password_question">
@@ -140,56 +148,72 @@
 				</td>
 			</tr>
 			<tr class="splitBar">
-				<td colspan="3"></td>
+				<td class="hidden-xs"></td>
+				<td class="hidden-xs"></td>
+				<td></td>
 			</tr>
 			<tr>
-				<td class="headerCell">패스워드 재발급 답변</td>
-				<td class="splitBar"></td>
+				<td class="headerCell hidden-xs">답변</td>
+				<td class="splitBar hidden-xs"></td>
 				<td class="bodyCell">
 					<input type="text" name="password_answer" class="input" style="width:100%;" value="{$member.password_answer}" />
 				</td>
+			</tr>
+			<tr class="sectionEnd">
+				<td class="hidden-xs"><div></div></td>
+				<td class="hidden-xs"><div></div></td>
+				<td><div></div></td>
 			</tr>
 			</table>
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 
 	{if $data.type == 'email'}
 	<tr>
-		<td class="headerCell"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
+			<div class="visible-xs headerLayer"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></div>
 			<input type="email" name="{$data.type}" class="input" onblur="MemberSignInFormCheck('email');" style="width:100%;" value="{$member.email}" />
 			<div class="help-block">{$data.msg}</div>
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 
 	{if $data.type == 'homepage'}
 	<tr>
-		<td class="headerCell"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
+			<div class="visible-xs headerLayer"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></div>
 			<input type="url" name="{$data.type}" class="input" style="width:100%;" value="{$member.homepage}" />
 			{if $data.msg}<div class="help-block">{$data.msg}</div>{/if}
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 
 	{if $data.type == 'telephone'}
 	<tr>
-		<td class="headerCell"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
+			<div class="visible-xs headerLayer"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></div>
 			<input type="hidden" name="telephone1" value="{$member.telephone.telephone1}" />
 			<div class="drop" style="width:100px;" form="MemberSignIn" field="telephone1">
 				<button>{$member.telephone.telephone1} <span class="arrow"></span></button>
@@ -234,15 +258,18 @@
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 
 	{if $data.type == 'cellphone'}
 	<tr>
-		<td class="headerCell"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
+			<div class="visible-xs headerLayer"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></div>
 			{if $data.value.provider == 'on'}
 			<input type="hidden" name="provider" value="{$member.cellphone.provider}" />
 			<div class="drop" style="width:80px;" form="MemberSignIn" field="provider">
@@ -253,8 +280,6 @@
 					<li value="SKT">LGT</li>
 				</ul>
 			</div>
-			
-			<span class="inputTag"></span>
 			{/if}
 			
 			<input type="hidden" name="cellphone1" value="{$member.cellphone.cellphone1}" />
@@ -289,15 +314,18 @@
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 	
 	{if $data.type == 'birthday'}
 	<tr>
-		<td class="headerCell"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
+			<div class="visible-xs headerLayer"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></div>
 			<input type="hidden" name="birthday1" value="{$member.birthday.year}" />
 			<input type="hidden" name="birthday2" value="{$member.birthday.month}" />
 			<input type="hidden" name="birthday3" value="{$member.birthday.day}" />
@@ -333,17 +361,20 @@
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 
 	{if $data.type == "address"}
 	<tr>
-		<td class="headerCell"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
+			<div class="visible-xs headerLayer"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></div>
 			<input type="hidden" name="{$data.name}_juso_depth1" />
-			<div class="drop" style="width:100px;" form="MemberSignIn" field="{$data.name}_juso_depth1" callback="MemberSearchAddressDepth1('{$data.name}','?');">
+			<div class="drop" style="width:120px;" form="MemberSignIn" field="{$data.name}_juso_depth1" callback="MemberSearchAddressDepth1('{$data.name}','?');">
 				<button>시도 <span class="arrow"></span></button>
 				<ul>
 					<li value="서울">서울특별시</li>
@@ -372,6 +403,9 @@
 				<ul></ul>
 			</div>
 			
+			<div class="height5 visible-xs"></div>
+			<div class="height10 visible-xs"></div>
+			
 			<input type="hidden" name="{$data.name}_juso_depth3" />
 			<div class="drop" style="width:120px;" form="MemberSignIn" field="{$data.name}_juso_depth3" callback="MemberSearchAddressDepth3('{$data.name}','?');">
 				<button disabled="disabled">읍면동 <span class="arrow"></span></button>
@@ -384,11 +418,14 @@
 				<ul></ul>
 			</div>
 			
+			<div class="height5 visible-xs"></div>
 			<div class="height10"></div>
 			
-			<input type="text" name="{$data.name}_juso_keyword" class="input" style="width:429px;" placeholder="번지 또는 건물번호(건물이름) / 도로명 + 건물번호" disabled="disabled" />
+			<input type="text" name="{$data.name}_juso_keyword" class="input" style="width:100%;" placeholder="번지/건물번호(건물이름)/도로명+건물번호" disabled="disabled" />
 			
-			<div class="btn btn-sm btn-default" onclick="MemberSearchAddressSearch('{$data.name}');">주소검색</div>
+			<div class="height10"></div>
+			
+			<div class="btn btn-sm btn-default btn-block" onclick="MemberSearchAddressSearch('{$data.name}');">주소검색</div>
 			
 			<div class="help-block">검색결과를 줄이기 위해 가급적 도로명까지 선택 후 검색하여 주시기 바랍니다.</div>
 			
@@ -410,21 +447,24 @@
 			<div class="height10"></div>
 			<div class="height5"></div>
 			
-			<input type="text" name="{$data.name}_address2" class="input" style="width:100%;" placeholder="나머지주소(동, 호실 등)가 필요하다면 입력하여 주십시오." value="{$member.address.address2}" />
+			<input type="text" name="{$data.name}_address2" class="input" style="width:100%;" placeholder="나머지주소(동, 호실 등)가 필요하다면 입력" value="{$member.address.address2}" />
 			
 			{if $data.msg}<div class="help-block">{$data.msg}</div>{/if}
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 
 	{if $data.type == 'gender'}
 	<tr>
-		<td class="headerCell"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
+			<div class="visible-xs headerLayer"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></div>
 			<input type="hidden" name="gender" value="{$member.gender}" />
 			<div class="drop" style="width:80px;" form="MemberSignIn" field="gender">
 				<button>{if $member.gender == 'MALE'}남자{else}여자{/if} <span class="arrow"></span></button>
@@ -437,15 +477,18 @@
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 
 	{if $data.type == 'nickcon'}
 	<tr>
-		<td class="headerCell"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
+			<div class="visible-xs headerLayer"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></div>
 			<input type="file" name="{$data.type}" class="input" style="width:100%;" />
 			<div class="height5"></div>
 			<table cellpadding="0" cellspacing="0" class="layoutfixed">
@@ -459,15 +502,18 @@
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 
 	{if $data.type == 'photo'}
 	<tr>
-		<td class="headerCell"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
+			<div class="visible-xs headerLayer"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></div>
 			<input type="file" name="{$data.type}" class="input" style="width:100%;" />
 			<div class="height5"></div>
 			<table cellpadding="0" cellspacing="0" class="layoutfixed">
@@ -481,45 +527,54 @@
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 	
 	{if $data.type == 'input'}{assign var='field' value=$data.name|regex_replace:"/^extra_/":""}
 	<tr>
-		<td class="headerCell"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
+			<div class="visible-xs headerLayer"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></div>
 			<input type="text" name="{$data.name}" class="input" style="width:100%;" value="{$member.extra.$field}" />
 			{if $data.msg}<div class="help-block">{$data.msg}</div>{/if}
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 
 	{if $data.type == 'textarea'}{assign var='field' value=$data.name|regex_replace:"/^extra_/":""}
 	<tr>
-		<td class="headerCell"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
+			<div class="visible-xs headerLayer"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></div>
 			<textarea name="{$data.name}" class="textarea" style="width:100%; height:{$data.value}px;">{$member.extra.$field}</textarea>
 			{if $data.msg}<div class="help-block">{$data.msg}</div>{/if}
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 	
 	{if $data.type == 'select'}{assign var='field' value=$data.name|regex_replace:"/^extra_/":""}
 	<tr>
-		<td class="headerCell"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
+			<div class="visible-xs headerLayer"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></div>
 			<input type="hidden" name="{$data.name}" value="{$member.extra.$field}" />
-			<div class="drop" style="width:200px;" form="MemberSignIn" field="{$data.name}">
+			<div class="drop" style="width:100%;" form="MemberSignIn" field="{$data.name}">
 				<button>{$member.extra.$field} <span class="arrow"></span></button>
 				<ul>
 					{foreach from=$data.value item=list}
@@ -531,15 +586,18 @@
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 	
 	{if $data.type == 'checkbox'}{assign var='field' value=$data.name|regex_replace:"/^extra_/":""}
 	<tr>
-		<td class="headerCell"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
+			<div class="visible-xs headerLayer"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></div>
 			<div>
 				{foreach from=$data.value item=list}
 				<input type="checkbox" name="{$data.name}[]" value="{$list}"{if in_array($list,$member.extra.$field) == true} checked="checked"{/if} />&nbsp;&nbsp;{$list}&nbsp;&nbsp;&nbsp;&nbsp;
@@ -549,15 +607,18 @@
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 	
 	{if $data.type == 'radio'}{assign var='field' value=$data.name|regex_replace:"/^extra_/":""}
 	<tr>
-		<td class="headerCell"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
+			<div class="visible-xs headerLayer"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></div>
 			<div>
 				{foreach from=$data.value item=list}
 				<input type="radio" name="{$data.name}" value="{$list}"{if $list == $member.extra.$field} checked="checked"{/if} />&nbsp;&nbsp;{$list}&nbsp;&nbsp;&nbsp;&nbsp;
@@ -567,17 +628,20 @@
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 	
 	{if $data.type == 'search_address'}{assign var='field' value=$data.name|regex_replace:"/^extra_/":""}
 	<tr>
-		<td class="headerCell"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
+			<div class="visible-xs headerLayer"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></div>
 			<input type="hidden" name="{$data.name}_juso_depth1" />
-			<div class="drop" style="width:100px;" form="MemberSignIn" field="{$data.name}_juso_depth1" callback="MemberSearchAddressDepth1('{$data.name}','?');">
+			<div class="drop" style="width:120px;" form="MemberSignIn" field="{$data.name}_juso_depth1" callback="MemberSearchAddressDepth1('{$data.name}','?');">
 				<button>시도 <span class="arrow"></span></button>
 				<ul>
 					<li value="서울">서울특별시</li>
@@ -606,6 +670,9 @@
 				<ul></ul>
 			</div>
 			
+			<div class="height5 visible-xs"></div>
+			<div class="height10 visible-xs"></div>
+			
 			<input type="hidden" name="{$data.name}_juso_depth3" />
 			<div class="drop" style="width:120px;" form="MemberSignIn" field="{$data.name}_juso_depth3" callback="MemberSearchAddressDepth3('{$data.name}','?');">
 				<button disabled="disabled">읍면동 <span class="arrow"></span></button>
@@ -618,18 +685,21 @@
 				<ul></ul>
 			</div>
 			
+			<div class="height5 visible-xs"></div>
 			<div class="height10"></div>
 			
-			<input type="text" name="{$data.name}_juso_keyword" class="input" style="width:429px;" placeholder="번지 또는 건물번호(건물이름) / 도로명 + 건물번호" disabled="disabled" />
+			<input type="text" name="{$data.name}_juso_keyword" class="input" style="width:100%;" placeholder="번지/건물번호(건물이름)/도로명+건물번호" disabled="disabled" />
 			
-			<div class="btn btn-sm btn-default" onclick="MemberSearchAddressSearch('{$data.name}');">주소검색</div>
+			<div class="height10"></div>
+			
+			<div class="btn btn-sm btn-default btn-block" onclick="MemberSearchAddressSearch('{$data.name}');">주소검색</div>
 			
 			<div class="help-block">검색결과를 줄이기 위해 가급적 도로명까지 선택 후 검색하여 주시기 바랍니다.</div>
 			
 			<div class="height10"></div>
 			<div class="height5"></div>
 			
-			<input type="hidden" name="{$data.name}_zipcode" value="{$member.extra.$field.zipcode}" />
+			<input type="hidden" name="{$data.name}_zipcode" value="{$member.zipcode}" />
 			
 			<div class="drop" style="width:100%;" form="MemberSignIn" field="{$data.name}_address1" callback="MemberSearchAddressSelect('{$data.name}','?');">
 				<button disabled="disabled">주소를 선택하여 주세요. <span class="arrow"></span></button>
@@ -639,25 +709,27 @@
 			<div class="height10"></div>
 			<div class="height5"></div>
 			
-			<input type="text" name="{$data.name}_address1" class="input" style="width:100%;" placeholder="상단 선택박스에서 주소를 선택하여 주세요." readonly="readonly" value="{$member.extra.$field.address1}" />
+			<input type="text" name="{$data.name}_address1" class="input" style="width:100%;" placeholder="상단 선택박스에서 주소를 선택하여 주세요." readonly="readonly" value="{$member.address.address1}" />
 			
 			<div class="height10"></div>
 			<div class="height5"></div>
 			
-			<input type="text" name="{$data.name}_address2" class="input" style="width:100%;" placeholder="나머지주소(동, 호실 등)가 필요하다면 입력하여 주십시오." value="{$member.extra.$field.address2}" />
+			<input type="text" name="{$data.name}_address2" class="input" style="width:100%;" placeholder="나머지주소(동, 호실 등)가 필요하다면 입력" value="{$member.address.address2}" />
 			
 			{if $data.msg}<div class="help-block">{$data.msg}</div>{/if}
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 	
 	{if $data.type == 'phone'}{assign var='field' value=$data.name|regex_replace:"/^extra_/":""}{assign var=temp value="-"|explode:$member.extra.$field}
 	<tr>
-		<td class="headerCell"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
 			<input type="hidden" name="{$data.name}-1" value="{$temp[0]}" />
 			<div class="drop" style="width:100px;" form="MemberSignIn" field="{$data.name}-1">
@@ -703,15 +775,18 @@
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 	
 	{if $data.type == 'date'}{assign var='field' value=$data.name|regex_replace:"/^extra_/":""}{assign var=temp value="-"|explode:$member.extra.$field}
 	<tr>
-		<td class="headerCell"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
-		<td class="splitBar"></td>
+		<td class="headerCell hidden-xs"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></td>
+		<td class="splitBar hidden-xs"></td>
 		<td class="bodyCell">
+			<div class="visible-xs headerLayer"><div{if $data.allowblank == 'FALSE'} class="essential"{/if}>{$data.title}</div></div>
 			<input type="hidden" name="{$data.name}-1" value="{$temp[0]}" />
 			<input type="hidden" name="{$data.name}-2" value="{$temp[1]}" />
 			<input type="hidden" name="{$data.name}-3" value="{$temp[2]}" />
@@ -747,12 +822,16 @@
 		</td>
 	</tr>
 	<tr class="splitBar">
-		<td colspan="3"></td>
+		<td class="hidden-xs"></td>
+		<td class="hidden-xs"></td>
+		<td></td>
 	</tr>
 	{/if}
 	{/foreach}
 	<tr class="sectionEnd">
-		<td colspan="3"><div></div></td>
+		<td class="hidden-xs"><div></div></td>
+		<td class="hidden-xs"><div></div></td>
+		<td><div></div></td>
 	</tr>
 	</table>
 </div>
@@ -760,6 +839,8 @@
 <div class="height10"></div>
 
 <div class="center">
-	<input type="submit" class="btn btn-sm btn-success" value="회원정보 수정하기" />
+	<input type="submit" class="btn btn-success" value="회원정보 수정하기" />
 </div>
+
+<div class="height10"></div>
 {$formEnd}

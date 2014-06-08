@@ -11,6 +11,7 @@ INPUT {outline:none; -webkit-appearance:none; border-radius:0;}
 INPUT[type=checkbox] {-webkit-appearance:checkbox; outline:aqua;}
 input[type=number]::-webkit-inner-spin-button {-webkit-appearance:none;}
 BUTTON[disabled], INPUT[disabled] {cursor:default;}
+TEXTAREA {outline:none; -webkit-appearance:none; border-radius:0;}
 [hidden] {display:none;}
 
 /* align */
@@ -70,7 +71,7 @@ BUTTON[disabled], INPUT[disabled] {cursor:default;}
 .liveSearchMatch {color:#EF5600;}
 
 /* SmartEditor */
-.smartOutput {padding:0px; font-size:12px; line-height:1.6 !important; font-family:NanumGothicWeb; -ms-word-break:break-all; word-wrap:break-word;}
+.smartOutput {padding:0px; font-size:12px; line-height:1.6 !important; -ms-word-break:break-all; word-wrap:break-word;}
 .smartOutput p {line-height:1.6;}
 .smartOutput SPAN {line-height:1.6;}
 .smartOutput DIV {line-height:1.6;}
@@ -274,7 +275,7 @@ fieldset[disabled] .form-control {
 
 /* Layers */
 #WindowDisabledLayer {position:absolute; z-index:1000; background:#000000; top:0px; left:0px;}
-#TipLayer {position:absolute; z-index:1001; background:#FFFFFF; border:2px solid #CCCCCC; padding:5px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; color:#666666;}
+#TipLayer {position:absolute; z-index:1001; background:#FFFFFF; border:2px solid #CCCCCC; padding:5px; font-size:12px; color:#666666;}
 #ShowImageLayer {position:absolute; z-index:1002;}
 #ShowImageLayer .LayerTopLeft {height:51px; background:url(../images/common/showimagelayer_topleft.gif);}
 #ShowImageLayer .LayerTopBg {height:51px; background:url(../images/common/showimagelayer_topbg.gif); vertical-align:top;}
