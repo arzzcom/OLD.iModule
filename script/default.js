@@ -733,19 +733,140 @@ function InputSelectBoxSelect(id,text,value,callback) {
 	}
 }
 
+function InsertDropList(object,text,value) {
+	object.append($("<li>").attr("value",value).html(text).on("click",function() {
+		if ($(this).hasClass("divider") == true) return;
+		
+		if ($(this).parent().parent().attr("form")) {
+			$($("form[name="+$(this).parent().parent().attr("form")+"]").find("input[name="+$(this).parent().parent().attr("field")+"]")).val($(this).attr("value"));
+		}
+		
+		if ($(this).parent().parent().attr("callback")) {
+			eval($(this).parent().parent().attr("callback").replace('?',$(this).attr("value")));
+		}
+		
+		$($(this).parent().parent().find("button")).html($(this).html()+' <div class="arrow"></div>');
+		
+		if ($(this).parent().parent().attr("submit") == "true") {
+			$("form[name="+$(this).parent().parent().attr("form")+"]").submit();
+		}
+	}).on("keydown",function() {
+		event.preventDefault();
+		
+		if (event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 27) {
+			if ($(this).parent().parent().hasClass("open") == false || ($(this).parent().parent().hasClass("open") == true && event.keyCode == 27)) {
+				return $($(this).parent().parent().find("button")).click();
+			}
+			
+			var items = $(this).parent().parent().find("li:not(.divider):visible");
+
+			if (items.length == 0) return;
+			
+			var index = items.index(items.filter(":focus"));
+
+			if (event.keyCode == 38 && index > 0) index--;
+			if (event.keyCode == 40 && index < items.length - 1) index++;
+			if (!~index) index = 0;
+			
+			$(items).eq(index).focus();
+			event.preventDefault();
+		}
+		
+		if (event.keyCode == 13) {
+			var items = $(this).parent().parent().find("li:not(.divider):visible");
+			var index = items.index(items.filter(":focus"));
+			if (!~index) return;
+			
+			$(items).eq(index).click();
+			$($(this).parent().parent().find("button")).focus();
+			event.preventDefault();
+		}
+	}));
+}
 
 /*****************************************************************************************
  * Events
  *****************************************************************************************/
 
 $(document).ready(function() {
+	$("button[type!=submit]").attr("type","button");
+	
+	$("button").on("click",function(event) {
+		event.preventDefault();
+	});
+	
+	$("input").on("keydown",function(event) {
+		if (event.keyCode == 13) {
+			if ($(this).attr("callback")) {
+				eval($(this).attr("callback").replace('?',$(this).val()));
+				event.preventDefault();
+			}
+		}
+	});
+	
 	$(".drop > button").on("click",function(event) {
+		console.log(event);
 		if ($(this).parent().hasClass("open") == true) {
-			
+			$(this).parent().removeClass("open");
+			$(this).find("li:not(.divider):visible").attr("tabindex",null);
 		} else {
 			$(this).parent().addClass("open");
 		}
+		$(this).focus();
 		event.preventDefault();
+	});
+	
+	$(".drop > button").on("keydown",function(event) {
+		if (event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 27) {
+			event.preventDefault();
+			if ($(this).parent().hasClass("open") == false || ($(this).parent().hasClass("open") == true && event.keyCode == 27)) {
+				return $(this).click();
+			}
+			
+			var items = $(this).parent().find("li:not(.divider):visible").attr("tabindex",1);
+			if (items.length == 0) return;
+			
+			var index = items.index(items.filter(":focus"));
+
+			if (event.keyCode == 38 && index > 0) index--;
+			if (event.keyCode == 40 && index < items.length - 1) index++;
+			if (!~index) index = 0;
+			
+			$(items).eq(index).focus();
+		}
+	});
+	
+	$(".drop > ul > li").on("keydown",function(event) {
+		event.preventDefault();
+		
+		if (event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 27) {
+			if ($(this).parent().parent().hasClass("open") == false || ($(this).parent().parent().hasClass("open") == true && event.keyCode == 27)) {
+				return $($(this).parent().parent().find("button")).click();
+			}
+			
+			var items = $(this).parent().parent().find("li:not(.divider):visible");
+
+			if (items.length == 0) return;
+			
+			var index = items.index(items.filter(":focus"));
+
+			if (event.keyCode == 38 && index > 0) index--;
+			if (event.keyCode == 40 && index < items.length - 1) index++;
+			if (!~index) index = 0;
+			
+			$(items).eq(index).focus();
+			event.preventDefault();
+		}
+		
+		if (event.keyCode == 13) {
+			var items = $(this).parent().parent().find("li:not(.divider):visible");
+			var index = items.index(items.filter(":focus"));
+			if (!~index) return;
+			
+			$(items).eq(index).click();
+			$($(this).parent().parent().find("button")).focus();
+			event.preventDefault();
+		}
 	});
 	
 	$(".drop > ul > li").on("click",function(event) {

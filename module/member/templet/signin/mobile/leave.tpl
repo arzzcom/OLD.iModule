@@ -1,5 +1,5 @@
 {$formStart}
-<div class="ModuleMemberSignInDefault">
+<div class="ModuleMemberSignInMobile">
 	<table cellpadding="0" cellspacing="0" class="memberTable">
 	<tr class="splitBar">
 		<td style="width:120px;" class="hidden-xs"></td>

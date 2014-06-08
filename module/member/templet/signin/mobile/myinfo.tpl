@@ -1,5 +1,5 @@
 {$formStart}
-<div class="ModuleMemberSignInDefault">
+<div class="ModuleMemberSignInMobile">
 	<table cellpadding="0" cellspacing="0" class="memberTable">
 	<tr class="splitBar">
 		<td style="width:120px;" class="hidden-xs"></td>
@@ -284,7 +284,7 @@
 			
 			<input type="hidden" name="cellphone1" value="{$member.cellphone.cellphone1}" />
 			<div class="drop" style="width:70px;">
-				<button>{$member.cellphone.cellphone1} <span class="arrow"></button></button>
+				<button>{$member.cellphone.cellphone1} <span class="arrow"></span></button>
 				<ul>
 					<li value="010">010</li>
 					<li value="011">011</li>
@@ -421,11 +421,11 @@
 			<div class="height5 visible-xs"></div>
 			<div class="height10"></div>
 			
-			<input type="text" name="{$data.name}_juso_keyword" class="input" style="width:100%;" placeholder="번지/건물번호(건물이름)/도로명+건물번호" disabled="disabled" />
+			<input type="text" name="{$data.name}_juso_keyword" class="input" style="width:100%;" placeholder="번지/건물번호(건물이름)/도로명+건물번호" disabled="disabled" callback="MemberSearchAddressSearch('{$data.name}');" />
 			
 			<div class="height10"></div>
 			
-			<div class="btn btn-sm btn-default btn-block" onclick="MemberSearchAddressSearch('{$data.name}');">주소검색</div>
+			<button class="btn btn-sm btn-default btn-block" onclick="MemberSearchAddressSearch('{$data.name}');">주소검색</button>
 			
 			<div class="help-block">검색결과를 줄이기 위해 가급적 도로명까지 선택 후 검색하여 주시기 바랍니다.</div>
 			
@@ -434,7 +434,7 @@
 			
 			<input type="hidden" name="{$data.name}_zipcode" value="{$member.zipcode}" />
 			
-			<div class="drop" style="width:100%;" form="MemberSignIn" field="{$data.name}_address1" callback="MemberSearchAddressSelect('{$data.name}','?');">
+			<div class="drop" style="width:100%;" field="{$data.name}_address1" callback="MemberSearchAddressSelect('{$data.name}','?');">
 				<button disabled="disabled">주소를 선택하여 주세요. <span class="arrow"></span></button>
 				<ul></ul>
 			</div>
@@ -688,11 +688,11 @@
 			<div class="height5 visible-xs"></div>
 			<div class="height10"></div>
 			
-			<input type="text" name="{$data.name}_juso_keyword" class="input" style="width:100%;" placeholder="번지/건물번호(건물이름)/도로명+건물번호" disabled="disabled" />
+			<input type="text" name="{$data.name}_juso_keyword" class="input" style="width:100%;" placeholder="번지/건물번호(건물이름)/도로명+건물번호" disabled="disabled" callback="MemberSearchAddressSearch('{$data.name}');" />
 			
 			<div class="height10"></div>
 			
-			<div class="btn btn-sm btn-default btn-block" onclick="MemberSearchAddressSearch('{$data.name}');">주소검색</div>
+			<button class="btn btn-sm btn-default btn-block" onclick="MemberSearchAddressSearch('{$data.name}');">주소검색</button>
 			
 			<div class="help-block">검색결과를 줄이기 위해 가급적 도로명까지 선택 후 검색하여 주시기 바랍니다.</div>
 			
@@ -701,7 +701,7 @@
 			
 			<input type="hidden" name="{$data.name}_zipcode" value="{$member.zipcode}" />
 			
-			<div class="drop" style="width:100%;" form="MemberSignIn" field="{$data.name}_address1" callback="MemberSearchAddressSelect('{$data.name}','?');">
+			<div class="drop" style="width:100%;" field="{$data.name}_address1" callback="MemberSearchAddressSelect('{$data.name}','?');">
 				<button disabled="disabled">주소를 선택하여 주세요. <span class="arrow"></span></button>
 				<ul></ul>
 			</div>

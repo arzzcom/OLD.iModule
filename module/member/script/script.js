@@ -233,22 +233,13 @@ function MemberSearchAddressDepth1(field,code) {
 			var object = $("div.drop[field="+field+"_juso_depth2] > ul");
 			object.html("");
 			for (var i=0, loop=data.length;i<loop;i++) {
-				object.append($("<li>").attr("value",data[i]).html(data[i]).on("click",function() {
-					if ($(this).parent().parent().attr("form")) {
-						$($("form[name="+$(this).parent().parent().attr("form")+"]").find("input[name="+$(this).parent().parent().attr("field")+"]")).val($(this).attr("value"));
-					}
-					
-					if ($(this).parent().parent().attr("callback")) {
-						eval($(this).parent().parent().attr("callback").replace('?',$(this).attr("value")));
-					}
-					
-					$($(this).parent().parent().find("button")).html($(this).html()+' <div class="arrow"></div>');
-				}));
+				InsertDropList(object,data[i],data[i]);
 			}
 			
 			$("div.drop[field="+field+"_juso_depth2] > button").html('시군구 <span class="arrow"></span>');
 			if (loop > 0) {
 				$("div.drop[field="+field+"_juso_depth2] > button").attr("disabled",false);
+				$("div.drop[field="+field+"_juso_depth2] > button").focus();
 				$("input[name="+field+"_juso_keyword]").attr("disabled",false);
 			}
 		} catch (e) {}
@@ -273,21 +264,14 @@ function MemberSearchAddressDepth2(field,code) {
 			var object = $("div.drop[field="+field+"_juso_depth3] > ul");
 			object.html("");
 			for (var i=0, loop=data.length;i<loop;i++) {
-				object.append($("<li>").attr("value",data[i]).html(data[i]).on("click",function() {
-					if ($(this).parent().parent().attr("form")) {
-						$($("form[name="+$(this).parent().parent().attr("form")+"]").find("input[name="+$(this).parent().parent().attr("field")+"]")).val($(this).attr("value"));
-					}
-					
-					if ($(this).parent().parent().attr("callback")) {
-						eval($(this).parent().parent().attr("callback").replace('?',$(this).attr("value")));
-					}
-					
-					$($(this).parent().parent().find("button")).html($(this).html()+' <div class="arrow"></div>');
-				}));
+				InsertDropList(object,data[i],data[i]);
 			}
 			
 			$("div.drop[field="+field+"_juso_depth3] > button").html('읍면동 <span class="arrow"></span>');
-			if (loop > 0) $("div.drop[field="+field+"_juso_depth3] > button").attr("disabled",false);
+			if (loop > 0) {
+				$("div.drop[field="+field+"_juso_depth3] > button").attr("disabled",false);
+				$("div.drop[field="+field+"_juso_depth3] > button").focus();
+			}
 		} catch (e) {}
 	});
 }
@@ -308,21 +292,14 @@ function MemberSearchAddressDepth3(field,code) {
 			var object = $("div.drop[field="+field+"_juso_depth4] > ul");
 			object.html("");
 			for (var i=0, loop=data.length;i<loop;i++) {
-				object.append($("<li>").attr("value",data[i]).html(data[i]).on("click",function() {
-					if ($(this).parent().parent().attr("form")) {
-						$($("form[name="+$(this).parent().parent().attr("form")+"]").find("input[name="+$(this).parent().parent().attr("field")+"]")).val($(this).attr("value"));
-					}
-					
-					if ($(this).parent().parent().attr("callback")) {
-						eval($(this).parent().parent().attr("callback").replace('?',$(this).attr("value")));
-					}
-					
-					$($(this).parent().parent().find("button")).html($(this).html()+' <div class="arrow"></div>');
-				}));
+				InsertDropList(object,data[i],data[i]);
 			}
 			
 			$("div.drop[field="+field+"_juso_depth4] > button").html('도로명 <span class="arrow"></span>');
-			if (loop > 0) $("div.drop[field="+field+"_juso_depth4] > button").attr("disabled",false);
+			if (loop > 0) {
+				$("div.drop[field="+field+"_juso_depth4] > button").attr("disabled",false);
+				$("div.drop[field="+field+"_juso_depth4] > button").focus();
+			}
 		} catch (e) {}
 	});
 }
@@ -351,25 +328,23 @@ function MemberSearchAddressSearch(field) {
 			var object = $("div.drop[field="+field+"_address1] > ul");
 			object.html("");
 			for (var i=0, loop=data.length;i<loop;i++) {
-				var viewAddress = data[i].address+' <span class="gray">('+data[i].old+')</span>';
-				object.append($("<li>").data("address",data[i]).html(viewAddress).on("click",function() {
-					if ($(this).parent().parent().attr("form")) {
-						$($("form[name="+$(this).parent().parent().attr("form")+"]").find("input[name="+$(this).parent().parent().attr("field")+"]")).val($(this).data("address").address);
-						$($("form[name="+$(this).parent().parent().attr("form")+"]").find("input[name="+$(this).parent().parent().attr("field").replace("_address1","_zipcode")+"]")).val($(this).data("address").zipcode);
-					}
-					
-					$($(this).parent().parent().find("button")).html($(this).html()+' <div class="arrow"></div>');
-					$("input[name="+field+"_address2]").val("");
-					$("input[name="+field+"_address2]").focus();
-				}));
+				InsertDropList(object,data[i].address+' <span class="gray">('+data[i].old+')</span>',data[i].zipcode+'@'+data[i].address);
 			}
 			
 			if (loop > 0) {
 				$("div.drop[field="+field+"_address1] > button").html('검색이 완료되었습니다. 주소를 선택하여 주십시오. <span class="arrow"></span>');
 				$("div.drop[field="+field+"_address1] > button").attr("disabled",false);
+				$("div.drop[field="+field+"_address1] > button").focus();
 			} else {
 				$("div.drop[field="+field+"_address1] > button").html('해당 검색어로 주소를 찾을 수 없습니다. 다른 검색어를 이용해보시기 바랍니다. <span class="arrow"></span>');
 			}
 		} catch (e) {}
 	});
+}
+
+function MemberSearchAddressSelect(field,value) {
+	var data = value.split("@");
+	$($("form[name=MemberSignIn]").find("input[name="+field+"_zipcode]")).val(data[0]);
+	$($("form[name=MemberSignIn]").find("input[name="+field+"_address1]")).val(data[1]);
+	$($("form[name=MemberSignIn]").find("input[name="+field+"_address2]")).focus();
 }
