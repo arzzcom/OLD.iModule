@@ -32,6 +32,7 @@
 .ModuleRelease .releaseTable .bodyCell DIV IMG {vertical-align:middle;}
 .ModuleRelease .releaseTable .bodyCell DIV A {color:#083772; text-decoration:none;}
 .ModuleRelease .releaseTable .bodyCell DIV A:HOVER {font-weight:bold; color:#083772; text-decoration:underline;}
+.ModuleRelease .releaseTable .bodyCell .drop {height:auto !important; overflow:visible !important;}
 .ModuleRelease .releaseTable .viewTitleCell {height:36px; padding:0px; font-weight:bold; background:#f8f8f9;}
 .ModuleRelease .releaseTable .viewTitleCell h4 {display:block; color:#222222; padding-left:8px; padding-right:8px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .ModuleRelease .releaseTable .mentCell {background:#f8f8f9; padding-left:5px; padding-right:5px;}

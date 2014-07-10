@@ -43,6 +43,7 @@
 .ModuleBoard .boardTable .bodyCell DIV IMG {vertical-align:middle;}
 .ModuleBoard .boardTable .bodyCell DIV A {color:#083772; text-decoration:none;}
 .ModuleBoard .boardTable .bodyCell DIV A:HOVER {font-weight:bold; color:#083772; text-decoration:underline;}
+.ModuleBoard .boardTable .bodyCell .drop {height:auto !important; overflow:visible !important;}
 .ModuleBoard .boardTable .viewTitleCell {height:36px; padding:0px; font-weight:bold; background:#f8f8f9;}
 .ModuleBoard .boardTable .viewTitleCell h4 {display:block; color:#222222; padding-left:8px; padding-right:8px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .ModuleBoard .boardTable .mentCell {background:#f8f8f9; padding-left:5px; padding-right:5px;}

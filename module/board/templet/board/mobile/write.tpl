@@ -58,19 +58,17 @@
 <tr>
 	<td class="headerCell">분류</td>
 	<td class="splitBar"></td>
-	<td>
+	<td class="bodyCell">
 		<input type="hidden" name="category" value="{$post.category}" />
-		<div style="margin:5px 0px 5px 10px;">
-		<div id="iBoardCategory" class="selectbox" style="width:150px;">
-			<div onclick="InputSelectBox('iBoardCategory')" clicker="iBoardCategory">{if $categoryName}{$categoryName}{else}카테고리{/if}</div>
+		<div class="drop" style="width:100%;" form="ModuleBoardPost" field="category">
+			<button>{if $categoryName}{$categoryName}{else}카테고리{/if} <span class="arrow"></span></button>
 
-			<ul style="display:none;" clicker="iBoardCategory">
-				{if $setup.use_category == 'OPTION'}<li onclick="InputSelectBoxSelect('iBoardCategory','분류없음','',WriteSelectCategory)">분류없음</li>{/if}
+			<ul>
+				{if $setup.use_category == 'OPTION'}<li value="">분류없음</li>{/if}
 				{foreach from=$categoryList item=categoryList}
-				<li onclick="InputSelectBoxSelect('iBoardCategory','{$categoryList.category}','{$categoryList.idx}',WriteSelectCategory)">{$categoryList.category}</li>
+				<li value="{$categoryList.idx}">{$categoryList.category}</li>
 				{/foreach}
 			</ul>
-		</div>
 		</div>
 	</td>
 </tr>

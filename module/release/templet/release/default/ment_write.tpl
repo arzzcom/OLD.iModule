@@ -1,5 +1,5 @@
 {$formStart}
-<table cellpadding="0" cellspacing="0" class="boardTable">
+<table cellpadding="0" cellspacing="0" class="releaseTable">
 <col width="100" /><col width="1" /><col width="100%" /><col width="250" />
 {if $mode == 'modify'}
 <tr>
@@ -52,7 +52,7 @@
 			<textarea name="content" id="{$wysiwygName}" style="width:100%; height:150px;" blank="내용을 입력하여 주십시오.">{$data.content}</textarea>
 		</div>
 		<div class="height5"></div>
-		{mBoard->PrintUploader type="ment" form=$formName id=$uploaderName skin="default" wysiwyg=$wysiwygName}
+		{mRelease->PrintUploader type="ment" form=$formName id=$uploaderName skin="default" wysiwyg=$wysiwygName}
 	</td>
 </tr>
 <tr>
@@ -66,7 +66,7 @@
 </table>
 
 {if $antispam}
-<table cellpadding="0" cellspacing="0" class="boardTable">
+<table cellpadding="0" cellspacing="0" class="releaseTable">
 <col width="180" /><col width="100%" />
 <tr>
 	<td class="sectionInfo">{$antispam}</td>

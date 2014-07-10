@@ -63,22 +63,19 @@
 <tr>
 	<td class="headerCell">라이센스</td>
 	<td class="splitBar"></td>
-	<td>
+	<td class="bodyCell">
 		<input type="hidden" name="license" value="{$post.license}" />
-		<div style="margin:5px 0px 5px 8px;">
-			<div id="iReleaseLicense" class="selectbox" style="width:150px;">
-				<div onclick="InputSelectBox('iReleaseLicense')" clicker="iReleaseLicense">{if $post.license}{$post.license}{else}라이센스{/if}</div>
-	
-				<ul style="display:none;" clicker="iReleaseLicense">
-					<li onclick="InputSelectBoxSelect('iReleaseLicense','GPL v2','GPL v2',WriteSelectLicense)">GPL v2</li>
-					<li onclick="InputSelectBoxSelect('iReleaseLicense','LGPL v2','LGPL v2',WriteSelectLicense)">LGPL v2</li>
-					<li onclick="InputSelectBoxSelect('iReleaseLicense','GPL v3','GPL v3',WriteSelectLicense)">GPL v3</li>
-					<li onclick="InputSelectBoxSelect('iReleaseLicense','LGPL v3','LGPL v3',WriteSelectLicense)">LGPL v3</li>
-					<li onclick="InputSelectBoxSelect('iReleaseLicense','MIT License','MIT License',WriteSelectLicense)">MIT License</li>
-					<li onclick="InputSelectBoxSelect('iReleaseLicense','Apache License 2.0','Apache License 2.0',WriteSelectLicense)">Apache License 2.0</li>
-					<li onclick="InputSelectBoxSelect('iReleaseLicense','기타 라이센스','기타 라이센스',WriteSelectLicense)">기타 라이센스</li>
-				</ul>
-			</div>
+		<div class="drop" style="width:150px;" form="ModuleReleasePost" field="license">
+			<button>{if $post.license}{$post.license}{else}라이센스{/if} <span class="arrow"></span></button>
+			<ul>
+				<li value="GPL v2">GPL v2</li>
+				<li value="LGPL v2">LGPL v2</li>
+				<li value="GPL v3">GPL v3</li>
+				<li value="LGPL v3">LGPL v3</li>
+				<li value="MIT License">MIT License</li>
+				<li value="Apache License 2.0">Apache License 2.0</li>
+				<li value="기타 라이센스">기타 라이센스</li>
+			</ul>
 		</div>
 	</td>
 	<td class="bodyCell right gray">기타 라이센스일 경우 프로그램소개에 라이센스를 명시</td>
