@@ -1,4 +1,4 @@
-<script type="text/javascript" src="<?php echo $_ENV['dir']; ?>/module/uploader/script/AzUploader.js"></script>
+<script type="text/javascript" src="<?php echo $_ENV['dir']; ?>/module/database/script/AzUploader.js"></script>
 <script type="text/javascript" src="<?php echo $_ENV['dir']; ?>/module/wysiwyg/script/wysiwyg.js"></script>
 <script type="text/javascript">
 ContentArea = function(viewport) {
@@ -656,7 +656,7 @@ ContentArea = function(viewport) {
 								id:uploaderID,
 								autoRender:false,
 								autoLoad:(idx ? true : false),
-								flashURL:"<?php echo $_ENV['dir']; ?>/module/uploader/flash/AzUploader.swf",
+								flashURL:"<?php echo $_ENV['dir']; ?>/module/database/flash/AzUploader.swf",
 								uploadURL:"<?php echo $_ENV['dir']; ?>/module/database/exec/FileUpload.do.php?type=HTML&tno="+tno+"&wysiwyg="+panel.getId().split("-").shift(),
 								loadURL:"<?php echo $_ENV['dir']; ?>/module/database/exec/FileLoad.do.php?type=HTML&wysiwyg="+panel.getId().split("-").shift()+"&repto="+idx,
 								buttonURL:"<?php echo $_ENV['dir']; ?>/module/database/images/admin/icon_file_button.gif",
