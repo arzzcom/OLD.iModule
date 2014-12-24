@@ -35,19 +35,6 @@
 			<index name="ip" type="index" />
 		</table>
 		
-		<table name="{code}_keyword_table">
-			<field name="idx" type="int" length="11">고유값</field>
-			<field name="keycode" type="varchar" length="100">단어인덱스</field>
-			<field name="engcode" type="varchar" length="100">영문인덱스</field>
-			<field name="keyword" type="varchar" length="100">키워드</field>
-			<field name="hit" type="int" length="11">검색수</field>
-			<field name="last_search" type="int" length="11">마지막검색시각</field>
-			<index name="idx" type="auto_increment" />
-			<index name="keycode" type="index" />
-			<index name="engcode" type="index" />
-			<index name="hit" type="index" />
-		</table>
-		
 		<table name="{code}_module_table">
 			<field name="module" type="varchar" length="20">모듈아이디</field>
 			<field name="name" type="varchar" length="20">모듈명</field>
@@ -75,16 +62,5 @@
 			<field name="module" type="varchar" length="255">적용모듈</field>
 			<index name="plugin" type="primary" />
 		</table>
-		
-		<table name="{code}_zipcode_table">
-			<field name="zipcode" type="char" length="7">우편번호</field>
-			<field name="depth1" type="varchar" length="100">시도</field>
-			<field name="depth2" type="varchar" length="100">구군</field>
-			<field name="depth3" type="varchar" length="100">읍면동</field>
-			<field name="depth4" type="varchar" length="100">기타</field>
-			<index name="zipcode" type="index" />
-			<index name="depth3" type="index" />
-		</table>
-		
 	</database>
 </module>

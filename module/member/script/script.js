@@ -1,3 +1,5 @@
+GlobalModuleList.push("member");
+
 function MemberSignInCheck(step) {
 	var object = $("form[name=MemberSignIn]");
 
@@ -63,7 +65,7 @@ function MemberSignInCheck(step) {
 			
 			$.ajax({
 				type:"POST",
-				url:ENV.dir+"/exec/Ajax.get.php?action=membercheck",
+				url:ENV.dir+"/module/member/exec/Ajax.get.php?action=membercheck",
 				data:QueryString,
 				dataType:"json",
 				success:function(result) {
@@ -133,7 +135,7 @@ function MemberSignInFormCheck(field) {
 		
 		$.ajax({
 			type:"POST",
-			url:ENV.dir+"/exec/Ajax.get.php?action=duplication",
+			url:ENV.dir+"/module/member/exec/Ajax.get.php?action=duplication",
 			data:QueryString,
 			dataType:"json",
 			success:function(result) {
@@ -191,7 +193,7 @@ function MemberCellPhoneCheck() {
 			
 			$.ajax({
 				type:"POST",
-				url:ENV.dir+"/exec/Ajax.get.php?action=phonecheck",
+				url:ENV.dir+"/module/member/exec/Ajax.get.php?action=phonecheck",
 				data:"phone="+phone,
 				dataType:"json",
 				success:function(result) {

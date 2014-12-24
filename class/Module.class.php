@@ -31,6 +31,13 @@ class Module {
 		$this->moduleXML = null;
 		$this->adminTop = $this->moduleInfo['is_admin_top'];
 	}
+	
+	function CheckInstalled($module) {
+		if ($this->moduleName == $module) return $this->IsSetup();
+		
+		if ($this->mDB->DBcount($_ENV['table']['module'],"where `module`='$module'") == 0) return false;
+		else return true;
+	}
 
 	function IsSetup() {
 		if ($this->module === false) return false;

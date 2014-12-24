@@ -3,12 +3,18 @@ class Crawler {
 	public $agent;
 	public $cookie;
 	public $timeout;
+	public $encode;
 
 	function __construct() {
 		$this->cookie = $_ENV['userfilePath'].'/temp/crawler.cookie.'.time().'.'.rand(10000,99999).'.txt';
 		$this->agent = 'Mozilla/4.0 MSIE 8.0';
 		$this->timeout = 30;
+		$this->encode = '';
 		$this->isDebug = false;
+	}
+	
+	function SetEncode($encode) {
+		$this->encode = $encode;
 	}
 	
 	function SetCookieFile($cookie) {
@@ -41,13 +47,14 @@ class Crawler {
 		curl_setopt($curlsession,CURLOPT_URL,$url);
 		curl_setopt($curlsession,CURLOPT_POST,1);
 		curl_setopt($curlsession,CURLOPT_POSTFIELDS,$post);
-		curl_setopt($curlsession,CURLOPT_USERAGENT,$this->agent);
 		curl_setopt($curlsession,CURLOPT_REFERER,$url);
 		curl_setopt($curlsession,CURLOPT_TIMEOUT,$this->timeout);
 		curl_setopt($curlsession,CURLOPT_COOKIEJAR,$this->cookie);
 		curl_setopt($curlsession,CURLOPT_RETURNTRANSFER,1);
-		curl_exec($curlsession);
+		$buffer = curl_exec($curlsession);
 		curl_close($curlsession);
+		
+		return $buffer;
 	}
 
 	function GetURLString($url) {
@@ -226,11 +233,15 @@ class Crawler {
 	}
 
 	function GetUTF8($str) {
+		if ($this->encode) {
+			return @iconv($this->encode,'UTF-8//IGNORE',$str);
+		}
+		
 		$encording = mb_detect_encoding($str,'EUC-KR,UTF-8,ASCII,EUC-JP,CP949,AUTO');
 		
 		if ($encording == '') {
 			if (preg_match('/<meta (.*?)content="text\/html; charset=(.*?)"(.*?)>/i',$str,$match) == true) {
-				$encording = $match[2];
+				$encording = $match[2] == 'KSC_5601' ? 'euc-kr' : $match[2];
 			}
 		}
 

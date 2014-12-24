@@ -1,0 +1,26 @@
+.ItemListPremium .header {background:url(./images/bg_tl.gif) no-repeat 0 0; height:51px; padding-left:23px;}
+.ItemListPremium .headerRight {height:51px; text-align:right; background:url(./images/bg_tr.gif) no-repeat 100% 0;}
+.ItemListPremium .header .title {float:left; padding:16px 40px 0px 10px; height:35px; background:url(./images/bg_title.gif) no-repeat 100% 0;}
+.ItemListPremium .header .info {float:right; padding:15px 20px 0px 0px; font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px;}
+.ItemListPremium .bodyer {background:url(./images/bg_ml.gif) repeat-y 0; padding-left:20px;}
+.ItemListPremium .bodyer .bodyerInner {background:url(./images/bg_mr.gif) repeat-y 100%; padding-right:20px;}
+
+.ItemListPremium .footer {background:url(./images/bg_bl.gif) no-repeat 0 0; height:27px; padding-left:28px;}
+.ItemListPremium .footerRight {height:27px; text-align:right; background:url(./images/bg_br.gif) no-repeat 100% 0;}
+
+.ItemListPremium .imageView {width:160px; height:120px; margin:5px; border:2px solid #CCCCCC; background:url(./images/noimage.gif) no-repeat 50% 50%;}
+.ItemListPremium .titleView {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; width:160px; margin:5px; height:15px; overflow:hidden; font-weight:bold; line-height:15px; color:#2F2F2F;}
+
+.ItemListPremium .titleView A:link {text-decoration:none; color:#2F2F2F;}
+.ItemListPremium .titleView A:visited {color:#2F2F2F; text-decoration:none;}
+.ItemListPremium .titleView A:active {color:#2F2F2F; text-decoration:none;}
+.ItemListPremium .titleView A:hover {text-decoration:underline; color:#000000;}
+
+.ItemListPremium .infoView {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:12px; width:160px; margin:5px; height:15px; overflow:hidden; color:#666666;}
+.ItemListPremium .infoView DIV {float:left; height:15px; margin-right:5px;}
+
+.ItemListPremium .category {color:#D97B43; font-weight:bold;}
+
+.ItemListPremium .priceRentAll {height:15px; background:url(./images/icon_rent_all.gif) no-repeat; padding-left:18px; font-weight:bold; color:#253DA6; line-height:15px; letter-spacing:-1px;}
+.ItemListPremium .priceRentMonth {height:15px; background:url(./images/icon_rent_month.gif) no-repeat; padding-left:18px; font-weight:bold; color:#253DA6; line-height:15px; letter-spacing:-1px;}
+.ItemListPremium .priceBuy {height:15px; background:url(./images/icon_buy.gif) no-repeat; padding-left:18px; font-weight:bold; color:#253DA6; line-height:15px; letter-spacing:-1px;}

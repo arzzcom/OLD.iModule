@@ -1,9 +1,3 @@
-<div id="toolbar">
-	<h1>회원로그인</h1>
-	{if $link.prevURL}<a id="backButton" class="button" href="/">이전</a>{/if}
-</div>
-
-<div id="content">
 {$formStart}
 	<div class="height5"></div>
 	<div class="titlebox">회원로그인</div>
@@ -35,7 +29,6 @@
 	</div>
 	
 	<div class="submitbox">
-		<input type="submit" value="회원로그인" />
+		<input type="submit" value="회원로그인" style="height:30px; line-height:30px;" />
 	</div>
 {$formEnd}
-</div>

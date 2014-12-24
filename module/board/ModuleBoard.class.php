@@ -5,6 +5,7 @@ class ModuleBoard extends Module {
 
 	protected $mTemplet;
 	protected $mPlugin;
+	protected $mKeyword;
 
 	public $find;
 	public $setup;
@@ -45,8 +46,14 @@ class ModuleBoard extends Module {
 		$this->userfile = '/board';
 		$this->thumbnail = '/board/thumbnail';
 		$this->skinThumbnail = '/board/skin';
-
+		
 		parent::__construct('board');
+		
+		if ($this->CheckInstalled('keyword') == true) {
+			$this->mKeyword = new ModuleKeyword();
+		} else {
+			$this->mKeyword = new Keyword();
+		}
 
 		if ($bid) {
 			$this->bid = $bid;
@@ -176,15 +183,6 @@ class ModuleBoard extends Module {
 			}
 		}
 
-		return $this->GetReplaceKeyword($content);
-	}
-
-	function GetReplaceKeyword($content) {
-		if (Request('keyword') != null) {
-			$keyword = str_replace(' ','|',GetString(Request('keyword'),'reg'));
-
-			$content = preg_replace('/('.$keyword.')/','<span class="keyword">\\1</span>',$content);
-		}
 		return $content;
 	}
 
@@ -520,8 +518,7 @@ class ModuleBoard extends Module {
 		
 		$keyword = Request('keyword') ? urldecode(Request('keyword')) : '';
 		if ($keyword != null) {
-			$mKeyword = new Keyword($keyword);
-			$keyQuery = $mKeyword->GetFullTextKeyword(array('title','search'));
+			$keyQuery = $this->mKeyword->GetFullTextKeyword($keyword,array('title','search'));
 			$find.= ' and '.$keyQuery;
 		}
 		
@@ -544,7 +541,6 @@ class ModuleBoard extends Module {
 		$data = $this->mDB->DBfetchs($this->table['post'],'*',$find,$orderer,$limiter);
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			$data[$i]['title'] = $data[$i]['is_html_title'] == 'TRUE' ? $data[$i]['title'] : GetString($data[$i]['title'],'replace');
-			$data[$i]['title'] = $this->GetReplaceKeyword($data[$i]['title']);
 			$data[$i]['postlink'] = $this->moduleDir.'/board.php?bid='.$data[$i]['bid'].'&amp;mode=view&amp;idx='.$data[$i]['idx'];
 			
 			$data[$i]['reg_date'] = strtotime(GetTime('c',$data[$i]['reg_date']));
@@ -690,10 +686,8 @@ class ModuleBoard extends Module {
 		$keyword = Request('keyword') ? urldecode(Request('keyword')) : '';
 
 		if ($keyword != null) {
-			$mKeyword = new Keyword($keyword);
-
 			if ($key == 'tc') {
-				$keyQuery = $mKeyword->GetFullTextKeyword(array('title','search'));
+				$keyQuery = $this->mKeyword->GetFullTextKeyword($keyword,array('title','search'));
 				$find.= ' and '.$keyQuery;
 			}
 
@@ -712,7 +706,7 @@ class ModuleBoard extends Module {
 			}
 
 			if ($key == 'ment') {
-				$keyQuery = $mKeyword->GetFullTextKeyword(array('search'));
+				$keyQuery = $this->mKeyword->GetFullTextKeyword($keyword,array('search'));
 				$searchMent = $this->mDB->DBfetchs($this->table['ment'],array('repto'),"where `is_delete`='FALSE' and `bid`='".$this->bid."' and ".$keyQuery);
 				$ment = array();
 				for ($i=0, $loop=sizeof($searchMent);$i<$loop;$i++) {
@@ -732,7 +726,6 @@ class ModuleBoard extends Module {
 			
 			for ($i=0, $loop=sizeof($notice);$i<$loop;$i++) {
 				$notice[$i]['title'] = $notice[$i]['is_html_title'] == 'TRUE' ? $notice[$i]['title'] : GetString($notice[$i]['title'],'replace');
-				$notice[$i]['title'] = $this->GetReplaceKeyword($notice[$i]['title']);
 				$notice[$i]['is_read'] = $notice[$i]['idx'] == Request('idx');
 				$notice[$i]['postlink'] = $this->baseURL.$this->GetQueryString(array('mode'=>'view','p'=>$p,'idx'=>$notice[$i]['idx']));
 				$notice[$i]['reg_date'] = strtotime(GetTime('c',$notice[$i]['reg_date']));
@@ -811,7 +804,6 @@ class ModuleBoard extends Module {
 		$loopnum = $totalpost-($p-1)*$listnum;
 		for ($i=0, $loop=sizeof($data);$i<$loop;$i++) {
 			$data[$i]['title'] = $data[$i]['is_html_title'] == 'TRUE' ? $data[$i]['title'] : GetString($data[$i]['title'],'replace');
-			$data[$i]['title'] = $this->GetReplaceKeyword($data[$i]['title']);
 			$data[$i]['postlink'] = $this->baseURL.$this->GetQueryString(array('mode'=>'view','idx'=>$data[$i]['idx']));
 			
 			$data[$i]['is_read'] = $data[$i]['idx'] == Request('idx');

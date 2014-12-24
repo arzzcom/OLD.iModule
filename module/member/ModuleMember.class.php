@@ -86,11 +86,10 @@ class ModuleMember extends member {
 				$link['myinfo'] = $this->module['myinfo'];
 				$link['msgbox'] = $this->module['msgbox'];
 
-				$id = 'MemberMessge'.rand(100000,999999);
 				$message = array();
-				$message['new'] = '<span id="'.$id.'New">0</span>';
-				$message['all'] = '<span id="'.$id.'All">0</span>';
-				$message['checker'] = '<script type="text/javascript">GetEmbed("'.$id.'Checker","'.$this->moduleDir.'/flash/MessageCountChecker.swf",8,8,"id='.$id.'&skin='.$this->moduleDir.'/templet/login/'.$skin.'&check='.urlencode($_ENV['dir'].'/exec/Ajax.get.php?action=checkMessage&mno='.$member['idx']).'");</script>';
+				$message['new'] = '<span class="ModuleMemberNewMessageCount">0</span>';
+				$message['all'] = '<span class="ModuleMemberTotalMessageCount">0</span>';
+				$message['checker'] = '<script type="text/javascript">ModuleMemberMessageChecker();</script>';
 				$mTemplet->assign('formStart',$formStart);
 				$mTemplet->assign('formEnd',$formEnd);
 				$mTemplet->assign('message',$message);

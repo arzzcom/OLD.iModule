@@ -14,7 +14,7 @@
 	{if $data.image}
 	<tr>
 		<td class="image"><img src="{$data.image}" style="width:60px; height:45px;" /></td>
-		<td class="body" colspan="2">{$data.search|cutstring:"60"}</td>
+		<td class="body" colspan="2">{if $data.search}{$data.search|cutstring:"60"}{else}이 게시물은 이미지나 동영상으로만 구성되어 있습니다.{/if}</td>
 	</tr>
 	<tr class="height5"><td colspan="2"></td></tr>
 	{else}

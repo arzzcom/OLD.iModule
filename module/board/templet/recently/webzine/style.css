@@ -6,7 +6,7 @@
 .RecentlyWebzine .title A {text-decoration:none; color:#EF0000;}
 .RecentlyWebzine .title A:HOVER {text-decoration:underline;}
 .RecentlyWebzine .image {vertical-align:top; font:0/0 arial; padding-top:2px;}
-.RecentlyWebzine .body {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; line-height:1.6; text-align:justify; padding:0px 0px 10px 0px; color:#666666; vertical-align:top;}
+.RecentlyWebzine .body {font-family:NanumGothicWeb, AppleGothic, "malgun gothic", dotum; font-size:11px; line-height:1.6; text-align:justify; padding:0px 0px 10px 0px; color:#666666; vertical-align:top; height:45px; overflow:hidden;}
 
 .RecentlyWebzine .date {text-align:right; color:#666666; font-family:tahoma; font-size:9px;}
 
