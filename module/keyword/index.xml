@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<title>키워드</title>
+	<version>1.0.0</version>
+	<path>/module/keyword</path>
+	<setup>TRUE</setup>
+	<manager>TRUE</manager>
+	<dependency></dependency>
+	<database>
+		<table name="{code}_keyword_table">
+			<field name="idx" type="int" length="11">고유값</field>
+			<field name="keycode" type="varchar" length="100">단어인덱스</field>
+			<field name="engcode" type="varchar" length="100">영문인덱스</field>
+			<field name="keyword" type="varchar" length="100">키워드</field>
+			<field name="hit" type="int" length="11">검색수</field>
+			<field name="last_search" type="int" length="11">마지막검색시각</field>
+			<index name="idx" type="auto_increment" />
+			<index name="keycode" type="index" />
+			<index name="engcode" type="index" />
+			<index name="hit" type="index" />
+		</table>
+	</database>
+</module>

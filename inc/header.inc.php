@@ -14,6 +14,8 @@ if (isset($resource) == true && is_array($resource) == true) {
 	for ($i=0, $loop=sizeof($resource);$i<$loop;$i++) {
 		if ($resource[$i]['type'] == 'css') {
 			echo '<link rel="stylesheet" href="'.$resource[$i]['css'].'" type="text/css" title="style" />'."\n";
+		} elseif ($resource[$i]['type'] == 'apple-touch-icon') {
+			echo '<link rel="apple-touch-icon" href="'.$resource[$i]['icon'].'" />'."\n";
 		} elseif ($resource[$i]['type'] == 'script') {
 			echo '<script type="text/javascript" src="'.$resource[$i]['script'].'"></script>'."\n";
 		} elseif ($resource[$i]['type'] == 'favicon') {

@@ -1,45 +1,45 @@
 <?php
-class Keyword {
-	public $mDB;
-	private $keyword;
+class ModuleKeyword extends Module {
+	public $table = array();
 
-	function __construct($keyword='') {
-		$this->mDB = &DB::instance();
-		$this->keyword = $keyword;
+	function __construct() {
+		$this->table['keyword'] = $_ENV['code'].'_keyword_table';
+		
+		parent::__construct('keyword');
 	}
 	
-	function KeywordHit() {
-		$keycode = $this->GetUTF8Code($this->keyword);
+	function KeywordHit($keyword='') {
+		$keycode = $this->GetUTF8Code($keyword);
 		$engcode = $this->GetEngCode($keycode);
 
-		if ($this->keyword) {
-			$keyData = $this->mDB->DBfetch($_ENV['code'].'_keyword_table',array('idx'),"where `keycode`='$keycode'");
+		if ($keyword) {
+			$keyData = $this->mDB->DBfetch($this->table['keyword'],array('idx'),"where `keycode`='$keycode'");
 			if (isset($keyData['idx']) == true) {
-				$this->mDB->DBupdate($_ENV['table']['keyword'],array('last_search'=>GetGMT()),array('hit'=>'`hit`-1'),"where `idx`='{$keyData['idx']}'");
+				$this->mDB->DBupdate($this->table['keyword'],array('last_search'=>GetGMT()),array('hit'=>'`hit`-1'),"where `idx`='{$keyData['idx']}'");
 			} else {
-				$this->mDB->DBinsert($_ENV['table']['keyword'],array('keycode'=>$keycode,'engcode'=>$engcode,'keyword'=>$this->keyword,'hit'=>'0','last_search'=>GetGMT()));
+				$this->mDB->DBinsert($this->table['keyword'],array('keycode'=>$keycode,'engcode'=>$engcode,'keyword'=>$keyword,'hit'=>'0','last_search'=>GetGMT()));
 			}
 		}
 	}
 
-	function GetFullTextKeyword($field=array()) {
-		$keycode = $this->GetUTF8Code($this->keyword);
+	function GetFullTextKeyword($keyword,$field=array()) {/*
+		$keycode = $this->GetUTF8Code($keyword);
 		$engcode = $this->GetEngCode($keycode);
 
 		if ($this->keyword) {
-			$keyData = $this->mDB->DBfetch($_ENV['code'].'_keyword_table',array('idx'),"where `keycode`='$keycode'");
+			$keyData = $this->mDB->DBfetch($this->table['keyword'],array('idx'),"where `keycode`='$keycode'");
 			if (isset($keyData['idx']) == true) {
-				$this->mDB->DBupdate($_ENV['table']['keyword'],array('last_search'=>GetGMT()),array('hit'=>'`hit`-1'),"where `idx`='{$keyData['idx']}'");
+				$this->mDB->DBupdate($this->table['keyword'],array('last_search'=>GetGMT()),array('hit'=>'`hit`-1'),"where `idx`='{$keyData['idx']}'");
 			} else {
-				$this->mDB->DBinsert($_ENV['table']['keyword'],array('keycode'=>$keycode,'engcode'=>$engcode,'keyword'=>$this->keyword,'hit'=>'0','last_search'=>GetGMT()));
+				$this->mDB->DBinsert($this->table['keyword'],array('keycode'=>$keycode,'engcode'=>$engcode,'keyword'=>$this->keyword,'hit'=>'0','last_search'=>GetGMT()));
 			}
 		}
-
+*/
 		for ($i=0, $loop=sizeof($field);$i<$loop;$i++) {
 			$field[$i] = '`'.$field[$i].'`';
 		}
 
-		$keylist = explode(' ',$this->keyword);
+		$keylist = explode(' ',$keyword);
 		for ($i=0, $loop=sizeof($keylist);$i<$loop;$i++) {
 			$keylist[$i] = '\'+'.$keylist[$i].'*\'';
 		}

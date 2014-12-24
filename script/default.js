@@ -559,7 +559,7 @@ function LiveSearch(id) {
 
 			var InnerFunctionValue = new Array();
 			InnerFunctionValue.push(id);
-			GetHttpRequestXML(ENV.dir+"/exec/Ajax.get.php","action=keyword&keyword="+GetAjaxParam(keyword),"LiveSearchInner",InnerFunctionValue);
+			GetHttpRequestXML(ENV.dir+"/module/keyword/exec/Ajax.get.php","action=keyword&keyword="+GetAjaxParam(keyword),"LiveSearchInner",InnerFunctionValue);
 		}
 	} else {
 		var list = document.getElementById(id+"-live-list");
@@ -615,7 +615,7 @@ function GetLiveSearchKeyword(id,type,nums,limit,time,clicker) {
 	InnerFunctionValue.push(limit);
 	InnerFunctionValue.push(time);
 	InnerFunctionValue.push(clicker);
-	GetHttpRequestXML(ENV.dir+"/exec/Ajax.get.php","action=liveKeyword&type="+type+"&nums="+nums+"&limit="+limit,"GetLiveSearchKeywordInner",InnerFunctionValue);
+	GetHttpRequestXML(ENV.dir+"/module/keyword/exec/Ajax.get.php","action=liveKeyword&type="+type+"&nums="+nums+"&limit="+limit,"GetLiveSearchKeywordInner",InnerFunctionValue);
 }
 
 function GetLiveSearchKeywordInner(XML,id,type,nums,limit,time,clicker) {

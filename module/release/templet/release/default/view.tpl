@@ -241,7 +241,7 @@
 	<td class="bodyCell center" onclick="$('.history{$version.idx}').toggle();">{$version.reg_date|date_format:"%B %d, %Y"}&nbsp;</td>
 	<td class="splitBar"></td>
 	<td class="center" style="padding:3px;">
-		<a class="btn btn-sm btn-{if $data.price > 0 && $data.payment == false}warning{elseif $data.price > 0 && $data.payment == false}success{else}primary{/if} btn-block" href="$version.link.download}" target="downloadFrame"{if $data.price > 0 && $data.payment == false} onclick="return confirm('해당 프로그램은 유료프로그램입니다.\n프로그램 다운로드시 {$data.price|number_format}포인트가 소진됩니다.\n프로그램을 다운로드 받으시겠습니까?');"{/if}>{if $data.price > 0 && $data.payment == false}{$data.price|number_format}P 구매{elseif $data.price > 0 && $data.payment == false}다운로드(구매함){else}무료다운로드{/if}</a>
+		<a class="btn btn-sm btn-{if $data.price > 0 && $data.payment == false}warning{elseif $data.price > 0 && $data.payment == false}success{else}primary{/if} btn-block" href="{$version.link.download}" target="downloadFrame"{if $data.price > 0 && $data.payment == false} onclick="return confirm('해당 프로그램은 유료프로그램입니다.\n프로그램 다운로드시 {$data.price|number_format}포인트가 소진됩니다.\n프로그램을 다운로드 받으시겠습니까?');"{/if}>{if $data.price > 0 && $data.payment == false}{$data.price|number_format}P 구매{elseif $data.price > 0 && $data.payment == false}다운로드(구매함){else}무료다운로드{/if}</a>
 	</td>
 </tr>
 <tr class="history{$version.idx}"{if $smarty.foreach.version.index > 0} style="display:none;"{/if}>
